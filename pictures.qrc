@@ -10,5 +10,10 @@
         <file>res/pictures/home.png</file>
         <file>res/pictures/setting.png</file>
         <file>res/pictures/arrow-right.png</file>
+        <file>res/pictures/battery.png</file>
+        <file>res/pictures/controls.png</file>
+        <file>res/pictures/switch-auto.png</file>
+        <file>res/pictures/switch-operate.png</file>
+        <file>res/pictures/information.png</file>
     </qresource>
 </RCC>

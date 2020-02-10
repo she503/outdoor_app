@@ -106,6 +106,7 @@ Item{
             id: btn_ok
             width: rect_login.width * 0.4
             height: rect_login.height * 0.2
+            btn_text: qsTr("OK")
             anchors {
                 top: password.bottom
                 topMargin: 10

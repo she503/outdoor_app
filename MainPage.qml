@@ -4,10 +4,17 @@ import QtQuick.Controls 1.4 as Control_14
 Rectangle {
     id: root
 
+    property Component home_page: HomePage { }
+    property Component user_manage_page: UserManagePage {}
     signal mainPageChanged(var current_index)
 
     onMainPageChanged: {
         console.info(current_index)
+        if (current_index === 0) {
+            stack_view.replace(home_page)
+        } else if (current_index === 1) {
+            stack_view.replace(user_manage_page)
+        }
     }
 
     Control_14.SplitView {
@@ -15,7 +22,7 @@ Rectangle {
         anchors.fill: parent
         orientation: Qt.Horizontal
         Rectangle {
-            id: rect_left
+//            id: rect_left
             width: parent.width * 0.25
             height: parent.height
             color: "white"
@@ -30,7 +37,8 @@ Rectangle {
                     highlighted: ListView.isCurrentItem
                     Row {
                         id: row
-                        anchors.fill: parent
+                        width: parent.width
+                        height: parent.height * 0.99
                         Image {
                             id: img_logo
                             width: parent.width * 0.2
@@ -83,6 +91,11 @@ Rectangle {
                         list_view.currentIndex = index
                         mainPageChanged(list_view.currentIndex)
                     }
+                    Rectangle {
+                        width: parent.width
+                        height: parent.height * 0.01
+                        color: "gray"
+                    }
                 }
                 model: ListModel {
                     ListElement {
@@ -116,7 +129,6 @@ Rectangle {
                         sourcee: "qrc:/res/pictures/about.png"
                     }
                 }
-
             }
         }
         Rectangle {
@@ -127,7 +139,14 @@ Rectangle {
             StackView {
                 id: stack_view
                 anchors.fill: parent
-//                initialItem:
+                initialItem: home_page
+
+                replaceEnter: Transition {
+
+                }
+                replaceExit: Transition {
+
+                }
             }
         }
     }

@@ -4,9 +4,12 @@
         <file>qtquickcontrols2.conf</file>
         <file>LoginPage.qml</file>
         <file>MainPage.qml</file>
+        <file>HomePage.qml</file>
+        <file>UserManagePage.qml</file>
     </qresource>
     <qresource prefix="/CustomControl">
         <file>TLTextField.qml</file>
         <file>TLButton.qml</file>
+        <file>TLInfoDisplay.qml</file>
     </qresource>
 </RCC>

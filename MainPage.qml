@@ -5,10 +5,30 @@ Rectangle {
     id: root
 
     signal mainPageChanged(var current_index)
-
     onMainPageChanged: {
-        console.info(current_index)
+        switch (list_view.currentIndex) {
+        case 0:
+            stack_view.replace(home_page)
+            break;
+        case 1:
+//            stack_view.replace()
+            break;
+        case 2:
+//            stack_view.replace()
+            break;
+        case 3:
+            stack_view.replace(help_document)
+            break;
+        case 4:
+            stack_view.replace(about_machine)
+            break;
+        default:
+            break;
+        }
     }
+    property Component home_page: HomePage { }
+    property Component help_document: HelpDocument { }
+    property Component about_machine: AboutMachine { }
 
     Control_14.SplitView {
         id: split_view
@@ -121,13 +141,14 @@ Rectangle {
         }
         Rectangle {
             id: rect_right
+            z: -1
             width: parent.width * 0.75
             height: parent.height
             color:"transparent"
             StackView {
                 id: stack_view
                 anchors.fill: parent
-//                initialItem:
+                initialItem: home_page
             }
         }
     }

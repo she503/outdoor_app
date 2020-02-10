@@ -4,6 +4,9 @@
         <file>qtquickcontrols2.conf</file>
         <file>LoginPage.qml</file>
         <file>MainPage.qml</file>
+        <file>AboutMachine.qml</file>
+        <file>HelpDocument.qml</file>
+        <file>HomePage.qml</file>
     </qresource>
     <qresource prefix="/CustomControl">
         <file>TLTextField.qml</file>

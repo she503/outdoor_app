@@ -3,7 +3,6 @@ import QtQuick.Controls 2.2
 import "CustomControl"
 Item{
     id: root
-
     property real rate: Math.min(width, height) / 400
     property var user_level: ""
     property var user_name: ""

@@ -4,5 +4,11 @@
         <file>res/pictures/logo.png</file>
         <file>res/pictures/password.png</file>
         <file>res/pictures/username.png</file>
+        <file>res/pictures/user.png</file>
+        <file>res/pictures/about.png</file>
+        <file>res/pictures/help.png</file>
+        <file>res/pictures/home.png</file>
+        <file>res/pictures/setting.png</file>
+        <file>res/pictures/arrow-right.png</file>
     </qresource>
 </RCC>

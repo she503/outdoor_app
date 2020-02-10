@@ -7,7 +7,6 @@ ApplicationWindow {
     visible: true
     width: 640
     height: 480
-    title: qsTr("Hello World")
 
     property var v_user_level: ""
     property var v_user_name: ""

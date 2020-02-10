@@ -1,1 +1,0 @@
-#tergeo-app

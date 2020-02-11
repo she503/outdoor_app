@@ -6,6 +6,46 @@ import "CustomControl"
 Rectangle {
     id: root
 
+    Dialog {
+        id: message_update_uer
+        width: root.width * 0.7
+        height: root.height * 0.5
+        x:(root.width - width) / 2
+        y: (root.height - height) / 2
+
+
+        title: qsTr("update user pwd")
+
+
+        Column {
+            width: parent.width
+            height: parent.height
+            anchors.centerIn: message_update_uer.Center
+            spacing: height * 0.05
+            TextField {
+                id: field_old_pwd
+                width: parent.width * 0.9
+                height: parent.height * 0.3
+                placeholderText: qsTr("Please enter old pwd")
+                font.pixelSize: height * 0.2
+            }
+            TextField {
+                id: field_new_pwd
+                width: parent.width * 0.9
+                height: parent.height * 0.3
+                placeholderText: qsTr("Please enter new pwd")
+                font.pixelSize: height * 0.2
+            }
+            Button {
+                id: btn_update_pwd
+                width: parent.width * 0.9
+                height: parent.height * 0.2
+                text: qsTr("OK")
+                onClicked: message_update_uer.close()
+            }
+        }
+    }
+
     Rectangle {
         id: title_user
         width: parent.width
@@ -39,6 +79,9 @@ Rectangle {
                 rightMargin: width * 0.1
                 verticalCenter: parent.verticalCenter
             }
+            backgroundDefaultColor: list_view_user.currentIndex == -1 ? "gray" : "#3498DB"
+            enabled: list_view_user.currentIndex == -1 ? false : true
+
         }
 
         TLButton {
@@ -52,6 +95,10 @@ Rectangle {
                 rightMargin: width * 0.1
                 verticalCenter: parent.verticalCenter
             }
+            enabled: list_view_user.currentIndex == -1 ? false : true
+            backgroundDefaultColor: list_view_user.currentIndex == -1 ? "gray" : "#3498DB"
+
+            onClicked: message_update_uer.open()
         }
 
     }
@@ -166,7 +213,6 @@ Rectangle {
     }
 
     Rectangle {
-
         height: parent.height * 0.4
         width: parent.width * 0.5
         anchors.top: rect_add_user_line.bottom
@@ -181,6 +227,7 @@ Rectangle {
                 topMargin: 2
                 left: parent.left
             }
+            btn_radius:  height * 0.1
             placeholderText: qsTr("enter new user name.")
             pic_name: "qrc:/res/pictures/username.png"
         }
@@ -193,34 +240,37 @@ Rectangle {
                 topMargin: 2
                 left: parent.left
             }
+            btn_radius:  height * 0.1
             placeholderText: qsTr("enter new password.")
             pic_name: "qrc:/res/pictures/password.png"
         }
         GroupBox {
             id: radio_box
             anchors.top: btn_add_pwd.bottom
-            width: parent.width
-            height: parent.height * 0.3
+            anchors.topMargin: 3
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width * 0.8
+            height: parent.height * 0.2
             background: Rectangle {
                 border.width: 0
             }
             Row {
                 anchors.fill: parent
-                leftPadding: width * 0.1
+
                 spacing: width * 0.1
 
                 TLRadioButton {
                     id: radio_btn_operator
-                    width: parent.width * 0.4
+                    width: parent.width * 0.5
                     height: parent.height
-                    text: qsTr("operator")
+                    text_name: qsTr("operator")
 
                 }
                 TLRadioButton {
                     id: radio_btn_admin
-                    width: parent.width * 0.4
+                    width: parent.width * 0.5
                     height: parent.height
-                    text: qsTr("admin")
+                    text_name: qsTr("admin")
                 }
             }
         }

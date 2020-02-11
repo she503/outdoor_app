@@ -7,6 +7,7 @@ TextField {
 
     property color checkedColor: "#2B99B9"
     property string pic_name: ""
+    property real btn_radius: 0
 
     signal doubleClicked()
 
@@ -18,7 +19,7 @@ TextField {
     leftPadding: font.pixelSize * 2
 
     background: Rectangle {
-        radius: height / 2
+        radius: root.btn_radius
         color: root.enabled ? "transparent" : "#F4F6F6"
         border.color: root.enabled ? root.checkedColor : "#D5DBDB"
         border.width: 2

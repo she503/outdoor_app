@@ -87,6 +87,7 @@ Item{
             }
             placeholderText: qsTr("enter your username.")
             pic_name: "qrc:/res/pictures/username.png"
+            btn_radius: height * 0.1
         }
 
         TLTextField {
@@ -98,6 +99,7 @@ Item{
                 topMargin: 10
                 horizontalCenter: parent.horizontalCenter
             }
+             btn_radius: height * 0.1
             placeholderText: qsTr("enter your password.")
             echoMode: TextInput.Password
             pic_name: "qrc:/res/pictures/password.png"

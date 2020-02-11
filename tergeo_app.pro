@@ -2,10 +2,13 @@ QT += qml quick
 
 CONFIG += c++11
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    user_account_manage.cpp \
+    file_io.cpp
 
 RESOURCES += qml.qrc \
-    pictures.qrc
+    pictures.qrc \
+    others.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -28,3 +31,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+HEADERS += \
+    user_account_manage.h \
+    file_io.h

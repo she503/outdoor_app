@@ -4,6 +4,8 @@ import "CustomControl"
 Item{
     id: root
 
+    property var user_nomal
+    property var user_admin
     property real rate: Math.min(width, height) / 400
     property var user_level: ""
     property var user_name: ""
@@ -42,16 +44,20 @@ Item{
             topMargin: parent.height * 0.01
         }
 
-        function judgeLogin() {
-            var normal_user = {
-                "123" : "123",
-                "456" : "456",
-                "" : ""
-            }
+        Connections {
+            target: user_manage
+            onEmitALLUserAccount: {
+                root.user_nomal = nomal
+                root.user_admin = admin
 
-            var admin = {
-                "admin" : "admin"
+//                for(var key in nomal)
             }
+        }
+
+        function judgeLogin() {
+            var normal_user = root.user_nomal
+
+            var admin = root.user_admin
 
             var user = username.text
             var pwd = password.text

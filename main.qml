@@ -20,6 +20,9 @@ ApplicationWindow {
             root.v_user_name = user_name
             stack_view.push(main_page)
         }
+        Component.onCompleted: {
+            user_manage.readAllUserAccountData()
+        }
     }
 
     StackView {

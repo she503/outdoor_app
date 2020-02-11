@@ -11,5 +11,6 @@
         <file>TLTextField.qml</file>
         <file>TLButton.qml</file>
         <file>TLInfoDisplay.qml</file>
+        <file>TLRadioButton.qml</file>
     </qresource>
 </RCC>

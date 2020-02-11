@@ -18,7 +18,7 @@ Item{
     Rectangle {
         id: rect_logo
         width: parent.width
-        height: parent.height * 0.4
+        height: parent.height * 0.5
         color: "transparent"
         Image {
             id: img_logo
@@ -35,10 +35,11 @@ Item{
     Rectangle {
         id: rect_login
         width: parent.width
-        height: parent.height * 0.5
+        height: parent.height * 0.4
         color: "transparent"
         anchors {
             top: rect_logo.bottom
+            topMargin: parent.height * 0.01
         }
 
         function judgeLogin() {

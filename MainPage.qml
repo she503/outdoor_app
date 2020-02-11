@@ -5,22 +5,23 @@ Rectangle {
     id: root
 
     property Component home_page: HomePage { }
-    property Component user_manage_page: UserManagePage {}
+    property Component user_manage_page: UserManagePage { }
+    property Component help_document_page: HelpDocumentPage { }
+    property Component about_machine_page: AboutMachinePage { }
     signal mainPageChanged(var current_index)
     onMainPageChanged: {
-        console.info(current_index)
         if (current_index === 0) {
             stack_view.replace(home_page)
         } else if (current_index === 1) {
             stack_view.replace(user_manage_page)
+        } else if (current_index === 2) {
+            turn_task_page = true
         } else if (current_index === 3) {
             stack_view.replace(help_document_page)
         } else if (current_index === 4) {
             stack_view.replace(about_machine_page)
         }
     }
-    property Component help_document_page: HelpDocumentPage { }
-    property Component about_machine_page: AboutMachinePage { }
 
     Control_14.SplitView {
         id: split_view

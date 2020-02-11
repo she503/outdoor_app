@@ -93,7 +93,6 @@ Rectangle {
                 onClicked: {
                     list_view_user.currentIndex = index
 //                    btn_user.checked = true
-                    console.info("1")
                 }
             }
             model: ListModel {

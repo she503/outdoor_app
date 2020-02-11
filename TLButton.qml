@@ -7,11 +7,12 @@ Button {
     property color backgroundDefaultColor: "#3498DB"
     property color backgroundPressedColor: Qt.darker(backgroundDefaultColor, 1.2)
     property string btn_text: ""
+    property real font_size: btn_ok.height * 0.8
 
     contentItem: Text {
-        text: qsTr("ok")
+        text: btn_text
         color: "white"
-        font.pixelSize: btn_ok.height * 0.8
+        font.pixelSize: font_size
         font.family: "Arial"
         font.weight: Font.Thin
         horizontalAlignment: Text.AlignHCenter

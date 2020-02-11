@@ -10,13 +10,11 @@
         <file>res/pictures/home.png</file>
         <file>res/pictures/setting.png</file>
         <file>res/pictures/arrow-right.png</file>
-        <file>res/pictures/document.png</file>
         <file>res/pictures/battery.png</file>
-        <file>res/pictures/button.png</file>
-        <file>res/pictures/gear-shift.png</file>
-        <file>res/pictures/speed.png</file>
-        <file>res/pictures/water.png</file>
-        <file>res/pictures/power_off.png</file>
-        <file>res/pictures/power_on.png</file>
+        <file>res/pictures/controls.png</file>
+        <file>res/pictures/switch-auto.png</file>
+        <file>res/pictures/switch-operate.png</file>
+        <file>res/pictures/information.png</file>
+        <file>res/pictures/document.png</file>
     </qresource>
 </RCC>

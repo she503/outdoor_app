@@ -4,38 +4,30 @@ import QtQuick.Controls 1.4 as Control_14
 Rectangle {
     id: root
 
+    property Component home_page: HomePage { }
+    property Component user_manage_page: UserManagePage {}
     signal mainPageChanged(var current_index)
     onMainPageChanged: {
-        switch (list_view.currentIndex) {
-        case 0:
+        console.info(current_index)
+        if (current_index === 0) {
             stack_view.replace(home_page)
-            break;
-        case 1:
-//            stack_view.replace()
-            break;
-        case 2:
-//            stack_view.replace()
-            break;
-        case 3:
-            stack_view.replace(help_document)
-            break;
-        case 4:
-            stack_view.replace(about_machine)
-            break;
-        default:
-            break;
+        } else if (current_index === 1) {
+            stack_view.replace(user_manage_page)
+        } else if (current_index === 3) {
+            stack_view.replace(help_document_page)
+        } else if (current_index === 4) {
+            stack_view.replace(about_machine_page)
         }
     }
-    property Component home_page: HomePage { }
-    property Component help_document: HelpDocument { }
-    property Component about_machine: AboutMachine { }
+    property Component help_document_page: HelpDocumentPage { }
+    property Component about_machine_page: AboutMachinePage { }
 
     Control_14.SplitView {
         id: split_view
         anchors.fill: parent
         orientation: Qt.Horizontal
         Rectangle {
-            id: rect_left
+//            id: rect_left
             width: parent.width * 0.25
             height: parent.height
             color: "white"
@@ -50,7 +42,8 @@ Rectangle {
                     highlighted: ListView.isCurrentItem
                     Row {
                         id: row
-                        anchors.fill: parent
+                        width: parent.width
+                        height: parent.height * 0.99
                         Image {
                             id: img_logo
                             width: parent.width * 0.2
@@ -103,6 +96,11 @@ Rectangle {
                         list_view.currentIndex = index
                         mainPageChanged(list_view.currentIndex)
                     }
+                    Rectangle {
+                        width: parent.width
+                        height: parent.height * 0.01
+                        color: "gray"
+                    }
                 }
                 model: ListModel {
                     ListElement {
@@ -136,7 +134,6 @@ Rectangle {
                         sourcee: "qrc:/res/pictures/about.png"
                     }
                 }
-
             }
         }
         Rectangle {
@@ -149,6 +146,13 @@ Rectangle {
                 id: stack_view
                 anchors.fill: parent
                 initialItem: home_page
+
+                replaceEnter: Transition {
+
+                }
+                replaceExit: Transition {
+
+                }
             }
         }
     }

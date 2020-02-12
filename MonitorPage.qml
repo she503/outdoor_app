@@ -43,9 +43,8 @@ Page {
     property real real_rate: 2.2
 
     property var choosePoint: []
-    property bool isMatched: true
+    property bool isMatched: false
     property alias checked_location: checked_location
-
 
     function geometryToPixel(X, Y) {
         var x = (X - min_x) * map_rate
@@ -65,6 +64,7 @@ Page {
         btn_match.visible = true
         note_text.visible = false
         btn_resure.visible = false
+        choose_marker.visible = false
     }
 
     Rectangle{
@@ -75,14 +75,16 @@ Page {
         height: parent.height*0.1
         color: Qt.rgba(0.5,0.5,0.5,0.3)
 
-        RowLayout{
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
+        Row {
+            spacing: 15 * rate
+            anchors.centerIn: parent
             Button {
                 id: btn_not_match
                 text: qsTr("not match")//不匹配
-                Layout.fillWidth: true
-                anchors.margins: 30
+                font.pixelSize: 10 * rate
+                width: 75 * rate
+                height: 22 * rate
+                anchors.verticalCenter: parent.verticalCenter
                 background: Rectangle {
                     implicitWidth: 100
                     implicitHeight: 25
@@ -92,6 +94,7 @@ Page {
                 }
                 onClicked: {
                     isMatched = false
+                    choose_marker.visible = true
                     btn_not_match.visible = false
                     btn_match.visible = false
                     btn_resure.visible = true
@@ -102,8 +105,9 @@ Page {
             Button {
                 id: btn_match
                 text: qsTr("match")//匹配
-                Layout.fillWidth: true
-                anchors.margins: 30
+                font.pixelSize: 10 * rate
+                width: 75 * rate
+                height: 22 * rate
                 background: Rectangle {
                     implicitWidth: 100
                     implicitHeight: 25
@@ -114,6 +118,7 @@ Page {
                 onClicked: {
                     isMatched = true
                     checked_location.visible = false
+                    choose_marker.visible = false
                 }
             }
             Text {
@@ -121,15 +126,18 @@ Page {
                 visible: false
                 text: qsTr("move and choose point!")//移动选点!
                 font.family: "Helvetica"
-                font.pointSize: 24
+                font.pointSize: 25 * rate
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
                 color: "red"
             }
             Button {
                 id: btn_resure
                 text:  qsTr("resure")//确认
                 visible: false
-                anchors.margins: 30
-                Layout.fillWidth: true
+                font.pixelSize: 10 * rate
+                width: 75 * rate
+                height: 22 * rate
                 background: Rectangle {
                     implicitWidth: 100
                     implicitHeight: 25
@@ -140,6 +148,7 @@ Page {
                 onClicked: {
                     isMatched = true
                     checked_location.visible = false
+                    choose_marker.visible = false
                 }
             }
         }
@@ -156,6 +165,17 @@ Page {
             id: map
             width: parent.width * 0.78
             height: parent.height
+            Image {
+                id: choose_marker
+                z: 1
+                visible: false
+                source: "qrc:/res/pictures/gps.png"
+                width: 28
+                height: 28
+                x: choosePoint[0] - width / 2
+                y: choosePoint[1] - height
+                fillMode: Image.PreserveAspectFit
+            }
             Rectangle {
                 id: map_background
                 width: parent.width
@@ -641,7 +661,6 @@ Page {
             //            var_road_edges, var_lane_lines, var_clear_areas,
             //            var_crosswalks, var_junctions, var_parking_spaces,
             //            var_roads
-
             var_trees = trees
             var_signals = signs
             var_stop_signs = stop_signs
@@ -654,7 +673,6 @@ Page {
             var_parking_spaces = parking_spaces
             var_roads_include = roads_include
             var_roads_exclude = roads_exclude
-            console.log(var_roads_include)
 
             var all_x = []
             var all_y = []

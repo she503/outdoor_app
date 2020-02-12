@@ -257,12 +257,20 @@ Rectangle {
                     anchors.top: rec_pic_car.bottom
                     anchors.left: parent.left
                     Column {
-                        spacing: rate * 10
                         Repeater {
-                            model: ["Current map: ", "Worked hours: ", "Finished: ", "estimated finish time: "]
-                            Text {
-                                text: qsTr(modelData + "  " + text_process[index])
-                                font.pixelSize: rate * 10
+                            model: ["Current map: ", "Worked hours: ", "Finished: ", "Estimated time: "]
+                            Rectangle {
+                                width: rec_peocess.width
+                                height: rec_peocess.height * 0.25
+                                Text {
+                                    anchors {
+                                        top: parent.top
+                                        left: parent.left
+                                        leftMargin: rec_peocess.width * 0.05
+                                    }
+                                    text: qsTr(modelData + "  " + text_process[index])
+                                    font.pixelSize: rate * 10
+                                }
                             }
                         }
                     }
@@ -391,19 +399,13 @@ Rectangle {
                 id: rec_map_view
                 width: parent.width
                 height: parent.height * 0.7
-                Image {
-                    id: pic_position
-                    z: 1
-                    source: "qrc:/res/pictures/gps.png"
-                    width: 30 * rate
-                    height: 30 * rate
-                    anchors.centerIn: parent
-                    fillMode: Image.PreserveAspectFit
-                }
                 MonitorPage {
                     id: monitor_page
                     width:parent.width
                     height: parent.height
+                    Component.onCompleted: {
+                        checked_location.visible = true
+                    }
                 }
             }
             Rectangle {
@@ -441,9 +443,14 @@ Rectangle {
                             verticalCenter: parent.verticalCenter
                         }
                         onClicked: {
-                            rec_power_view.visible = false
-                            list_view.visible = false
-                            rec_turn_view.visible = true
+                            if (monitor_page.isMatched) {
+                                rec_power_view.visible = false
+                                list_view.visible = false
+                                rec_map_view.height = rec_right.height
+                                rec_turn_view.visible = true
+                            } else {
+                                dialog_match_warn.open()
+                            }
                         }
                     }
                     TLButton {
@@ -456,7 +463,6 @@ Rectangle {
                             leftMargin: 15 * rate
                             verticalCenter: parent.verticalCenter
                         }
-
                         onClicked: {
                             turn_task_page = false
                         }
@@ -484,6 +490,19 @@ Rectangle {
             rec_turn_view.visible = false
             turn_task_page = false
         }
+    }
+    Dialog {
+        id: dialog_match_warn
+        width: root.width * 0.4
+        height: root.height * 0.3
+        x: (root.width - width) / 2
+        y: (root.height - height) / 2
+
+        title: qsTr("Warn!")
+        contentItem: Label {
+            text: qsTr("Please resure the match")
+        }
+        standardButtons: Dialog.Ok
     }
 
 

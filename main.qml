@@ -25,6 +25,7 @@ ApplicationWindow {
     onTurn_task_pageChanged: {
         if (turn_task_page) {
             stack_view.replace(task_settings_page)
+            socket_manager.sendAllPower(true)
         } else {
             stack_view.replace(main_page)
         }

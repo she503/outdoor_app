@@ -6,6 +6,31 @@ import "CustomControl"
 Rectangle {
     id: root
 
+    property var user_nomal
+    property var user_admin
+    property string checked_user_name: ""
+    property string checked_user_level: ""
+    Component.onCompleted: {
+        user_manage.getAllUserAccountData()
+    }
+
+    Connections {
+        target: user_manage
+        onEmitALLUserAccount: {
+            root.user_nomal = nomal
+            root.user_admin = admin
+            var nomal_level = qsTr("nomal_level");
+            var admin_level = qsTr("admin_level")
+            for (var nomal_key in nomal) {
+                user_list_model.append({"user_name": nomal_key, "level": nomal_level, "level_obj_name": "nomal_user"})
+            }
+            for (var admin_key in admin) {
+                user_list_model.append({"user_name": admin_key, "level": admin_level, "level_obj_name": "admin_user"})
+            }
+        }
+
+    }
+
     Dialog {
         id: message_update_uer
         width: root.width * 0.7
@@ -28,6 +53,7 @@ Rectangle {
                 height: parent.height * 0.3
                 placeholderText: qsTr("Please enter old pwd")
                 font.pixelSize: height * 0.2
+                validator: RegExpValidator{regExp:/^.[A-Za-z0-9_]{0,11}$/}
             }
             TextField {
                 id: field_new_pwd
@@ -35,14 +61,48 @@ Rectangle {
                 height: parent.height * 0.3
                 placeholderText: qsTr("Please enter new pwd")
                 font.pixelSize: height * 0.2
+                validator: RegExpValidator{regExp:/^.[A-Za-z0-9]{0,6}$/}
             }
-            Button {
-                id: btn_update_pwd
+            Rectangle {
+                id: rect_update_btns
                 width: parent.width * 0.9
                 height: parent.height * 0.2
-                text: qsTr("OK")
-                onClicked: message_update_uer.close()
+                Button {
+                    id: btn_update_pwd
+                    width: parent.width * 0.45
+                    height: parent.height
+                    text: qsTr("OK")
+                    onClicked: {
+                        if (root.user_nomal[root.checked_user_name] === field_old_pwd.text) {
+                            if (user_manage.addNewOrUpdateUserAccount(root.checked_user_name, field_new_pwd.text, root.checked_user_level)) {
+                                root.user_nomal[root.checked_user_name] = field_new_pwd.text
+                            }
+
+                        } else if (root.user_admin[root.checked_user_name] === field_old_pwd.text){
+                            if (user_manage.addNewOrUpdateUserAccount(root.checked_user_name, field_new_pwd.text, root.checked_user_level)) {
+                                root.user_admin[root.checked_user_name] === field_new_pwd.text
+                            }
+                        } else {
+                    console.info("error old pwd")
+                }
+                    }
+                }
+                Button {
+                    id: btn_update_cancel
+                    anchors.left: btn_update_pwd.right
+                    anchors.leftMargin: parent.width * 0.1
+                    width: parent.width * 0.45
+                    height: parent.height
+                    text: qsTr("cancel")
+                    onClicked: {
+                        field_old_pwd.text = ""
+                        field_new_pwd.text = ""
+                        message_update_uer.close()
+                    }
+                }
             }
+
+
         }
     }
 
@@ -152,29 +212,38 @@ Rectangle {
                     }
                 }
                 Text {
+                    id: text_username
                     anchors {
-
                         left: rect_circle.right
                         leftMargin: item_de.height * 0.2
                         verticalCenter: item_de.verticalCenter
                     }
-                    text: model.btn_text
+                    text: model.user_name + ", "
+                    font.pixelSize: item_de.height * 0.8
+                    horizontalAlignment: Text.AlignLeft
+                    verticalAlignment: Text.AlignVCenter
+                }
+                Text {
+                    id: text_level
+                    objectName: model.level_obj_name
+                    anchors {
+                        left: text_username.right
+                        leftMargin: item_de.height * 0.2
+                        verticalCenter: item_de.verticalCenter
+                    }
+                    text: model.level
                     font.pixelSize: item_de.height * 0.8
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
                 }
                 onClicked: {
                     list_view_user.currentIndex = index
-
+                    root.checked_user_name = model.user_name
+                    root.checked_user_level = model.level_obj_name
                 }
             }
             model: ListModel {
-                ListElement {
-                    btn_text: "admin,admin"
-                }
-                ListElement {
-                    btn_text: "admisn,admisrn"
-                }
+                id: user_list_model
             }
         }
     }

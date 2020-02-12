@@ -21,7 +21,7 @@ ApplicationWindow {
             stack_view.push(main_page)
         }
         Component.onCompleted: {
-            user_manage.readAllUserAccountData()
+            user_manage.getAllUserAccountData()
         }
     }
 

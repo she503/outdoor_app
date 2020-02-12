@@ -2,7 +2,8 @@
 
 UserAccountManage::UserAccountManage(QObject *parent) : QObject(parent)
 {
-    _path = "./res/Others/user.tl";
+    _path = "/home/mmj/tonglu/tergeo/tergeo_app/res/Others/user.tl";
+    readAllUserAccountData();
 }
 
 bool UserAccountManage::addNewOrUpdateUserAccount(const QString &key, const QString &value, const QString& level)
@@ -47,4 +48,15 @@ bool UserAccountManage::readAllUserAccountData()
     emit emitALLUserAccount(_nomal_obj, _admin_obj);
 
     return true;
+}
+
+bool UserAccountManage::getAllUserAccountData()
+{
+    if (!_nomal_obj.empty() || !_admin_obj.empty()) {
+        emit emitALLUserAccount(_nomal_obj, _admin_obj);
+        return true;
+    } else {
+        qCritical() << "[UserAccountManage::getAllUserAccountData]: dont init obj!";
+        return false;
+    }
 }

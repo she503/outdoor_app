@@ -15,13 +15,14 @@ class UserAccountManage : public QObject
 public:
     explicit UserAccountManage(QObject *parent = nullptr);
 
-    bool addNewOrUpdateUserAccount(const QString& key, const QString& value, const QString &level);
+    Q_INVOKABLE bool addNewOrUpdateUserAccount(const QString& key, const QString& value, const QString &level);
 
-    Q_INVOKABLE bool readAllUserAccountData();
+    Q_INVOKABLE bool getAllUserAccountData();
 
 signals:
     void emitALLUserAccount(const QJsonObject& nomal, const QJsonObject& admin);
-
+private:
+    bool readAllUserAccountData();
 private:
     FileIO *_file;
     QString _path;

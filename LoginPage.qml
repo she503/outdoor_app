@@ -94,6 +94,7 @@ Item{
             placeholderText: qsTr("enter your username.")
             pic_name: "qrc:/res/pictures/username.png"
             btn_radius: height * 0.1
+            validator: RegExpValidator{regExp:/^.[A-Za-z0-9_]{0,11}$/}
         }
 
         TLTextField {
@@ -109,6 +110,7 @@ Item{
             placeholderText: qsTr("enter your password.")
             echoMode: TextInput.Password
             pic_name: "qrc:/res/pictures/password.png"
+            validator: RegExpValidator{regExp:/^.[A-Za-z0-9]{0,6}$/}
         }
 
         TLButton {

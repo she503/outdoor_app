@@ -124,7 +124,7 @@ Item{
                 horizontalCenter: parent.horizontalCenter
             }
             onClicked: {
-                if (rect_login.judgeLogin()) {
+                if (/*rect_login.judgeLogin()*/1) {
                     root.sendAccountInfo(root.user_level, root.user_name)
                 }
             }

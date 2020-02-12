@@ -1,4 +1,4 @@
-QT += qml quick
+QT += qml quick network widgets
 
 CONFIG += c++11
 
@@ -35,3 +35,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     user_account_manage.h \
     file_io.h
+TRANSLATIONS = translation_chinese.ts

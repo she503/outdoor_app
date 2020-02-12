@@ -1,11 +1,13 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>qtquickcontrols2.conf</file>
         <file>LoginPage.qml</file>
         <file>MainPage.qml</file>
         <file>HomePage.qml</file>
         <file>UserManagePage.qml</file>
+        <file>HelpDocumentPage.qml</file>
+        <file>AboutMachinePage.qml</file>
+        <file>TaskSettingsPage.qml</file>
     </qresource>
     <qresource prefix="/CustomControl">
         <file>TLTextField.qml</file>

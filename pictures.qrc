@@ -15,5 +15,10 @@
         <file>res/pictures/switch-auto.png</file>
         <file>res/pictures/switch-operate.png</file>
         <file>res/pictures/information.png</file>
+        <file>res/pictures/document.png</file>
+        <file>res/pictures/finish.png</file>
+        <file>res/pictures/warn.png</file>
+        <file>res/pictures/gps.png</file>
+        <file>res/pictures/finish_2.png</file>
     </qresource>
 </RCC>

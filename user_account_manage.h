@@ -13,11 +13,13 @@ class UserAccountManage : public QObject
 {
     Q_OBJECT
 public:
-    explicit UserAccountManage(QObject *parent = nullptr);
+    explicit UserAccountManage(QObject *parent = nullptr, const QString &path = "");
 
     Q_INVOKABLE bool addNewOrUpdateUserAccount(const QString& key, const QString& value, const QString &level);
 
     Q_INVOKABLE bool getAllUserAccountData();
+
+    Q_INVOKABLE bool deleteUserAccount(const QJsonObject &obj, const QString &level);
 
 signals:
     void emitALLUserAccount(const QJsonObject& nomal, const QJsonObject& admin);

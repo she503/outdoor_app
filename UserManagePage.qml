@@ -28,7 +28,6 @@ Rectangle {
                 user_list_model.append({"user_name": admin_key, "level": admin_level, "level_obj_name": "admin_user"})
             }
         }
-
     }
 
     Dialog {
@@ -38,9 +37,7 @@ Rectangle {
         x:(root.width - width) / 2
         y: (root.height - height) / 2
 
-
         title: qsTr("update user pwd")
-
 
         Column {
             width: parent.width
@@ -142,6 +139,12 @@ Rectangle {
             backgroundDefaultColor: list_view_user.currentIndex == -1 ? "gray" : "#3498DB"
             enabled: list_view_user.currentIndex == -1 ? false : true
 
+            onClicked: {
+                delete root.user_nomal[root.checked_user_name];
+                console.info(user_manage.deleteUserAccount(root.user_nomal, root.checked_user_level))
+                user_list_model.remove(list_view_user.currentIndex)
+                list_view_user.currentIndex = -1
+            }
         }
 
         TLButton {
@@ -344,10 +347,50 @@ Rectangle {
             }
         }
         TLButton {
+            id: btn_registered
             width: parent.width
             height: parent.height * 0.2
             anchors.top: radio_box.bottom
             btn_text: qsTr("OK")
+            Component.onCompleted: {
+
+            }
+
+            onClicked: {
+                if ((radio_btn_operator.checked || radio_btn_admin.checked)
+                        && btn_add_username.text.trim() !=  ""
+                        && btn_add_pwd.text.trim() != "") {
+                    var user_name = btn_add_username.text
+                    var user_pwd = btn_add_pwd.text
+                    var user_level = radio_btn_operator.checked ? "nomal_user" : "admin_user"
+
+                    for (var key_nomal in root.user_nomal) {
+                         if (key_nomal === user_name) {
+                             console.info("[registered faild]: existence user name!!!")
+                             return
+                         }
+                    }
+                    for (var key_admin in root.user_admin) {
+                        if (key_admin === user_name) {
+                            console.info("[registered faild]: existence user name!!!")
+                            return
+                        }
+                    }
+
+                    user_manage.addNewOrUpdateUserAccount(user_name, user_pwd, user_level)
+                    var add_admin_level = qsTr("add_admin_level")
+                    var add_user_level = qsTr("add_user_level")
+                    if (user_level === "nomal_user") {
+                        user_list_model.append({"user_name": user_name, "level": add_user_level, "level_obj_name": user_level})
+                    } else if (user_level === "admin_user") {
+                        user_list_model.append({"user_name": user_name, "level": add_admin_level, "level_obj_name": user_level})
+                    }
+
+                    console.info("registered success!!!")
+                } else {
+                    console.info("registered faild!!!")
+                }
+            }
         }
     }
 }

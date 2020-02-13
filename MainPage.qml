@@ -114,7 +114,7 @@ Rectangle {
                         obj_name: "user"
                         name: qsTr("user")
                         text_description: qsTr("userrrr")
-                        sourcee: "qrc:/res/pictures/user.png"
+                        sourcee: "qrc:/res/pictures/User.png"
                     }
                     ListElement {
                         obj_name: "setting"

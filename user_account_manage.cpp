@@ -1,8 +1,7 @@
 #include "user_account_manage.h"
 
-UserAccountManage::UserAccountManage(QObject *parent) : QObject(parent)
+UserAccountManage::UserAccountManage(QObject *parent, const QString& path) : QObject(parent), _path(path)
 {
-    _path = "/home/qc/tongji/app/tergeo_app/res/Others/user.tl";
     readAllUserAccountData();
 }
 
@@ -57,6 +56,21 @@ bool UserAccountManage::getAllUserAccountData()
         return true;
     } else {
         qCritical() << "[UserAccountManage::getAllUserAccountData]: dont init obj!";
+        return false;
+    }
+}
+
+bool UserAccountManage::deleteUserAccount(const QJsonObject& obj, const QString &level)
+{
+    if (level == "nomal_user") {
+        _all_obj.insert("nomal_user", obj);
+    } else if (level == "admin_user") {
+        _all_obj.insert("admin_user", obj);
+    }
+
+    if (_file->writeData(_all_obj)) {
+        return true;
+    } else {
         return false;
     }
 }

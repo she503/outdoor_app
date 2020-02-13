@@ -20,5 +20,6 @@
         <file>res/pictures/warn.png</file>
         <file>res/pictures/gps.png</file>
         <file>res/pictures/finish_2.png</file>
+        <file>res/pictures/User.png</file>
     </qresource>
 </RCC>

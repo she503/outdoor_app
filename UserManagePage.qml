@@ -28,7 +28,6 @@ Rectangle {
                 user_list_model.append({"user_name": admin_key, "level": admin_level, "level_obj_name": "admin_user"})
             }
         }
-
     }
 
     Dialog {
@@ -38,9 +37,7 @@ Rectangle {
         x:(root.width - width) / 2
         y: (root.height - height) / 2
 
-
         title: qsTr("update user pwd")
-
 
         Column {
             width: parent.width
@@ -142,6 +139,13 @@ Rectangle {
             backgroundDefaultColor: list_view_user.currentIndex == -1 ? "gray" : "#3498DB"
             enabled: list_view_user.currentIndex == -1 ? false : true
 
+            onClicked: {
+                delete root.user_nomal[root.checked_user_name];
+                console.info(user_manage.deleteUserAccount(root.user_nomal, root.checked_user_level))
+                user_list_model.remove(list_view_user.currentIndex)
+                list_view_user.currentIndex = -1
+
+            }
         }
 
         TLButton {

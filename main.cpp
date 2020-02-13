@@ -20,7 +20,8 @@ int main(int argc, char *argv[])
 //    app.installTranslator(&trans);
     QQmlApplicationEngine engine;
 
-    UserAccountManage* user_manage = new UserAccountManage(&engine);
+    QString user_file_path = "/home/mmj/tonglu/tergeo/tergeo_app/res/Others/user.tl";
+    UserAccountManage* user_manage = new UserAccountManage(&engine, user_file_path);
     engine.rootContext()->setContextProperty("user_manage", user_manage);
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())

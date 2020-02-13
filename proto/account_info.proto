@@ -1,0 +1,19 @@
+syntax = "proto2";
+
+package tergeo_app.account_info;
+
+enum PermissionLevel {
+    UNKNOWN = 0;
+    NORMER = 1;
+    ADMIN = 2;
+};
+
+message Account {
+    optional PermissionLevel lever = 1;
+    optional string name = 2;
+    optional string password = 3;
+}
+
+message AccountInfo {
+    repeated Account account = 1;
+}

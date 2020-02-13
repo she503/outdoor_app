@@ -4,7 +4,8 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     user_account_manage.cpp \
-    file_io.cpp
+    file_io.cpp \
+    proto/account_info.pb.cc
 
 RESOURCES += qml.qrc \
     pictures.qrc \
@@ -34,5 +35,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     user_account_manage.h \
-    file_io.h
+    file_io.h \
+    proto/account_info.pb.h
 TRANSLATIONS = translation_chinese.ts

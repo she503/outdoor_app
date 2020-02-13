@@ -123,18 +123,18 @@ Item{
                 topMargin: 10
                 horizontalCenter: parent.horizontalCenter
             }
-//            onClicked: {
-//                if (rect_login.judgeLogin()) {
-//                    root.sendAccountInfo(root.user_level, root.user_name)
-//                }
-//            }
             onClicked: {
-                if (socket_manager.connectToHost("192.168.0.104", "32432")) {
+                if (rect_login.judgeLogin()) {
                     root.sendAccountInfo(root.user_level, root.user_name)
-                } else {
-
                 }
             }
+//            onClicked: {
+//                if (socket_manager.connectToHost("192.168.0.106", "32432")) {
+//                    root.sendAccountInfo(root.user_level, root.user_name)
+//                } else {
+
+//                }
+//            }
         }
     }
 

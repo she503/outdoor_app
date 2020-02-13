@@ -2,7 +2,8 @@
 
 UserAccountManage::UserAccountManage(QObject *parent) : QObject(parent)
 {
-    _path = "/home/qc/tongji/app/tergeo_app/res/Others/user.tl";
+//    _path = "/home/qc/tongji/app/tergeo_app/res/Others/user.tl";
+    _path = ":/UserAccount/res/Others/user.tl";
     readAllUserAccountData();
 }
 

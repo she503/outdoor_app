@@ -1,5 +1,1 @@
-<RCC>
-    <qresource prefix="/UserAccount">
-        <file>res/Others/user.tl</file>
-    </qresource>
-</RCC>
+<RCC/>

@@ -6,7 +6,9 @@ Rectangle {
 
     Image {
         id: name
-        anchors.fill: parent
+        width: parent.width
+        height: parent.height
         source: "qrc:/res/pictures/document.png"
+        fillMode: Image.PreserveAspectFit
     }
 }

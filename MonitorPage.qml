@@ -138,6 +138,7 @@ Page {
                 font.pixelSize: 10 * rate
                 width: 75 * rate
                 height: 22 * rate
+                anchors.verticalCenter: parent.verticalCenter
                 background: Rectangle {
                     implicitWidth: 100
                     implicitHeight: 25

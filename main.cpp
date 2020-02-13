@@ -24,7 +24,6 @@ int main(int argc, char *argv[])
     SocketManager* socket_manager = new SocketManager(&engine);
     engine.rootContext()->setContextProperty("socket_manager", socket_manager);
 
-    UserAccountManage* user_manage = new UserAccountManage(&engine);
     QString user_file_path = "/home/mmj/tonglu/tergeo/tergeo_app/res/Others/user.tl";
     UserAccountManage* user_manage = new UserAccountManage(&engine, user_file_path);
     engine.rootContext()->setContextProperty("user_manage", user_manage);

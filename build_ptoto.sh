@@ -2,7 +2,6 @@
 
 set -ue
 CURRENT_PATH=$(cd `dirname $0`; pwd)
-PRE_PATH=${CURRENT_PATH}/..
 cd ${CURRENT_PATH}
 
 function gen_protobuf {
@@ -16,7 +15,7 @@ function gen_protobuf {
         rm ${pb_cc}  
     done
          
-    cd ${PRE_PATH}
+    cd ${CURRENT_PATH}
     protoc -I=${PWD} -I=${CURRENT_PATH}/${1} --cpp_out=${PWD} ${CURRENT_PATH}/${1}/*.proto
     cd ${CURRENT_PATH} 
 }

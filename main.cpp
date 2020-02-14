@@ -2,10 +2,13 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include "user_account_manage.h"
 #include <QObject>
 #include <QDebug>
 #include <QTranslator>
+
+//#include "user_account_manage.h"
+#include "account_manager.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -20,9 +23,15 @@ int main(int argc, char *argv[])
 //    app.installTranslator(&trans);
     QQmlApplicationEngine engine;
 
-    QString user_file_path = "/home/xuky/tergeo-v2.0/tergeo_app/res/Others/user.tl";
-    UserAccountManage* user_manage = new UserAccountManage(&engine, user_file_path);
-    engine.rootContext()->setContextProperty("user_manage", user_manage);
+//    QString user_file_path = "/home/xuky/tergeo-v2.0/tergeo_app/res/Others/user.tl";
+//    UserAccountManage* user_manage = new UserAccountManage(&engine, user_file_path);
+//    engine.rootContext()->setContextProperty("user_manage", user_manage);
+//    engine.load(QUrl(QLatin1String("qrc:/main.qml")));
+//    if (engine.rootObjects().isEmpty())
+//        return -1;
+
+    AccountManager* account_manager = new AccountManager(&engine);
+    engine.rootContext()->setContextProperty("account_manager", account_manager);
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;

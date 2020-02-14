@@ -11,11 +11,13 @@ Rectangle {
     property string checked_user_name: ""
     property string checked_user_level: ""
     Component.onCompleted: {
-        user_manage.getAllUserAccountData()
+        account_manager.getAllAcountInfo()
+//        user_manage.getAllUserAccountData()
     }
 
     Connections {
-        target: user_manage
+//        target: user_manage
+        target: account_manager
         onEmitALLUserAccount: {
             root.user_nomal = nomal
             root.user_admin = admin

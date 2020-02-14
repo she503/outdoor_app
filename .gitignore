@@ -3,4 +3,4 @@
 *.user
 *.pb.h
 *.pb.cc
-build/
+build/*

@@ -29,9 +29,9 @@ ApplicationWindow {
             stack_view.replace(main_page)
         }
     }
-    Component.onCompleted: {
-        user_manage.getAllUserAccountData()
-    }
+//    Component.onCompleted: {
+//        user_manage.getAllUserAccountData()
+//    }
 
     StackView {
         id: stack_view

@@ -6,23 +6,22 @@ import "CustomControl"
 Rectangle {
     id: root
 
-    property var user_nomal
-    property var user_admin
+    property var accounts_info
+
     property string checked_user_name: ""
     property string checked_user_level: ""
     Component.onCompleted: {
         account_manager.getAllAcountInfo()
-//        user_manage.getAllUserAccountData()
     }
 
     Connections {
-//        target: user_manage
         target: account_manager
-        onEmitALLUserAccount: {
-            root.user_nomal = nomal
-            root.user_admin = admin
-            var nomal_level = qsTr("nomal_level");
+        onEmitAllAccountInfo: {
+            root.accounts_info = accounts_info
+
+            var nomal_level = qsTr("nomal_level")
             var admin_level = qsTr("admin_level")
+
             for (var nomal_key in nomal) {
                 user_list_model.append({"user_name": nomal_key, "level": nomal_level, "level_obj_name": "nomal_user"})
             }

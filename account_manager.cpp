@@ -101,19 +101,15 @@ bool AccountManager::getAllAcountInfo() const
     if (_account_info_map.isEmpty()) {
         return false;
     }
-    QList<QString> user_names;
-    QList<QString> pass_words;
-    QList<int> levels;
+    QMap<QString, int> accounts_info;
 
     QMap<std::string, QPair<std::string, proto::PermissionLevel> >::const_iterator
             iter = _account_info_map.constBegin();
     while (iter != _account_info_map.constEnd()) {
-        user_names.push_back(iter.key());
-        pass_words.push_back(iter.value().first);
-        levels.push_back(int(iter.value().second));
+        accounts_info[iter.key()] = int(iter.value().second);
         ++iter;
     }
-    emit emitAllAccountInfo(user_names, pass_words, levels);
+    emit emitAllAccountInfo(accounts_info);
 }
 
 void AccountManager::protoToAccountMap()

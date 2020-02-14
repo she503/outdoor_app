@@ -55,9 +55,7 @@ public:
 
 
 signals:
-    void emitAllAccountInfo(const QList<QString>& user_names,
-                            const QList<QString>& pass_words,
-                            const QList<int>& levels);
+    void emitAllAccountInfo(const QMap<QString, int>& accounts_info);
 
 private:
     void protoToAccountMap();

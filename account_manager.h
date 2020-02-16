@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QMap>
 #include <QPair>
+#include <QJsonObject>
 #include <QList>
 #include "proto/account_info.pb.h"
 
@@ -55,8 +56,9 @@ public:
 
 
 signals:
-    void emitAllAccountInfo(const QMap<QString, int>& accounts_info);
+//    void emitAllAccountInfo(const QMap<QString, int>& accounts_info);
 
+    void emitAllAccountInfo(const QJsonObject& accounts_info);
 private:
     void protoToAccountMap();
     void accountMapToProto();
@@ -70,7 +72,7 @@ private:
 
 private:
     proto::AccountInfo _proto_account_info;
-    proto::PermissionLevel _current_account_level;
+    std::string _current_user_name;
 
     QMap<std::string, QPair<std::string, proto::PermissionLevel> > _account_info_map;
 };

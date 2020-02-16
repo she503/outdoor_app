@@ -8,7 +8,7 @@
 AccountManager::AccountManager(QObject *parent) : QObject(parent)
 {
     this->readFromProto();
-    _current_account_level = proto::PermissionLevel::UNKNOWN;
+    _current_user_name = "";
 }
 
 AccountManager::~AccountManager()
@@ -88,13 +88,18 @@ int AccountManager::checkLogin(const QString &user_name, const QString &pass_wor
     if (iter.value().first != pass_word_std) {
         return 1;
     }
-    _current_account_level = iter.value().second;
+    _current_user_name = user_name_std;
     return 2;
 }
 
 int AccountManager::getCurrentAccountLevel() const
 {
-    return int(_current_account_level);
+    QMap<std::string, QPair<std::string, proto::PermissionLevel> >::const_iterator
+            iter = _account_info_map.find(_current_user_name);
+    if (iter == _account_info_map.constEnd()) {
+        return int(proto::PermissionLevel::UNKNOWN);
+    }
+    return int(iter.value().second);
 }
 
 bool AccountManager::getAllAcountInfo() //const
@@ -102,21 +107,22 @@ bool AccountManager::getAllAcountInfo() //const
     if (_account_info_map.isEmpty()) {
         return false;
     }
-    QMap<QString, int> accounts_info;
-
+//    QMap<QString, int> accounts_info;
+    QJsonObject obj;
     QMap<std::string, QPair<std::string, proto::PermissionLevel> >::const_iterator
             iter = _account_info_map.constBegin();
     while (iter != _account_info_map.constEnd()) {
-        accounts_info[QString::fromStdString(iter.key())] = int(iter.value().second);
+//        accounts_info[QString::fromStdString(iter.key())] = int(iter.value().second);
+        obj.insert(QString::fromStdString(iter.key()), int(iter.value().second));
         ++iter;
     }
-    emit emitAllAccountInfo(accounts_info);
+    emit emitAllAccountInfo(obj);
+    return true;
 }
 
 void AccountManager::protoToAccountMap()
 {
     int account_size = _proto_account_info.account_size();
-//    qDebug() << account_size;
     for (int i = 0; i < account_size; ++i) {
         QPair<std::string, proto::PermissionLevel> account_info(
                     _proto_account_info.account(i).password(),
@@ -155,23 +161,24 @@ void AccountManager::readFromProto()
     if (!account_file.exists()) {
         proto::Account* account = _proto_account_info.add_account();
         account->set_level(proto::PermissionLevel::ADMIN);
-        account->set_user_name("admin");
-        account->set_password("password");
+        account->set_user_name("");
+        account->set_password("");
+        this->protoToAccountMap();
+        this->writeToProto();
         return;
     }
 
     std::fstream in_file(account_file_path.toStdString(), std::ios::in | std::ios::binary);
-    if (!in_file.good()) {
+    if (!in_file.good() || !_proto_account_info.ParseFromIstream(&in_file) ||
+                            _proto_account_info.account_size() == 0) {
         // ADD THE DEFAULT ACCOUNT INFO
         proto::Account* account = _proto_account_info.add_account();
         account->set_level(proto::PermissionLevel::ADMIN);
         account->set_user_name("admin");
         account->set_password("password");
-        writeToProto();
-        return;
     }
-    _proto_account_info.ParseFromIstream(&in_file);
     this->protoToAccountMap();
+    return;
 }
 
 void AccountManager::writeToProto()
@@ -198,7 +205,7 @@ bool AccountManager::isLegalPassWord(const std::string &pass_word)
 
 bool AccountManager::isLegalLevel(const int level)
 {
-    if (level >= 1 || level <= 2) {
+    if (level >= 1 && level <= 2) {
         return true;
     }
     return false;

@@ -13,8 +13,6 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-//    QGuiApplication app(argc, argv);
-
     QApplication app(argc, argv);
 //    QTranslator trans;
 //    if (!trans.load(":/language/translation_chinese.qm")) {

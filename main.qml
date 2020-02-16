@@ -15,9 +15,10 @@ ApplicationWindow {
         width: root.width
         height: root.height
         onSuccessToLogin: {
-            stack_view.replace(login_page)
+            stack_view.replace(main_page)
         }
     }
+
     onTurn_task_pageChanged: {
         if (turn_task_page) {
             stack_view.replace(task_settings_page)

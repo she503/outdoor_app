@@ -6,26 +6,31 @@ import "CustomControl"
 Rectangle {
     id: root
 
-    property var accounts_info
+    property var v_accounts_info
 
     property string checked_user_name: ""
-    property string checked_user_level: 0
+    property int checked_user_level: 0
+
+    Component.onCompleted: {
+        account_manager.getAllAcountInfo()
+    }
 
     Connections {
         target: account_manager
         onEmitAllAccountInfo: {
-            root.accounts_info = accounts_info
+            root.v_accounts_info = accounts_info
 
             var nomal_level = qsTr("nomal_level")
             var admin_level = qsTr("admin_level")
 
-            for (var key in accounts_info) {
+            for (var key in root.v_accounts_info) {
+                console.info(key)
                 if (accounts_info[key] === 0) {
                     console.info("error user level")
                 } else if (accounts_info[key] === 1) {
-                    user_list_model.append({"user_name": accounts_info.key, "level": nomal_level, "user_level": accounts_info[key]})
+                    user_list_model.append({"user_name": key, "level": nomal_level, "user_level": accounts_info[key]})
                 } else if (accounts_info[key] === 2) {
-                    user_list_model.append({"user_name": accounts_info.key, "level": admin_level, "user_level": accounts_info[key]})
+                    user_list_model.append({"user_name":    key, "level": admin_level, "user_level": accounts_info[key]})
                 }
             }
         }
@@ -71,18 +76,7 @@ Rectangle {
                     height: parent.height
                     text: qsTr("OK")
                     onClicked: {
-                        if (root.user_nomal[root.checked_user_name] === field_old_pwd.text) {
-                            if (user_manage.addNewOrUpdateUserAccount(root.checked_user_name, field_new_pwd.text, root.checked_user_level)) {
-                                root.user_nomal[root.checked_user_name] = field_new_pwd.text
-                            }
-
-                        } else if (root.user_admin[root.checked_user_name] === field_old_pwd.text){
-                            if (user_manage.addNewOrUpdateUserAccount(root.checked_user_name, field_new_pwd.text, root.checked_user_level)) {
-                                root.user_admin[root.checked_user_name] === field_new_pwd.text
-                            }
-                        } else {
-                    console.info("error old pwd")
-                }
+                        account_manager.updateUser(root.checked_user_name, field_new_pwd.text, root.checked_user_level)
                     }
                 }
                 Button {
@@ -99,8 +93,6 @@ Rectangle {
                     }
                 }
             }
-
-
         }
     }
 

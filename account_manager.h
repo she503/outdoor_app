@@ -70,7 +70,7 @@ private:
 
 private:
     proto::AccountInfo _proto_account_info;
-    proto::PermissionLevel _current_account_level;
+    std::string _current_user_name;
 
     QMap<std::string, QPair<std::string, proto::PermissionLevel> > _account_info_map;
 };

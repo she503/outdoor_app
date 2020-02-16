@@ -8,18 +8,14 @@ ApplicationWindow {
     width: 640
     height: 480
 
-    property var v_user_level: ""
-    property var v_user_name: ""
     property bool turn_task_page: false
     property Component task_settings_page: TaskSettingsPage { }
     property Component main_page: MainPage { }
     property Component login_page: LoginPage {
         width: root.width
         height: root.height
-        onSendAccountInfo: {
-            root.v_user_level = user_level
-            root.v_user_name = user_name
-            stack_view.replace(main_page)
+        onSuccessToLogin: {
+            stack_view.replace(login_page)
         }
     }
     onTurn_task_pageChanged: {
@@ -28,9 +24,6 @@ ApplicationWindow {
         } else {
             stack_view.replace(main_page)
         }
-    }
-    Component.onCompleted: {
-        user_manage.getAllUserAccountData()
     }
 
     StackView {

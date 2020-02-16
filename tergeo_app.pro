@@ -2,13 +2,15 @@ QT += qml quick network widgets
 
 CONFIG += c++11
 
+LIBS += -lprotobuf
+
 SOURCES += main.cpp \
-    user_account_manage.cpp \
-    file_io.cpp
+    file_io.cpp \
+    proto/account_info.pb.cc \
+    account_manager.cpp
 
 RESOURCES += qml.qrc \
-    pictures.qrc \
-    others.qrc
+    pictures.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -33,6 +35,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    user_account_manage.h \
-    file_io.h
+    file_io.h \
+    proto/account_info.pb.h \
+    account_manager.h
+
 TRANSLATIONS = translation_chinese.ts

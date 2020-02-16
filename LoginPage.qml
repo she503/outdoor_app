@@ -4,13 +4,11 @@ import "CustomControl"
 Item{
     id: root
 
-    property var user_nomal
-    property var user_admin
     property real rate: Math.min(width, height) / 400
     property var user_level: ""
     property var user_name: ""
-    signal sendAccountInfo(var user_level, var user_name)
 
+    signal successToLogin()
     //    Image {
     //        id: img_background
     //        source: "qrc:/res/pictures/login_background.jpg"
@@ -44,46 +42,6 @@ Item{
             topMargin: parent.height * 0.01
         }
 
-        Connections {
-            target: user_manage
-            onEmitALLUserAccount: {
-                root.user_nomal = nomal
-                root.user_admin = admin
-
-//                for(var key in nomal)
-            }
-        }
-
-        function judgeLogin() {
-            var normal_user = root.user_nomal
-
-            var admin = root.user_admin
-
-            var user = username.text
-            var pwd = password.text
-
-            for (var key in normal_user) {
-                if (key === user && pwd === normal_user[key]) {
-                    root.user_level = "normal"
-                    root.user_name = key
-                    return true
-                } else {
-                    continue
-                }
-            }
-
-            for (var key in admin) {
-                if (key === user && pwd === admin[key]) {
-                    root.user_level = "admin"
-                    root.user_name = key
-                    return true
-                } else {
-                    continue
-                }
-            }
-            message_login_faild.open()
-            return false
-        }
         TLTextField {
             id: username
             width: rect_login.width * 0.4
@@ -110,7 +68,7 @@ Item{
             placeholderText: qsTr("enter your password.")
             echoMode: TextInput.Password
             pic_name: "qrc:/res/pictures/password.png"
-            validator: RegExpValidator{regExp:/^.[A-Za-z0-9]{0,6}$/}
+            validator: RegExpValidator{regExp:/^.[A-Za-z0-9]{0,16}$/}
         }
 
         TLButton {
@@ -124,8 +82,15 @@ Item{
                 horizontalCenter: parent.horizontalCenter
             }
             onClicked: {
-                if (rect_login.judgeLogin()) {
-                    root.sendAccountInfo(root.user_level, root.user_name)
+                var emun_login_status = account_manager.checkLogin(username.text, password.text)
+                if ( emun_login_status === 0) {
+                    console.info("user name bucunzai")
+                } else if (emun_login_status === 1) {
+                    console.info("error pwd")
+                } else if (emun_login_status === 2) {
+                    console.info("login success")
+                    root.user_level = account_manager.getCurrentAccountLevel()
+                    root.successToLogin()
                 }
             }
         }

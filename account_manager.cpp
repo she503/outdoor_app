@@ -78,18 +78,18 @@ int AccountManager::deleteUser(const QString &user_name)
 
 int AccountManager::checkLogin(const QString &user_name, const QString &pass_word)
 {
-//    std::string user_name_std = user_name.toStdString();
-//    std::string pass_word_std = pass_word.toStdString();
-//    if (!_account_info_map.contains(user_name_std)) {
-//        return 0;
-//    }
-//    QMap<std::string, QPair<std::string, proto::PermissionLevel> >::const_iterator
-//            iter = _account_info_map.find(user_name_std);
-//    if (iter.value().first != pass_word_std) {
-//        return 1;
-//    }
-//    _current_account_level = iter.value().second;
-//    return 2;
+    std::string user_name_std = user_name.toStdString();
+    std::string pass_word_std = pass_word.toStdString();
+    if (!_account_info_map.contains(user_name_std)) {
+        return 0;
+    }
+    QMap<std::string, QPair<std::string, proto::PermissionLevel> >::const_iterator
+            iter = _account_info_map.find(user_name_std);
+    if (iter.value().first != pass_word_std) {
+        return 1;
+    }
+    _current_account_level = iter.value().second;
+    return 2;
 }
 
 int AccountManager::getCurrentAccountLevel() const
@@ -167,6 +167,7 @@ void AccountManager::readFromProto()
         account->set_level(proto::PermissionLevel::ADMIN);
         account->set_user_name("admin");
         account->set_password("password");
+        writeToProto();
         return;
     }
     _proto_account_info.ParseFromIstream(&in_file);

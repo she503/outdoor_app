@@ -9,7 +9,7 @@ Rectangle {
     property var accounts_info
 
     property string checked_user_name: ""
-    property string checked_user_level: ""
+    property string checked_user_level: 0
 
     Connections {
         target: account_manager
@@ -19,11 +19,14 @@ Rectangle {
             var nomal_level = qsTr("nomal_level")
             var admin_level = qsTr("admin_level")
 
-            for (var nomal_key in nomal) {
-                user_list_model.append({"user_name": nomal_key, "level": nomal_level, "level_obj_name": "nomal_user"})
-            }
-            for (var admin_key in admin) {
-                user_list_model.append({"user_name": admin_key, "level": admin_level, "level_obj_name": "admin_user"})
+            for (var key in accounts_info) {
+                if (accounts_info[key] === 0) {
+                    console.info("error user level")
+                } else if (accounts_info[key] === 1) {
+                    user_list_model.append({"user_name": accounts_info.key, "level": nomal_level, "user_level": accounts_info[key]})
+                } else if (accounts_info[key] === 2) {
+                    user_list_model.append({"user_name": accounts_info.key, "level": admin_level, "user_level": accounts_info[key]})
+                }
             }
         }
     }
@@ -226,7 +229,6 @@ Rectangle {
                 }
                 Text {
                     id: text_level
-                    objectName: model.level_obj_name
                     anchors {
                         left: text_username.right
                         leftMargin: item_de.height * 0.2
@@ -236,11 +238,12 @@ Rectangle {
                     font.pixelSize: item_de.height * 0.8
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
+                    property int user_level: model.user_level
                 }
                 onClicked: {
                     list_view_user.currentIndex = index
                     root.checked_user_name = model.user_name
-                    root.checked_user_level = model.level_obj_name
+                    root.checked_user_level = text_level.user_level
                 }
             }
             model: ListModel {

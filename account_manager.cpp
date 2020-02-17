@@ -161,8 +161,8 @@ void AccountManager::readFromProto()
     if (!account_file.exists()) {
         proto::Account* account = _proto_account_info.add_account();
         account->set_level(proto::PermissionLevel::ADMIN);
-        account->set_user_name("");
-        account->set_password("");
+        account->set_user_name("admin");
+        account->set_password("password");
         this->protoToAccountMap();
         this->writeToProto();
         return;

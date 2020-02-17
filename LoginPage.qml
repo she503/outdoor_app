@@ -84,11 +84,14 @@ Item{
             onClicked: {
                 var emun_login_status = account_manager.checkLogin(username.text, password.text)
                 if ( emun_login_status === 0) {
-                    console.info("user name bucunzai")
+                    message_login_faild.title = qsTr("error")
+                    login_label.text = qsTr("user name is not exit")
+                    message_login_faild.open()
                 } else if (emun_login_status === 1) {
-                    console.info("error pwd")
+                    message_login_faild.title = qsTr("error")
+                    login_label.text = qsTr("error password")
+                    message_login_faild.open()
                 } else if (emun_login_status === 2) {
-                    console.info("login success")
                     root.user_level = account_manager.getCurrentAccountLevel()
                     root.successToLogin()
                 }
@@ -105,7 +108,8 @@ Item{
 
         title: qsTr("faild!")
 
-        contentItem: Label {
+        contentItem: TextArea {
+            id: login_label
             text: qsTr("Please checkout username and password...")
         }
         standardButtons: Dialog.Yes

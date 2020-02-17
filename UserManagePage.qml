@@ -24,13 +24,12 @@ Rectangle {
             var admin_level = qsTr("admin_level")
 
             for (var key in root.v_accounts_info) {
-                console.info(key)
                 if (accounts_info[key] === 0) {
                     console.info("error user level")
                 } else if (accounts_info[key] === 1) {
                     user_list_model.append({"user_name": key, "level": nomal_level, "user_level": accounts_info[key]})
                 } else if (accounts_info[key] === 2) {
-                    user_list_model.append({"user_name":    key, "level": admin_level, "user_level": accounts_info[key]})
+                    user_list_model.append({"user_name": key, "level": admin_level, "user_level": accounts_info[key]})
                 }
             }
         }
@@ -77,9 +76,16 @@ Rectangle {
                     text: qsTr("OK")
                     onClicked: {
                         if (field_old_pwd.text === "" || field_new_pwd.text === "") {
-
+                            message_account.title = qsTr("password formart error")
+                            message_account.message_level = 0
+                            message_text.text = qsTr("password cannot be empty!!!")
+                            message_account.open()
                         } else {
                             account_manager.updateUser(root.checked_user_name, field_new_pwd.text, root.checked_user_level)
+                            message_account.title = qsTr("Success")
+                            message_account.message_level = 1
+                            message_text.text = qsTr("password had be changed!!!")
+                            message_account.open()
                         }
                     }
                 }
@@ -98,6 +104,65 @@ Rectangle {
                 }
             }
         }
+    }
+
+    Dialog {
+        id: message_account
+        width: root.width * 0.7
+        height: root.height * 0.5
+        x:(root.width - width) / 2
+        y: (root.height - height) / 2
+        title: qsTr("")
+        /*
+          @param
+                0: error
+                1: success
+                2: infomation
+          */
+        property int message_level: 0
+        onMessage_levelChanged: {
+            if (message_account.message_level === 0) {
+               back_color.color = "#DB7093"
+            } else if (message_account.message_level === 1) {
+                back_color.color = "#00FA9A"
+            }
+        }
+
+        background: Rectangle {
+            id: back_color
+            anchors.fill: parent
+            color: {
+                if (message_account.message_level === 0) {
+                    color = "#DB7093"
+                } else if (message_account.message_level === 1) {
+                    color = "#00FA9A"
+                }
+            }
+        }
+
+        TextArea {
+            id: message_text
+            width: parent.contentWidth * 0.8
+            height: parent.contentHeight * 0.8
+            text: ""
+        }
+
+        Button {
+            id: btn_ok
+            width: parent.contentWidth * 0.8
+            height: parent.contentHeight * 0.2
+            anchors{
+                right: parent.right
+                bottom: parent.bottom
+            }
+            text: "OK"
+            onClicked: {
+                message_account.close()
+                message_text.text = ""
+                message_account.title = ""
+            }
+        }
+
     }
 
     Rectangle {
@@ -137,9 +202,20 @@ Rectangle {
             enabled: list_view_user.currentIndex == -1 ? false : true
 
             onClicked: {
-                account_manager.deleteUser(root.checked_user_name)
-                user_list_model.remove(list_view_user.currentIndex)
-                list_view_user.currentIndex = -1
+                if (list_view_user.count === 1) {
+                    message_account.title = qsTr("error")
+                    message_account.message_level = 0
+                    message_text.text = qsTr("This one user is last user, you forbidden to delete it!")
+                    message_account.open()
+                } else {
+                    account_manager.deleteUser(root.checked_user_name)
+                    user_list_model.remove(list_view_user.currentIndex)
+                    list_view_user.currentIndex = -1
+                    message_account.title = qsTr("Success")
+                    message_account.message_level = 1
+                    message_text.text = "( " + root.checked_user_name + qsTr(" )user was deleted !")
+                    message_account.open()
+                }
             }
         }
 
@@ -351,6 +427,10 @@ Rectangle {
             onClicked: {
                 if (btn_add_pwd.text === "" || btn_add_username.text === "" ||
                         (!radio_btn_admin.checked && !radio_btn_operator.checked)) {
+                    message_account.title = qsTr("empty error")
+                    message_account.message_level = 0
+                    message_text.text = qsTr("some information is empty!!!")
+                    message_account.open()
                     return
                 } else {
                     var level = radio_btn_admin.checked ? 2 : 1
@@ -362,6 +442,10 @@ Rectangle {
                             leve_name = qsTr("admin_user")
                         }
                        user_list_model.append({"user_name": btn_add_username.text, "level": leve_name, "user_level": level})
+                        message_account.title = qsTr("Success")
+                        message_account.message_level = 1
+                        message_text.text = qsTr("a new user was added")
+                        message_account.open()
                     }
                 }
             }

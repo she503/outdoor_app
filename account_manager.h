@@ -6,7 +6,6 @@
 #include <QPair>
 #include <QJsonObject>
 #include <QList>
-#include "proto/account_info.pb.h"
 
 class AccountManager : public QObject
 {
@@ -14,6 +13,12 @@ class AccountManager : public QObject
 public:
     explicit AccountManager(QObject* parent = nullptr);
     ~AccountManager();
+
+    enum PermissionLevel {
+        UNKNOWN = 0,
+        NORMAL = 1,
+        ADMIN = 2
+    };
 
     /**
      * @brief 添加用户
@@ -56,25 +61,20 @@ public:
 
 
 signals:
-//    void emitAllAccountInfo(const QMap<QString, int>& accounts_info);
-
     void emitAllAccountInfo(const QJsonObject& accounts_info);
+
 private:
-    void protoToAccountMap();
-    void accountMapToProto();
+    void readAccountsInfo();
+    void writeAccountsInfo();
+    bool readAccountsFromFile(const QString& file);
 
-    void readFromProto();
-    void writeToProto();
-
-    bool isLegalUserName(const std::string& user_name);
-    bool isLegalPassWord(const std::string& pass_word);
+    bool isLegalUserName(const QString& user_name);
+    bool isLegalPassWord(const QString& pass_word);
     bool isLegalLevel(const int level);
 
 private:
-    proto::AccountInfo _proto_account_info;
-    std::string _current_user_name;
-
-    QMap<std::string, QPair<std::string, proto::PermissionLevel> > _account_info_map;
+    QString _current_user_name;
+    QMap<QString, QPair<QString, PermissionLevel> > _account_info_map;
 };
 
 #endif // ACCOUNT_MANAGER_H

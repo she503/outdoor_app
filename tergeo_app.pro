@@ -6,7 +6,6 @@ LIBS += -lprotobuf
 
 SOURCES += main.cpp \
     file_io.cpp \
-    proto/account_info.pb.cc \
     account_manager.cpp \
     socket_manager.cpp
 
@@ -37,7 +36,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     file_io.h \
-    proto/account_info.pb.h \
     account_manager.h \
     socket_manager.h
 

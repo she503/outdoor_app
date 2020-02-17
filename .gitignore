@@ -1,6 +1,4 @@
 *.stash
 *.autosave
 *.user
-*.pb.h
-*.pb.cc
 build/*

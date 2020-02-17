@@ -6,7 +6,6 @@ LIBS += -lprotobuf
 
 SOURCES += main.cpp \
     file_io.cpp \
-    proto/account_info.pb.cc \
     account_manager.cpp \
     socket_manager.cpp
 
@@ -37,8 +36,18 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     file_io.h \
-    proto/account_info.pb.h \
     account_manager.h \
     socket_manager.h
 
 TRANSLATIONS = translation_chinese.ts
+
+DISTFILES += \
+    android/AndroidManifest.xml \
+    android/gradle/wrapper/gradle-wrapper.jar \
+    android/gradlew \
+    android/res/values/libs.xml \
+    android/build.gradle \
+    android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradlew.bat
+
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android

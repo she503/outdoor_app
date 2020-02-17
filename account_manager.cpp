@@ -1,103 +1,93 @@
 #include "account_manager.h"
 
 #include <QCoreApplication>
-#include <fstream>
 #include <QDir>
-#include <QDebug>
+#include <QFile>
+#include <QDataStream>
 
 AccountManager::AccountManager(QObject *parent) : QObject(parent)
 {
-    this->readFromProto();
+    this->readAccountsInfo();
     _current_user_name = "";
 }
 
 AccountManager::~AccountManager()
 {
-    this->writeToProto();
+    this->writeAccountsInfo();
 }
 
 int AccountManager::addUser(const QString &user_name, const QString &pass_word, const int level)
 {
-    std::string user_name_std = user_name.toStdString();
-    std::string pass_word_std = pass_word.toStdString();
-
-    if (_account_info_map.contains(user_name_std)) {
+    if (_account_info_map.contains(user_name)) {
         return 0;
     }
-    if (!this->isLegalUserName(user_name_std)) {
+    if (!this->isLegalUserName(user_name)) {
         return 2;
     }
-    if (!this->isLegalPassWord(pass_word_std)) {
+    if (!this->isLegalPassWord(pass_word)) {
         return 3;
     }
     if (!this->isLegalLevel(level)) {
         return 4;
     }
 
-    QPair<std::string, proto::PermissionLevel> account_info(
-                pass_word_std,proto::PermissionLevel(level));
-    _account_info_map[user_name_std] = account_info;
+    QPair<QString, PermissionLevel> account_info(
+                pass_word,PermissionLevel(level));
+    _account_info_map[user_name] = account_info;
     return 1;
 }
 
 int AccountManager::updateUser(const QString &user_name, const QString &pass_word, const int level)
 {
-    std::string user_name_std = user_name.toStdString();
-    std::string pass_word_std = pass_word.toStdString();
-
-    if (!_account_info_map.contains(user_name_std)) {
+    if (!_account_info_map.contains(user_name)) {
         return 0;
     }
-    if (!this->isLegalPassWord(pass_word_std)) {
+    if (!this->isLegalPassWord(pass_word)) {
         return 2;
     }
     if (!this->isLegalLevel(level)) {
         return 3;
     }
 
-    QPair<std::string, proto::PermissionLevel> account_info(
-                pass_word_std,proto::PermissionLevel(level));
-    _account_info_map[user_name_std] = account_info;
+    QPair<QString, PermissionLevel> account_info(
+                pass_word,PermissionLevel(level));
+    _account_info_map[user_name] = account_info;
 
     return 1;
 }
 
 int AccountManager::deleteUser(const QString &user_name)
 {
-    std::string user_name_std = user_name.toStdString();
-
-    if (!_account_info_map.contains(user_name_std)) {
+    if (!_account_info_map.contains(user_name)) {
         return 0;
     }
 
-    QMap<std::string, QPair<std::string, proto::PermissionLevel> >::iterator iter =
-            _account_info_map.find(user_name_std);
+    QMap<QString, QPair<QString, PermissionLevel> >::iterator iter =
+            _account_info_map.find(user_name);
     _account_info_map.erase(iter);
     return 1;
 }
 
 int AccountManager::checkLogin(const QString &user_name, const QString &pass_word)
 {
-    std::string user_name_std = user_name.toStdString();
-    std::string pass_word_std = pass_word.toStdString();
-    if (!_account_info_map.contains(user_name_std)) {
+    if (!_account_info_map.contains(user_name)) {
         return 0;
     }
-    QMap<std::string, QPair<std::string, proto::PermissionLevel> >::const_iterator
-            iter = _account_info_map.find(user_name_std);
-    if (iter.value().first != pass_word_std) {
+    QMap<QString, QPair<QString, PermissionLevel> >::const_iterator
+            iter = _account_info_map.find(user_name);
+    if (iter.value().first != pass_word) {
         return 1;
     }
-    _current_user_name = user_name_std;
+    _current_user_name = user_name;
     return 2;
 }
 
 int AccountManager::getCurrentAccountLevel() const
 {
-    QMap<std::string, QPair<std::string, proto::PermissionLevel> >::const_iterator
+    QMap<QString, QPair<QString, PermissionLevel> >::const_iterator
             iter = _account_info_map.find(_current_user_name);
     if (iter == _account_info_map.constEnd()) {
-        return int(proto::PermissionLevel::UNKNOWN);
+        return int(PermissionLevel::UNKNOWN);
     }
     return int(iter.value().second);
 }
@@ -107,101 +97,94 @@ bool AccountManager::getAllAcountInfo() //const
     if (_account_info_map.isEmpty()) {
         return false;
     }
-//    QMap<QString, int> accounts_info;
     QJsonObject obj;
-    QMap<std::string, QPair<std::string, proto::PermissionLevel> >::const_iterator
+    QMap<QString, QPair<QString, PermissionLevel> >::const_iterator
             iter = _account_info_map.constBegin();
     while (iter != _account_info_map.constEnd()) {
-//        accounts_info[QString::fromStdString(iter.key())] = int(iter.value().second);
-        obj.insert(QString::fromStdString(iter.key()), int(iter.value().second));
+        obj.insert(iter.key(), int(iter.value().second));
         ++iter;
     }
     emit emitAllAccountInfo(obj);
     return true;
 }
 
-void AccountManager::protoToAccountMap()
+void AccountManager::readAccountsInfo()
 {
-    int account_size = _proto_account_info.account_size();
-    for (int i = 0; i < account_size; ++i) {
-        QPair<std::string, proto::PermissionLevel> account_info(
-                    _proto_account_info.account(i).password(),
-                    _proto_account_info.account(i).level());
-        _account_info_map[_proto_account_info.account(i).user_name()] = account_info;
-    }
-}
-
-void AccountManager::accountMapToProto()
-{
-    _proto_account_info.clear_account();
-
-    QMap<std::string, QPair<std::string, proto::PermissionLevel> >::const_iterator
-            iter = _account_info_map.constBegin();
-    while (iter != _account_info_map.constEnd()) {
-        proto::Account* account = _proto_account_info.add_account();
-        account->set_user_name(iter.key());
-        account->set_password(iter.value().first);
-        account->set_level(iter.value().second);
-        ++iter;
-    }
-}
-
-void AccountManager::readFromProto()
-{
-    _proto_account_info.clear_account();
-#if defined(Q_OS_ANDROID)
-    qDebug() << "android";
-#else
-    qDebug() << "windows or linux";
     QString current_path = QCoreApplication::applicationDirPath();
-    QString account_file_dir = current_path + "/res/Account";
-#endif
+    QString account_file_dir = current_path + "/res";
     QDir account_dir(account_file_dir);
     if (!account_dir.exists()) {
         account_dir.mkpath(account_file_dir);
     }
-    QString account_file_path = current_path + "/res/Account/accounts.tl";
-    QFile account_file(account_file_path);
-    if (!account_file.exists()) {
-        proto::Account* account = _proto_account_info.add_account();
-        account->set_level(proto::PermissionLevel::ADMIN);
-        account->set_user_name("admin");
-        account->set_password("password");
-        this->protoToAccountMap();
-        this->writeToProto();
+    QString account_file_path = current_path + "/res/accounts.tl";
+    if (!this->readAccountsFromFile(account_file_path)) {
+        QPair<QString, PermissionLevel> account_info("password", PermissionLevel::ADMIN);
+        _account_info_map["admin"] = account_info;
+    }
+}
+
+void AccountManager::writeAccountsInfo()
+{
+    QString current_path = QCoreApplication::applicationDirPath();
+    QString account_file_dir = current_path + "/res";
+    QDir account_dir(account_file_dir);
+    if (!account_dir.exists()) {
+        account_dir.mkpath(account_file_dir);
+    }
+    QString account_file_path = current_path + "/res/accounts.tl";
+    QFile out_file(account_file_path);
+    if (!out_file.open(QIODevice::WriteOnly)) {
         return;
     }
-
-    std::fstream in_file(account_file_path.toStdString(), std::ios::in | std::ios::binary);
-    if (!in_file.good() || !_proto_account_info.ParseFromIstream(&in_file) ||
-                            _proto_account_info.account_size() == 0) {
-        // ADD THE DEFAULT ACCOUNT INFO
-        proto::Account* account = _proto_account_info.add_account();
-        account->set_level(proto::PermissionLevel::ADMIN);
-        account->set_user_name("admin");
-        account->set_password("password");
+    QDataStream out_stream(&out_file);
+    out_stream << _account_info_map.size();
+    QMap<QString, QPair<QString, PermissionLevel> >::const_iterator
+            iter = _account_info_map.constBegin();
+    while (iter != _account_info_map.constEnd()) {
+        out_stream << iter.key() << iter.value().first << int(iter.value().second);
+        ++iter;
     }
-    this->protoToAccountMap();
-    return;
 }
 
-void AccountManager::writeToProto()
+bool AccountManager::readAccountsFromFile(const QString &file)
 {
-    this->accountMapToProto();
-    QString current_path = QCoreApplication::applicationDirPath();
-    QString account_file_path = current_path + "/res/Account/accounts.tl";
-    std::fstream out_file(account_file_path.toStdString(),
-            std::ios::out | std::ios::trunc | std::ios::binary);
-    _proto_account_info.SerializeToOstream(&out_file);
+    QFile account_file(file);
+    if (!account_file.exists()) {
+        return false;
+    }
+
+    if (!account_file.open(QIODevice::ReadOnly)) {
+        return false;
+    }
+
+    QDataStream in_file(&account_file);
+    int account_num = 0;
+    in_file >> account_num;
+
+    if (account_num <= 0) {
+        return false;
+    }
+    for (int i = 0; i < account_num; ++i) {
+        QString user_name = "";
+        QString pass_word = "";
+        int level = 0;
+        in_file >> user_name >> pass_word >> level;
+        if (level < 0 || level > 2) {
+            level = 0;
+        }
+        QPair<QString, PermissionLevel> account_info(pass_word, PermissionLevel(level));
+        _account_info_map[user_name] = account_info;
+    }
+    return true;
 }
 
-bool AccountManager::isLegalUserName(const std::string &user_name)
+bool AccountManager::isLegalUserName(const QString &user_name)
 {
     // TODO: 判断用户名是否符合要求
     return true;
 }
 
-bool AccountManager::isLegalPassWord(const std::string &pass_word)
+bool AccountManager::isLegalPassWord(const QString &pass_word)
 {
     // TODO: 判断密码是否符合要求
     return true;
@@ -214,3 +197,5 @@ bool AccountManager::isLegalLevel(const int level)
     }
     return false;
 }
+
+

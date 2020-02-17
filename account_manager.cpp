@@ -149,9 +149,13 @@ void AccountManager::accountMapToProto()
 void AccountManager::readFromProto()
 {
     _proto_account_info.clear_account();
-
+#if defined(Q_OS_ANDROID)
+    qDebug() << "android";
+#else
+    qDebug() << "windows or linux";
     QString current_path = QCoreApplication::applicationDirPath();
     QString account_file_dir = current_path + "/res/Account";
+#endif
     QDir account_dir(account_file_dir);
     if (!account_dir.exists()) {
         account_dir.mkpath(account_file_dir);

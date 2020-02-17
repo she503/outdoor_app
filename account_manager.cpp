@@ -5,7 +5,6 @@
 #include <QFile>
 #include <QDataStream>
 
-
 AccountManager::AccountManager(QObject *parent) : QObject(parent)
 {
     this->readAccountsInfo();

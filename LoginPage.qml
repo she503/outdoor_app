@@ -96,6 +96,13 @@ Item{
                     root.successToLogin()
                 }
             }
+//            onClicked: {
+//                if (socket_manager.connectToHost("192.168.0.106", "32432")) {
+//                    root.sendAccountInfo(root.user_level, root.user_name)
+//                } else {
+
+//                }
+//            }
         }
     }
 

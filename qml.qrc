@@ -8,11 +8,14 @@
         <file>HelpDocumentPage.qml</file>
         <file>AboutMachinePage.qml</file>
         <file>TaskSettingsPage.qml</file>
+        <file>VehicleItem.qml</file>
+        <file>MonitorPage.qml</file>
     </qresource>
     <qresource prefix="/CustomControl">
         <file>TLTextField.qml</file>
         <file>TLButton.qml</file>
         <file>TLInfoDisplay.qml</file>
         <file>TLRadioButton.qml</file>
+        <file>TLInfoDisplayPage.qml</file>
     </qresource>
 </RCC>

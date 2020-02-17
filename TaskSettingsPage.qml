@@ -22,254 +22,108 @@ Rectangle {
         anchors.fill: parent
         orientation: Qt.Horizontal
         Rectangle {
-            id: rec_turn_view
-            z: 1
-            visible: false
+            id: rec_left
+            color: "transparent"
             width: parent.width * 0.25
             height: parent.height
-            color: "transparent"
-
             Rectangle {
-                id: rect_info_display
-                width: parent.width
-                height: parent.height * 0.3
-
-                property real cellWidth: width / 3
-                property real cellHeight: height / 2
-                property real min_length: Math.min(cellHeight, cellWidth)
-                property real btn_size: min_length * 0.8
-
-                //battery
-                Rectangle {
-                    id: rect_battery_info
-                    width: rect_info_display.cellWidth
-                    height: rect_info_display.cellHeight
-                    color: "transparent"
-                    anchors {
-                        top: parent.top
-                        topMargin: height * 0.05
-                        left: parent.left
-                    }
-                    TLInfoDisplay {
-                        id: info_battery
-                        x: (rect_battery_info.width - rect_info_display.min_length) / 2
-                        y: (rect_battery_info.height - rect_info_display.min_length) / 2
-                        width: rect_info_display.btn_size
-                        height: rect_info_display.btn_size
-
-                        isImage: true
-                        model_name_text: qsTr("Battery Soc")
-                        img_source: "qrc:/res/pictures/battery.png"
-                    }
-                }
-
-                //water
-                Rectangle {
-                    id: rect_water_info
-                    width: rect_info_display.cellWidth
-                    height: rect_info_display.cellHeight
-                    color: "transparent"
-                    anchors {
-                        top: parent.top
-                        topMargin: height * 0.05
-                        left: rect_battery_info.right
-                    }
-                    TLInfoDisplay {
-                        id: info_water
-                        x: (rect_battery_info.width - rect_info_display.min_length) / 2
-                        y: (rect_battery_info.height - rect_info_display.min_length) / 2
-                        width: rect_info_display.btn_size
-                        height: rect_info_display.btn_size
-
-                        isImage: false
-                        model_name_text: qsTr("Water")
-
-                        info_text: "85%"
-                        info_text_color: "green"
-                    }
-                }
-
-                //operate
-                Rectangle {
-                    id: rect_operate_info
-                    width: rect_info_display.cellWidth
-                    height: rect_info_display.cellHeight
-                    color: "transparent"
-                    anchors {
-                        top: parent.top
-                        topMargin: height * 0.05
-                        left: rect_water_info.right
-                    }
-                    TLInfoDisplay {
-                        id: info_operate
-                        x: (rect_battery_info.width - rect_info_display.min_length) / 2
-                        y: (rect_battery_info.height - rect_info_display.min_length) / 2
-                        width: rect_info_display.btn_size
-                        height: rect_info_display.btn_size
-
-                        isImage: true
-                        model_name_text: qsTr("operate --- auto")
-                        img_source: "qrc:/res/pictures/switch-operate.png"
-                    }
-                }
-
-                //gear
-                Rectangle {
-                    id: rect_gear_info
-                    width: rect_info_display.cellWidth
-                    height: rect_info_display.cellHeight
-                    color: "transparent"
-                    anchors {
-                        bottom: parent.bottom
-                        left: parent.left
-                    }
-                    TLInfoDisplay {
-                        id: info_gear
-                        x: (rect_battery_info.width - rect_info_display.min_length) / 2
-                        y: (rect_battery_info.height - rect_info_display.min_length) / 2
-                        width: rect_info_display.btn_size
-                        height: rect_info_display.btn_size
-
-                        isImage: true
-                        model_name_text: qsTr("gear")
-                        img_source: "qrc:/res/pictures/controls.png"
-                    }
-                }
-
-                //speed
-                Rectangle {
-                    id: rect_speed_info
-                    width: rect_info_display.cellWidth
-                    height: rect_info_display.cellHeight
-                    color: "transparent"
-                    anchors {
-                        bottom: parent.bottom
-                        left: rect_gear_info.right
-                    }
-                    TLInfoDisplay {
-                        id: info_speed
-                        x: (rect_battery_info.width - rect_info_display.min_length) / 2
-                        y: (rect_battery_info.height - rect_info_display.min_length) / 2
-                        width: rect_info_display.btn_size
-                        height: rect_info_display.btn_size
-
-                        isImage: false
-                        model_name_text: qsTr("Speed")
-
-                        info_text: "30m/s"
-                        info_text_color: "red"
-                    }
-                }
-
-                //state
-                Rectangle {
-                    id: rect_state_info
-                    width: rect_info_display.cellWidth
-                    height: rect_info_display.cellHeight
-                    color: "transparent"
-                    anchors {
-                        bottom: parent.bottom
-                        left: rect_speed_info.right
-                    }
-                    TLInfoDisplay {
-                        id: info_state
-                        x: (rect_battery_info.width - rect_info_display.min_length) / 2
-                        y: (rect_battery_info.height - rect_info_display.min_length) / 2
-                        width: rect_info_display.btn_size
-                        height: rect_info_display.btn_size
-
-                        isImage: true
-                        model_name_text: qsTr("States")
-                        img_source: "qrc:/res/pictures/information.png"
-                    }
-                }
-
-            }
-
-            Rectangle {
-                id: rec_pic_car
-                width: parent.width
-                height:  parent.height * 0.5
-                anchors.top: rect_info_display.bottom
-                anchors.left: parent.left
-                Rectangle {
-                    id: rec_power_control
+                id: rec_turn_view
+                visible: false
+                anchors.fill: parent
+                color: "transparent"
+                TLInfoDisplayPage {
+                    id: rect_info_display
                     width: parent.width
                     height: parent.height * 0.3
-                    color: "green"
-                    Row {
-                        anchors.fill: parent
-                        Rectangle {
-                            width: parent.width / 2
-                            height: parent.height
-                            Image {
-                                id: pic_yes
-                                width: 50 * rate
-                                height: 50 * rate
-                                source: "qrc:/res/pictures/finish.png"
-                                anchors.centerIn: parent
-                                fillMode: Image.PreserveAspectFit
+                }
+                Rectangle {
+                    id: rec_pic_car
+                    width: parent.width
+                    height:  parent.height * 0.5
+                    anchors.top: rect_info_display.bottom
+                    anchors.left: parent.left
+                    Rectangle {
+                        id: rec_power_control
+                        width: parent.width
+                        height: parent.height * 0.3
+                        color: "green"
+                        Row {
+                            anchors.fill: parent
+                            Rectangle {
+                                width: parent.width / 2
+                                height: parent.height
+                                Image {
+                                    id: pic_yes
+                                    width: 50 * rate
+                                    height: 50 * rate
+                                    source: "qrc:/res/pictures/finish.png"
+                                    anchors.centerIn: parent
+                                    fillMode: Image.PreserveAspectFit
+                                }
                             }
-                        }
-                        Rectangle {
-                            width: parent.width / 2
-                            height: parent.height
-                            Image {
-                                id: pic_no
-                                width: 50 * rate
-                                height: 50 * rate
-                                source: "qrc:/res/pictures/warn.png"
-                                anchors.centerIn: parent
-                                fillMode: Image.PreserveAspectFit
+                            Rectangle {
+                                width: parent.width / 2
+                                height: parent.height
+                                Image {
+                                    id: pic_no
+                                    width: 50 * rate
+                                    height: 50 * rate
+                                    source: "qrc:/res/pictures/warn.png"
+                                    anchors.centerIn: parent
+                                    fillMode: Image.PreserveAspectFit
 
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        dialog_machine_warn.open()
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            dialog_machine_warn.open()
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
-                Rectangle {
-                    id: rec_car_icon
-                    width: parent.width
-                    height: parent.height * 0.7
-                    anchors.top: rec_power_control.bottom
-                    Image {
-                        id: pic_car
-                        source: "qrc:/res/pictures/logo.png"
-                        width: 100 * rate
-                        height: 100 * rate
-                        anchors.centerIn:  parent
-                        fillMode: Image.PreserveAspectFit
+                    Rectangle {
+                        id: rec_car_icon
+                        width: parent.width
+                        height: parent.height * 0.7
+                        anchors.top: rec_power_control.bottom
+                        Image {
+                            id: pic_car
+                            source: "qrc:/res/pictures/logo.png"
+                            width: 100 * rate
+                            height: 100 * rate
+                            anchors.centerIn:  parent
+                            fillMode: Image.PreserveAspectFit
+                        }
                     }
                 }
-            }
-            Rectangle {
-                id: rec_peocess
-                width: parent.width
-                height:  parent.height * 0.2
-                anchors.top: rec_pic_car.bottom
-                anchors.left: parent.left
-                Column {
-                    spacing: rate * 10
-                    Repeater {
-                        model: ["Current map: ", "Worked hours: ", "Finished: ", "estimated finish time: "]
-                        Text {
-                            text: qsTr(modelData + "  " + text_process[index])
-                            font.pixelSize: rate * 10
+                Rectangle {
+                    id: rec_peocess
+                    width: parent.width
+                    height:  parent.height * 0.2
+                    anchors.top: rec_pic_car.bottom
+                    anchors.left: parent.left
+                    Column {
+                        Repeater {
+                            model: ["Current map: ", "Worked hours: ", "Finished: ", "Estimated time: "]
+                            Rectangle {
+                                width: rec_peocess.width
+                                height: rec_peocess.height * 0.25
+                                Text {
+                                    anchors {
+                                        top: parent.top
+                                        left: parent.left
+                                        leftMargin: rec_peocess.width * 0.05
+                                    }
+                                    text: qsTr(modelData + "  " + text_process[index])
+                                    font.pixelSize: rate * 10
+                                }
+                            }
                         }
                     }
                 }
             }
-        }
-        Rectangle {
-            id: rec_left
-            color: "transparent"
-            width: parent.width * 0.25
-            height: parent.height
+
             ListView {
                 id: list_view
                 clip: true
@@ -392,14 +246,13 @@ Rectangle {
                 id: rec_map_view
                 width: parent.width
                 height: parent.height * 0.7
-                Image {
-                    id: name
-                    source: "qrc:/res/pictures/gps.png"
-                    width: 100 * rate
-                    height: 100 * rate
-                    anchors.centerIn: parent
-                    fillMode: Image.PreserveAspectFit
-                    //                    verticalAlignment: Image.AlignVCenter
+                MonitorPage {
+                    id: monitor_page
+                    width:parent.width
+                    height: parent.height
+                    Component.onCompleted: {
+                        checked_location.visible = true
+                    }
                 }
             }
             Rectangle {
@@ -437,9 +290,14 @@ Rectangle {
                             verticalCenter: parent.verticalCenter
                         }
                         onClicked: {
-                            rec_power_view.visible = false
-                            rec_left.visible = false
-                            rec_turn_view.visible = true
+                            if (monitor_page.isMatched) {
+                                rec_power_view.visible = false
+                                list_view.visible = false
+                                rec_map_view.height = rec_right.height
+                                rec_turn_view.visible = true
+                            } else {
+                                dialog_match_warn.open()
+                            }
                         }
                     }
                     TLButton {
@@ -452,7 +310,6 @@ Rectangle {
                             leftMargin: 15 * rate
                             verticalCenter: parent.verticalCenter
                         }
-
                         onClicked: {
                             turn_task_page = false
                         }
@@ -476,10 +333,23 @@ Rectangle {
         }
         standardButtons: Dialog.Ok
         onAccepted: {
-            rec_left.visible = true
+            list_view.visible = true
             rec_turn_view.visible = false
             turn_task_page = false
         }
+    }
+    Dialog {
+        id: dialog_match_warn
+        width: root.width * 0.4
+        height: root.height * 0.3
+        x: (root.width - width) / 2
+        y: (root.height - height) / 2
+
+        title: qsTr("Warn!")
+        contentItem: Label {
+            text: qsTr("Please resure the match")
+        }
+        standardButtons: Dialog.Ok
     }
 
 

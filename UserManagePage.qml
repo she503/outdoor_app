@@ -434,7 +434,15 @@ Rectangle {
                     return
                 } else {
                     var level = radio_btn_admin.checked ? 2 : 1
-                    if (account_manager.addUser(btn_add_username.text, btn_add_pwd.text, level)) {
+                    var states = account_manager.addUser(btn_add_username.text, btn_add_pwd.text, level)
+                    switch (states) {
+                    case 0:
+                        message_account.title = qsTr("error")
+                        message_account.message_level = 0
+                        message_text.text = qsTr("user name has exited !")
+                        message_account.open()
+                        break;
+                    case 1:
                         var leve_name = ""
                         if (level === 1) {
                             leve_name = qsTr("nomal_user")
@@ -446,6 +454,13 @@ Rectangle {
                         message_account.message_level = 1
                         message_text.text = qsTr("a new user was added")
                         message_account.open()
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
                     }
                 }
             }

@@ -2,11 +2,11 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include "socket_manager.h"
 #include <QObject>
 #include <QDebug>
 #include <QTranslator>
 
-//#include "user_account_manage.h"
 #include "account_manager.h"
 
 
@@ -23,6 +23,10 @@ int main(int argc, char *argv[])
 
     AccountManager* account_manager = new AccountManager(&engine);
     engine.rootContext()->setContextProperty("account_manager", account_manager);
+
+    SocketManager* socket_manager = new SocketManager(&engine);
+    engine.rootContext()->setContextProperty("socket_manager", socket_manager);
+
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;

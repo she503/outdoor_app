@@ -76,7 +76,11 @@ Rectangle {
                     height: parent.height
                     text: qsTr("OK")
                     onClicked: {
-                        account_manager.updateUser(root.checked_user_name, field_new_pwd.text, root.checked_user_level)
+                        if (field_old_pwd.text === "" || field_new_pwd.text === "") {
+
+                        } else {
+                            account_manager.updateUser(root.checked_user_name, field_new_pwd.text, root.checked_user_level)
+                        }
                     }
                 }
                 Button {
@@ -133,8 +137,7 @@ Rectangle {
             enabled: list_view_user.currentIndex == -1 ? false : true
 
             onClicked: {
-                delete root.user_nomal[root.checked_user_name];
-                console.info(user_manage.deleteUserAccount(root.user_nomal, root.checked_user_level))
+                account_manager.deleteUser(root.checked_user_name)
                 user_list_model.remove(list_view_user.currentIndex)
                 list_view_user.currentIndex = -1
             }
@@ -345,43 +348,21 @@ Rectangle {
             height: parent.height * 0.2
             anchors.top: radio_box.bottom
             btn_text: qsTr("OK")
-            Component.onCompleted: {
-
-            }
-
             onClicked: {
-                if ((radio_btn_operator.checked || radio_btn_admin.checked)
-                        && btn_add_username.text.trim() !=  ""
-                        && btn_add_pwd.text.trim() != "") {
-                    var user_name = btn_add_username.text
-                    var user_pwd = btn_add_pwd.text
-                    var user_level = radio_btn_operator.checked ? "nomal_user" : "admin_user"
-
-                    for (var key_nomal in root.user_nomal) {
-                         if (key_nomal === user_name) {
-                             console.info("[registered faild]: existence user name!!!")
-                             return
-                         }
-                    }
-                    for (var key_admin in root.user_admin) {
-                        if (key_admin === user_name) {
-                            console.info("[registered faild]: existence user name!!!")
-                            return
-                        }
-                    }
-
-                    user_manage.addNewOrUpdateUserAccount(user_name, user_pwd, user_level)
-                    var add_admin_level = qsTr("add_admin_level")
-                    var add_user_level = qsTr("add_user_level")
-                    if (user_level === "nomal_user") {
-                        user_list_model.append({"user_name": user_name, "level": add_user_level, "level_obj_name": user_level})
-                    } else if (user_level === "admin_user") {
-                        user_list_model.append({"user_name": user_name, "level": add_admin_level, "level_obj_name": user_level})
-                    }
-
-                    console.info("registered success!!!")
+                if (btn_add_pwd.text === "" || btn_add_username.text === "" ||
+                        (!radio_btn_admin.checked && !radio_btn_operator.checked)) {
+                    return
                 } else {
-                    console.info("registered faild!!!")
+                    var level = radio_btn_admin.checked ? 2 : 1
+                    if (account_manager.addUser(btn_add_username.text, btn_add_pwd.text, level)) {
+                        var leve_name = ""
+                        if (level === 1) {
+                            leve_name = qsTr("nomal_user")
+                        } else if (level === 2) {
+                            leve_name = qsTr("admin_user")
+                        }
+                       user_list_model.append({"user_name": btn_add_username.text, "level": leve_name, "user_level": level})
+                    }
                 }
             }
         }

@@ -35,6 +35,7 @@ int AccountManager::addUser(const QString &user_name, const QString &pass_word, 
     QPair<QString, PermissionLevel> account_info(
                 pass_word,PermissionLevel(level));
     _account_info_map[user_name] = account_info;
+    this->writeAccountsInfo();
     return 1;
 }
 
@@ -53,7 +54,7 @@ int AccountManager::updateUser(const QString &user_name, const QString &pass_wor
     QPair<QString, PermissionLevel> account_info(
                 pass_word,PermissionLevel(level));
     _account_info_map[user_name] = account_info;
-
+    this->writeAccountsInfo();
     return 1;
 }
 
@@ -66,6 +67,7 @@ int AccountManager::deleteUser(const QString &user_name)
     QMap<QString, QPair<QString, PermissionLevel> >::iterator iter =
             _account_info_map.find(user_name);
     _account_info_map.erase(iter);
+    this->writeAccountsInfo();
     return 1;
 }
 
@@ -111,28 +113,36 @@ bool AccountManager::getAllAcountInfo() //const
 
 void AccountManager::readAccountsInfo()
 {
+    QString account_file_path;
+    QString account_file_dir;
+#if defined(Q_OS_ANDROID)
+    account_file_path = "/data/data/tonglu.tergeo_app/accounts/accounts.tl";
+    account_file_dir = "/data/data/tonglu.tergeo_app/accounts/";
+#else
     QString current_path = QCoreApplication::applicationDirPath();
-    QString account_file_dir = current_path + "/res";
+    account_file_dir = current_path + "/res";
+    account_file_path = current_path + "/res/accounts.tl";
+#endif
     QDir account_dir(account_file_dir);
     if (!account_dir.exists()) {
         account_dir.mkpath(account_file_dir);
     }
-    QString account_file_path = current_path + "/res/accounts.tl";
     if (!this->readAccountsFromFile(account_file_path)) {
         QPair<QString, PermissionLevel> account_info("password", PermissionLevel::ADMIN);
         _account_info_map["admin"] = account_info;
+        this->writeAccountsInfo();
     }
 }
 
 void AccountManager::writeAccountsInfo()
 {
+    QString account_file_path;
+#if defined(Q_OS_ANDROID)
+    account_file_path = "/data/data/tonglu.tergeo_app/accounts/accounts.tl";
+#else
     QString current_path = QCoreApplication::applicationDirPath();
-    QString account_file_dir = current_path + "/res";
-    QDir account_dir(account_file_dir);
-    if (!account_dir.exists()) {
-        account_dir.mkpath(account_file_dir);
-    }
-    QString account_file_path = current_path + "/res/accounts.tl";
+    account_file_path = current_path + "/res/accounts.tl";
+#endif
     QFile out_file(account_file_path);
     if (!out_file.open(QIODevice::WriteOnly)) {
         return;

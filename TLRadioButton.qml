@@ -38,7 +38,7 @@ RadioButton {
     contentItem: Text {
         anchors.left: rect_radio_btn.right
         anchors.leftMargin: 2
-        font.pixelSize: parent.height * 0.8
+        font.pixelSize: 14 * rate
         text: root.text_name
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignLeft

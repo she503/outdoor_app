@@ -21,5 +21,11 @@
         <file>res/pictures/gps.png</file>
         <file>res/pictures/finish_2.png</file>
         <file>res/pictures/User.png</file>
+        <file>res/pictures/button.png</file>
+        <file>res/pictures/gear-shift.png</file>
+        <file>res/pictures/power_off.png</file>
+        <file>res/pictures/power_on.png</file>
+        <file>res/pictures/speed.png</file>
+        <file>res/pictures/water.png</file>
     </qresource>
 </RCC>

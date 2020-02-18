@@ -2,10 +2,7 @@ QT += qml quick network widgets
 
 CONFIG += c++11
 
-LIBS += -lprotobuf
-
 SOURCES += main.cpp \
-    file_io.cpp \
     account_manager.cpp \
     socket_manager.cpp
 
@@ -35,7 +32,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    file_io.h \
     account_manager.h \
     socket_manager.h
 

@@ -4,6 +4,7 @@
 #include <QTime>
 #include <QThread>
 #include <QDataStream>
+#include <QTimer>
 
 SocketManager::SocketManager(QObject *parent) : QObject(parent)
 {
@@ -12,6 +13,7 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
 
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));
     connect(_socket, SIGNAL(disconnected()), this, SLOT(disConnet()));
+    testfunction();
 }
 
 SocketManager::~SocketManager()
@@ -63,60 +65,6 @@ bool SocketManager::sendData(const QByteArray &data)
     return false;
 }
 
-bool SocketManager::sendAllPower(bool flag)
-{
-    QJsonObject object;
-    object.insert("message_type", "power_all");
-    object.insert("sender", "mobile_client");
-    QJsonDocument doc(object);
-    return this->sendSocketMessage(doc.toJson());
-}
-
-bool SocketManager::sendModulePower(bool flag, const QString &module)
-{
-    QJsonObject object;
-    object.insert("message_type", "power_module");
-    object.insert("sender", "mobile_client");
-    object.insert("module_name", module);
-    object.insert("flag", flag);
-    QJsonDocument doc(object);;
-    return this->sendSocketMessage(doc.toJson());
-}
-
-bool SocketManager::sendEmergency(bool flag)
-{
-    QJsonObject object;
-    if (flag) {
-        object.insert("message_type", "emergency_stop");
-    } else {
-        object.insert("message_type", "release_emergency");
-    }
-    QJsonDocument doc(object);
-    return this->sendSocketMessage(doc.toJson());
-}
-
-bool SocketManager::sendConfInfoData(const QString &file_path, const QString &conf_data, const int &write_flag)
-{
-    QJsonObject object;
-    object.insert("message_type", "edit_conf_file");
-    object.insert("sender", "mobile_client");
-    object.insert("file_path", "/" + file_path);
-    object.insert("conf_data", conf_data);
-    object.insert("write_flag", write_flag);
-    QJsonDocument doc(object);
-    return this->sendSocketMessage(doc.toJson());
-}
-
-bool SocketManager::sendLineSpeedAndAngularSpeed(const float &line_speed, const float &angular_speed)
-{
-    QJsonObject object;
-    object.insert("message_type", "line_angular_speed_info");
-    object.insert("line_speed", line_speed);
-    object.insert("angular_speed", angular_speed);
-    QJsonDocument doc(object);
-    return this->sendSocketMessage(doc.toJson());
-}
-
 bool SocketManager::sendClickPointPos(const QString &pos_x, const QString &pos_y)
 {
     QJsonObject object;
@@ -126,42 +74,6 @@ bool SocketManager::sendClickPointPos(const QString &pos_x, const QString &pos_y
     QJsonDocument doc(object);
     return this->sendSocketMessage(doc.toJson());
 }
-
-bool SocketManager::getRostopic()
-{
-    QJsonObject object;
-    object.insert("message_type", "get_all_rostopic");
-    QJsonDocument doc(object);
-    return this->sendSocketMessage(doc.toJson());
-}
-
-bool SocketManager::startOrStopRecord(const QString &status, const QString& data)
-{
-    QJsonObject object;
-    object.insert("message_type", "record_data");
-    object.insert("status", status);
-    object.insert("data", data);
-    QJsonDocument doc(object);
-    return this->sendSocketMessage(doc.toJson());
-}
-
-bool SocketManager::getConfData(const QString &file_path)
-{
-    QJsonObject object;
-    object.insert("message_type", "get_conf_data");
-    object.insert("file_path", file_path);
-    QJsonDocument doc(object);
-    return this->sendSocketMessage(doc.toJson());
-}
-
-//bool SocketManager::sendHandOperateInfo(const bool &is_hand)
-//{
-//    QJsonObject object;
-//    object.insert("message_type", "operate_method");
-//    object.insert("is_hand_operate", is_hand);
-//    QJsonDocument doc(object);
-//    return this->sendSocketMessage(doc.toJson());
-//}
 
 void SocketManager::readSocketData(/*const QByteArray& buffer*/)
 {
@@ -185,11 +97,7 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
         if (error.error == QJsonParseError::NoError) {
             QJsonObject obj = doc.object();
             QString message_type = obj.value("message_type").toString();
-            if (message_type == "modules_status") {
-                this->parseModulesStatus(obj);
-            } else if (message_type == "conf_edit_rst") {
-                this->parseConfInfoData(obj);
-            } else if (message_type == "ros_message") {
+            if (message_type == "ros_message") {
                 this->parseRosInfoData(obj);
             } else if (message_type == "map_data") {
                 this->parseMapData(obj);
@@ -199,14 +107,8 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
                 this->parsePlanningPath(obj);
             } else if (message_type == "obstacles_info") {
                 this->parsePerceptionObstacles(obj);
-            } else if (message_type == "brain_status") {
-                this->parseBrainStatus(obj);
             } else if (message_type == "reference_line") {
                 this->parseReferenceLine(obj);
-            } else if (message_type == "all_rostopic") {
-                emit this->sendRostopic(obj.value("topic_list").toVariant());
-            } else if (message_type == "record_status") {
-                emit this->sendRecordStatus(obj.value("record_status").toString());
             } else if (message_type == "pipline_file") {
                 emit this->parsePiplineInfoData(obj);
             }
@@ -221,159 +123,32 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
     _buffer = buffer_list.at(complete_buffer_num);
 }
 
-void SocketManager::parseModulesStatus(const QJsonObject &obj)
+void SocketManager::testfunction()
 {
-    QJsonObject modules_status = obj.value("modules_status").toObject();
-    QJsonObject::const_iterator begin = modules_status.constBegin();
-    QJsonObject::const_iterator end = modules_status.constEnd();
-    int active_num = 0;
+    QTimer *time = new QTimer();
 
-
-    for (QJsonObject::const_iterator iter = begin; iter != end; ++iter) {
-        bool flag = iter.value().toObject().value("is_running").toBool();
-        float cpu_rate = iter.value().toObject().value("cpu_rate").toDouble();
-        float mem_rate = iter.value().toObject().value("mem_rate").toDouble();
-        if (iter.key() == "Vehicle") {
-            emit sendVehicleStatus(flag, cpu_rate, mem_rate);
-            if (flag) {
-                ++active_num;
-            }
-        }
-        if (iter.key() == "Localization") {
-            emit sendLocalizationStatus(flag, cpu_rate, mem_rate);
-            if (flag) {
-                ++active_num;
-            }
-        }
-        if (iter.key() == "Prediction") {
-            emit sendMapStatus(flag, cpu_rate, mem_rate);
-            if (flag) {
-                ++active_num;
-            }
-        }
-        if (iter.key() == "Monitor") {
-            emit sendMonitorStatus(flag, cpu_rate, mem_rate);
-            if (flag) {
-                ++active_num;
-            }
-        }
-        if (iter.key() == "Perception") {
-            emit sendPerceptionStatus(flag, cpu_rate, mem_rate);
-            if (flag) {
-                ++active_num;
-            }
-        }
-        if (iter.key() == "Planning") {
-            emit sendPlanningStatus(flag, cpu_rate, mem_rate);
-            if (flag) {
-                ++active_num;
-            }
-        }
-        if (iter.key() == "Control") {
-            emit sendControlStatus(flag, cpu_rate, mem_rate);
-            if (flag) {
-                ++active_num;
-            }
-        }
-        if (iter.key() == "Guardian") {
-            emit sendGuardianStatus(flag, cpu_rate, mem_rate);
-            if (flag) {
-                ++active_num;
-            }
-        }
-//        if (iter.key() == "Lidar") {
-//            emit sendLidarStatus(flag, cpu_rate, mem_rate);
-//            if (flag) {
-//                ++active_num;
-//            }
-//        }
-    }
-    emit sendActiveNum(active_num);
-}
-
-void SocketManager::parseConfInfoData(const QJsonObject &obj)
-{
-    QString file_path = obj.value("file_path").toString();
-    int write_flag = obj.value("write_flag").toInt();
-    emit sendConfWriteStatus(file_path, write_flag);
+    time->setInterval(100);
+    connect(time,&QTimer::timeout,[=](){
+        soc = (soc + 1) % 100;
+        speed = (speed + 1) % 30;
+        water_volume = (water_volume + 1) % 100;
+        emit updateBatteryInfo(QString::number(soc));
+        emit updateVehicleSpeed(QString::number(speed));
+        emit updateWaterVolume(QString::number(water_volume));
+    });
+    time->start();
 }
 
 void SocketManager::parseRosInfoData(const QJsonObject &obj)
 {
-    if (obj.contains("chassis_info")) {
-        this->parseChassisInfo(obj.value("chassis_info").toObject());
-    }
-    if (obj.contains("battery_info")) {
-        this->parseBatteryInfo(obj.value("battery_info").toObject());
-    }
-    if (obj.contains("gps_info")) {
-        this->parseGpsInfo(obj.value("gps_info").toObject());
-    }
-    if (obj.contains("guardian_info")) {
-        this->parseGuardianInfo(obj.value("guardian_info").toObject());
-    }
-    if (obj.contains("control_info")) {
-        this->parseControlInfo(obj.value("control_info").toObject());
-    }
+
 }
 
 void SocketManager::parsePiplineInfoData(const QJsonObject &obj)
 {
-//    qDebug() << obj;
     QString file_path = obj.value("file_path").toString();
     QString file_data = obj.value("file_data").toString();
     emit sendpiplineFile(file_path, file_data);
-}
-
-void SocketManager::parseChassisInfo(const QJsonObject &obj)
-{
-    QString time = obj.value("time").toString();
-    QString speed_mps = obj.value("speed_mps").toString();
-    QString omega_radps = obj.value("omega_radps").toString();
-    QString brake = obj.value("brake").toString();
-    QString drive_button = obj.value("drive_button").toString();
-    QString drive_mode = obj.value("drive_mode").toString();
-    emit updateChassisInfo(time, speed_mps.toFloat(), omega_radps.toFloat(), brake, drive_button, drive_mode);
-}
-
-void SocketManager::parseBatteryInfo(const QJsonObject &obj)
-{
-    QString time = obj.value("time").toString();
-    float soc = obj.value("SOC").toDouble();
-    float temperature = obj.value("temperature").toDouble();
-    emit updateBatteryInfo(time, soc,temperature);
-
-}
-
-void SocketManager::parseGpsInfo(const QJsonObject &obj)
-{
-    QString time = obj.value("time").toString();
-    QString B = obj.value("B").toString();
-    QString L = obj.value("L").toString();
-    QString heading = obj.value("heading").toString();
-    QString state = obj.value("state").toString();
-    emit updateGpsInfo(time, B, L, heading, state);
-}
-
-void SocketManager::parseGuardianInfo(const QJsonObject &obj)
-{
-
-    QString time = obj.value("time").toString();
-    QString brake_cmd = obj.value("brake_cmd").toString();
-    QString omega_radps = obj.value("omega_radps").toString();
-    QString speed_mps = obj.value("speed_mps").toString();
-    QString lighting = obj.value("lighting").toString();
-    QString trumpet = obj.value("trumpet").toString();
-    QString left_steer_light = obj.value("left_steer_light").toString();
-    QString right_steer_light = obj.value("right_steer_light").toString();
-    QString indicator_lighting = obj.value("indicator_lighting").toString();
-    QString sweeping = obj.value("sweeping").toString();
-    QString water_pump = obj.value("water_pump").toString();
-    QString lifting_motor = obj.value("lifting_motor").toString();
-
-    emit updateGuardianInfo(time, brake_cmd, omega_radps, speed_mps, lighting, trumpet, left_steer_light, right_steer_light,
-                            indicator_lighting, sweeping, water_pump, lifting_motor);
-
 }
 
 void SocketManager::parseLocalization(const QJsonObject &obj)
@@ -399,23 +174,11 @@ void SocketManager::parsePerceptionObstacles(const QJsonObject &obj)
     emit updatePerceptionObstacles(obstacles, is_polygon);
 }
 
-void SocketManager::parseBrainStatus(const QJsonObject &obj)
-{
-    int temperature = obj.value("temperature").toInt();
-    emit updateBrainStatus(temperature);
-}
-
 void SocketManager::parsePerceptionRoadEdge(const QJsonObject &obj)
 {
     QVariantList road_edge = obj.value("road_edge").toVariant().toList();;
     emit updatePerceptionRoadEdge(road_edge);
 }
-
-//void SocketManager::parseNotification(const QJsonObject &obj)
-//{
-//    QVariantList obstacles = obj.value("obstacles").toVariant().toList();
-//    emit updatePerceptionObstacles(obstacles);
-//}
 
 void SocketManager::parseReferenceLine(const QJsonObject &obj)
 {
@@ -424,19 +187,8 @@ void SocketManager::parseReferenceLine(const QJsonObject &obj)
     emit updateReferenceLine(reference_line);
 }
 
-void SocketManager::parseControlInfo(const QJsonObject &obj)
-{
-    QString time = obj.value("time").toString();
-    QString success = obj.value("success").toString();
-    QString omega_radps = obj.value("omega_radps").toString();
-    QString speed_mps = obj.value("speed_mps").toString();
-
-    emit updateControlInfo(time, success, omega_radps, speed_mps);
-}
-
 void SocketManager::parseMapData(const QJsonObject &obj)
 {
-//    qDebug() << obj;
     QVariantList var_trees;
     var_trees = this->parseTrees(obj);
 

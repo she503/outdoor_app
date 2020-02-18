@@ -35,6 +35,7 @@ int AccountManager::addUser(const QString &user_name, const QString &pass_word, 
     QPair<QString, PermissionLevel> account_info(
                 pass_word,PermissionLevel(level));
     _account_info_map[user_name] = account_info;
+    this->writeAccountsInfo();
     return 1;
 }
 
@@ -53,7 +54,7 @@ int AccountManager::updateUser(const QString &user_name, const QString &pass_wor
     QPair<QString, PermissionLevel> account_info(
                 pass_word,PermissionLevel(level));
     _account_info_map[user_name] = account_info;
-
+    this->writeAccountsInfo();
     return 1;
 }
 
@@ -66,6 +67,7 @@ int AccountManager::deleteUser(const QString &user_name)
     QMap<QString, QPair<QString, PermissionLevel> >::iterator iter =
             _account_info_map.find(user_name);
     _account_info_map.erase(iter);
+    this->writeAccountsInfo();
     return 1;
 }
 
@@ -128,6 +130,7 @@ void AccountManager::readAccountsInfo()
     if (!this->readAccountsFromFile(account_file_path)) {
         QPair<QString, PermissionLevel> account_info("password", PermissionLevel::ADMIN);
         _account_info_map["admin"] = account_info;
+        this->writeAccountsInfo();
     }
 }
 

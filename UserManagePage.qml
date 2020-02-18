@@ -10,6 +10,7 @@ Rectangle {
 
     property string checked_user_name: ""
     property int checked_user_level: 0
+    property real rate: Math.min(width, height) / 400
 
     Component.onCompleted: {
         account_manager.getAllAcountInfo()
@@ -267,17 +268,19 @@ Rectangle {
         width: parent.width
         height: parent.height * 0.4
         clip: true
-        anchors {
-            top: rect_user_line.bottom
-            topMargin: 2
-        }
-
+        anchors.top: rect_user_line.bottom
         ListView {
             id: list_view_user
             width: parent.width
             height: parent.height
+            anchors {
+                top: parent.top
+                left: parent.left
+                topMargin: parent.height * 0.02
+                leftMargin: parent.height * 0.015
+            }
             currentIndex: -1
-            spacing: height * 0.1
+            spacing: 12 * rate
             delegate: ItemDelegate {
                 id: item_de
                 width: list_view_user.width
@@ -286,16 +289,15 @@ Rectangle {
 
                 Rectangle {
                     id: rect_circle
-                    width: parent.height * 0.8
+                    width: 19 * rate
                     height: width
                     radius: height / 2
                     border.width: 1
                     border.color: "#87CEFA"
                     anchors.verticalCenter: parent.verticalCenter
-
                     Rectangle {
                         anchors.centerIn: rect_circle
-                        width: parent.width * 0.4
+                        width: parent.width * 0.5
                         height: width
                         radius: width / 2
                         color: "#00BFFF"
@@ -384,7 +386,7 @@ Rectangle {
             height: parent.height * 0.2
             anchors {
                 top: parent.top
-                topMargin: 2
+                topMargin: 5 * rate
                 left: parent.left
             }
             btn_radius:  height * 0.1
@@ -397,7 +399,7 @@ Rectangle {
             height: parent.height * 0.2
             anchors {
                 top: btn_add_username.bottom
-                topMargin: 2
+                topMargin: 5 * rate
                 left: parent.left
             }
             btn_radius:  height * 0.1
@@ -415,21 +417,21 @@ Rectangle {
                 border.width: 0
             }
             Row {
-                anchors.fill: parent
+                anchors.centerIn: parent
 
-                spacing: width * 0.1
+                spacing: 70 * rate
 
                 TLRadioButton {
                     id: radio_btn_operator
-                    width: parent.width * 0.5
-                    height: parent.height
+                    width: 25 * rate
+                    height: 25 * rate
                     text_name: qsTr("operator")
 
                 }
                 TLRadioButton {
                     id: radio_btn_admin
-                    width: parent.width * 0.5
-                    height: parent.height
+                    width: 25 * rate
+                    height: 25 * rate
                     text_name: qsTr("admin")
                 }
             }
@@ -439,6 +441,7 @@ Rectangle {
             width: parent.width
             height: parent.height * 0.2
             anchors.top: radio_box.bottom
+            anchors.topMargin: 5
             btn_text: qsTr("OK")
             onClicked: {
                 if (btn_add_pwd.text === "" || btn_add_username.text === "" ||

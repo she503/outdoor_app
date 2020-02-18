@@ -45,7 +45,7 @@ Item{
         TLTextField {
             id: username
             width: rect_login.width * 0.4
-            height: rect_login.height * 0.2
+            height: rect_login.height * 0.25
             anchors {
                 horizontalCenter: parent.horizontalCenter
             }
@@ -58,7 +58,7 @@ Item{
         TLTextField {
             id: password
             width: rect_login.width * 0.4
-            height: rect_login.height * 0.2
+            height: rect_login.height * 0.25
             anchors {
                 top: username.bottom
                 topMargin: 10

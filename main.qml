@@ -8,6 +8,7 @@ ApplicationWindow {
     width: 640
     height: 480
 
+    property real rate: Math.min(width, height) / 400
     property bool turn_task_page: false
     property Component task_settings_page: TaskSettingsPage { }
     property Component main_page: MainPage { }
@@ -18,7 +19,6 @@ ApplicationWindow {
             stack_view.replace(main_page)
         }
     }
-
     onTurn_task_pageChanged: {
         if (turn_task_page) {
             stack_view.replace(task_settings_page)
@@ -27,7 +27,6 @@ ApplicationWindow {
             stack_view.replace(main_page)
         }
     }
-
     StackView {
         id: stack_view
         anchors.fill: parent

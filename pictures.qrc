@@ -27,5 +27,8 @@
         <file>res/pictures/power_on.png</file>
         <file>res/pictures/speed.png</file>
         <file>res/pictures/water.png</file>
+        <file>res/pictures/eye.png</file>
+        <file>res/pictures/progress_start.png</file>
+        <file>res/pictures/progress_stop.png</file>
     </qresource>
 </RCC>

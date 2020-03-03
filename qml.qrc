@@ -17,5 +17,6 @@
         <file>TLInfoDisplay.qml</file>
         <file>TLRadioButton.qml</file>
         <file>TLInfoDisplayPage.qml</file>
+        <file>TLDialog.qml</file>
     </qresource>
 </RCC>

@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
 import QtQuick.Controls.Styles 1.4
@@ -9,6 +9,7 @@ Rectangle {
     id: root
 
     property real rate: Math.min(width, height) / 400
+    property real ratio: Math.sqrt(Math.min(rec_left.width / 3, rec_power_control.height)) * 0.1
     property var text_process: ["map1#", "1h", "80%", "20min"]
     property var cell_map: ["submap1#", "submap2#", "submap3#"]
     property var sel_map: -1
@@ -46,36 +47,85 @@ Rectangle {
                         id: rec_power_control
                         width: parent.width
                         height: parent.height * 0.3
-                        color: "green"
+                        color: "transparent"
                         Row {
                             anchors.fill: parent
                             Rectangle {
-                                width: parent.width / 2
+                                width: parent.width / 3
                                 height: parent.height
                                 Image {
                                     id: pic_yes
-                                    width: 50 * rate
-                                    height: 50 * rate
+                                    width: 50 * rate * ratio
+                                    height: 50 * rate * ratio
                                     source: "qrc:/res/pictures/finish.png"
                                     anchors.centerIn: parent
                                     fillMode: Image.PreserveAspectFit
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            dialog_machine_finish.open()
+                                        }
+                                    }
                                 }
                             }
                             Rectangle {
-                                width: parent.width / 2
+                                width: parent.width / 3
                                 height: parent.height
                                 Image {
                                     id: pic_no
-                                    width: 50 * rate
-                                    height: 50 * rate
+                                    width: 50 * rate * ratio
+                                    height: 50 * rate * ratio
                                     source: "qrc:/res/pictures/warn.png"
                                     anchors.centerIn: parent
                                     fillMode: Image.PreserveAspectFit
-
                                     MouseArea {
                                         anchors.fill: parent
                                         onClicked: {
                                             dialog_machine_warn.open()
+                                        }
+                                    }
+                                }
+                            }
+                            Rectangle {
+                                id: rec_progress_state
+                                width: parent.width / 3
+                                height: parent.height
+                                property bool is_processing: false
+                                Image {
+                                    id: pic_task_stop
+                                    visible: !rec_progress_state.is_processing
+                                    width: 50 * rate * ratio
+                                    height: 50 * rate * ratio
+                                    source: "qrc:/res/pictures/progress_stop.png"
+                                    anchors.centerIn: parent
+                                    fillMode: Image.PreserveAspectFit
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            if (rec_progress_state.is_processing) {
+                                                rec_progress_state.is_processing = false
+                                            } else {
+                                                rec_progress_state.is_processing = true
+                                            }
+                                        }
+                                    }
+                                }
+                                Image {
+                                    id: pic_task_start
+                                    visible: rec_progress_state.is_processing
+                                    width: 60 * rate * ratio
+                                    height: 60 * rate * ratio
+                                    source: "qrc:/res/pictures/progress_start.png"
+                                    anchors.centerIn: parent
+                                    fillMode: Image.PreserveAspectFit
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            if (rec_progress_state.is_processing) {
+                                                rec_progress_state.is_processing = false
+                                            } else {
+                                                rec_progress_state.is_processing = true
+                                            }
                                         }
                                     }
                                 }
@@ -90,8 +140,8 @@ Rectangle {
                         Image {
                             id: pic_car
                             source: "qrc:/res/pictures/logo.png"
-                            width: 100 * rate
-                            height: 100 * rate
+                            width: 120 * rate * ratio
+                            height: 120 * rate * ratio
                             anchors.centerIn:  parent
                             fillMode: Image.PreserveAspectFit
                         }
@@ -116,7 +166,7 @@ Rectangle {
                                         leftMargin: rec_peocess.width * 0.05
                                     }
                                     text: qsTr(modelData + "  " + text_process[index])
-                                    font.pixelSize: rate * 10
+                                    font.pixelSize: rate * 15 * ratio
                                 }
                             }
                         }
@@ -145,7 +195,7 @@ Rectangle {
                             id: label
                             text: name
                             font.bold: true
-                            font.pixelSize: 13 * rate
+                            font.pixelSize: 25 * rate * ratio
                             elide: Text.ElideRight
                             Layout.fillWidth: true
                         }
@@ -158,11 +208,11 @@ Rectangle {
                                 CheckBox {
                                     id: control
                                     text: attrName
-                                    font.pixelSize: 10 * rate
+                                    font.pixelSize: 18 * rate * ratio
                                     indicator: Rectangle {
                                         anchors.verticalCenter: control.verticalCenter
-                                        implicitWidth: rate * 25
-                                        implicitHeight: rate * 25
+                                        implicitWidth: rate * 30 * ratio
+                                        implicitHeight: rate * 30 * ratio
                                         radius: width / 2
                                         border.color: "grey"
                                         border.width: 1
@@ -207,14 +257,22 @@ Rectangle {
                     ]
                 }
                 ScrollBar.vertical: ScrollBar {
-                    id: scrollBar
-                    onActiveChanged: {
-                        active = true
+                    id: vbar
+                    hoverEnabled: true
+                    active: hovered || pressed
+                    orientation: Qt.Vertical
+                    anchors {
+                        top: parent.top
+                        right: parent.right
+                        rightMargin: 10 * rate
+                        bottom: parent.bottom
                     }
-                    Component.onCompleted: {
-                        scrollBar.active = true
-                        scrollBar.width = 20
-                        scrollBar.height = 100
+                    policy: ScrollBar.AlwaysOn
+                    contentItem: Rectangle {
+                        implicitWidth: 20 * rate
+                        implicitHeight: height
+                        radius: width / 2
+                        color: vbar.pressed ? "#c2f4c6" : "transparent"
                     }
                 }
             }
@@ -319,38 +377,50 @@ Rectangle {
         }
     }
 
-    Dialog {
+    TLDialog {
         id: dialog_machine_warn
         width: root.width * 0.4
         height: root.height * 0.3
         x: (root.width - width) / 2
         y: (root.height - height) / 2
-
-        title: qsTr("error!")
-        contentItem: Label {
-            text: qsTr("Software failure, manually open the supply station,
-                        and contact the operation and maintenance personnel")
+        dia_title: qsTr("Warn!")
+        dia_info_text: qsTr("machine malfunction")
+        onOkClicked: {
+            rec_power_view.visible = true
+            list_view.visible = true
+            rec_map_view.height = rec_right.height * 0.7
+            rec_turn_view.visible = false
+            monitor_page.checked_location.visible = true
+            monitor_page.setCheckedLocationStatus()
+            monitor_page.isMatched = false
+            dialog_machine_warn.close()
         }
-        standardButtons: Dialog.Ok
-        onAccepted: {
+    }
+    TLDialog {
+        id: dialog_machine_finish
+        width: root.width * 0.4
+        height: root.height * 0.3
+        x: (root.width - width) / 2
+        y: (root.height - height) / 2
+        dia_title: qsTr("Finish!")
+        dia_info_text: qsTr("finish the task ,\n and return to the homepage")
+        onOkClicked: {
             list_view.visible = true
             rec_turn_view.visible = false
             turn_task_page = false
         }
     }
-    Dialog {
+    TLDialog {
         id: dialog_match_warn
         width: root.width * 0.4
         height: root.height * 0.3
         x: (root.width - width) / 2
         y: (root.height - height) / 2
-
-        title: qsTr("Warn!")
-        contentItem: Label {
-            text: qsTr("Please resure the match")
+        dia_title: qsTr("Warn!")
+        dia_info_text: qsTr("Please resure the match")
+        is_single_btn: true
+        onOkClicked: {
+            dialog_match_warn.close()
         }
-        standardButtons: Dialog.Ok
     }
-
-
 }

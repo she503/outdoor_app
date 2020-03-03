@@ -81,28 +81,28 @@ Item{
                 topMargin: 10
                 horizontalCenter: parent.horizontalCenter
             }
-//            onClicked: {
-//                var emun_login_status = account_manager.checkLogin(username.text, password.text)
-//                if ( emun_login_status === 0) {
-//                    message_login_faild.title = qsTr("error")
-//                    login_label.text = qsTr("user name is not exit")
-//                    message_login_faild.open()
-//                } else if (emun_login_status === 1) {
-//                    message_login_faild.title = qsTr("error")
-//                    login_label.text = qsTr("error password")
-//                    message_login_faild.open()
-//                } else if (emun_login_status === 2) {
-//                    root.user_level = account_manager.getCurrentAccountLevel()
-//                    root.successToLogin()
-//                }
-//            }
             onClicked: {
-                if (socket_manager.connectToHost("192.168.43.170", "32432")) {
+                var emun_login_status = account_manager.checkLogin(username.text, password.text)
+                if ( emun_login_status === 0) {
+                    message_login_faild.title = qsTr("error")
+                    login_label.text = qsTr("user name is not exit")
+                    message_login_faild.open()
+                } else if (emun_login_status === 1) {
+                    message_login_faild.title = qsTr("error")
+                    login_label.text = qsTr("error password")
+                    message_login_faild.open()
+                } else if (emun_login_status === 2) {
+                    root.user_level = account_manager.getCurrentAccountLevel()
                     root.successToLogin()
-                } else {
-
                 }
             }
+//            onClicked: {
+//                if (socket_manager.connectToHost("192.168.43.170", "32432")) {
+//                    root.successToLogin()
+//                } else {
+
+//                }
+//            }
         }
     }
 

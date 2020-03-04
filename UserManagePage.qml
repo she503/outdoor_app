@@ -88,11 +88,27 @@ Rectangle {
                             message_text.text = qsTr("password cannot be empty!!!")
                             message_account.open()
                         } else {
-                            account_manager.updateUser(root.checked_user_name, field_new_pwd.text, root.checked_user_level)
-                            message_account.title = qsTr("Success")
-                            message_account.message_level = 1
-                            message_text.text = qsTr("password had be changed!!!")
-                            message_account.open()
+                            var states = account_manager.updateUser(root.checked_user_name, field_new_pwd.text, root.checked_user_level)
+                            switch(states) {
+                            case 0:
+                                message_account.title = qsTr("error")
+                                message_account.message_level = 0
+                                message_text.text = qsTr("user name dont exist!!!")
+                                message_account.open()
+                                break;
+                            case 1:
+                                message_account.title = qsTr("Success")
+                                message_account.message_level = 1
+                                message_text.text = qsTr("password had be changed!!!")
+                                message_account.open()
+                                break;
+                            case 2:
+                                break;
+                            case 3:
+                                break;
+                            }
+
+
                         }
                     }
                 }

@@ -11,6 +11,48 @@ Rectangle {
     property real min_length: Math.min(cellHeight, cellWidth)
     property real btn_size: min_length * 0.8
 
+    Connections {
+        target: socket_manager
+        onUpdateBatteryInfo: {
+            var v_soc = soc;
+            var n_soc = Number(v_soc)
+            if (n_soc <= 20) {
+                info_battery.info_text_color = "red"
+            } else if (n_soc > 20 && n_soc <= 50) {
+                info_battery.info_text_color = "orange"
+            } else if (n_soc > 50) {
+                info_battery.info_text_color = "green"
+            }
+            info_battery.info_text = v_soc + "%"
+        }
+        onUpdateVehicleSpeed: {
+            var v_speed = speed
+            var n_speed = Number(v_speed)
+            if (n_speed <= 10) {
+                info_speed.info_text_color = "green"
+            } else if (n_speed > 10 && n_speed <= 15) {
+                info_speed.info_text_color = "orange"
+            } else if (n_speed > 15) {
+                info_speed.info_text_color = "red"
+            }
+            info_speed.info_text = n_speed / 10.0 + "m/s"
+        }
+        onUpdateWaterVolume: {
+            var v_water_volume = water_volume
+            info_water.info_text = v_water_volume + "%"
+            var n_water_volume = Number(v_water_volume)
+
+            if (n_water_volume <= 20) {
+                info_water.info_text_color = "red"
+            } else if (n_water_volume > 20 && n_water_volume <= 50) {
+                info_water.info_text_color = "orange"
+            } else if (n_water_volume > 50) {
+                info_water.info_text_color = "green"
+            }
+            info_water.info_text = v_water_volume + "%"
+        }
+    }
+
     //battery
     Rectangle {
         id: rect_battery_info
@@ -29,9 +71,10 @@ Rectangle {
             width: rect_info_display.btn_size
             height: rect_info_display.btn_size
 
-            isImage: true
+            isImage: false
             model_name_text: qsTr("Battery Soc")
-            img_source: "qrc:/res/pictures/battery.png"
+            info_text: "85%"
+            info_text_color: "green"
         }
     }
 

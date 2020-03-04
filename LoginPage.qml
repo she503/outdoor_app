@@ -5,7 +5,7 @@ Item{
     id: root
 
     property real rate: Math.min(width, height) / 400
-    property var user_level: ""
+    property var user_level: 0
     property var user_name: ""
 
     signal successToLogin()

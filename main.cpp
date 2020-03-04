@@ -12,7 +12,8 @@
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+//    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setAttribute(Qt::AA_UseOpenGLES);
     QApplication app(argc, argv);
 //    QTranslator trans;
 //    if (!trans.load(":/language/translation_chinese.qm")) {

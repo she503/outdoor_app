@@ -1,14 +1,13 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.2
+import QtWebView 1.0
 
 Rectangle {
     id: root
 
-    Image {
-        id: name
-        width: parent.width
-        height: parent.height
-        source: "qrc:/res/pictures/document.png"
-        fillMode: Image.PreserveAspectFit
+    WebView {
+       id: webVie1;
+       anchors.fill: parent;
+       url: "qrc:/res/html/test.html";
     }
 }

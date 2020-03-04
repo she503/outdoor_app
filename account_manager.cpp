@@ -101,11 +101,18 @@ bool AccountManager::getAllAcountInfo() //const
         return false;
     }
     QJsonObject obj;
-    QMap<QString, QPair<QString, PermissionLevel> >::const_iterator
-            iter = _account_info_map.constBegin();
-    while (iter != _account_info_map.constEnd()) {
-        obj.insert(iter.key(), int(iter.value().second));
-        ++iter;
+
+    int user_level = getCurrentAccountLevel();
+
+    if (user_level == 1) {
+        obj.insert(_current_user_name, int(user_level));
+    } else if (user_level == 2) {
+        QMap<QString, QPair<QString, PermissionLevel> >::const_iterator
+                iter = _account_info_map.constBegin();
+        while (iter != _account_info_map.constEnd()) {
+            obj.insert(iter.key(), int(iter.value().second));
+            ++iter;
+        }
     }
     emit emitAllAccountInfo(obj);
     return true;

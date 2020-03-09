@@ -18,18 +18,6 @@ Rectangle {
 
     }
 
-    Timer {
-        interval: 5000
-        running: true
-        repeat: false
-        onTriggered: {
-            if (rec_machine_state.has_error) {
-                rec_machine_state.has_error = false
-            } else {
-                rec_machine_state.has_error = true
-            }
-        }
-    }
     Control_14.SplitView {
         id: split_view
         anchors.fill: parent
@@ -84,10 +72,9 @@ Rectangle {
                                 id: rec_machine_state
                                 width: parent.width / 3
                                 height: parent.height
-                                property bool has_error: false
                                 Image {
                                     id: pic_ok
-                                    visible: !rec_machine_state.has_error
+                                    visible: !has_error
                                     width: 50 * rate * ratio
                                     height: 50 * rate * ratio
                                     source: "qrc:/res/pictures/finish.png"
@@ -96,7 +83,7 @@ Rectangle {
                                 }
                                 Image {
                                     id: pic_warn
-                                    visible: rec_machine_state.has_error
+                                    visible: has_error
                                     width: 50 * rate * ratio
                                     height: 50 * rate * ratio
                                     source: "qrc:/res/pictures/warn.png"
@@ -409,14 +396,16 @@ Rectangle {
         y: (root.height - height) / 2
         dia_title: qsTr("Warn!")
         dia_info_text: qsTr("Machine malfunction")
+        is_single_btn: true
         onOkClicked: {
-            rec_power_view.visible = true
-            list_view.visible = true
-            rec_map_view.height = rec_right.height * 0.7
-            rec_turn_view.visible = false
-            monitor_page.checked_location.visible = true
-            monitor_page.setCheckedLocationStatus()
-            monitor_page.isMatched = false
+//            rec_power_view.visible = true
+//            list_view.visible = true
+//            rec_map_view.height = rec_right.height * 0.7
+//            rec_turn_view.visible = false
+//            monitor_page.checked_location.visible = true
+//            monitor_page.setCheckedLocationStatus()
+//            monitor_page.isMatched = false
+//            dialog_machine_warn.close()
             dialog_machine_warn.close()
         }
     }

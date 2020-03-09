@@ -10,6 +10,7 @@ ApplicationWindow {
 
     property real rate: Math.min(width, height) / 400
     property bool turn_task_page: false
+    property bool has_error: false
     property Component task_settings_page: TaskSettingsPage { }
     property Component main_page: MainPage { }
     property Component login_page: LoginPage {
@@ -26,6 +27,19 @@ ApplicationWindow {
             socket_manager.sendAllPower(true)
         } else {
             stack_view.replace(main_page)
+        }
+    }
+
+    Timer {
+        interval: 2000
+        running: true
+        repeat: true
+        onTriggered: {
+            if (has_error) {
+                has_error = false
+            } else {
+                has_error = true
+            }
         }
     }
     StackView {

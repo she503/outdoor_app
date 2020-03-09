@@ -146,6 +146,7 @@ void AccountManager::writeAccountsInfo()
     QString account_file_path;
 #if defined(Q_OS_ANDROID)
     account_file_path = "/data/data/tonglu.tergeo_app/accounts/accounts.tl";
+    emit isAndroid();
 #else
     QString current_path = QCoreApplication::applicationDirPath();
     account_file_path = current_path + "/res/accounts.tl";

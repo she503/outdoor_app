@@ -62,6 +62,7 @@ public:
 
 signals:
     void emitAllAccountInfo(const QJsonObject& accounts_info);
+    bool isAndroid();
 
 private:
     void readAccountsInfo();

@@ -1,5 +1,4 @@
-QT += qml quick network widgets webview webengine
-
+QT += qml quick network widgets webview
 
 CONFIG += c++11
 

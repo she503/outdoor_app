@@ -164,7 +164,7 @@ Page {
 
         Rectangle {
             id: map
-            width: parent.width * 0.78
+            width: parent.width
             height: parent.height
             Image {
                 id: choose_marker
@@ -184,7 +184,8 @@ Page {
                 color:"transparent"
                 Canvas {
                     id: canvas_background
-
+                    x: map_background.width / 3
+                    y: 0
                     width: map_width * map_rate  + 100
                     height: map_height * map_rate  + 100
 
@@ -560,7 +561,7 @@ Page {
                 VehicleItem {
                     id: vehicle
                     z: 5
-                    x: 0
+                    x: map_background.width / 3
                     y: 0
                 }
             }

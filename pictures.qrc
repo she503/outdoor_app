@@ -31,5 +31,6 @@
         <file>res/pictures/progress_start.png</file>
         <file>res/pictures/progress_stop.png</file>
         <file>res/html/test.html</file>
+        <file>res/pictures/back.png</file>
     </qresource>
 </RCC>

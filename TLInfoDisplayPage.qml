@@ -52,6 +52,14 @@ Rectangle {
             info_water.info_text = v_water_volume + "%"
         }
     }
+    Timer {
+        interval: 5000
+        running: true
+        repeat: true
+        onTriggered: {
+            info_operate.img_source = "qrc:/res/pictures/switch-auto.png"
+        }
+    }
 
     //battery
     Rectangle {

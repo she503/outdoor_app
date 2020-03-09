@@ -39,6 +39,11 @@ public:
      */
     Q_INVOKABLE bool sendClickPointPos(const QString& pos_x, const QString& pos_y);
 
+    /**
+     * @brief 启动模块
+     */
+    Q_INVOKABLE bool sendAllPower(bool flag);
+
 signals:
     // app断开连接发出信号
     void appDisconnected();

@@ -18,6 +18,18 @@ Rectangle {
 
     }
 
+    Timer {
+        interval: 5000
+        running: true
+        repeat: false
+        onTriggered: {
+            if (rec_machine_state.has_error) {
+                rec_machine_state.has_error = false
+            } else {
+                rec_machine_state.has_error = true
+            }
+        }
+    }
     Control_14.SplitView {
         id: split_view
         anchors.fill: parent
@@ -54,25 +66,37 @@ Rectangle {
                                 width: parent.width / 3
                                 height: parent.height
                                 Image {
-                                    id: pic_yes
-                                    width: 50 * rate * ratio
-                                    height: 50 * rate * ratio
-                                    source: "qrc:/res/pictures/finish.png"
+                                    id: pic_back
+                                    width: 60 * rate * ratio
+                                    height: 60 * rate * ratio
+                                    source: "qrc:/res/pictures/back.png"
                                     anchors.centerIn: parent
                                     fillMode: Image.PreserveAspectFit
                                     MouseArea {
                                         anchors.fill: parent
                                         onClicked: {
-                                            dialog_machine_finish.open()
+                                            dialog_machine_back.open()
                                         }
                                     }
                                 }
                             }
                             Rectangle {
+                                id: rec_machine_state
                                 width: parent.width / 3
                                 height: parent.height
+                                property bool has_error: false
                                 Image {
-                                    id: pic_no
+                                    id: pic_ok
+                                    visible: !rec_machine_state.has_error
+                                    width: 50 * rate * ratio
+                                    height: 50 * rate * ratio
+                                    source: "qrc:/res/pictures/finish.png"
+                                    anchors.centerIn: parent
+                                    fillMode: Image.PreserveAspectFit
+                                }
+                                Image {
+                                    id: pic_warn
+                                    visible: rec_machine_state.has_error
                                     width: 50 * rate * ratio
                                     height: 50 * rate * ratio
                                     source: "qrc:/res/pictures/warn.png"
@@ -384,7 +408,7 @@ Rectangle {
         x: (root.width - width) / 2
         y: (root.height - height) / 2
         dia_title: qsTr("Warn!")
-        dia_info_text: qsTr("machine malfunction")
+        dia_info_text: qsTr("Machine malfunction")
         onOkClicked: {
             rec_power_view.visible = true
             list_view.visible = true
@@ -397,13 +421,13 @@ Rectangle {
         }
     }
     TLDialog {
-        id: dialog_machine_finish
+        id: dialog_machine_back
         width: root.width * 0.4
         height: root.height * 0.3
         x: (root.width - width) / 2
         y: (root.height - height) / 2
-        dia_title: qsTr("Finish!")
-        dia_info_text: qsTr("finish the task ,\n and return to the homepage")
+        dia_title: qsTr("Back!")
+        dia_info_text: qsTr("Return to the homepage")
         onOkClicked: {
             list_view.visible = true
             rec_turn_view.visible = false

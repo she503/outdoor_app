@@ -22,7 +22,8 @@ ApplicationWindow {
     onTurn_task_pageChanged: {
         if (turn_task_page) {
             stack_view.replace(task_settings_page)
-//            socket_manager.sendAllPower(true)
+            socket_manager.connectToHost("192.168.8.143", "32432")
+            socket_manager.sendAllPower(true)
         } else {
             stack_view.replace(main_page)
         }

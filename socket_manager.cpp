@@ -75,6 +75,15 @@ bool SocketManager::sendClickPointPos(const QString &pos_x, const QString &pos_y
     return this->sendSocketMessage(doc.toJson());
 }
 
+bool SocketManager::sendAllPower(bool flag)
+{
+    QJsonObject object;
+    object.insert("message_type", "power_all");
+    object.insert("sender", "mobile_client");
+    QJsonDocument doc(object);
+    return this->sendSocketMessage(doc.toJson());
+}
+
 void SocketManager::readSocketData(/*const QByteArray& buffer*/)
 {
     if (_socket->bytesAvailable() < 4) {

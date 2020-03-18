@@ -43,8 +43,7 @@ Page {
     property real real_rate: 2.2
 
     property var choosePoint: []
-    property bool isMatched: false
-    property alias checked_location: checked_location
+    property alias choose_marker: choose_marker
 
     function geometryToPixel(X, Y) {
         var x = (X - min_x) * map_rate
@@ -67,93 +66,7 @@ Page {
         choose_marker.visible = false
     }
 
-    Rectangle{
-        id:checked_location
-        visible: false
-        z: 3
-        width: parent.width
-        height: parent.height*0.1
-        color: Qt.rgba(0.5,0.5,0.5,0.3)
 
-        Row {
-            spacing: 15 * rate
-            anchors.centerIn: parent
-            Button {
-                id: btn_not_match
-                text: qsTr("not match")//不匹配
-                font.pixelSize: 10 * rate
-                width: 75 * rate
-                height: 22 * rate
-                anchors.verticalCenter: parent.verticalCenter
-                background: Rectangle {
-                    implicitWidth: 100
-                    implicitHeight: 25
-                    border.width: btn_not_match.activeFocus ? 2 : 1
-                    border.color: "#888"
-                    radius: 4
-                }
-                onClicked: {
-                    isMatched = false
-                    choose_marker.visible = true
-                    btn_not_match.visible = false
-                    btn_match.visible = false
-                    btn_resure.visible = true
-                    note_text.visible = true
-                }
-            }
-
-            Button {
-                id: btn_match
-                text: qsTr("match")//匹配
-                font.pixelSize: 10 * rate
-                width: 75 * rate
-                height: 22 * rate
-                background: Rectangle {
-                    implicitWidth: 100
-                    implicitHeight: 25
-                    border.width: btn_match.activeFocus ? 2 : 1
-                    border.color: "#888"
-                    radius: 4
-                }
-                onClicked: {
-                    isMatched = true
-                    checked_location.visible = false
-                    choose_marker.visible = false
-                }
-            }
-            Text {
-                id: note_text
-                visible: false
-                text: qsTr("move and choose point!")//移动选点!
-                font.family: "Helvetica"
-                font.pointSize: 25 * rate
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                color: "red"
-            }
-            Button {
-                id: btn_resure
-                text:  qsTr("resure")//确认
-                visible: false
-                font.pixelSize: 10 * rate
-                width: 75 * rate
-                height: 22 * rate
-                anchors.verticalCenter: parent.verticalCenter
-                background: Rectangle {
-                    implicitWidth: 100
-                    implicitHeight: 25
-                    border.width: btn_match.activeFocus ? 2 : 1
-                    border.color: "#888"
-                    radius: 4
-                }
-                onClicked: {
-                    isMatched = true
-                    checked_location.visible = false
-                    choose_marker.visible = false
-                }
-            }
-        }
-    }
 
     SplitView {
         id:split

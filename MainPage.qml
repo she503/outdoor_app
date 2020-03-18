@@ -6,6 +6,7 @@ Rectangle {
 
     property Component home_page: HomePage { }
     property Component user_manage_page: UserManagePage { }
+    property Component task_settings_page: TaskSettingsPage { }
     property Component help_document_page: HelpDocumentPage { }
     property Component about_machine_page: AboutMachinePage { }
     signal mainPageChanged(var current_index)
@@ -15,7 +16,7 @@ Rectangle {
         } else if (current_index === 1) {
             stack_view.replace(user_manage_page)
         } else if (current_index === 2) {
-            turn_task_page = true
+            stack_view.replace(task_settings_page)
         } else if (current_index === 3) {
             stack_view.replace(help_document_page)
         } else if (current_index === 4) {

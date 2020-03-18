@@ -9,181 +9,50 @@ Rectangle {
     id: root
 
     property real rate: Math.min(width, height) / 400
-    property real ratio: Math.sqrt(Math.min(rec_left.width / 3, rec_power_control.height)) * 0.1
+    property real ratio: Math.sqrt(Math.min(rec_left.width / 3, rec_task_control.height)) * 0.1
     property var text_process: ["map1#", "1h", "80%", "20min"]
-    property var cell_map: ["submap1#", "submap2#", "submap3#"]
+    property var map_areas: ["MAP1#", "MAP2#", "MAP3#"]
+    property var ref_lines: ["submap1#", "submap2#", "submap3#"]
     property var sel_map: -1
+    property bool isMatched: true
+    property bool can_work: false
+    property real header_bar_index: 0
     signal mapIndexChanged(var current_index)
     onMapIndexChanged: {
 
     }
 
+    TabBar {
+        id: header_bar
+        width: parent.width
+        height: parent.height * 0.05 * rate
+        position: TabBar.Header
+        Repeater {
+            model: map_areas
+
+            TabButton {
+                text: modelData
+                width: header_bar.width / map_areas.length
+                height: parent.height
+                onPressed: {
+                    header_bar_index = index
+                }
+            }
+        }
+    }
+
     Control_14.SplitView {
         id: split_view
-        anchors.fill: parent
+        width: parent.width
+        height: parent.height
+        anchors.left: parent.left
+        anchors.top: header_bar.bottom
         orientation: Qt.Horizontal
         Rectangle {
             id: rec_left
             color: "transparent"
-            width: parent.width * 0.25
+            width: parent.width * 0.2
             height: parent.height
-            Rectangle {
-                id: rec_turn_view
-                visible: false
-                anchors.fill: parent
-                color: "transparent"
-                TLInfoDisplayPage {
-                    id: rect_info_display
-                    width: parent.width
-                    height: parent.height * 0.3
-                }
-                Rectangle {
-                    id: rec_pic_car
-                    width: parent.width
-                    height:  parent.height * 0.5
-                    anchors.top: rect_info_display.bottom
-                    anchors.left: parent.left
-                    Rectangle {
-                        id: rec_power_control
-                        width: parent.width
-                        height: parent.height * 0.3
-                        color: "transparent"
-                        Row {
-                            anchors.fill: parent
-                            Rectangle {
-                                width: parent.width / 3
-                                height: parent.height
-                                Image {
-                                    id: pic_back
-                                    width: 60 * rate * ratio
-                                    height: 60 * rate * ratio
-                                    source: "qrc:/res/pictures/back.png"
-                                    anchors.centerIn: parent
-                                    fillMode: Image.PreserveAspectFit
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        onClicked: {
-                                            dialog_machine_back.open()
-                                        }
-                                    }
-                                }
-                            }
-                            Rectangle {
-                                id: rec_machine_state
-                                width: parent.width / 3
-                                height: parent.height
-                                Image {
-                                    id: pic_ok
-                                    visible: !has_error
-                                    width: 50 * rate * ratio
-                                    height: 50 * rate * ratio
-                                    source: "qrc:/res/pictures/finish.png"
-                                    anchors.centerIn: parent
-                                    fillMode: Image.PreserveAspectFit
-                                }
-                                Image {
-                                    id: pic_warn
-                                    visible: has_error
-                                    width: 50 * rate * ratio
-                                    height: 50 * rate * ratio
-                                    source: "qrc:/res/pictures/warn.png"
-                                    anchors.centerIn: parent
-                                    fillMode: Image.PreserveAspectFit
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        onClicked: {
-                                            dialog_machine_warn.open()
-                                        }
-                                    }
-                                }
-                            }
-                            Rectangle {
-                                id: rec_progress_state
-                                width: parent.width / 3
-                                height: parent.height
-                                property bool is_processing: false
-                                Image {
-                                    id: pic_task_stop
-                                    visible: !rec_progress_state.is_processing
-                                    width: 50 * rate * ratio
-                                    height: 50 * rate * ratio
-                                    source: "qrc:/res/pictures/progress_stop.png"
-                                    anchors.centerIn: parent
-                                    fillMode: Image.PreserveAspectFit
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        onClicked: {
-                                            if (rec_progress_state.is_processing) {
-                                                rec_progress_state.is_processing = false
-                                            } else {
-                                                rec_progress_state.is_processing = true
-                                            }
-                                        }
-                                    }
-                                }
-                                Image {
-                                    id: pic_task_start
-                                    visible: rec_progress_state.is_processing
-                                    width: 60 * rate * ratio
-                                    height: 60 * rate * ratio
-                                    source: "qrc:/res/pictures/progress_start.png"
-                                    anchors.centerIn: parent
-                                    fillMode: Image.PreserveAspectFit
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        onClicked: {
-                                            if (rec_progress_state.is_processing) {
-                                                rec_progress_state.is_processing = false
-                                            } else {
-                                                rec_progress_state.is_processing = true
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    Rectangle {
-                        id: rec_car_icon
-                        width: parent.width
-                        height: parent.height * 0.7
-                        anchors.top: rec_power_control.bottom
-                        Image {
-                            id: pic_car
-                            source: "qrc:/res/pictures/logo.png"
-                            width: 120 * rate * ratio
-                            height: 120 * rate * ratio
-                            anchors.centerIn:  parent
-                            fillMode: Image.PreserveAspectFit
-                        }
-                    }
-                }
-                Rectangle {
-                    id: rec_peocess
-                    width: parent.width
-                    height:  parent.height * 0.2
-                    anchors.top: rec_pic_car.bottom
-                    anchors.left: parent.left
-                    Column {
-                        Repeater {
-                            model: ["Current map: ", "Worked hours: ", "Finished: ", "Estimated time: "]
-                            Rectangle {
-                                width: rec_peocess.width
-                                height: rec_peocess.height * 0.25
-                                Text {
-                                    anchors {
-                                        top: parent.top
-                                        left: parent.left
-                                        leftMargin: rec_peocess.width * 0.05
-                                    }
-                                    text: qsTr(modelData + "  " + text_process[index])
-                                    font.pixelSize: rate * 15 * ratio
-                                }
-                            }
-                        }
-                    }
-                }
-            }
 
             ListView {
                 id: list_view
@@ -200,20 +69,11 @@ Rectangle {
                         color: "lightgrey"
                     }
                     contentItem: ColumnLayout {
-                        spacing: 10
                         width: parent.width
-                        Label {
-                            id: label
-                            text: name
-                            font.bold: true
-                            font.pixelSize: 25 * rate * ratio
-                            elide: Text.ElideRight
-                            Layout.fillWidth: true
-                        }
                         ColumnLayout {
                             id: grid
-                            visible: false
-                            ButtonGroup { id: radio_group }
+                            visible: true
+//                            ButtonGroup { id: radio_group }
                             Repeater {
                                 model: attributes
                                 CheckBox {
@@ -236,20 +96,21 @@ Rectangle {
                                         }
                                     }
                                     onClicked: {
-                                        if (name === qsTr("map1#")) {
-                                            sel_map = index
-                                            mapIndexChanged(sel_map)
-                                        } else if (name === qsTr("map2#")){
-                                            sel_map = index
-                                        } else if (name === qsTr("map3#")) {
-                                            sel_map = index
-                                        }
+//                                        if (name === qsTr("map1#")) {
+//                                            sel_map = index
+//                                            mapIndexChanged(sel_map)
+//                                        } else if (name === qsTr("map2#")){
+//                                            sel_map = index
+//                                        } else if (name === qsTr("map3#")) {
+//                                            sel_map = index
+//                                        }
                                     }
 
-                                    ButtonGroup.group : {
-                                        if(name === qsTr("map1#") || name === qsTr("map2#") || name === qsTr("map3#")) {
-                                            return radio_group
-                                        }
+//                                    ButtonGroup.group : {
+//                                        if(name === qsTr("map1#") || name === qsTr("map2#") || name === qsTr("map3#")) {
+//                                            return radio_group
+//                                        if ()
+//                                        }
                                     }
                                 }
                             }
@@ -267,38 +128,20 @@ Rectangle {
                         }
                     ]
                 }
-                ScrollBar.vertical: ScrollBar {
-                    id: vbar
-                    hoverEnabled: true
-                    active: hovered || pressed
-                    orientation: Qt.Vertical
-                    anchors {
-                        top: parent.top
-                        right: parent.right
-                        rightMargin: 10 * rate
-                        bottom: parent.bottom
-                    }
-                    policy: ScrollBar.AlwaysOn
-                    contentItem: Rectangle {
-                        implicitWidth: 20 * rate
-                        implicitHeight: height
-                        radius: width / 2
-                        color: vbar.pressed ? "#c2f4c6" : "transparent"
-                    }
-                }
-            }
+
+
             ListModel {
                 id: list_model
                 function initListModel() {
-                    for (var i = 0; i < 3; ++i) {
+//                    for (var i = 0; i < 3; ++i) {
                         var mapAttr = []
-                        for (var j = 0; j < cell_map.length; ++j) {
-                            mapAttr.push({attrName: cell_map[j]})
+                        for (var j = 0; j < ref_lines.length; ++j) {
+                            mapAttr.push({attrName: ref_lines[j]})
                         }
-                        var mapElem = {name: qsTr("map" + (i + 1) + "#"), attributes: mapAttr}
+                        var mapElem = {/*name: qsTr("map" + (i + 1) + "#"), */ attributes: mapAttr}
                         append(mapElem)
                     }
-                }
+//                }
                 Component.onCompleted: {
                     initListModel()
                 }
@@ -308,121 +151,148 @@ Rectangle {
         Rectangle {
             id: rec_right
             anchors.left: rec_left.right
-            width: parent.width * 0.75
+            width: parent.width * 0.8
             height: parent.height
-
-            Rectangle {
-                id: rec_map_view
-                width: parent.width
-                height: parent.height * 0.7
-                MonitorPage {
-                    id: monitor_page
-                    width:parent.width
-                    height: parent.height
-                    Component.onCompleted: {
-                        checked_location.visible = true
-                    }
-                }
-            }
-            Rectangle {
-                id: rec_power_view
-                width: parent.width
-                height: parent.height * 0.3
-                anchors.top: rec_map_view.bottom
-                color: "white"
-                Text {
-                    id: text_checked
-                    text: qsTr("Make sure the map is selected correctly and
-                                        the scrubber is at the starting point of the operation")//请确认地图选择无误，且洗地机位于作业起始点
-                    font.bold: true
-                    font.pixelSize: 10 * rate
-                    anchors {
-                        top: parent.top
-                        topMargin: parent.height * 0.05
-                        horizontalCenter: parent.horizontalCenter
-                    }
-                }
-                Rectangle {
-                    id: rec_button_control
-                    width: parent.width
-                    height: parent.height * 0.6
-                    anchors.top: text_checked.bottom
-                    TLButton {
-                        id: button_start
-                        width: 60 * rate
-                        height: 30 * rate
-                        font_size: 12 * rate
-                        btn_text: qsTr("Start")
-                        anchors {
-                            right: parent.horizontalCenter
-                            rightMargin: 15 * rate
-                            verticalCenter: parent.verticalCenter
-                        }
-                        onClicked: {
-                            if (monitor_page.isMatched) {
-                                rec_power_view.visible = false
-                                list_view.visible = false
-                                rec_map_view.height = rec_right.height
-                                rec_turn_view.visible = true
-                            } else {
-                                dialog_match_warn.open()
-                            }
-                        }
-                    }
-                    TLButton {
-                        width: 60 * rate
-                        height: 30 * rate
-                        btn_text: qsTr("Cancel")
-                        font_size: 12 * rate
-                        anchors {
-                            left: parent.horizontalCenter
-                            leftMargin: 15 * rate
-                            verticalCenter: parent.verticalCenter
-                        }
-                        onClicked: {
-                            turn_task_page = false
-                        }
-                    }
-                }
+            MonitorPage {
+                id: monitor_page
+                width:parent.width
+                height: parent.height
             }
         }
     }
 
-    TLDialog {
-        id: dialog_machine_warn
-        width: root.width * 0.4
-        height: root.height * 0.3
-        x: (root.width - width) / 2
-        y: (root.height - height) / 2
-        dia_title: qsTr("Warn!")
-        dia_info_text: qsTr("Machine malfunction")
-        is_single_btn: true
-        onOkClicked: {
-//            rec_power_view.visible = true
-//            list_view.visible = true
-//            rec_map_view.height = rec_right.height * 0.7
-//            rec_turn_view.visible = false
-//            monitor_page.checked_location.visible = true
-//            monitor_page.setCheckedLocationStatus()
-//            monitor_page.isMatched = false
-//            dialog_machine_warn.close()
-            dialog_machine_warn.close()
+    Rectangle {
+        id: rec_task_control
+        width: parent.width
+        height: parent.height * 0.1
+        anchors.bottom: parent.bottom
+        TLButton {
+            id: button_start
+            width: 60 * rate
+            height: 30 * rate
+            font_size: 12 * rate
+            btn_text: qsTr("Start")
+            anchors {
+                right: parent.horizontalCenter
+                rightMargin: 15 * rate
+                verticalCenter: parent.verticalCenter
+            }
+            onClicked: {
+                if (can_work) {
+                    rec_task_control.visible = false
+                } else {
+                    dialog_match_warn.open()
+                }
+            }
+        }
+        TLButton {
+            width: 60 * rate
+            height: 30 * rate
+            btn_text: qsTr("Cancel")
+            font_size: 12 * rate
+            anchors {
+                left: parent.horizontalCenter
+                leftMargin: 15 * rate
+                verticalCenter: parent.verticalCenter
+            }
+            onClicked: {
+                //                        turn_task_page = false
+            }
         }
     }
-    TLDialog {
-        id: dialog_machine_back
-        width: root.width * 0.4
-        height: root.height * 0.3
-        x: (root.width - width) / 2
-        y: (root.height - height) / 2
-        dia_title: qsTr("Back!")
-        dia_info_text: qsTr("Return to the homepage")
-        onOkClicked: {
-            list_view.visible = true
-            rec_turn_view.visible = false
-            turn_task_page = false
+
+    Rectangle{
+        id: rec_checked_location
+        color: "#98F5FF"
+        width: parent.width
+        height: parent.height * 0.1
+        //            color: Qt.rgba(0.5,0.5,0.5,0.3)
+        anchors.bottom: rec_task_control.top
+        Row {
+            spacing: 15 * rate
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: parent.right
+            anchors.rightMargin: 15 * rate
+            Button {
+                id: btn_not_match
+                text: qsTr("not match")//不匹配
+                font.pixelSize: 10 * rate
+                width: 75 * rate
+                height: 22 * rate
+                anchors.verticalCenter: parent.verticalCenter
+                background: Rectangle {
+                    implicitWidth: 100
+                    implicitHeight: 25
+                    border.width: btn_not_match.activeFocus ? 2 : 1
+                    border.color: "#888"
+                    radius: 4
+                }
+                onClicked: {
+                    isMatched = false
+                    can_work = false
+                    monitor_page.choose_marker.visible = true
+                    btn_not_match.visible = false
+                    btn_match.visible = false
+                    btn_resure.visible = true
+                    note_text.visible = true
+                }
+            }
+            
+            Button {
+                id: btn_match
+                text: qsTr("match")//匹配
+                font.pixelSize: 10 * rate
+                width: 75 * rate
+                height: 22 * rate
+                background: Rectangle {
+                    implicitWidth: 100
+                    implicitHeight: 25
+                    border.width: btn_match.activeFocus ? 2 : 1
+                    border.color: "#888"
+                    radius: 4
+                }
+                onClicked: {
+                    isMatched = true
+                    can_work = true
+                    rec_checked_location.visible = false
+                    monitor_page.choose_marker.visible = false
+                }
+            }
+            Text {
+                id: note_text
+                visible: false
+                text: qsTr("move and choose point!")//移动选点!
+                font.family: "Helvetica"
+                font.pointSize: 25 * rate
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                color: "red"
+            }
+            Button {
+                id: btn_resure
+                text:  qsTr("resure")//确认
+                visible: false
+                font.pixelSize: 10 * rate
+                width: 75 * rate
+                height: 22 * rate
+                anchors.verticalCenter: parent.verticalCenter
+                background: Rectangle {
+                    implicitWidth: 100
+                    implicitHeight: 25
+                    border.width: btn_match.activeFocus ? 2 : 1
+                    border.color: "#888"
+                    radius: 4
+                }
+                onClicked: {
+                    isMatched = true
+                    can_work = true
+                    rec_checked_location.visible = false
+                    monitor_page.choose_marker.visible = false
+                }
+            }
         }
     }
+
     TLDialog {
         id: dialog_match_warn
         width: root.width * 0.4
@@ -436,4 +306,5 @@ Rectangle {
             dialog_match_warn.close()
         }
     }
+    
 }

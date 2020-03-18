@@ -11,7 +11,6 @@ ApplicationWindow {
     property real rate: Math.min(width, height) / 400
     property bool turn_task_page: false
     property bool has_error: false
-    property Component task_settings_page: TaskSettingsPage { }
     property Component main_page: MainPage { }
     property Component login_page: LoginPage {
         width: root.width
@@ -20,15 +19,15 @@ ApplicationWindow {
             stack_view.replace(main_page)
         }
     }
-    onTurn_task_pageChanged: {
-        if (turn_task_page) {
-            stack_view.replace(task_settings_page)
-            socket_manager.connectToHost("192.168.8.143", "32432")
-            socket_manager.sendAllPower(true)
-        } else {
-            stack_view.replace(main_page)
-        }
-    }
+//    onTurn_task_pageChanged: {
+//        if (turn_task_page) {
+//            stack_view.replace(task_settings_page)
+//            socket_manager.connectToHost("192.168.8.143", "32432")
+//            socket_manager.sendAllPower(true)
+//        } else {
+//            stack_view.replace(main_page)
+//        }
+//    }
 
     Timer {
         interval: 2000

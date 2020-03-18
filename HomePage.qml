@@ -86,7 +86,7 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        turn_task_page = true
+//                        turn_task_page = true
                     }
                 }
             }

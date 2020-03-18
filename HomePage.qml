@@ -86,7 +86,7 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-//                        turn_task_page = true
+                        stack_view.replace(task_settings_page)
                     }
                 }
             }

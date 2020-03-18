@@ -10,13 +10,14 @@ Rectangle {
 
     property real rate: Math.min(width, height) / 400
     property real ratio: Math.sqrt(Math.min(rec_left.width / 3, rec_task_control.height)) * 0.1
-    property var text_process: ["map1#", "1h", "80%", "20min"]
     property var map_areas: ["MAP1#", "MAP2#", "MAP3#"]
-    property var ref_lines: ["submap1#", "submap2#", "submap3#"]
+    property var ref_lines: [["submap1#", "submap2#", "submap3#"], ["submap4#", "submap5#", "submap6#"], ["submap7#", "submap8#", "submap9#"]]
     property var sel_map: -1
     property bool isMatched: true
     property bool can_work: false
     property real header_bar_index: 0
+
+    signal backToHomePage()
     signal mapIndexChanged(var current_index)
     onMapIndexChanged: {
 
@@ -36,6 +37,8 @@ Rectangle {
                 height: parent.height
                 onPressed: {
                     header_bar_index = index
+                    list_model.clear()
+                    list_model.initListModel()
                 }
             }
         }
@@ -44,7 +47,7 @@ Rectangle {
     Control_14.SplitView {
         id: split_view
         width: parent.width
-        height: parent.height
+        height: root.height - header_bar.height
         anchors.left: parent.left
         anchors.top: header_bar.bottom
         orientation: Qt.Horizontal
@@ -73,13 +76,13 @@ Rectangle {
                         ColumnLayout {
                             id: grid
                             visible: true
-//                            ButtonGroup { id: radio_group }
+                            ButtonGroup { id: radio_group }
                             Repeater {
                                 model: attributes
                                 CheckBox {
                                     id: control
                                     text: attrName
-                                    font.pixelSize: 18 * rate * ratio
+                                    font.pixelSize: 15 * rate * ratio
                                     indicator: Rectangle {
                                         anchors.verticalCenter: control.verticalCenter
                                         implicitWidth: rate * 30 * ratio
@@ -89,7 +92,7 @@ Rectangle {
                                         border.width: 1
                                         Image {
                                             visible: control.checked
-//                                            anchors.margins: 4
+                                            //                                            anchors.margins: 4
                                             source: "qrc:/res/pictures/finish_2.png"
                                             fillMode: Image.PreserveAspectFit
                                             anchors.fill: parent
@@ -106,42 +109,42 @@ Rectangle {
 //                                        }
                                     }
 
-//                                    ButtonGroup.group : {
-//                                        if(name === qsTr("map1#") || name === qsTr("map2#") || name === qsTr("map3#")) {
-//                                            return radio_group
-//                                        if ()
-//                                        }
+                                    ButtonGroup.group : {
+                                        if(true) {
+                                            return radio_group
+                                        }
                                     }
                                 }
                             }
                         }
-
                     }
-                    states: [
-                        State {
-                            name: "expanded"
-                            when: list_delegate.checked
-                            PropertyChanges {
-                                target: grid
-                                visible: true
-                            }
-                        }
-                    ]
+
                 }
+                states: [
+                    State {
+                        name: "expanded"
+                        when: list_delegate.checked
+                        PropertyChanges {
+                            target: grid
+                            visible: true
+                        }
+                    }
+                ]
+            }
 
 
             ListModel {
                 id: list_model
                 function initListModel() {
-//                    for (var i = 0; i < 3; ++i) {
-                        var mapAttr = []
-                        for (var j = 0; j < ref_lines.length; ++j) {
-                            mapAttr.push({attrName: ref_lines[j]})
-                        }
-                        var mapElem = {/*name: qsTr("map" + (i + 1) + "#"), */ attributes: mapAttr}
-                        append(mapElem)
+                    //                    for (var i = 0; i < 3; ++i) {
+                    var mapAttr = []
+                    for (var i = 0; i < ref_lines[header_bar_index].length; ++i) {
+                        mapAttr.push({attrName: ref_lines[header_bar_index][i]})
                     }
-//                }
+                    var mapElem = {attributes: mapAttr}
+                    append(mapElem)
+                }
+                //                }
                 Component.onCompleted: {
                     initListModel()
                 }
@@ -151,7 +154,7 @@ Rectangle {
         Rectangle {
             id: rec_right
             anchors.left: rec_left.right
-            width: parent.width * 0.8
+            width: split_view.width - rec_left.width
             height: parent.height
             MonitorPage {
                 id: monitor_page
@@ -180,6 +183,11 @@ Rectangle {
             onClicked: {
                 if (can_work) {
                     rec_task_control.visible = false
+                    rec_left.visible = false
+                    header_bar.visible = false
+                    rec_left.width = 0
+                    header_bar.height = 0
+                    turn_task_page = true
                 } else {
                     dialog_match_warn.open()
                 }
@@ -196,7 +204,7 @@ Rectangle {
                 verticalCenter: parent.verticalCenter
             }
             onClicked: {
-                //                        turn_task_page = false
+                backToHomePage()
             }
         }
     }

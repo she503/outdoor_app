@@ -45,5 +45,18 @@
         <file>res/pictures/btn_1.png</file>
         <file>res/pictures/user_background.png</file>
         <file>res/pictures/btn_2.png</file>
+        <file>res/pictures/background_all.png</file>
+        <file>res/pictures/background_glow1.png</file>
+        <file>res/pictures/background_glow2.png</file>
+        <file>res/pictures/background_mached.png</file>
+        <file>res/pictures/bar_ref_line0.png</file>
+        <file>res/pictures/bar_ref_line1.png</file>
+        <file>res/pictures/bar_ref_line2.png</file>
+        <file>res/pictures/btn_style1.png</file>
+        <file>res/pictures/btn_style2.png</file>
+        <file>res/pictures/map_areas_focus.png</file>
+        <file>res/pictures/map_areas_normal.png</file>
+        <file>res/pictures/sad.png</file>
+        <file>res/pictures/smile.png</file>
     </qresource>
 </RCC>

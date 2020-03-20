@@ -81,100 +81,17 @@ Rectangle {
             }
         }
     }
-
-    //    Rectangle {
-//        id: rect_bottom
-//        width: parent.width
-//        height: parent.height * 0.35
-//        anchors.top: rect_info_display.bottom
-//        color: "transparent"
-//        Rectangle {
-//            id: rec_machine_state
-//            width: rect_bottom.width * 0.3
-//            height: rect_bottom.height / 2
-//            color: "transparent"
-//            Image {
-//                id: pic_ok
-//                width: 50 * rate * ratio
-//                height: 50 * rate * ratio
-//                visible: !has_error
-//                source: "qrc:/res/pictures/finish.png"
-//                anchors.centerIn: parent
-//                fillMode: Image.PreserveAspectFit
-//            }
-//            Image {
-//                id: pic_warn
-//                width: 50 * rate * ratio
-//                height: 50 * rate * ratio
-//                visible: has_error
-//                source: "qrc:/res/pictures/warn.png"
-//                anchors.centerIn: parent
-//                fillMode: Image.PreserveAspectFit
-//                MouseArea {
-//                    anchors.fill: parent
-//                    onClicked: {
-//                        dialog_machine_warn.open()
-//                    }
-//                }
-//            }
-//        }
-//        DelayButton {
-//            id: delayButton
-//            width:Math.min(parent.height, Math.min(parent.width, parent.height) * rate * ratio)
-//            height: width
-//            x: (parent.width - width) / 2
-//            y: (parent.height - height) / 2
-//            delay: 1000
-//            text: qsTr("start")
-//            enabled: !has_error
-//            style: DelayButtonStyle {
-
-//                progressBarGradient: Gradient {
-//                    GradientStop { position: 0.0; color: "green" }
-//                    GradientStop { position: 0.99; color: "green" }
-//                    GradientStop { position: 1.0; color: "green" }
-//                }
-//                progressBarDropShadowColor: "green"
-//            }
-//        }
-//        Rectangle {
-//            width: rect_bottom.width * 0.3
-//            height: rect_bottom.height / 2
-//            color: "transparent"
-//            anchors {
-//                left: parent.left
-//                bottom: parent.bottom
-//            }
-//            Image {
-//                width: 50 * rate * ratio
-//                height: 50 * rate * ratio
-//                anchors.centerIn: parent
-//                source: "qrc:/res/pictures/eye.png"
-//                fillMode: Image.PreserveAspectFit
-//                horizontalAlignment: Image.AlignHCenter
-//                verticalAlignment: Image.AlignVCenter
-//                MouseArea {
-//                    anchors.fill: parent
-//                    onClicked: {
-////                        turn_task_page = true
-//                    }
-//                }
-//            }
-//        }
-//    }
-//    TLDialog {
-//        id: dialog_machine_warn
-//        width: root.width * 0.6
-//        height: root.height * 0.3
-//        x: (root.width - width) / 2
-//        y: (root.height - height) / 2
-//        dia_title: qsTr("Warn!")
-//        dia_info_text: qsTr("Machine malfunction")
-//        is_single_btn: true
-//        onOkClicked: {
-//            dialog_machine_warn.close()
-//        }
-//    }
-
-
+    TLDialog {
+        id: dialog_machine_warn
+        width: root.width * 0.6
+        height: root.height * 0.3
+        x: (root.width - width) / 2
+        y: (root.height - height) / 2
+        dia_title: qsTr("Warn!")
+        dia_image_source: "qrc:/res/pictures/sad.png"
+        is_single_btn: true
+        onOkClicked: {
+            dialog_machine_warn.close()
+        }
+    }
 }

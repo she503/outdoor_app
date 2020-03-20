@@ -1,10 +1,13 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.2
+import QtQuick.Layouts 1.3
 import QtQuick.Controls 1.4 as Control_14
 import "CustomControl"
+
 Rectangle {
     id: root
 
+    color: "transparent"
     signal backToHomePage()
 
     property real ratio: Math.sqrt(Math.min(rec_left.width / 3, rec_power_control.height)) * 0.1
@@ -47,6 +50,13 @@ Rectangle {
         }
     }
 
+    Rectangle {
+        anchors.fill: parent
+        Image {
+            anchors.fill: parent
+            source: "qrc:/res/pictures/background_all.png"
+        }
+    }
     Control_14.SplitView {
         id: split_view
         anchors.fill: parent
@@ -56,7 +66,7 @@ Rectangle {
             width: parent.width * 0.25
             height: parent.height
             color: "white"
-
+            Layout.minimumWidth: parent.width * 0.1
             Rectangle {
                 id: rec_turn_view
                 visible: false
@@ -326,6 +336,7 @@ Rectangle {
             width: parent.width * 0.75
             height: parent.height
             color:"transparent"
+            Layout.minimumWidth: parent.width * 0.1
             StackView {
                 id: stack_view
                 anchors.fill: parent
@@ -348,7 +359,7 @@ Rectangle {
         x: (root.width - width) / 2
         y: (root.height - height) / 2
         dia_title: qsTr("Warn!")
-        dia_info_text: qsTr("Machine malfunction")
+        dia_image_source: "qrc:/res/pictures/sad.png"
         is_single_btn: true
         onOkClicked: {
             dialog_machine_warn.close()
@@ -357,11 +368,11 @@ Rectangle {
     TLDialog {
         id: dialog_machine_back
         width: root.width * 0.4
-        height: root.height * 0.3
+        height: root.height * 0.4
         x: (root.width - width) / 2
         y: (root.height - height) / 2
         dia_title: qsTr("Back!")
-        dia_info_text: qsTr("Return to the homepage")
+        dia_image_source: "qrc:/res/pictures/smile.png"
         onOkClicked: {
             backToHomePage()
             dialog_machine_back.close()

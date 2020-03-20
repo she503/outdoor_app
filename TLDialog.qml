@@ -6,62 +6,101 @@ Dialog {
     id: dialog_info
     property bool is_single_btn: false
     property string dia_title: ""
-    property string dia_info_text: ""
+    property string dia_image_source: ""
     signal okClicked()
     contentItem: Rectangle {
         anchors.fill: parent
-        color: "#C5F2F2"
-        border.width: 0.5
-        border.color: "#97D0D1"
-        ColumnLayout {
-            width: parent.width
-            height: parent.height
-            Label {
-                text: qsTr(dia_title)
-                font.pixelSize: 15 * rate
-            }
-            Label {
-                text: qsTr(dia_info_text)
-                Layout.alignment: Qt.AlignCenter
-                font.pixelSize: 10 * rate
-            }
-            Row {
-                spacing: 20
+        Image {
+            anchors.fill: parent
+            source: "qrc:/res/pictures/background_glow2.png"
+        }
+        Rectangle {
+            width: parent.width * 0.8
+            height: parent.height * 0.7
+            anchors.centerIn: parent
+            ColumnLayout {
                 width: parent.width
-                height: parent.height * 0.7
-                Layout.alignment: Qt.AlignCenter
-                Rectangle {
-                    width: 50 * rate
-                    height: 25 * rate
-                    radius: width / 2
-                    color: "orange"
-                    visible: !is_single_btn
-                    Text {
-                        text: qsTr("No")
-                        font.pixelSize: 12 * rate
-                        anchors.centerIn: parent
-                    }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            dialog_info.close()
-                        }
-                    }
+                height: parent.height
+                Label {
+                    text: qsTr(dia_title)
+                    font.pixelSize: 15 * rate
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    Layout.alignment: Qt.AlignCenter
                 }
                 Rectangle {
-                    width: 50 * rate
-                    height: 25 * rate
-                    radius: width / 2
-                    color: "green"
-                    Text {
-                        text: qsTr("Ok")
-                        font.pixelSize: 12 * rate
-                        anchors.centerIn: parent
-                    }
-                    MouseArea {
+                    width: parent.width
+                    height: parent.height * 0.2
+                    anchors.centerIn: parent
+                    color: "transparent"
+                    Image {
+                        source: dia_image_source
                         anchors.fill: parent
-                        onClicked: {
-                            okClicked()
+                        Layout.alignment: Qt.AlignCenter
+                        fillMode: Image.PreserveAspectFit
+                    }
+                }
+
+                Row {
+                    spacing: 20
+                    width: parent.width
+                    height: parent.height * 0.7
+                    Layout.alignment: Qt.AlignCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    Rectangle {
+                        width: 50 * rate
+                        height: 25 * rate
+                        visible: !is_single_btn
+                        color: "transparent"
+                        Image {
+                            anchors.fill: parent
+                            source: "qrc:/res/pictures/btn_style2.png"
+                            fillMode: Image.PreserveAspectFit
+                            horizontalAlignment: Image.AlignHCenter
+                            verticalAlignment: Image.AlignVCenter
+                            Text {
+                                anchors.centerIn: parent
+                                color: "white"
+                                text: qsTr("No")
+                                font.pixelSize: 12 * rate
+                                font.family: "Arial"
+                                font.weight: Font.Thin
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                }
+                            }
+                        }
+                    }
+                    Rectangle {
+                        width: 50 * rate
+                        height: 25 * rate
+                        color: "transparent"
+                        Image {
+                            anchors.fill: parent
+                            source: "qrc:/res/pictures/btn_style2.png"
+                            fillMode: Image.PreserveAspectFit
+                            horizontalAlignment: Image.AlignHCenter
+                            verticalAlignment: Image.AlignVCenter
+                            Text {
+                                text: qsTr("Ok")
+                                anchors.centerIn: parent
+                                color: "white"
+                                font.pixelSize: 12 * rate
+                                font.family: "Arial"
+                                font.weight: Font.Thin
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    okClicked()
+                                }
+                            }
                         }
                     }
                 }

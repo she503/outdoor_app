@@ -1,13 +1,10 @@
 <RCC>
     <qresource prefix="/">
-        <file>res/pictures/login_background.jpg</file>
         <file>res/pictures/logo.png</file>
         <file>res/pictures/password.png</file>
         <file>res/pictures/username.png</file>
-        <file>res/pictures/user.png</file>
         <file>res/pictures/about.png</file>
         <file>res/pictures/help.png</file>
-        <file>res/pictures/home.png</file>
         <file>res/pictures/setting.png</file>
         <file>res/pictures/arrow-right.png</file>
         <file>res/pictures/battery.png</file>
@@ -20,7 +17,6 @@
         <file>res/pictures/warn.png</file>
         <file>res/pictures/gps.png</file>
         <file>res/pictures/finish_2.png</file>
-        <file>res/pictures/User.png</file>
         <file>res/pictures/button.png</file>
         <file>res/pictures/gear-shift.png</file>
         <file>res/pictures/power_off.png</file>
@@ -32,5 +28,22 @@
         <file>res/pictures/progress_stop.png</file>
         <file>res/html/test.html</file>
         <file>res/pictures/back.png</file>
+        <file>res/pictures/login_background.png</file>
+        <file>res/pictures/home_focus.png</file>
+        <file>res/pictures/about_no.png</file>
+        <file>res/pictures/help_no.png</file>
+        <file>res/pictures/setting_no.png</file>
+        <file>res/pictures/user_no.png</file>
+        <file>res/pictures/main_background.png</file>
+        <file>res/pictures/states_no.png</file>
+        <file>res/pictures/states_success.png</file>
+        <file>res/pictures/switch_auto.png</file>
+        <file>res/pictures/switch_operate.png</file>
+        <file>res/pictures/start.png</file>
+        <file>res/pictures/stop.png</file>
+        <file>res/pictures/task_progress.png</file>
+        <file>res/pictures/btn_1.png</file>
+        <file>res/pictures/user_background.png</file>
+        <file>res/pictures/btn_2.png</file>
     </qresource>
 </RCC>

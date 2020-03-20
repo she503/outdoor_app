@@ -4,6 +4,7 @@ import QtQuick.Controls 1.4 as Control_14
 Rectangle {
     id: root
 
+    color: "transparent"
     property Component home_page: HomePage { }
     property Component user_manage_page: UserManagePage { }
     property Component task_settings_page: TaskSettingsPage { }
@@ -24,126 +25,101 @@ Rectangle {
         }
     }
 
-    Control_14.SplitView {
-        id: split_view
+    Image {
+        id: img_main_background
+        source: "qrc:/res/pictures/main_background.png"
         anchors.fill: parent
-        orientation: Qt.Horizontal
+    }
+    Rectangle {
+        id: rect_title
+        width: parent.width
+        height: parent.height * 0.082
+        color: "transparent"
+
+    }
+
+    Rectangle {
+        anchors {
+            top: rect_title.bottom
+        }
+        width: parent.width
+        height: parent.height - rect_title.height
+
+        color: "transparent"
+
         Rectangle {
-//            id: rect_left
-            width: parent.width * 0.25
+            id: rect_left
             height: parent.height
-            color: "white"
+            width: height / 5 * 2.4
+            color: "transparent"
+
             ListView {
                 id: list_view
                 anchors.fill: parent
                 spacing: height * 0.002
-                currentIndex: -1
+                currentIndex: 0
+                highlight: Rectangle {color: "transparent"}
+                clip: true
                 delegate: ItemDelegate {
-                    width: list_view.width
-                    height: list_view.height / 8
-                    highlighted: ListView.isCurrentItem
-                    Row {
-                        id: row
-                        width: parent.width
-                        height: parent.height * 0.99
-                        Image {
-                            id: img_logo
-                            width: parent.width * 0.2
-                            height: parent.height
-                            source: sourcee
-                            fillMode: Image.PreserveAspectFit
-                            horizontalAlignment: Image.AlignHCenter
-                            verticalAlignment: Image.AlignVCenter
-                        }
+                    id: item
+                    height: list_view.height / 5
+                    width: height * 2.4
+                    property real id_num: model.id_num
 
-                        Rectangle {
-                            width: parent.width * 0.5
-                            height: parent.height
-
-                            Text {
-                                id: model_name
-                                clip: true
-                                text: "  " + model.name
-                                objectName: model.obj_name
-                                width: parent.width
-                                height: parent.height * 0.6
-                                font.bold: true
-                                font.pixelSize: height * 0.7
-                                verticalAlignment: Text.AlignVCenter
-                            }
-                            Text {
-                                id: description
-                                text: " " + model.text_description
-                                clip: true
-                                width: parent.width
-                                height: parent.height * 0.3
-                                font.pixelSize: height * 0.5
-                                anchors {
-                                    top: model_name.bottom
-                                }
-                            }
-                            color: "transparent"
-                        }
+                    Rectangle {
+                        anchors.fill: parent
+                        color: "transparent"
                         Image {
-                            id: img_right
-                            width: parent.width * 0.2
-                            height: parent.height
-                            source: "qrc:/res/pictures/arrow-right.png"
+                            id: img_background
+                            source: list_view.currentIndex == item.id_num ? model.focus_source : model.no_focus_source
+                            anchors.fill: parent
                             fillMode: Image.PreserveAspectFit
-                            horizontalAlignment: Image.AlignHCenter
-                            verticalAlignment: Image.AlignVCenter
                         }
                     }
+
                     onClicked: {
                         list_view.currentIndex = index
                         mainPageChanged(list_view.currentIndex)
                     }
-                    Rectangle {
-                        width: parent.width
-                        height: parent.height * 0.01
-                        color: "gray"
-                    }
                 }
                 model: ListModel {
                     ListElement {
-                        obj_name: "home"
-                        name: qsTr("home")
-                        text_description: qsTr("homeeeee")
-                        sourcee: "qrc:/res/pictures/home.png"
+                        id_num: 0
+                        focus_source: "qrc:/res/pictures/home_focus.png"
+                        no_focus_source: "qrc:/res/pictures/home_no.png"
+
                     }
                     ListElement {
-                        obj_name: "user"
-                        name: qsTr("user")
-                        text_description: qsTr("userrrr")
-                        sourcee: "qrc:/res/pictures/User.png"
+                        id_num: 1
+                        focus_source: "qrc:/res/pictures/user_focus.png"
+                        no_focus_source: "qrc:/res/pictures/user_no.png"
                     }
                     ListElement {
-                        obj_name: "setting"
-                        name: qsTr("setting")
-                        text_description: qsTr("setting ")
-                        sourcee: "qrc:/res/pictures/setting.png"
+                        id_num: 2
+                        focus_source: "qrc:/res/pictures/setting_focus.png"
+                        no_focus_source: "qrc:/res/pictures/setting_no.png"
                     }
                     ListElement {
-                        obj_name: "help"
-                        name: qsTr("help")
-                        text_description: qsTr("helppp")
-                        sourcee: "qrc:/res/pictures/help.png"
+                        id_num: 3
+                        focus_source: "qrc:/res/pictures/help_focus.png"
+                        no_focus_source: "qrc:/res/pictures/help_no.png"
                     }
                     ListElement {
-                        obj_name: "about"
-                        name: qsTr("about")
-                        text_description: qsTr("abouttttt")
-                        sourcee: "qrc:/res/pictures/about.png"
+                        id_num: 4
+                        focus_source: "qrc:/res/pictures/about_focus.png"
+                        no_focus_source: "qrc:/res/pictures/about_no.png"
                     }
                 }
             }
         }
+
         Rectangle {
             id: rect_right
             z: -1
-            width: parent.width * 0.75
+            width: parent.width - rect_left.width
             height: parent.height
             color:"transparent"
+            anchors.left: rect_left.right
             StackView {
                 id: stack_view
                 anchors.fill: parent
@@ -158,7 +134,4 @@ Rectangle {
             }
         }
     }
-
-
-
 }

@@ -14,33 +14,8 @@ Rectangle {
     property int admin_num: 0
     property real rate: Math.min(width, height) / 400
 
-    Component.onCompleted: {
-        account_manager.getAllAcountInfo()
-        root.user_level = account_manager.getCurrentAccountLevel()
-    }
+    color: "transparent"
 
-    Connections {
-        target: account_manager
-        onEmitAllAccountInfo: {
-
-            root.v_accounts_info = accounts_info
-
-
-            var nomal_level = qsTr("nomal_level")
-            var admin_level = qsTr("admin_level")
-
-            for (var key in root.v_accounts_info) {
-                if (accounts_info[key] === 0) {
-                    console.info("error user level")
-                } else if (accounts_info[key] === 1) {
-                    user_list_model.append({"user_name": key, "level": nomal_level, "user_level": accounts_info[key]})
-                } else if (accounts_info[key] === 2) {
-                    user_list_model.append({"user_name": key, "level": admin_level, "user_level": accounts_info[key]})
-                    ++root.admin_num;
-                }
-            }
-        }
-    }
 
     Dialog {
         id: message_update_uer
@@ -137,11 +112,11 @@ Rectangle {
         y: (root.height - height) / 2
         title: qsTr("")
         /*
-          @param
-                0: error
-                1: success
-                2: infomation
-          */
+              @param
+                    0: error
+                    1: success
+                    2: infomation
+              */
         property int message_level: 0
         onMessage_levelChanged: {
             if (message_account.message_level === 0) {
@@ -189,36 +164,47 @@ Rectangle {
     }
 
     Rectangle {
-        id: rect_admin
-        anchors.fill: parent
-        visible: root.user_level === 2 ? true : false
+        id: bg
+        height: parent.width > parent.height ? parent.height * 0.9 : parent.width * 0.9 * 0.787
+        width: parent.width > parent.height ? parent.height * 0.9 * 1.27 : parent.width * 0.9
+        anchors.centerIn: parent
+        color: "transparent"
+        Image {
+            id: im
+            anchors.fill: parent
+            source: "qrc:/res/pictures/user_background.png"
+        }
         Rectangle {
-            id: title_user
+            id: rect_top
             width: parent.width
-            height: parent.height * 0.1
-            color: "white"
-
-            Text {
-                id: title
-                width: parent.width * 0.2
-                height: parent.height
-                font.pixelSize: height * 0.5
-                font.bold: true
-                text: qsTr("user list: ")
-                anchors {
-                    left: parent.left
-                    leftMargin: width * 0.1
-                }
-                horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
-            }
-
-            TLButton {
+            height: parent.height * 0.16
+            color: "transparent"
+            Button {
                 id: btn_delete
                 width: parent.width * 0.2
-                height: parent.height * 0.8
-                btn_text: qsTr("delete")
-                font_size: height * 0.5
+                height: parent.height * 0.5
+                contentItem: Text {
+                    anchors.fill: parent
+                    font.pixelSize: parent.height * 0.5
+                    text: qsTr("delete")
+                    color: "white"
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
+                enabled: list_view_user.currentIndex === -1 ? false : true
+
+                background: Image {
+                    id: img_delete
+                    anchors.fill: parent
+                    source: !enabled ? "qrc:/res/pictures/btn_2.png" : "qrc:/res/pictures/btn_1.png"
+                }
+
+                anchors {
+                    bottom: parent.bottom
+                    right: parent.right
+                    rightMargin: width * 0.25
+                }
+
                 Component.onCompleted: {
                     if (root.user_level === 1) {
                         btn_delete.visible = false
@@ -227,16 +213,7 @@ Rectangle {
                     }
                 }
 
-                anchors {
-                    right: parent.right
-                    rightMargin: width * 0.1
-                    verticalCenter: parent.verticalCenter
-                }
-                backgroundDefaultColor: list_view_user.currentIndex == -1 ? "gray" : "#3498DB"
-                enabled: list_view_user.currentIndex == -1 ? false : true
-
                 onClicked: {
-
                     if (root.checked_user_level == 2 && root.admin_num === 1) {
                         message_account.title = qsTr("error")
                         message_account.message_level = 0
@@ -258,44 +235,53 @@ Rectangle {
 
                 }
             }
-
-            TLButton {
+            Button {
                 id: btn_update
                 width: parent.width * 0.2
-                height: parent.height * 0.8
-                btn_text: qsTr("update")
-                font_size: height * 0.5
+                height: parent.height * 0.5
+
+
+                contentItem: Text {
+                    anchors.fill: parent
+                    font.pixelSize: parent.height * 0.5
+                    text: qsTr("update")
+                    color: "white"
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
+
+                enabled: list_view_user.currentIndex === -1 ? false : true
+
+                background: Image {
+                    id: img_update
+                    anchors.fill: parent
+                    source: !enabled ? "qrc:/res/pictures/btn_2.png" : "qrc:/res/pictures/btn_1.png"
+                }
+
                 anchors {
+                    bottom: parent.bottom
                     right: btn_delete.visible ? btn_delete.left : parent.right
                     rightMargin: width * 0.1
-                    verticalCenter: parent.verticalCenter
                 }
-                enabled: list_view_user.currentIndex == -1 ? false : true
-                backgroundDefaultColor: list_view_user.currentIndex == -1 ? "gray" : "#3498DB"
-
                 onClicked: message_update_uer.open()
             }
-
-        }
-
-        Rectangle {
-            id: rect_user_line
-            width: parent.width
-            height: parent.height * 0.002
-            color: "gray"
-            anchors.top: title_user.bottom
         }
 
         Rectangle {
             id: rect_list
-            width: parent.width
+            width: parent.width * 0.8
             height: parent.height * 0.4
             clip: true
-            anchors.top: rect_user_line.bottom
+            color: "transparent"
+            anchors {
+                top: rect_top.bottom
+                horizontalCenter: parent.horizontalCenter
+            }
             ListView {
                 id: list_view_user
                 width: parent.width
                 height: parent.height
+
                 anchors {
                     top: parent.top
                     left: parent.left
@@ -338,6 +324,7 @@ Rectangle {
                         font.pixelSize: item_de.height * 0.8
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
+                        color: "white"
                     }
                     Text {
                         id: text_level
@@ -350,6 +337,7 @@ Rectangle {
                         font.pixelSize: item_de.height * 0.8
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
+                        color: "white"
                         property int user_level: model.user_level
                     }
                     onClicked: {
@@ -365,117 +353,128 @@ Rectangle {
         }
 
         Rectangle {
-            id: rect_add_user_linee
-            width: parent.width
-            height: parent.height * 0.002
-            color: "gray"
-            anchors.top: rect_list.bottom
-        }
-
-        Rectangle {
             id: rect_add_user
-            width: parent.width
-            height: parent.height * 0.1
-            anchors.top: rect_add_user_linee.bottom
-            Text {
-                id: title_add
-                width: parent.width * 0.2
-                height: parent.height
-                text: qsTr("add new user: ")
-                font.pixelSize: height * 0.5
-                font.bold: true
-                horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
+            width: parent.width * 0.4
+            height: parent.height * 0.3
+            anchors{
+                top: rect_list.bottom
+                topMargin: parent.height * 0.08
+                right: parent.right
+                rightMargin: parent.width * 0.08
             }
-        }
+            color: "transparent"
 
-        Rectangle {
-            id: rect_add_user_line
-            width: parent.width
-            height: parent.height * 0.002
-            color: "gray"
-            anchors.top: rect_add_user.bottom
-        }
-
-        Rectangle {
-            height: parent.height * 0.4
-            width: parent.width * 0.5
-            anchors.top: rect_add_user_line.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            TLTextField {
-                id: btn_add_username
+            Rectangle {
+                id: user_rect
                 width: parent.width
                 height: parent.height * 0.2
                 anchors {
                     top: parent.top
-                    topMargin: 5 * rate
-                    left: parent.left
                 }
-                btn_radius:  height * 0.1
-                placeholderText: qsTr("enter new user name.")
-                pic_name: "qrc:/res/pictures/username.png"
+                Text {
+                    id: text_use
+                    text: qsTr("username:")
+                    width: parent.width * 0.3
+                    height: parent.height
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+                    color: "#1a7ec0"
+                    font.pixelSize: height * 0.5
+                    anchors{
+                        top: parent.top
+                        topMargin: parent.height * 0.2
+                        left: parent.left
+                    }
+                }
+
+                TLTextField {
+                    id: btn_add_username
+                    width: parent.width * 0.6
+                    height: parent.height
+                    anchors {
+                        top: parent.top
+                        topMargin: parent.height * 0.1
+                        left: text_use.right
+                        leftMargin: parent.width * 0.05
+                    }
+                    btn_radius:  height * 0.2
+                    placeholderText: qsTr("enter new user name.")
+                    pic_name: "qrc:/res/pictures/username.png"
+                }
             }
-            TLTextField {
-                id: btn_add_pwd
+
+            Rectangle {
+                id: pwd_rect
                 width: parent.width
                 height: parent.height * 0.2
                 anchors {
-                    top: btn_add_username.bottom
-                    topMargin: 5 * rate
-                    left: parent.left
+                    top: user_rect.bottom
+                    topMargin: parent.height * 0.1
                 }
-                btn_radius:  height * 0.1
-                placeholderText: qsTr("enter new password.")
-                pic_name: "qrc:/res/pictures/password.png"
+                Text {
+                    id: text_pwd
+                    text: qsTr("password:")
+                    width: parent.width * 0.3
+                    height: parent.height
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+                    color: "#1a7ec0"
+                    font.pixelSize: height * 0.5
+                    anchors{
+                        top: parent.top
+                        left: parent.left
+                    }
+                }
+                TLTextField {
+                    id: btn_add_pwd
+                    width: parent.width * 0.6
+                    height: parent.height
+                    anchors {
+                        top: parent.top
+                        topMargin: parent.height * 0.1
+                        left: text_pwd.right
+                        leftMargin: parent.width * 0.05
+
+                    }
+                    btn_radius:  height * 0.2
+                    placeholderText: qsTr("enter new password.")
+                    pic_name: "qrc:/res/pictures/password.png"
+                }
+
             }
-            GroupBox {
-                id: radio_box
-                anchors.top: btn_add_pwd.bottom
-                anchors.topMargin: 3
-                anchors.horizontalCenter: parent.horizontalCenter
+
+            TLRadioButton {
+                id: radio_btn
                 width: parent.width * 0.8
-                height: parent.height * 0.2
-                background: Rectangle {
-                    border.width: 0
-                }
-                Row {
-                    anchors.centerIn: parent
-
-                    spacing: 70 * rate
-
-                    TLRadioButton {
-                        id: radio_btn_operator
-                        width: 25 * rate
-                        height: 25 * rate
-                        text_name: qsTr("operator")
-
-                    }
-                    TLRadioButton {
-                        id: radio_btn_admin
-                        width: 25 * rate
-                        height: 25 * rate
-                        text_name: qsTr("admin")
-                    }
+                height: parent.height * 0.1
+                anchors{
+                    top: pwd_rect.bottom
+                    topMargin: parent.height * 0.08
+                    right: parent.right
                 }
             }
+
             TLButton {
                 id: btn_registered
-                width: parent.width
-                height: parent.height * 0.2
-                anchors.top: radio_box.bottom
-                anchors.topMargin: 5
+                width: parent.width * 0.4
+                height: parent.height * 0.15
+                anchors{
+                    top: radio_btn.bottom
+                    topMargin: parent.height * 0.08
+                    horizontalCenter: parent.horizontalCenter
+                    horizontalCenterOffset: parent.width * 0.1
+                }
                 btn_text: qsTr("OK")
                 onClicked: {
                     if (btn_add_pwd.text === "" || btn_add_username.text === "" ||
-                            (!radio_btn_admin.checked && !radio_btn_operator.checked)) {
+                            radio_btn.checked_num === -1) {
                         message_account.title = qsTr("empty error")
                         message_account.message_level = 0
                         message_text.text = qsTr("some information is empty!!!")
                         message_account.open()
                         return
                     } else {
-                        var level = radio_btn_admin.checked ? 2 : 1
+                        var level = radio_btn.checked_num
                         var states = account_manager.addUser(btn_add_username.text, btn_add_pwd.text, level)
                         switch (states) {
                         case 0:
@@ -490,13 +489,13 @@ Rectangle {
                                 leve_name = qsTr("nomal_user")
                             } else if (level === 2) {
                                 leve_name = qsTr("admin_user")
+                                ++root.admin_num
                             }
                             user_list_model.append({"user_name": btn_add_username.text, "level": leve_name, "user_level": level})
                             message_account.title = qsTr("Success")
                             message_account.message_level = 1
                             message_text.text = qsTr("a new user was added")
                             message_account.open()
-                            ++root.admin_num
                             break;
                         case 2:
                             break;
@@ -510,60 +509,88 @@ Rectangle {
             }
         }
 
-    }
 
-    Rectangle {
-        id: rect_nomal
-        anchors.fill: parent
-        visible: root.user_level === 1 ? true : false
+        Component.onCompleted: {
+            account_manager.getAllAcountInfo()
+            root.user_level = account_manager.getCurrentAccountLevel()
+        }
 
-        Rectangle {
-            id: rect_nomal_user_name_text
-            width: parent.width
-            height: parent.height * 0.8
-            property var user_name: ""
-            Component.onCompleted: {
-                 for (var key in root.v_accounts_info) {
-                     rect_nomal_user_name_text.user_name = key
-                 }
-            }
+        Connections {
+            target: account_manager
+            onEmitAllAccountInfo: {
 
-            Text {
-                id: text_welcom
-                width: parent.width * 0.5
-                text: qsTr("Welcom :")
-                horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
-                font.pixelSize: parent.width * 0.1
-                color: "Red"
-                font.bold: true
-            }
-            Text {
-                anchors.top: text_welcom.bottom
-                width: parent.width
-                height: parent.height * 0.5
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                font.pixelSize: parent.width * 0.05
-                text: rect_nomal_user_name_text.user_name
+                root.v_accounts_info = accounts_info
+
+                var nomal_level = qsTr("nomal_level")
+                var admin_level = qsTr("admin_level")
+
+                for (var key in root.v_accounts_info) {
+                    if (accounts_info[key] === 0) {
+                        console.info("error user level")
+                    } else if (accounts_info[key] === 1) {
+                        user_list_model.append({"user_name": key, "level": nomal_level, "user_level": accounts_info[key]})
+                    } else if (accounts_info[key] === 2) {
+                        user_list_model.append({"user_name": key, "level": admin_level, "user_level": accounts_info[key]})
+                        ++root.admin_num;
+                    }
+                }
             }
         }
-        Rectangle {
-            id: rect_nomal_user_update
-            width: parent.width
-            height: parent.height * 0.2
-            anchors.top: rect_nomal_user_name_text.bottom
-            TLButton {
-                id: btn_update_nomal
-                width: parent.width * 0.2
-                height: parent.height * 0.8
-                btn_text: qsTr("update")
-                font_size: height * 0.5
-                anchors.centerIn: parent
-                backgroundDefaultColor: "#3498DB"
-                onClicked: message_update_uer.open()
-            }
-        }
-    }
 
+
+
+        //    Rectangle {
+        //        id: rect_nomal
+        //        anchors.fill: parent
+        //        visible: root.user_level === 1 ? true : false
+
+        //        Rectangle {
+        //            id: rect_nomal_user_name_text
+        //            width: parent.width
+        //            height: parent.height * 0.8
+        //            property var user_name: ""
+        //            Component.onCompleted: {
+        //                 for (var key in root.v_accounts_info) {
+        //                     rect_nomal_user_name_text.user_name = key
+        //                 }
+        //            }
+
+        //            Text {
+        //                id: text_welcom
+        //                width: parent.width * 0.5
+        //                text: qsTr("Welcom :")
+        //                horizontalAlignment: Text.AlignLeft
+        //                verticalAlignment: Text.AlignVCenter
+        //                font.pixelSize: parent.width * 0.1
+        //                color: "Red"
+        //                font.bold: true
+        //            }
+        //            Text {
+        //                anchors.top: text_welcom.bottom
+        //                width: parent.width
+        //                height: parent.height * 0.5
+        //                horizontalAlignment: Text.AlignHCenter
+        //                verticalAlignment: Text.AlignVCenter
+        //                font.pixelSize: parent.width * 0.05
+        //                text: rect_nomal_user_name_text.user_name
+        //            }
+        //        }
+        //        Rectangle {
+        //            id: rect_nomal_user_update
+        //            width: parent.width
+        //            height: parent.height * 0.2
+        //            anchors.top: rect_nomal_user_name_text.bottom
+        //            TLButton {
+        //                id: btn_update_nomal
+        //                width: parent.width * 0.2
+        //                height: parent.height * 0.8
+        //                btn_text: qsTr("update")
+        //                font_size: height * 0.5
+        //                anchors.centerIn: parent
+        //                backgroundDefaultColor: "#3498DB"
+        //                onClicked: message_update_uer.open()
+        //            }
+        //        }
+        //    }
+    }
 }

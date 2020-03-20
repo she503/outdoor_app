@@ -10,13 +10,20 @@
         <file>TaskSettingsPage.qml</file>
         <file>VehicleItem.qml</file>
         <file>MonitorPage.qml</file>
+        <file>res/font/hanzhen.ttf</file>
+        <file>res/font/BRLNSR.TTF</file>
+        <file>res/pictures/user_focus.png</file>
+        <file>res/pictures/home_no.png</file>
+        <file>res/pictures/setting_focus.png</file>
+        <file>res/pictures/about_focus.png</file>
+        <file>res/pictures/help_focus.png</file>
     </qresource>
     <qresource prefix="/CustomControl">
         <file>TLTextField.qml</file>
         <file>TLButton.qml</file>
-        <file>TLInfoDisplay.qml</file>
         <file>TLRadioButton.qml</file>
         <file>TLInfoDisplayPage.qml</file>
         <file>TLDialog.qml</file>
+        <file>TLProgressBar.qml</file>
     </qresource>
 </RCC>

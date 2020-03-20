@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QTranslator>
-#include <QtWebView/QtWebView>
+//#include <QtWebView/QtWebView>
 
 #include "socket_manager.h"
 #include "account_manager.h"
@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
-    QtWebView::initialize();
+//    QtWebView::initialize();
 //    QTranslator trans;
 //    if (!trans.load(":/language/translation_chinese.qm")) {
 //        qDebug() << "faild to load translation qm !!!";

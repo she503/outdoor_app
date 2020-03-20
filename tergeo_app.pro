@@ -1,6 +1,6 @@
-QT += qml quick network widgets webview
-
-CONFIG += c++11
+#QT += qml quick network widgets webview
+QT += qml quick network widgets
+CONFIG += c++11 resources_big
 
 SOURCES += main.cpp \
     account_manager.cpp \

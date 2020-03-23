@@ -58,5 +58,6 @@
         <file>res/pictures/map_areas_normal.png</file>
         <file>res/pictures/sad.png</file>
         <file>res/pictures/smile.png</file>
+        <file>res/pictures/user_nomal_background.png</file>
     </qresource>
 </RCC>

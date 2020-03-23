@@ -37,6 +37,7 @@ Rectangle {
 
                 Rectangle {
                     id: admin_center
+                    smooth: true
                     anchors.centerIn: parent
                     width: parent.width * 0.6
                     height: width

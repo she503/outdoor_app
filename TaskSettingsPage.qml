@@ -363,7 +363,7 @@ Rectangle {
                             text: qsTr("Not Matched")
                             anchors.centerIn: parent
                             color: "blue"
-                            font.pixelSize: 15 * rate * ratio
+                            font.pixelSize: 13 * rate * ratio
                             font.family: "Arial"
                             font.weight: Font.Thin
                             horizontalAlignment: Text.AlignHCenter
@@ -456,9 +456,26 @@ Rectangle {
                                 can_work = true
                                 rec_checked_location.visible = false
                                 monitor_page.choose_marker.visible = false
+                                busy.running = true
                             }
                         }
                     }
+                }
+            }
+        }
+
+        BusyIndicator{
+            id:busy
+
+            running: false
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            anchors.topMargin: parent.height/3.
+            Timer{
+                interval: 2000
+                running: busy.running
+                onTriggered: {
+                    busy.running = false
                 }
             }
         }

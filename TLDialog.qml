@@ -29,13 +29,14 @@ Dialog {
                 }
                 Rectangle {
                     width: parent.width
-                    height: parent.height * 0.2
+                    height: parent.height * 0.6
                     anchors.centerIn: parent
                     color: "transparent"
                     Image {
                         source: dia_image_source
                         anchors.fill: parent
                         Layout.alignment: Qt.AlignCenter
+                        anchors.centerIn: parent
                         fillMode: Image.PreserveAspectFit
                     }
                 }
@@ -71,6 +72,7 @@ Dialog {
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
+                                    dialog_info.close()
                                 }
                             }
                         }

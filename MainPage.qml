@@ -77,7 +77,6 @@ Rectangle {
             height: parent.height
             width: height / 5 * 2.4
             color: "transparent"
-            Layout.minimumWidth: parent.width * 0.1
             Rectangle {
                 id: rec_turn_view
                 visible: false
@@ -94,6 +93,7 @@ Rectangle {
                     height:  parent.height * 0.5
                     anchors.top: rect_info_display.bottom
                     anchors.left: parent.left
+                    color: "transparent"
                     Rectangle {
                         id: rec_power_control
                         width: parent.width
@@ -104,6 +104,7 @@ Rectangle {
                             Rectangle {
                                 width: parent.width / 3
                                 height: parent.height
+                                color: "transparent"
                                 Image {
                                     id: pic_back
                                     width: 60 * rate * ratio
@@ -123,6 +124,7 @@ Rectangle {
                                 id: rec_machine_state
                                 width: parent.width / 3
                                 height: parent.height
+                                color: "transparent"
                                 Image {
                                     id: pic_ok
                                     visible: !has_error
@@ -152,6 +154,7 @@ Rectangle {
                                 id: rec_progress_state
                                 width: parent.width / 3
                                 height: parent.height
+                                color: "transparent"
                                 property bool is_processing: false
                                 Image {
                                     id: pic_task_stop
@@ -199,6 +202,7 @@ Rectangle {
                         width: parent.width
                         height: parent.height * 0.7
                         anchors.top: rec_power_control.bottom
+                        color: "transparent"
                         Image {
                             id: pic_car
                             source: "qrc:/res/pictures/logo.png"
@@ -215,12 +219,14 @@ Rectangle {
                     height:  parent.height * 0.2
                     anchors.top: rec_pic_car.bottom
                     anchors.left: parent.left
+                    color: "transparent"
                     Column {
                         Repeater {
                             model: ["Current map: ", "Worked hours: ", "Finished: ", "Estimated time: "]
                             Rectangle {
                                 width: rec_peocess.width
                                 height: rec_peocess.height * 0.25
+                                color: "transparent"
                                 Text {
                                     anchors {
                                         top: parent.top
@@ -229,6 +235,7 @@ Rectangle {
                                     }
                                     text: qsTr(modelData + "  " + text_process[index])
                                     font.pixelSize: rate * 15 * ratio
+                                    color: "white"
                                 }
                             }
                         }
@@ -255,6 +262,7 @@ Rectangle {
                         Image {
                             id: img_background
                             source: list_view.currentIndex == item.id_num ? model.focus_source : model.no_focus_source
+                            opacity: list_view.currentIndex == item.id_num ? 1 : 0.4
                             anchors.fill: parent
                             fillMode: Image.PreserveAspectFit
                         }

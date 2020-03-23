@@ -11,7 +11,7 @@ Rectangle {
     property real rate: Math.min(width, height) / 400
     property real ratio: Math.sqrt(Math.min(rec_left.width / 3, rec_task_control.height)) * 0.1
     property var map_areas: ["MAP1#", "MAP2#", "MAP3#"]
-    property var ref_lines: [["submap1#", "submap2#", "submap3#"], ["submap4#", "submap5#", "submap6#"], ["submap7#", "submap8#", "submap9#"]]
+    property var ref_lines: [["Task1#", "Task2#", "Task3#"], ["Task4#", "Task5#", "Task6#"], ["Task7#", "Task8#", "Task9#"]]
     property var sel_map: -1
     property bool isMatched: true
     property bool can_work: false
@@ -40,82 +40,114 @@ Rectangle {
             Rectangle {
                 id: rec_header_bar
                 width: parent.width
-                height: parent.height * 0.05 * rate
-                TabBar {
-                    id: header_bar
+                height: parent.height * 0.07 * rate
+                Rectangle {
                     width: parent.width
-                    height: parent.height * 0.95
-                    position: TabBar.Header
-                    Repeater {
-                        model: map_areas
-
-                        TabButton {
-                            width: header_bar.width / (map_areas.length + 2)
-                            height: parent.height
-                            indicator: Rectangle {
-                                anchors.fill: parent
+                    height: 2
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    anchors.topMargin: 1
+                    color: "lightblue"
+                }
+                ListView {
+                    id: list_view_areas
+                    clip: true
+                    anchors.fill: parent
+                    model: list_model_areas
+                    orientation:ListView.Horizontal
+                    boundsBehavior:Flickable.StopAtBounds
+                    delegate: RowLayout {
+                        id: grid_areas
+                        visible: true
+                        width: parent.width
+                        height: parent.height
+                        Repeater {
+                            model: attributes
+                            Rectangle {
+                                width: rec_header_bar.width / (map_areas.length + 2)
+                                height: parent.height
                                 border.color: "transparent"
+//                                color: ListView.isCurrentItem ? "blue" : "red"
                                 Image {
-                                    id: pic_areas_normol
+                                    id: bac_areas
                                     anchors.fill: parent
-                                    source: "qrc:/res/pictures/map_areas_normal.png"
+                                    source: ListView.isCurrentItem ? "qrc:/res/pictures/map_areas_focus.png": "qrc:/res/pictures/map_areas_normal.png"
                                     Text {
                                         text: qsTr(modelData)
                                         anchors.centerIn: parent
-                                    }
-                                }
-                                Image {
-                                    id: pic_areas_focus
-                                    visible: false
-                                    anchors.fill: parent
-                                    source: "qrc:/res/pictures/map_areas_focus.png"
-                                    Text {
-                                        text: qsTr(modelData)
-                                        anchors.centerIn: parent
+                                        font.pixelSize: 15 * rate * ratio
                                     }
                                 }
                                 MouseArea {
                                     anchors.fill: parent
+                                    propagateComposedEvents: true
                                     onPressed: {
+                                        list_view_areas.currentIndex = index
                                         header_bar_index = index
-                                        pic_areas_focus.visible = true
-                                        pic_areas_normol.visible = false
                                         list_model.clear()
                                         list_model.initListModel()
-                                    }
-                                    onCanceled: {
-                                        pic_areas_normol.visible = true
-                                        pic_areas_focus.visible = false
+                                        rec_ref_lines.visible = true
+                                        rec_checked_location.visible = true
+                                        btn_not_match.visible = true
+                                        btn_match.visible = true
+                                        note_text.visible = false
+                                        btn_resure.visible = false
+                                        bac_areas.source = "qrc:/res/pictures/map_areas_focus.png"
+//                                        list_model_areas.clear()
+//                                        list_model_areas.initListModel()
                                     }
                                     onReleased: {
-                                        pic_areas_normol.visible = true
-                                        pic_areas_focus.visible = false
+                                        bac_areas.source = "qrc:/res/pictures/map_areas_normal.png"
                                     }
                                 }
                             }
                         }
                     }
                 }
-                Rectangle {
-                    width: parent.width
-                    height: parent.height * 0.05
-                    anchors.top: header_bar.bottom
-                    color: "lightblue"
+                ListModel {
+                    id: list_model_areas
+                    function initListModel() {
+                        var mapAttr = []
+                        for (var i = 0; i < map_areas.length; ++i) {
+                            mapAttr.push({attrName: map_areas[i]})
+                        }
+                        var mapElem = {attributes: mapAttr}
+                        append(mapElem)
+                    }
+                    Component.onCompleted: {
+                        initListModel()
+                    }
                 }
             }
-            Control_14.SplitView {
-                id: split_view
+            Rectangle {
+                id: rec_split
                 width: parent.width
-                height: rec_task_page.height - rec_header_bar.height - 1
+                height: 1
+                anchors.bottom: rec_header_bar.bottom
                 anchors.left: parent.left
-                anchors.top: rec_header_bar.bottom
-                orientation: Qt.Horizontal
+                anchors.topMargin: 1
+                color: "white"
+            }
+            Rectangle {
+                id: map_view
+                width: parent.width
+                height: rec_task_page.height - rec_header_bar.height
+                anchors.left: parent.left
+                anchors.top: rec_split.bottom
+                color: "transparent"
                 Rectangle {
-                    id: rec_left
-                    color: "transparent"
+                    id: rec_ref_lines
+                    visible: false
+                    z: 1
                     width: parent.width * 0.2
                     height: parent.height
-                    Layout.minimumWidth: parent.width * 0.1
+                    Rectangle {
+                        width: 1
+                        height: parent.height
+                        anchors.top: parent.top
+                        anchors.right: parent.right
+                        color: "lightgrey"
+                    }
                     ListView {
                         id: list_view
                         clip: true
@@ -126,53 +158,49 @@ Rectangle {
                             checkable: true
                             width: parent.width
                             contentItem: ColumnLayout {
-                                width: parent.width
-                                ColumnLayout {
-                                    id: grid
-                                    visible: true
-                                    ButtonGroup { id: radio_group }
-                                    Repeater {
-                                        model: attributes
-                                        CheckBox {
-                                            id: control
-                                            text: attrName
-                                            font.pixelSize: 15 * rate * ratio
-                                            indicator: Rectangle {
-                                                anchors.verticalCenter: control.verticalCenter
-                                                implicitWidth: rate * 30 * ratio
-                                                implicitHeight: rate * 30 * ratio
-                                                radius: width / 2
-                                                border.color: "grey"
-                                                border.width: 1
-                                                Image {
-                                                    visible: control.checked
-                                                    //                                            anchors.margins: 4
-                                                    source: "qrc:/res/pictures/finish_2.png"
-                                                    fillMode: Image.PreserveAspectFit
-                                                    anchors.fill: parent
-                                                }
+                                id: grid
+                                visible: true
+                                ButtonGroup { id: radio_group }
+                                Repeater {
+                                    model: attributes
+                                    CheckBox {
+                                        id: control
+                                        text: attrName
+                                        font.pixelSize: 15 * rate * ratio
+                                        indicator: Rectangle {
+                                            anchors.verticalCenter: control.verticalCenter
+                                            implicitWidth: rate * 25 * ratio
+                                            implicitHeight: rate * 25 * ratio
+                                            radius: width / 2
+                                            border.color: "grey"
+                                            border.width: 1
+                                            Image {
+                                                visible: control.checked
+                                                //                                            anchors.margins: 4
+                                                source: "qrc:/res/pictures/finish_2.png"
+                                                fillMode: Image.PreserveAspectFit
+                                                anchors.fill: parent
                                             }
-                                            onClicked: {
-                                                //                                        if (name === qsTr("map1#")) {
-                                                //                                            sel_map = index
-                                                //                                            mapIndexChanged(sel_map)
-                                                //                                        } else if (name === qsTr("map2#")){
-                                                //                                            sel_map = index
-                                                //                                        } else if (name === qsTr("map3#")) {
-                                                //                                            sel_map = index
-                                                //                                        }
-                                            }
+                                        }
+                                        onClicked: {
+                                            //                                        if (name === qsTr("map1#")) {
+                                            //                                            sel_map = index
+                                            //                                            mapIndexChanged(sel_map)
+                                            //                                        } else if (name === qsTr("map2#")){
+                                            //                                            sel_map = index
+                                            //                                        } else if (name === qsTr("map3#")) {
+                                            //                                            sel_map = index
+                                            //                                        }
+                                        }
 
-                                            ButtonGroup.group : {
-                                                if(true) {
-                                                    return radio_group
-                                                }
+                                        ButtonGroup.group : {
+                                            if(true) {
+                                                return radio_group
                                             }
                                         }
                                     }
                                 }
                             }
-
                         }
                         states: [
                             State {
@@ -185,12 +213,9 @@ Rectangle {
                             }
                         ]
                     }
-
-
                     ListModel {
                         id: list_model
                         function initListModel() {
-                            //                    for (var i = 0; i < 3; ++i) {
                             var mapAttr = []
                             for (var i = 0; i < ref_lines[header_bar_index].length; ++i) {
                                 mapAttr.push({attrName: ref_lines[header_bar_index][i]})
@@ -198,7 +223,6 @@ Rectangle {
                             var mapElem = {attributes: mapAttr}
                             append(mapElem)
                         }
-                        //                }
                         Component.onCompleted: {
                             initListModel()
                         }
@@ -206,10 +230,8 @@ Rectangle {
                 }
 
                 Rectangle {
-                    id: rec_right
-                    anchors.left: rec_left.right
-                    width: split_view.width - rec_left.width
-                    height: parent.height
+                    width: map_view.width
+                    height: map_view.height
                     Layout.minimumWidth: parent.width * 0.1
                     MonitorPage {
                         id: monitor_page
@@ -258,10 +280,9 @@ Rectangle {
                         onClicked: {
                             if (can_work) {
                                 rec_task_control.visible = false
-                                rec_left.visible = false
                                 rec_header_bar.visible = false
-                                rec_left.width = 0
-                                rec_header_bar.height = 0
+                                rec_ref_lines.visible = false
+                                rec_split.visible = false
                                 turn_task_page = true
                             } else {
                                 dialog_match_warn.open()
@@ -317,6 +338,7 @@ Rectangle {
                 width: parent.width * 0.96
                 height: parent.height * 0.9
                 anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
                 source: "qrc:/res/pictures/background_mached.png"
                 horizontalAlignment: Image.AlignHCenter
                 verticalAlignment: Image.AlignVCenter
@@ -341,7 +363,7 @@ Rectangle {
                             text: qsTr("Not Matched")
                             anchors.centerIn: parent
                             color: "blue"
-                            font.pixelSize: 13 * rate * ratio
+                            font.pixelSize: 15 * rate * ratio
                             font.family: "Arial"
                             font.weight: Font.Thin
                             horizontalAlignment: Text.AlignHCenter

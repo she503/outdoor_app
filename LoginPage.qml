@@ -169,12 +169,14 @@ Item{
                 onClicked: {
                     var emun_login_status = account_manager.checkLogin(username.text, password.text)
                     if ( emun_login_status === 0) {
-                        message_login_faild.title = qsTr("error")
-                        login_label.text = qsTr("user name is not exit")
+//                        message_login_faild.title = qsTr("error")
+//                        login_label.text = qsTr("user name is not exit")
+                        message_login_faild.dia_title = qsTr("user name is not exit")
                         message_login_faild.open()
                     } else if (emun_login_status === 1) {
-                        message_login_faild.title = qsTr("error")
-                        login_label.text = qsTr("error password")
+//                        message_login_faild.title = qsTr("error")
+//                        login_label.text = qsTr("error password")
+                        message_login_faild.dia_title = qsTr("error password")
                         message_login_faild.open()
                     } else if (emun_login_status === 2) {
                         root.user_level = account_manager.getCurrentAccountLevel()
@@ -185,20 +187,33 @@ Item{
         }
     }
 
-    Dialog {
+//    Dialog {
+//        id: message_login_faild
+//        width: root.width * 0.4
+//        height: root.height * 0.3
+//        x:(root.width - width) / 2
+//        y: (root.height - height) / 2
+
+//        title: qsTr("faild!")
+
+//        contentItem: TextArea {
+//            id: login_label
+//            text: qsTr("Please checkout username and password...")
+//        }
+//        standardButtons: Dialog.Yes
+//    }
+    TLDialog {
         id: message_login_faild
         width: root.width * 0.4
         height: root.height * 0.3
-        x:(root.width - width) / 2
+        x: (root.width - width) / 2
         y: (root.height - height) / 2
-
-        title: qsTr("faild!")
-
-        contentItem: TextArea {
-            id: login_label
-            text: qsTr("Please checkout username and password...")
+        dia_title: qsTr("error!")
+        dia_image_source: "qrc:/res/pictures/sad.png"
+        is_single_btn: true
+        onOkClicked: {
+            message_login_faild.close()
         }
-        standardButtons: Dialog.Yes
     }
 
 }

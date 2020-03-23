@@ -1,4 +1,4 @@
-#QT += qml quick network widgets webview
+QT += qml quick network widgets webview
 QT += qml quick network widgets
 CONFIG += c++11 resources_big
 
@@ -44,6 +44,7 @@ DISTFILES += \
     android/res/values/libs.xml \
     android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.properties \
-    android/gradlew.bat
+    android/gradlew.bat \
+    android/AndroidManifest.xml
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android

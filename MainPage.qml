@@ -255,6 +255,7 @@ Rectangle {
                         Image {
                             id: img_background
                             source: list_view.currentIndex == item.id_num ? model.focus_source : model.no_focus_source
+                            opacity: list_view.currentIndex == item.id_num ? 1 : 0.3
                             anchors.fill: parent
                             fillMode: Image.PreserveAspectFit
                         }

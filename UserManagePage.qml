@@ -169,6 +169,7 @@ Rectangle {
         width: parent.width > parent.height ? parent.height * 0.9 * 1.27 : parent.width * 0.9
         anchors.centerIn: parent
         color: "transparent"
+        visible: root.user_level === 1 ? false : true
         Image {
             id: im
             anchors.fill: parent
@@ -509,88 +510,113 @@ Rectangle {
             }
         }
 
+    }
 
-        Component.onCompleted: {
-            account_manager.getAllAcountInfo()
-            root.user_level = account_manager.getCurrentAccountLevel()
+    Rectangle {
+        id: rect_nomal
+        height: parent.width > parent.height ? parent.height * 0.9 : parent.width * 0.9 * 0.787
+        width: parent.width > parent.height ? parent.height * 0.9 * 1.27 : parent.width * 0.9
+        anchors.centerIn: parent
+        color: "transparent"
+        visible: root.user_level === 1 ? true : false
+        Image {
+            id: img
+            anchors.fill: parent
+            source: "qrc:/res/pictures/user_nomal_background.png"
         }
+        Rectangle {
+            id: rect_noaml_update
+            width: parent.width
+            height: parent.height * 0.15
+            anchors{
+                top: parent.top
+                topMargin: parent.height * 0.07
+            }
+            color: "transparent"
+            Button {
+                id: btn_update_nomal
+                width: parent.width * 0.2
+                height: parent.height * 0.5
 
-        Connections {
-            target: account_manager
-            onEmitAllAccountInfo: {
+                contentItem: Text {
+                    anchors.fill: parent
+                    font.pixelSize: parent.height * 0.5
+                    text: qsTr("update")
+                    color: "white"
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
 
-                root.v_accounts_info = accounts_info
+                background: Image {
+                    id: img_update_nomal
+                    anchors.fill: parent
+                    source: !enabled ? "qrc:/res/pictures/btn_2.png" : "qrc:/res/pictures/btn_1.png"
+                }
 
-                var nomal_level = qsTr("nomal_level")
-                var admin_level = qsTr("admin_level")
-
-                for (var key in root.v_accounts_info) {
-                    if (accounts_info[key] === 0) {
-                        console.info("error user level")
-                    } else if (accounts_info[key] === 1) {
-                        user_list_model.append({"user_name": key, "level": nomal_level, "user_level": accounts_info[key]})
-                    } else if (accounts_info[key] === 2) {
-                        user_list_model.append({"user_name": key, "level": admin_level, "user_level": accounts_info[key]})
-                        ++root.admin_num;
-                    }
+                anchors {
+                    top: parent.top
+                    topMargin: parent.height * 0.1
+                    right: parent.right
+                    rightMargin: width * 0.4
+                }
+                onClicked: {
+                    root.checked_user_name = rect_nomal_user_name_text.user_name.trim()
+                    root.checked_user_level = 1
+                    message_update_uer.open()
                 }
             }
         }
 
+        Rectangle {
+            id: rect_nomal_user_name_text
+            width: parent.width * 0.8
+            height: parent.height * 0.6
+            anchors{
+                top: rect_noaml_update.bottom
+                horizontalCenter: parent.horizontalCenter
+            }
+            color: "transparent"
+            property var user_name: "error"
+            Component.onCompleted: {
+                for (var key in root.v_accounts_info) {
+                    rect_nomal_user_name_text.user_name = key
+                }
+            }
 
+            Text {
+                anchors.fill: parent
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: parent.height * 0.1
+                text: rect_nomal_user_name_text.user_name
+                color: "white"
+            }
+        }
+    }
 
-        //    Rectangle {
-        //        id: rect_nomal
-        //        anchors.fill: parent
-        //        visible: root.user_level === 1 ? true : false
+    Component.onCompleted: {
+        account_manager.getAllAcountInfo()
+        root.user_level = account_manager.getCurrentAccountLevel()
+    }
 
-        //        Rectangle {
-        //            id: rect_nomal_user_name_text
-        //            width: parent.width
-        //            height: parent.height * 0.8
-        //            property var user_name: ""
-        //            Component.onCompleted: {
-        //                 for (var key in root.v_accounts_info) {
-        //                     rect_nomal_user_name_text.user_name = key
-        //                 }
-        //            }
+    Connections {
+        target: account_manager
+        onEmitAllAccountInfo: {
+            root.v_accounts_info = accounts_info
 
-        //            Text {
-        //                id: text_welcom
-        //                width: parent.width * 0.5
-        //                text: qsTr("Welcom :")
-        //                horizontalAlignment: Text.AlignLeft
-        //                verticalAlignment: Text.AlignVCenter
-        //                font.pixelSize: parent.width * 0.1
-        //                color: "Red"
-        //                font.bold: true
-        //            }
-        //            Text {
-        //                anchors.top: text_welcom.bottom
-        //                width: parent.width
-        //                height: parent.height * 0.5
-        //                horizontalAlignment: Text.AlignHCenter
-        //                verticalAlignment: Text.AlignVCenter
-        //                font.pixelSize: parent.width * 0.05
-        //                text: rect_nomal_user_name_text.user_name
-        //            }
-        //        }
-        //        Rectangle {
-        //            id: rect_nomal_user_update
-        //            width: parent.width
-        //            height: parent.height * 0.2
-        //            anchors.top: rect_nomal_user_name_text.bottom
-        //            TLButton {
-        //                id: btn_update_nomal
-        //                width: parent.width * 0.2
-        //                height: parent.height * 0.8
-        //                btn_text: qsTr("update")
-        //                font_size: height * 0.5
-        //                anchors.centerIn: parent
-        //                backgroundDefaultColor: "#3498DB"
-        //                onClicked: message_update_uer.open()
-        //            }
-        //        }
-        //    }
+            var nomal_level = qsTr("nomal_level")
+            var admin_level = qsTr("admin_level")
+
+            for (var key in root.v_accounts_info) {
+                if (accounts_info[key] === 0) {
+                    console.info("error user level")
+                } else if (accounts_info[key] === 1) {
+                    user_list_model.append({"user_name": key, "level": nomal_level, "user_level": accounts_info[key]})
+                } else if (accounts_info[key] === 2) {
+                    user_list_model.append({"user_name": key, "level": admin_level, "user_level": accounts_info[key]})
+                    ++root.admin_num;
+                }
+            }
+        }
     }
 }

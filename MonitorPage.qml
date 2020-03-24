@@ -42,6 +42,8 @@ Page {
     property real max_y: Number.NEGATIVE_INFINITY
     property real max_x: Number.NEGATIVE_INFINITY
     property real real_rate: 2.8
+    property real car_in_center_rate: 0.2
+    property real map_min_scale_rate: 0.3
 
     property var choosePoint: []
     property alias choose_marker: choose_marker
@@ -450,7 +452,7 @@ Page {
                             for (var i = 0; i < obstacles[0].length; ++i) {
                                 var point = geometryToPixel(obstacles[0][i][0], obstacles[0][i][1])
                                 ctx.beginPath()
-                                ctx.arc(point[0],point[1],0.5,0,2*Math.PI)
+                                ctx.arc(point[0],point[1],1.0,0,2*Math.PI)
                                 ctx.fill()
                                 ctx.stroke()
                             }
@@ -481,7 +483,7 @@ Page {
         id:parea
         anchors.fill: parent
         pinch.maximumScale: 8
-        pinch.minimumScale: 0.5
+        pinch.minimumScale: root.map_min_scale_rate
         pinch.dragAxis:Pinch.XAndYAxis
         pinch.target: map
 
@@ -534,7 +536,7 @@ Page {
             vehicle.x = pixel_pos[0] - vehicle.width / 2
             vehicle.y = pixel_pos[1] - vehicle.height / 2
 
-            if (map.scale > 1) {
+            if (map.scale > root.car_in_center_rate) {
                 map.x = (map.width / 2 - vehicle.x - vehicle.width / 2) * (map.scale)
                 map.y = (map.height / 2 - vehicle.y - vehicle.height / 2) * (map.scale)
             }
@@ -618,8 +620,8 @@ Page {
             map_rate *= real_rate
 
             if (min_x < 50) {
-                vehicle.width = 2.4 * map_rate
-                vehicle.height = 0.8 * map_rate
+                vehicle.width = 2.1 * map_rate
+                vehicle.height = 0.7 * map_rate
             } else {
                 vehicle.width = 6.6 * map_rate
                 vehicle.height = 2.2 * map_rate

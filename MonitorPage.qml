@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.4
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import QtQuick.Dialogs 1.2
 Page {
     id: root
     visible: true
@@ -40,10 +41,12 @@ Page {
     property real min_y: Number.POSITIVE_INFINITY
     property real max_y: Number.NEGATIVE_INFINITY
     property real max_x: Number.NEGATIVE_INFINITY
-    property real real_rate: 2.2
+    property real real_rate: 2.8
 
     property var choosePoint: []
-    property alias choose_marker: choose_marker
+//    property bool isMatched: true
+//    property alias checked_location: checked_location
+
 
     function geometryToPixel(X, Y) {
         var x = (X - min_x) * map_rate
@@ -66,8 +69,6 @@ Page {
         choose_marker.visible = false
     }
 
-
-
     SplitView {
         id:split
         z:2
@@ -77,19 +78,17 @@ Page {
 
         Rectangle {
             id: map
-            width: parent.width
+            width: parent.width * 0.78
             height: parent.height
-            Image {
-                id: choose_marker
-                z: 1
-                visible: false
-                source: "qrc:/res/pictures/gps.png"
-                width: 28
-                height: 28
-                x: choosePoint[0] - width / 2
-                y: choosePoint[1] - height
-                fillMode: Image.PreserveAspectFit
-            }
+//            ChooseMarker{
+//                id:choose_marker
+//                z:2
+//                visible: false
+//                centerX: choosePoint[0]
+//                centerY: choosePoint[1]
+//                choosePoint: root.choosePoint
+//                isMatched: root.isMatched
+//            }
             Rectangle {
                 id: map_background
                 width: parent.width
@@ -97,8 +96,7 @@ Page {
                 color:"transparent"
                 Canvas {
                     id: canvas_background
-                    x: map_background.width / 3
-                    y: 0
+
                     width: map_width * map_rate  + 100
                     height: map_height * map_rate  + 100
 
@@ -473,13 +471,12 @@ Page {
                 }
                 VehicleItem {
                     id: vehicle
-                    z: 5
-                    x: map_background.width / 3
-                    y: 0
+
                 }
             }
         }
     }
+
     PinchArea{
         id:parea
         anchors.fill: parent
@@ -533,9 +530,7 @@ Page {
     Connections {
         target: socket_manager
         onUpdateLocalization: {
-
             var pixel_pos = geometryToPixel(X, Y)
-
             vehicle.x = pixel_pos[0] - vehicle.width / 2
             vehicle.y = pixel_pos[1] - vehicle.height / 2
 
@@ -543,9 +538,7 @@ Page {
                 map.x = (map.width / 2 - vehicle.x - vehicle.width / 2) * (map.scale)
                 map.y = (map.height / 2 - vehicle.y - vehicle.height / 2) * (map.scale)
             }
-
             vehicle.rotation = -heading
-
         }
     }
 
@@ -562,7 +555,6 @@ Page {
     Connections {
         target: socket_manager
         onUpdateReferenceLine: {
-            //            console.info("Refrence Line")
             var_reference_line = reference_line
             canvas_others.requestPaint()
         }
@@ -572,10 +564,6 @@ Page {
     Connections {
         target: socket_manager
         onUpdateMapData: {
-            //            var_trees, var_signals,var_stop_signs, var_speed_bumps,
-            //            var_road_edges, var_lane_lines, var_clear_areas,
-            //            var_crosswalks, var_junctions, var_parking_spaces,
-            //            var_roads
             var_trees = trees
             var_signals = signs
             var_stop_signs = stop_signs
@@ -633,10 +621,13 @@ Page {
                 vehicle.width = 2.4 * map_rate
                 vehicle.height = 0.8 * map_rate
             } else {
-                vehicle.width = 7.2 * map_rate
-                vehicle.height = 2.4 * map_rate
+                vehicle.width = 6.6 * map_rate
+                vehicle.height = 2.2 * map_rate
             }
             canvas_background.requestPaint()
         }
     }
+
+
+
 }

@@ -62,6 +62,7 @@ Rectangle {
 //                            message_account.message_level = 0
 //                            message_text.text = qsTr("password cannot be empty!!!")
                             message_account.dia_title = qsTr("password cannot be empty!!!")
+                            message_account.dia_title_color = "red"
                             message_account.dia_image_source = "qrc:/res/pictures/sad.png"
                             message_account.open()
                         } else {
@@ -72,6 +73,7 @@ Rectangle {
 //                                message_account.message_level = 0
 //                                message_text.text = qsTr("user name dont exist!!!")
                                 message_account.dia_title = qsTr("user name dont exist!!!")
+                                message_account.dia_title_color = "red"
                                 message_account.dia_image_source = "qrc:/res/pictures/sad.png"
                                 message_account.open()
                                 break;
@@ -80,6 +82,7 @@ Rectangle {
 //                                message_account.message_level = 1
 //                                message_text.text = qsTr("password had be changed!!!")
                                 message_account.dia_title = qsTr("password had be changed!!!")
+                                message_account.dia_title_color = "#4F94CD"
                                 message_account.dia_image_source = "qrc:/res/pictures/smile.png"
                                 message_account.open()
                                 break;
@@ -239,6 +242,7 @@ Rectangle {
 //                        message_account.title = qsTr("error")
 //                        message_account.message_level = 0
 //                        message_text.text = qsTr("This one user is last admin, you are not allowed to delete it!")
+                        message_account.dia_title_color = "red"
                         message_account.dia_title = qsTr("This one user is last admin,\n you are not allowed to delete it!")
                         message_account.dia_image_source = "qrc:/res/pictures/sad.png"
                         message_account.open()
@@ -251,6 +255,7 @@ Rectangle {
 //                        message_account.message_level = 1
 //                        message_text.text = "( " + root.checked_user_name + qsTr(" )user was deleted !")
                         message_account.dia_title = "( " + root.checked_user_name + qsTr(" )user was deleted !")
+                        message_account.dia_title_color = "#4F94CD"
                         message_account.dia_image_source = "qrc:/res/pictures/smile.png"
                         message_account.open()
                         if (root.checked_user_level == 2) {
@@ -497,6 +502,7 @@ Rectangle {
 //                        message_account.message_level = 0
 //                        message_text.text = qsTr("some information is empty!!!")
                         message_account.dia_title = qsTr("some information is empty!!!")
+                        message_account.dia_title_color = "red"
                         message_account.dia_image_source = "qrc:/res/pictures/sad.png"
                         message_account.open()
                         return
@@ -509,6 +515,7 @@ Rectangle {
 //                            message_account.message_level = 0
 //                            message_text.text = qsTr("user name has exited !")
                             message_account.dia_title = qsTr("user name has exited !")
+                            message_account.dia_title_color = "red"
                             message_account.dia_image_source = "qrc:/res/pictures/sad.png"
                             message_account.open()
                             break;
@@ -525,6 +532,7 @@ Rectangle {
 //                            message_account.message_level = 1
 //                            message_text.text = qsTr("a new user was added")
                             message_account.dia_title = qsTr("a new user was added")
+                            message_account.dia_title_color = "#4F94CD"
                             message_account.dia_image_source = "qrc:/res/pictures/smile.png"
                             message_account.open()
                             break;

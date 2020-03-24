@@ -206,9 +206,10 @@ Item{
         id: message_login_faild
         width: root.width * 0.4
         height: root.height * 0.3
-        x: (root.width - width) / 2
+        x: (root.width - width) / 2 + 3.5 * rate
         y: (root.height - height) / 2
         dia_title: qsTr("error!")
+        dia_title_color: "red"
         dia_image_source: "qrc:/res/pictures/sad.png"
         is_single_btn: true
         onOkClicked: {

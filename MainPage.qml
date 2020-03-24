@@ -334,6 +334,7 @@ Rectangle {
         x: (root.width - width) / 2
         y: (root.height - height) / 2
         dia_title: qsTr("Warn!")
+        dia_title_color: "red"
         dia_image_source: "qrc:/res/pictures/sad.png"
         is_single_btn: true
         onOkClicked: {
@@ -347,6 +348,7 @@ Rectangle {
         x: (root.width - width) / 2
         y: (root.height - height) / 2
         dia_title: qsTr("Back!")
+        dia_title_color: "#4F94CD"
         dia_image_source: "qrc:/res/pictures/smile.png"
         onOkClicked: {
             backToHomePage()

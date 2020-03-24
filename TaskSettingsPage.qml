@@ -468,9 +468,9 @@ Rectangle {
             id:busy
             z: 5
             running: false
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.topMargin: parent.height/3.
+            width: parent.height * 0.2
+            height: width
+            anchors.centerIn: parent
             Timer{
                 interval: 2000
                 running: busy.running

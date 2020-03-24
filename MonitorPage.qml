@@ -36,10 +36,10 @@ Page {
     property real map_width: 0
     property real map_height: 0
     property real map_rate: 1
-    property real min_x: 0
-    property real min_y: 0
-    property real max_y: 0
-    property real max_x: 0
+    property real min_x: Number.POSITIVE_INFINITY
+    property real min_y: Number.POSITIVE_INFINITY
+    property real max_y: Number.NEGATIVE_INFINITY
+    property real max_x: Number.NEGATIVE_INFINITY
     property real real_rate: 2.2
 
     property var choosePoint: []

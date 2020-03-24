@@ -466,7 +466,7 @@ Rectangle {
 
         BusyIndicator{
             id:busy
-
+            z: 5
             running: false
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top

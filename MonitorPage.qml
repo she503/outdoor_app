@@ -44,9 +44,7 @@ Page {
     property real real_rate: 2.8
 
     property var choosePoint: []
-//    property bool isMatched: true
-//    property alias checked_location: checked_location
-
+    property alias choose_marker: choose_marker
 
     function geometryToPixel(X, Y) {
         var x = (X - min_x) * map_rate
@@ -80,15 +78,17 @@ Page {
             id: map
             width: parent.width * 0.78
             height: parent.height
-//            ChooseMarker{
-//                id:choose_marker
-//                z:2
-//                visible: false
-//                centerX: choosePoint[0]
-//                centerY: choosePoint[1]
-//                choosePoint: root.choosePoint
-//                isMatched: root.isMatched
-//            }
+            Image {
+                id: choose_marker
+                z: 1
+                visible: false
+                source: "qrc:/res/pictures/gps.png"
+                width: 28
+                height: 28
+                x: choosePoint[0] - width / 2
+                y: choosePoint[1] - height
+                fillMode: Image.PreserveAspectFit
+            }
             Rectangle {
                 id: map_background
                 width: parent.width

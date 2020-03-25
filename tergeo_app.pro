@@ -4,7 +4,8 @@ CONFIG += c++11 resources_big
 
 SOURCES += main.cpp \
     account_manager.cpp \
-    socket_manager.cpp
+    socket_manager.cpp \
+    map_task_manager.cpp
 
 RESOURCES += qml.qrc \
     pictures.qrc
@@ -33,7 +34,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     account_manager.h \
-    socket_manager.h
+    socket_manager.h \
+    map_task_manager.h
 
 TRANSLATIONS = translation_chinese.ts
 

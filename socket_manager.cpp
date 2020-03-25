@@ -11,7 +11,8 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
     _socket = new QTcpSocket(this);
     _socket->setReadBufferSize(10 * 1024 * 1024);
 
-    this->connectToHost("192.168.8.165", "32432");
+//    this->connectToHost("192.168.8.165", "32432");
+    this->connectToHost("192.168.8.163", "32432");
 
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));
     connect(_socket, SIGNAL(disconnected()), this, SLOT(disConnet()));
@@ -111,9 +112,7 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
                 this->parsePerceptionObstacles(obj);
             } else if (message_type == "reference_line") {
                 this->parseReferenceLine(obj);
-            } else if (message_type == "pipline_file") {
-                emit this->parsePiplineInfoData(obj);
-            } else if (message_type == "all_tasks_info") {
+            }else if (message_type == "all_tasks_info") {//all_tasks_info
                 this->parseRegionsInfo(obj);
             }
             else {
@@ -148,18 +147,31 @@ void SocketManager::parseRosInfoData(const QJsonObject &obj)
 
 }
 
+void SocketManager::getTasksData(const QString &task_name)
+{
+    if(_tasks.size() <= 0) {
+        return;
+    }
+     qint8 task_type = _tasks.value(task_name).first;
+     QVariantList points = _tasks.value(task_name).second;
+
+     QJsonObject obj;
+     obj.insert("task_type", task_type);
+     obj.insert(task_name, QJsonArray::fromVariantList(points));
+
+     emit updateTaskData(obj);
+
+}
+
 void SocketManager::parseRegionsInfo(const QJsonObject &obj)
 {
-//    qint8 status = obj.value("status").toInt();
     qint8 status = obj.value("get_maps_name_status").toInt();
     if (status == 0) {
-//        QString error_message = obj.value("message").toString();
         QString error_message = obj.value("get_maps_message").toString();
         qDebug() << "[SocketManager::parseRegionsInfo]: " << error_message;
         emit getMapInfoError(error_message);
         return;
     }
-//    QJsonObject map_obj = obj.value("regions").toObject();
     QJsonObject map_obj = obj.value("maps").toObject();
 
 
@@ -168,18 +180,18 @@ void SocketManager::parseRegionsInfo(const QJsonObject &obj)
     for(it = map_obj.begin(); it != map_obj.end(); ++it) {
         QString map_name = it.key();
         QJsonObject map_temp_obj = it.value().toObject().value("map_info").toObject();
-//        QJsonObject map_temp_obj = it.value().toObject();
+        QJsonObject map_task_obj = it.value().toObject().value("tasks_info").toObject();
         _map_name_list.push_back(map_name);
-        qDebug() << map_temp_obj;
-        _maps.insert(map_name, map_temp_obj);
-       }
-}
 
-void SocketManager::parsePiplineInfoData(const QJsonObject &obj)
-{
-    QString file_path = obj.value("file_path").toString();
-    QString file_data = obj.value("file_data").toString();
-    emit sendpiplineFile(file_path, file_data);
+        QStringList tasks_name;
+        QJsonObject::iterator it_tasks;
+        for(it_tasks = map_task_obj.begin(); it_tasks != map_task_obj.end(); ++it_tasks) {
+            tasks_name.push_back(it_tasks.key());
+        }
+        _task_name.insert(map_name, tasks_name);
+        QPair<QJsonObject, QJsonObject> maps_tasks_obj(map_temp_obj, map_task_obj);
+        _maps.insert(map_name, maps_tasks_obj);
+       }
 }
 
 void SocketManager::parseLocalization(const QJsonObject &obj)
@@ -190,6 +202,31 @@ void SocketManager::parseLocalization(const QJsonObject &obj)
     QString heading = obj.value("heading").toString();
     QString state = obj.value("state").toString();
     emit updateLocalization(time, X, Y, heading, state);
+}
+
+void SocketManager::parseTasksName(const QString& name)
+{
+    if (_maps.size() <= 0) {
+        return;
+    }
+    QJsonObject tasks_obj = _maps.value(name).second;
+
+    QJsonObject::Iterator it;
+
+    QStringList tasks_list;
+    for(it = tasks_obj.begin(); it != tasks_obj.end(); ++it) {
+        QJsonObject temp_obj = it.value().toObject();
+        QString task_name = temp_obj.value("name").toString();
+
+        QVariantList points = temp_obj.value("points").toArray().toVariantList();
+        qint8 task_type = temp_obj.value("task_type").toInt();
+
+        QPair<qint8, QVariantList> type_point(task_type, points);
+        _tasks.insert(task_name, type_point);
+        tasks_list.push_back(task_name);
+    }
+    _task_name.insert(name, tasks_list);
+    emit updateTasksName(tasks_list);
 }
 
 void SocketManager::parsePlanningPath(const QJsonObject &obj)
@@ -223,7 +260,8 @@ void SocketManager::parseMapData(const QString& name)
     if (_maps.size() == 0) {
         return;
     }
-    QJsonObject obj = _maps.value(name);
+    this->parseTasksName(name);
+    QJsonObject obj = _maps.value(name).first;
     QVariantList var_trees;
     var_trees = this->parseTrees(obj);
 

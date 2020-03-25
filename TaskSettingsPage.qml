@@ -1,8 +1,9 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
+import QtGraphicalEffects 1.0
 import QtQuick.Controls.Styles 1.4
-import "CustomControl"
+import "./CustomControl"
 
 Rectangle {
     id: root
@@ -18,6 +19,10 @@ Rectangle {
 
     property var map_status: -1
     property string error: ""
+    property string choose_map_name: ""
+    property var tasks_list
+    property var choose_task_type: -1
+    property var choose_task_points
 
     signal backToHomePage()
     signal mapIndexChanged(var current_index)
@@ -42,6 +47,24 @@ Rectangle {
         onGetMapInfoError: {
             map_status = 0
             error = error_message
+        }
+        onUpdateTasksName: {
+//          tasks
+            tasks_list = tasks
+            task_list_model.clear()
+            for (var i = 0; i < tasks_list.length; ++i) {
+                task_list_model.append({"idcard": i,"check_box_text": tasks_list[i]})
+            }
+        }
+        onUpdateTaskData: {
+            for(var key in obj) {
+                if (key === "task_type") {
+                    monitor_page.task_type = obj[key]
+                } else {
+                    monitor_page.points = obj[key]
+                }
+            }
+
         }
     }
 
@@ -95,6 +118,7 @@ Rectangle {
                                 propagateComposedEvents: true
                                 onPressed: {
                                     socket_manager.parseMapData(model.map_name)
+                                    root.choose_map_name = model.map_name
                                 }
                                 onReleased: {
                                     bac_areas.source = "qrc:/res/pictures/map_areas_normal.png"
@@ -127,6 +151,7 @@ Rectangle {
                     id: monitor_page
                     width:parent.width
                     height: parent.height
+
                 }
 
                 Rectangle {
@@ -135,42 +160,67 @@ Rectangle {
                     z: 1
                     width: parent.width * 0.2
                     height: parent.height
-                    color: Qt.rgba(0, 0, 0, 0.6)
+                    color: "transparent"
+                    LinearGradient {
+                        anchors.fill: parent
+                        start: Qt.point(0, 0)
+                        end: Qt.point(parent.width, 0)
+                        gradient: Gradient {
+                            GradientStop { position: 0.0; color: Qt.rgba(0, 0, 0, 0.5)}
+                            GradientStop { position: 1.0; color: Qt.rgba(255, 255, 255, 0.5)}
+                        }
+                    }
                     ListView {
                         id: list_view
                         clip: true
                         anchors.fill: parent
+                        orientation:ListView.Vertical
+                        spacing: height * 0.02
+                        currentIndex: -1
                         delegate: ItemDelegate {
-                            anchors.fill: parent
-                            CheckBox {
-                                id: control
-                                text: attrName
-                                font.pixelSize: 15 * rate * ratio
-                                indicator: Rectangle {
-                                    anchors.verticalCenter: control.verticalCenter
-                                    implicitWidth: rate * 25 * ratio
-                                    implicitHeight: rate * 25 * ratio
-                                    radius: width / 2
-                                    border.color: "grey"
-                                    border.width: 1
-                                    Image {
-                                        visible: control.checked
-                                        source: "qrc:/res/pictures/finish_2.png"
-                                        fillMode: Image.PreserveAspectFit
-                                        anchors.fill: parent
-                                    }
+                            id: item
+                            property int id_card: model.idcard
+                            Rectangle {
+                                id: check_style
+                                width: parent.width * 0.1
+                                height: width
+                                anchors.verticalCenter: parent.verticalCenter
+                                radius: height / 2
+                                border.color: "black"
+                                border.width: 1
+                                Image {
+                                    visible: list_view.currentIndex == item.id_card ? true : false
+                                    source: "qrc:/res/pictures/finish.png"
+                                    fillMode: Image.PreserveAspectFit
+                                    anchors.fill: parent
                                 }
+                            }
+                            Text {
+                                clip: true
+                                text: model.check_box_text
+                                horizontalAlignment: Text.AlignLeft
+                                verticalAlignment: Text.AlignVCenter
+                                width: parent.width * 0.7
+                                height: parent.height
+                                anchors.left: check_style.right
+                                anchors.leftMargin: parent.width * 0.05
+                                font.pixelSize: height * 0.4
+                                color: list_view.currentIndex == item.id_card ? "lightblue" : "black"
+                            }
+                            onClicked: {
+                                list_view.currentIndex = index
+                                socket_manager.getTasksData(model.check_box_text)
                             }
                         }
                         model: ListModel {
                             id: task_list_model
                         }
+
                     }
                 }
+
             }
         }
-
-
 
         Rectangle {
             id: rec_task_control

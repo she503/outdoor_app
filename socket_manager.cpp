@@ -37,7 +37,7 @@ bool SocketManager::connectToHost(const QString &ip, const QString &port)
         object.insert("message_type", "mobile_client_connected");
         object.insert("sender", "mobile_client");
         QJsonDocument doc(object);
-        qDebug() << object;
+//        qDebug() << object;
         this->sendSocketMessage(doc.toJson());
         return true;
     }
@@ -113,7 +113,7 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
                 this->parseReferenceLine(obj);
             } else if (message_type == "pipline_file") {
                 emit this->parsePiplineInfoData(obj);
-            } else if (message_type == "regions_info") {
+            } else if (message_type == "all_tasks_info") {
                 this->parseRegionsInfo(obj);
             }
             else {
@@ -150,23 +150,27 @@ void SocketManager::parseRosInfoData(const QJsonObject &obj)
 
 void SocketManager::parseRegionsInfo(const QJsonObject &obj)
 {
-    qDebug() << obj;
-    qint8 status = obj.value("status").toInt();
+//    qint8 status = obj.value("status").toInt();
+    qint8 status = obj.value("get_maps_name_status").toInt();
     if (status == 0) {
-        QString error_message = obj.value("message").toString();
+//        QString error_message = obj.value("message").toString();
+        QString error_message = obj.value("get_maps_message").toString();
         qDebug() << "[SocketManager::parseRegionsInfo]: " << error_message;
         emit getMapInfoError(error_message);
         return;
     }
-    QJsonObject map_obj = obj.value("regions").toObject();
+//    QJsonObject map_obj = obj.value("regions").toObject();
+    QJsonObject map_obj = obj.value("maps").toObject();
 
 
     QJsonObject::Iterator it;
 
     for(it = map_obj.begin(); it != map_obj.end(); ++it) {
         QString map_name = it.key();
-        QJsonObject map_temp_obj = it.value().toObject();
+        QJsonObject map_temp_obj = it.value().toObject().value("map_info").toObject();
+//        QJsonObject map_temp_obj = it.value().toObject();
         _map_name_list.push_back(map_name);
+        qDebug() << map_temp_obj;
         _maps.insert(map_name, map_temp_obj);
        }
 }

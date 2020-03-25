@@ -117,34 +117,31 @@ Rectangle {
                 anchors.topMargin: 1
                 color: "white"
             }
+
             Rectangle {
-                id: map_view
                 width: parent.width
                 height: rec_task_page.height - rec_header_bar.height - rec_split.height
                 anchors.top: rec_split.bottom
-                color: "transparent"
-                Rectangle {
-                    id: rec_ref_lines
-                    visible: false
-                    z: 1
-                    width: parent.width * 0.2
+                MapDisplayPage {
+                    id: monitor_page
+                    width:parent.width
                     height: parent.height
-                    color: Qt.rgba(0, 0, 0, 0.5)
-                    ListView {
-                        id: list_view
-                        clip: true
-                        anchors.fill: parent
-                        model: list_model
-                        delegate: ItemDelegate {
-                            id: list_delegate
-                            checkable: true
-                            width: parent.width
-                            contentItem: ColumnLayout {
-                                id: grid
-                                visible: true
-                                ButtonGroup { id: radio_group }
-                                Repeater {
-                                    model: attributes
+                    Rectangle {
+                        id: map_view
+                        color: "transparent"
+                        Rectangle {
+                            id: rec_ref_lines
+                            visible: false
+                            z: 1
+                            width: parent.width * 0.2
+                            height: parent.height
+                            color: Qt.rgba(0, 0, 0, 0.5)
+                            ListView {
+                                id: list_view
+                                clip: true
+                                anchors.fill: parent
+                                delegate: ItemDelegate {
+                                    anchors.fill: parent
                                     CheckBox {
                                         id: control
                                         text: attrName
@@ -165,63 +162,19 @@ Rectangle {
                                             }
                                         }
                                         onClicked: {
-                                            //                                        if (name === qsTr("map1#")) {
-                                            //                                            sel_map = index
-                                            //                                            mapIndexChanged(sel_map)
-                                            //                                        } else if (name === qsTr("map2#")){
-                                            //                                            sel_map = index
-                                            //                                        } else if (name === qsTr("map3#")) {
-                                            //                                            sel_map = index
-                                            //                                        }
-                                        }
-
-                                        ButtonGroup.group : {
-                                            if(true) {
-                                                return radio_group
-                                            }
                                         }
                                     }
                                 }
-                            }
-                        }
-                        states: [
-                            State {
-                                name: "expanded"
-                                when: list_delegate.checked
-                                PropertyChanges {
-                                    target: grid
-                                    visible: true
+                                model: ListModel {
+                                    id: task_list_model
                                 }
                             }
-                        ]
-                    }
-                    ListModel {
-                        id: list_model
-                        function initListModel() {
-                            var mapAttr = []
-                            for (var i = 0; i < ref_lines[header_bar_index].length; ++i) {
-                                mapAttr.push({attrName: ref_lines[header_bar_index][i]})
-                            }
-                            var mapElem = {attributes: mapAttr}
-                            append(mapElem)
                         }
-                        Component.onCompleted: {
-                            initListModel()
-                        }
-                    }
-                }
 
-                Rectangle {
-                    width: map_view.width
-                    height: map_view.height
-                    Layout.minimumWidth: parent.width * 0.1
-                    MapDisplayPage {
-                        id: monitor_page
-                        width:parent.width
-                        height: parent.height
                     }
                 }
             }
+        }
 
 
             Rectangle {

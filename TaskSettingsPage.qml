@@ -2,7 +2,6 @@ import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
 import QtQuick.Controls.Styles 1.4
-import QtQuick.Controls 1.4 as Control_14
 import "CustomControl"
 
 Rectangle {
@@ -17,10 +16,33 @@ Rectangle {
     property bool can_work: false
     property real header_bar_index: 0
 
+    property var map_status: -1
+    property string error: ""
+
     signal backToHomePage()
     signal mapIndexChanged(var current_index)
     onMapIndexChanged: {
 
+    }
+    FontLoader {
+        id: font_hanzhen;
+        source: "qrc:/res/font/hanzhen.ttf"
+    }
+
+    Connections {
+        target: socket_manager
+        onUpdateMapsName: {
+            list_model_areas.clear()
+            map_areas = maps_name
+            map_status = 1
+            for (var i = 0; i < map_areas.length; ++i) {
+                list_model_areas.append({"map_name":map_areas[i]})
+            }
+        }
+        onGetMapInfoError: {
+            map_status = 0
+            error = error_message
+        }
     }
 
     Rectangle {
@@ -37,88 +59,55 @@ Rectangle {
             width: parent.width * 0.9
             height: parent.height * 0.88
             anchors.centerIn: parent
+            color: "transparent"
+            visible: root.map_status === 1 ? true : false
             Rectangle {
                 id: rec_header_bar
                 width: parent.width
-                height: parent.height * 0.07 * rate
-                Rectangle {
-                    width: parent.width
-                    height: 2
-                    anchors.bottom: parent.bottom
-                    anchors.left: parent.left
-                    anchors.topMargin: 1
-                    color: "lightblue"
-                }
+                height: parent.height * 0.1
+                color: "white"
                 ListView {
                     id: list_view_areas
                     clip: true
                     anchors.fill: parent
-                    model: list_model_areas
                     orientation:ListView.Horizontal
-                    boundsBehavior:Flickable.StopAtBounds
-                    delegate: RowLayout {
-                        id: grid_areas
-                        visible: true
-                        width: parent.width
-                        height: parent.height
-                        Repeater {
-                            model: attributes
-                            Rectangle {
-                                width: rec_header_bar.width / (map_areas.length + 2)
-                                height: parent.height
-                                border.color: "transparent"
-//                                color: ListView.isCurrentItem ? "blue" : "red"
-                                Image {
-                                    id: bac_areas
-                                    anchors.fill: parent
-                                    source: ListView.isCurrentItem ? "qrc:/res/pictures/map_areas_focus.png": "qrc:/res/pictures/map_areas_normal.png"
-                                    Text {
-                                        text: qsTr(modelData)
-                                        anchors.centerIn: parent
-                                        font.pixelSize: 15 * rate * ratio
-                                    }
+                    spacing: width * 0.02
+                    //                    boundsBehavior:Flickable.StopAtBounds
+                    delegate: ItemDelegate {
+                        width: list_view_areas.width / 4
+                        height: list_view_areas.height
+                        Rectangle {
+                            width: parent.width
+                            height: parent.height
+                            border.color: "transparent"
+                            Image {
+                                id: bac_areas
+                                anchors.fill: parent
+                                source: ListView.isCurrentItem ? "qrc:/res/pictures/map_areas_focus.png": "qrc:/res/pictures/map_areas_normal.png"
+                                Text {
+                                    text: qsTr(model.map_name)
+                                    anchors.centerIn: parent
+                                    font.pixelSize: 15 * rate * ratio
                                 }
-                                MouseArea {
-                                    anchors.fill: parent
-                                    propagateComposedEvents: true
-                                    onPressed: {
-                                        list_view_areas.currentIndex = index
-                                        header_bar_index = index
-                                        list_model.clear()
-                                        list_model.initListModel()
-                                        rec_ref_lines.visible = true
-                                        rec_checked_location.visible = true
-                                        btn_not_match.visible = true
-                                        btn_match.visible = true
-                                        note_text.visible = false
-                                        btn_resure.visible = false
-                                        bac_areas.source = "qrc:/res/pictures/map_areas_focus.png"
-//                                        list_model_areas.clear()
-//                                        list_model_areas.initListModel()
-                                    }
-                                    onReleased: {
-                                        bac_areas.source = "qrc:/res/pictures/map_areas_normal.png"
-                                    }
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                propagateComposedEvents: true
+                                onPressed: {
+                                    socket_manager.parseMapData(model.map_name)
+                                }
+                                onReleased: {
+                                    bac_areas.source = "qrc:/res/pictures/map_areas_normal.png"
                                 }
                             }
                         }
                     }
-                }
-                ListModel {
-                    id: list_model_areas
-                    function initListModel() {
-                        var mapAttr = []
-                        for (var i = 0; i < map_areas.length; ++i) {
-                            mapAttr.push({attrName: map_areas[i]})
-                        }
-                        var mapElem = {attributes: mapAttr}
-                        append(mapElem)
-                    }
-                    Component.onCompleted: {
-                        initListModel()
+                    model: ListModel {
+                        id: list_model_areas
                     }
                 }
             }
+
             Rectangle {
                 id: rec_split
                 width: parent.width
@@ -131,8 +120,7 @@ Rectangle {
             Rectangle {
                 id: map_view
                 width: parent.width
-                height: rec_task_page.height - rec_header_bar.height
-                anchors.left: parent.left
+                height: rec_task_page.height - rec_header_bar.height - rec_split.height
                 anchors.top: rec_split.bottom
                 color: "transparent"
                 Rectangle {
@@ -141,13 +129,7 @@ Rectangle {
                     z: 1
                     width: parent.width * 0.2
                     height: parent.height
-                    Rectangle {
-                        width: 1
-                        height: parent.height
-                        anchors.top: parent.top
-                        anchors.right: parent.right
-                        color: "lightgrey"
-                    }
+                    color: Qt.rgba(0, 0, 0, 0.5)
                     ListView {
                         id: list_view
                         clip: true
@@ -233,272 +215,295 @@ Rectangle {
                     width: map_view.width
                     height: map_view.height
                     Layout.minimumWidth: parent.width * 0.1
-                    MonitorPage {
+                    MapDisplayPage {
                         id: monitor_page
                         width:parent.width
                         height: parent.height
                     }
                 }
             }
+
+
+            Rectangle {
+                id: rect_decoration
+                width: parent.width
+                height: 2
+                anchors {
+                    top: rec_header_bar.bottom
+                    left: parent.left
+                }
+                color: "lightblue"
+            }
+            Rectangle {
+                id: rec_task_control
+                color: "transparent"
+                width: rec_task_page.width
+                height: parent.height * 0.1
+                anchors.bottom: rec_task_page.bottom
+                anchors.horizontalCenter: parent.horizontalCenter
+                Rectangle {
+                    id: btn_start_task
+                    width: 60 * rate
+                    height: 30 * rate
+                    color: "transparent"
+                    anchors {
+                        right: parent.horizontalCenter
+                        rightMargin: 5 * rate
+                        verticalCenter: parent.verticalCenter
+                    }
+                    Image {
+                        anchors.fill: parent
+                        source: "qrc:/res/pictures/btn_style2.png"
+                        fillMode: Image.PreserveAspectFit
+                        horizontalAlignment: Image.AlignHCenter
+                        verticalAlignment: Image.AlignVCenter
+                        Text {
+                            text: qsTr("Start")
+                            anchors.centerIn: parent
+                            color: "red"
+                            font.pixelSize: 15 * rate * ratio
+                            font.family: "Arial"
+                            font.weight: Font.Thin
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                if (can_work) {
+                                    rec_task_control.visible = false
+                                    rec_header_bar.visible = false
+                                    rec_ref_lines.visible = false
+                                    rec_split.visible = false
+                                    turn_task_page = true
+                                } else {
+                                    dialog_match_warn.open()
+                                }
+                            }
+                        }
+                    }
+                }
+                Rectangle {
+                    id: btn_cancle_task
+                    width: 60 * rate
+                    height: 30 * rate
+                    color: "transparent"
+                    anchors {
+                        left: parent.horizontalCenter
+                        leftMargin: 5 * rate
+                        verticalCenter: parent.verticalCenter
+                    }
+                    Image {
+                        anchors.fill: parent
+                        source: "qrc:/res/pictures/btn_style2.png"
+                        fillMode: Image.PreserveAspectFit
+                        horizontalAlignment: Image.AlignHCenter
+                        verticalAlignment: Image.AlignVCenter
+                        Text {
+                            text: qsTr("Cancle")
+                            anchors.centerIn: parent
+                            color: "blue"
+                            font.pixelSize: 15 * rate * ratio
+                            font.family: "Arial"
+                            font.weight: Font.Thin
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                backToHomePage()
+                            }
+                        }
+                    }
+                }
+            }
+
+            Rectangle{
+                id: rec_checked_location
+                color: "transparent"
+                width: rec_glow_background.width
+                height: rec_glow_background.height * 0.1
+                anchors.bottom: rec_task_control.top
+                anchors.horizontalCenter: parent.horizontalCenter
+                Image {
+                    width: parent.width * 0.96
+                    height: parent.height * 0.9
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    source: "qrc:/res/pictures/background_mached.png"
+                    horizontalAlignment: Image.AlignHCenter
+                    verticalAlignment: Image.AlignVCenter
+                }
+                Row {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: 15 * rate
+                    Rectangle {
+                        id: btn_not_match
+                        width: 75 * rate
+                        height: 22 * rate
+                        color: "transparent"
+                        anchors.verticalCenter: parent.verticalCenter
+                        Image {
+                            anchors.fill: parent
+                            source: "qrc:/res/pictures/btn_style1.png"
+                            fillMode: Image.PreserveAspectFit
+                            horizontalAlignment: Image.AlignHCenter
+                            verticalAlignment: Image.AlignVCenter
+                            Text {
+                                text: qsTr("Not Matched")
+                                anchors.centerIn: parent
+                                color: "blue"
+                                font.pixelSize: 13 * rate * ratio
+                                font.family: "Arial"
+                                font.weight: Font.Thin
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    isMatched = false
+                                    can_work = false
+                                    monitor_page.choose_marker.visible = true
+                                    btn_not_match.visible = false
+                                    btn_match.visible = false
+                                    btn_resure.visible = true
+                                    note_text.visible = true
+                                }
+                            }
+                        }
+                    }
+                    Rectangle {
+                        id: btn_match
+                        width: 75 * rate
+                        height: 22 * rate
+                        color: "transparent"
+                        anchors.verticalCenter: parent.verticalCenter
+                        Image {
+                            anchors.fill: parent
+                            source: "qrc:/res/pictures/btn_style1.png"
+                            fillMode: Image.PreserveAspectFit
+                            horizontalAlignment: Image.AlignHCenter
+                            verticalAlignment: Image.AlignVCenter
+                            Text {
+                                text: qsTr("Matched")
+                                anchors.centerIn: parent
+                                color: "blue"
+                                font.pixelSize: 13 * rate * ratio
+                                font.family: "Arial"
+                                font.weight: Font.Thin
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    isMatched = true
+                                    can_work = true
+                                    rec_checked_location.visible = false
+                                    monitor_page.choose_marker.visible = false
+                                }
+                            }
+                        }
+                    }
+                    Text {
+                        id: note_text
+                        visible: false
+                        text: qsTr("move and choose point!")//移动选点!
+                        font.family: "Helvetica"
+                        font.pointSize: 25 * rate
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        color: "red"
+                    }
+                    Rectangle {
+                        id: btn_resure
+                        visible: false
+                        width: 75 * rate
+                        height: 22 * rate
+                        color: "transparent"
+                        anchors.verticalCenter: parent.verticalCenter
+                        Image {
+                            anchors.fill: parent
+                            source: "qrc:/res/pictures/btn_style1.png"
+                            fillMode: Image.PreserveAspectFit
+                            horizontalAlignment: Image.AlignHCenter
+                            verticalAlignment: Image.AlignVCenter
+                            Text {
+                                text: qsTr("Resure")
+                                anchors.centerIn: parent
+                                color: "blue"
+                                font.pixelSize: 13 * rate * ratio
+                                font.family: "Arial"
+                                font.weight: Font.Thin
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    isMatched = true
+                                    can_work = true
+                                    rec_checked_location.visible = false
+                                    monitor_page.choose_marker.visible = false
+                                    busy.running = true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            BusyIndicator{
+                id:busy
+                z: 5
+                running: false
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+                anchors.topMargin: parent.height/3.
+                Timer{
+                    interval: 2000
+                    running: busy.running
+                    onTriggered: {
+                        busy.running = false
+                    }
+                }
+            }
         }
 
         Rectangle {
-            id: rec_task_control
-            color: "transparent"
-            width: rec_task_page.width
-            height: parent.height * 0.1
-            anchors.bottom: rec_task_page.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
-            Rectangle {
-                id: btn_start_task
-                width: 60 * rate
-                height: 30 * rate
-                color: "transparent"
-                anchors {
-                    right: parent.horizontalCenter
-                    rightMargin: 5 * rate
-                    verticalCenter: parent.verticalCenter
-                }
-                Image {
-                    anchors.fill: parent
-                    source: "qrc:/res/pictures/btn_style2.png"
-                    fillMode: Image.PreserveAspectFit
-                    horizontalAlignment: Image.AlignHCenter
-                    verticalAlignment: Image.AlignVCenter
-                    Text {
-                        text: qsTr("Start")
-                        anchors.centerIn: parent
-                        color: "red"
-                        font.pixelSize: 15 * rate * ratio
-                        font.family: "Arial"
-                        font.weight: Font.Thin
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                    }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            if (can_work) {
-                                rec_task_control.visible = false
-                                rec_header_bar.visible = false
-                                rec_ref_lines.visible = false
-                                rec_split.visible = false
-                                turn_task_page = true
-                            } else {
-                                dialog_match_warn.open()
-                            }
-                        }
-                    }
-                }
-            }
-            Rectangle {
-                id: btn_cancle_task
-                width: 60 * rate
-                height: 30 * rate
-                color: "transparent"
-                anchors {
-                    left: parent.horizontalCenter
-                    leftMargin: 5 * rate
-                    verticalCenter: parent.verticalCenter
-                }
-                Image {
-                    anchors.fill: parent
-                    source: "qrc:/res/pictures/btn_style2.png"
-                    fillMode: Image.PreserveAspectFit
-                    horizontalAlignment: Image.AlignHCenter
-                    verticalAlignment: Image.AlignVCenter
-                    Text {
-                        text: qsTr("Cancle")
-                        anchors.centerIn: parent
-                        color: "blue"
-                        font.pixelSize: 15 * rate * ratio
-                        font.family: "Arial"
-                        font.weight: Font.Thin
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                    }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            backToHomePage()
-                        }
-                    }
-                }
+            id: rect_error
+            width: parent.width * 0.9
+            height: parent.height * 0.88
+            anchors.centerIn: parent
+            color: "white"
+            visible: !rec_task_page.visible
+            Text {
+                anchors.fill: parent
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                font.family: font_hanzhen.name
+                font.pixelSize: height * 0.05
+                text: root.error
             }
         }
 
-        Rectangle{
-            id: rec_checked_location
-            color: "transparent"
-            width: rec_glow_background.width
-            height: rec_glow_background.height * 0.1
-            anchors.bottom: rec_task_control.top
-            anchors.horizontalCenter: parent.horizontalCenter
-            Image {
-                width: parent.width * 0.96
-                height: parent.height * 0.9
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                source: "qrc:/res/pictures/background_mached.png"
-                horizontalAlignment: Image.AlignHCenter
-                verticalAlignment: Image.AlignVCenter
-            }
-            Row {
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                anchors.rightMargin: 15 * rate
-                Rectangle {
-                    id: btn_not_match
-                    width: 75 * rate
-                    height: 22 * rate
-                    color: "transparent"
-                    anchors.verticalCenter: parent.verticalCenter
-                    Image {
-                        anchors.fill: parent
-                        source: "qrc:/res/pictures/btn_style1.png"
-                        fillMode: Image.PreserveAspectFit
-                        horizontalAlignment: Image.AlignHCenter
-                        verticalAlignment: Image.AlignVCenter
-                        Text {
-                            text: qsTr("Not Matched")
-                            anchors.centerIn: parent
-                            color: "blue"
-                            font.pixelSize: 13 * rate * ratio
-                            font.family: "Arial"
-                            font.weight: Font.Thin
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                        }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                isMatched = false
-                                can_work = false
-                                monitor_page.choose_marker.visible = true
-                                btn_not_match.visible = false
-                                btn_match.visible = false
-                                btn_resure.visible = true
-                                note_text.visible = true
-                            }
-                        }
-                    }
-                }
-                Rectangle {
-                    id: btn_match
-                    width: 75 * rate
-                    height: 22 * rate
-                    color: "transparent"
-                    anchors.verticalCenter: parent.verticalCenter
-                    Image {
-                        anchors.fill: parent
-                        source: "qrc:/res/pictures/btn_style1.png"
-                        fillMode: Image.PreserveAspectFit
-                        horizontalAlignment: Image.AlignHCenter
-                        verticalAlignment: Image.AlignVCenter
-                        Text {
-                            text: qsTr("Matched")
-                            anchors.centerIn: parent
-                            color: "blue"
-                            font.pixelSize: 13 * rate * ratio
-                            font.family: "Arial"
-                            font.weight: Font.Thin
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                        }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                isMatched = true
-                                can_work = true
-                                rec_checked_location.visible = false
-                                monitor_page.choose_marker.visible = false
-                            }
-                        }
-                    }
-                }
-                Text {
-                    id: note_text
-                    visible: false
-                    text: qsTr("move and choose point!")//移动选点!
-                    font.family: "Helvetica"
-                    font.pointSize: 25 * rate
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    color: "red"
-                }
-                Rectangle {
-                    id: btn_resure
-                    visible: false
-                    width: 75 * rate
-                    height: 22 * rate
-                    color: "transparent"
-                    anchors.verticalCenter: parent.verticalCenter
-                    Image {
-                        anchors.fill: parent
-                        source: "qrc:/res/pictures/btn_style1.png"
-                        fillMode: Image.PreserveAspectFit
-                        horizontalAlignment: Image.AlignHCenter
-                        verticalAlignment: Image.AlignVCenter
-                        Text {
-                            text: qsTr("Resure")
-                            anchors.centerIn: parent
-                            color: "blue"
-                            font.pixelSize: 13 * rate * ratio
-                            font.family: "Arial"
-                            font.weight: Font.Thin
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                        }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                isMatched = true
-                                can_work = true
-                                rec_checked_location.visible = false
-                                monitor_page.choose_marker.visible = false
-                                busy.running = true
-                            }
-                        }
-                    }
-                }
+        TLDialog {
+            id: dialog_match_warn
+            width: root.width * 0.4
+            height: root.height * 0.3
+            x: (root.width - width) / 2
+            y: (root.height - height) / 2
+            dia_title: qsTr("Warn!")
+            dia_title_color: "red"
+            dia_image_source: "qrc:/res/pictures/sad.png"
+            is_single_btn: true
+            onOkClicked: {
+                dialog_match_warn.close()
             }
         }
-
-        BusyIndicator{
-            id:busy
-            z: 5
-            running: false
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.topMargin: parent.height/3.
-            Timer{
-                interval: 2000
-                running: busy.running
-                onTriggered: {
-                    busy.running = false
-                }
-            }
-        }
-
-
 
     }
-
-
-
-    TLDialog {
-        id: dialog_match_warn
-        width: root.width * 0.4
-        height: root.height * 0.3
-        x: (root.width - width) / 2
-        y: (root.height - height) / 2
-        dia_title: qsTr("Warn!")
-        dia_title_color: "red"
-        dia_image_source: "qrc:/res/pictures/sad.png"
-        is_single_btn: true
-        onOkClicked: {
-            dialog_match_warn.close()
-        }
-    }
-    
 }

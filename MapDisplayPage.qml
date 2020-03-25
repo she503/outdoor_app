@@ -10,10 +10,6 @@ Page {
     height: parent.height
     clip: true
 
-    //    property var var_driving_area: []
-    //    property var var_point_feature: []
-    //    property var var_polyline_feature: []
-
     property var var_trees: []
     property var var_signals: []
     property var var_stop_signs: []
@@ -476,10 +472,6 @@ Page {
                         drawObstacles(ctx, var_obstacles, obstacles_is_polygon)
                     }
                 }
-                VehicleItem {
-                    id: vehicle
-
-                }
             }
         }
     }
@@ -496,12 +488,6 @@ Page {
             id: dragArea
             anchors.fill: parent
             drag.target: map
-            onDoubleClicked: {
-                map.x = (map.width / 2 - vehicle.x ) * /*Math.sqrt*/(map.scale)
-                map.y = (map.height / 2 - vehicle.y) * /*Math.sqrt*/(map.scale)
-                canvas_background.requestPaint()
-                canvas_others.requestPaint()
-            }
             onWheel: {
                 if(wheel.angleDelta.y > 0 ){
                     map.scale += 0.2
@@ -520,41 +506,6 @@ Page {
                     return
                 }
             }
-        }
-    }
-
-    //Obstacles
-    Connections {
-        target: socket_manager
-        onUpdatePerceptionObstacles: {
-            var_obstacles = obstacles
-            obstacles_is_polygon = is_polygon
-            canvas_others.requestPaint()
-        }
-    }
-
-    //Location
-    Connections {
-        target: socket_manager
-        onUpdateLocalization: {
-            var pixel_pos = geometryToPixel(X, Y)
-            vehicle.x = pixel_pos[0] - vehicle.width / 2
-            vehicle.y = pixel_pos[1] - vehicle.height / 2
-
-            if (map.scale > 1) {
-                map.x = (map.width / 2 - vehicle.x - vehicle.width / 2) * (map.scale)
-                map.y = (map.height / 2 - vehicle.y - vehicle.height / 2) * (map.scale)
-            }
-            vehicle.rotation = -heading
-        }
-    }
-
-    //Planning Path
-    Connections {
-        target: socket_manager
-        onUpdatePlanningPath: {
-            var_planning_path = path
-            canvas_others.requestPaint()
         }
     }
 
@@ -628,13 +579,6 @@ Page {
                                                 (map.height / map_height)
             map_rate *= real_rate
 
-            if (min_x < 50) {
-                vehicle.width = 2.4 * map_rate
-                vehicle.height = 0.8 * map_rate
-            } else {
-                vehicle.width = 6.6 * map_rate
-                vehicle.height = 2.2 * map_rate
-            }
             canvas_background.requestPaint()
 
             map.x = 0

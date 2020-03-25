@@ -11,6 +11,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonValue>
+#include <QMap>
 
 class SocketManager : public QObject
 {
@@ -40,10 +41,14 @@ public:
     Q_INVOKABLE bool sendClickPointPos(const QString& pos_x, const QString& pos_y);
 
     /**
-     * @brief 启动模块
-     */
-    Q_INVOKABLE bool sendAllPower(bool flag);
+      * @brief send map info by param map_name
+      */
+    Q_INVOKABLE void parseMapData(const QString& map_name);
 
+    /**
+     * @brief get maps name
+     */
+    Q_INVOKABLE void getMapsName();
 signals:
     // app断开连接发出信号
     void appDisconnected();
@@ -54,6 +59,7 @@ signals:
     /**
      * @brief 地图相关
      */
+    void updateMapsName(const QStringList& maps_name);
     void updateMapData(const QVariantList& trees, const QVariantList& signs,
                        const QVariantList& stop_signs, const QVariantList& speed_bumps,
                        const QVariantList& road_edges, const QVariantList& lane_lines,
@@ -77,6 +83,7 @@ signals:
     void updateWaterVolume(const QString& water_volume);
     void updateOperateMethod(const QString& operate_method);
 
+    void getMapInfoError(const QString& error_message);
 private slots:
     void readSocketData(/*const QByteArray& buffer*/);
 
@@ -88,13 +95,14 @@ private:
     /**
      * @brief 地图相关
      */
+    void parseRegionsInfo(const  QJsonObject& obj);
     void parsePiplineInfoData(const QJsonObject& obj);
     void parsePlanningPath(const QJsonObject& obj);
     void parsePerceptionObstacles(const QJsonObject& obj);
     void parsePerceptionRoadEdge(const QJsonObject& obj);
     void parseReferenceLine(const QJsonObject& obj);
-    void parseMapData(const QJsonObject& obj);
     void parseLocalization(const QJsonObject& obj);
+
     QVariantList parseSignals(const QJsonObject &obj);
     QVariantList parseTrees(const QJsonObject &obj);
     QVariantList parseStopSigns(const QJsonObject &obj);
@@ -110,6 +118,8 @@ private:
 private:
     QTcpSocket* _socket;
     QByteArray _buffer;
+    QMap<QString, QJsonObject> _maps;
+    QStringList _map_name_list;
 
     /**
      * @brief test

@@ -7,7 +7,7 @@ Item{
     property real rate: Math.min(width, height) / 400
     property var user_level: 0
     property var user_name: ""
-
+    property string test_text: "1"
     signal successToLogin()
 
     FontLoader {
@@ -100,6 +100,7 @@ Item{
                     id: username
                     width: parent.width * 0.55
                     height: parent.height * 0.8
+                    text: root.test_text
                     anchors {
                         verticalCenter: parent.verticalCenter
                         left: lab_user.right
@@ -139,6 +140,7 @@ Item{
                     id: password
                     width: parent.width * 0.55
                     height: parent.height * 0.8
+                    text: root.test_text
                     anchors {
                         left: lab_pwd.right
                         leftMargin: parent.width * 0.05

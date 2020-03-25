@@ -11,6 +11,8 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
     _socket = new QTcpSocket(this);
     _socket->setReadBufferSize(10 * 1024 * 1024);
 
+    this->connectToHost("192.168.8.165", "32432");
+
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));
     connect(_socket, SIGNAL(disconnected()), this, SLOT(disConnet()));
     testfunction();
@@ -35,6 +37,7 @@ bool SocketManager::connectToHost(const QString &ip, const QString &port)
         object.insert("message_type", "mobile_client_connected");
         object.insert("sender", "mobile_client");
         QJsonDocument doc(object);
+        qDebug() << object;
         this->sendSocketMessage(doc.toJson());
         return true;
     }
@@ -75,14 +78,6 @@ bool SocketManager::sendClickPointPos(const QString &pos_x, const QString &pos_y
     return this->sendSocketMessage(doc.toJson());
 }
 
-bool SocketManager::sendAllPower(bool flag)
-{
-    QJsonObject object;
-    object.insert("message_type", "power_all");
-    object.insert("sender", "mobile_client");
-    QJsonDocument doc(object);
-    return this->sendSocketMessage(doc.toJson());
-}
 
 void SocketManager::readSocketData(/*const QByteArray& buffer*/)
 {
@@ -108,8 +103,6 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             QString message_type = obj.value("message_type").toString();
             if (message_type == "ros_message") {
                 this->parseRosInfoData(obj);
-            } else if (message_type == "map_data") {
-                this->parseMapData(obj);
             } else if (message_type == "localization_info") {
                 this->parseLocalization(obj);
             } else if (message_type == "planning_path") {
@@ -120,9 +113,11 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
                 this->parseReferenceLine(obj);
             } else if (message_type == "pipline_file") {
                 emit this->parsePiplineInfoData(obj);
+            } else if (message_type == "regions_info") {
+                this->parseRegionsInfo(obj);
             }
             else {
-                qDebug() << "other message type!!!";
+                qDebug() << obj;
             }
         } else {
             qDebug() << "[SocketManager::readSocketData]: json error  " << error.errorString();
@@ -151,6 +146,29 @@ void SocketManager::testfunction()
 void SocketManager::parseRosInfoData(const QJsonObject &obj)
 {
 
+}
+
+void SocketManager::parseRegionsInfo(const QJsonObject &obj)
+{
+    qDebug() << obj;
+    qint8 status = obj.value("status").toInt();
+    if (status == 0) {
+        QString error_message = obj.value("message").toString();
+        qDebug() << "[SocketManager::parseRegionsInfo]: " << error_message;
+        emit getMapInfoError(error_message);
+        return;
+    }
+    QJsonObject map_obj = obj.value("regions").toObject();
+
+
+    QJsonObject::Iterator it;
+
+    for(it = map_obj.begin(); it != map_obj.end(); ++it) {
+        QString map_name = it.key();
+        QJsonObject map_temp_obj = it.value().toObject();
+        _map_name_list.push_back(map_name);
+        _maps.insert(map_name, map_temp_obj);
+       }
 }
 
 void SocketManager::parsePiplineInfoData(const QJsonObject &obj)
@@ -196,8 +214,12 @@ void SocketManager::parseReferenceLine(const QJsonObject &obj)
     emit updateReferenceLine(reference_line);
 }
 
-void SocketManager::parseMapData(const QJsonObject &obj)
+void SocketManager::parseMapData(const QString& name)
 {
+    if (_maps.size() == 0) {
+        return;
+    }
+    QJsonObject obj = _maps.value(name);
     QVariantList var_trees;
     var_trees = this->parseTrees(obj);
 
@@ -261,6 +283,15 @@ void SocketManager::parseMapData(const QJsonObject &obj)
                        var_clear_areas_include, var_crosswalks_include,
                        var_junctions_include, var_parking_spaces_include,
                        var_roads_include, var_roads_exclude);
+}
+
+void SocketManager::getMapsName()
+{
+    if (_map_name_list.size() != 0 ) {
+        emit updateMapsName(_map_name_list);
+    } else {
+
+    }
 }
 
 bool SocketManager::sendSocketMessage(const QByteArray &message)

@@ -2,12 +2,10 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Extras 1.4
 import QtQuick.Controls.Styles 1.4
-import "CustomControl"
+import "./CustomControl"
 
 Rectangle {
     id: root
-//    property real ratio: Math.sqrt(Math.min(rect_bottom.width / 5, rect_bottom.height)) * 0.1
-
     color: "transparent"
     TLInfoDisplayPage {
         id: rect_info_display
@@ -42,8 +40,6 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        socket_manager.connectToHost("192.168.8.143", "32432")
-                        socket_manager.sendAllPower(true)
                         stack_view.replace(task_settings_page)
                     }
                 }

@@ -9,10 +9,15 @@ ApplicationWindow {
     height: 480
 
     property real rate: Math.min(width, height) / 400
-    property bool turn_task_page: false
+//    property bool turn_task_page: false
+//    property bool turn_task: false
+//    onTurn_taskChanged: {
+//        turn_task_page = true
+//    }
+
     property bool has_error: false
     property Component main_page: MainPage {
-        turn_task_page: root.turn_task_page
+//        turn_task_page: root.turn_task_page
         onBackToHomePage: {
             stack_view.replace(main_page)
         }

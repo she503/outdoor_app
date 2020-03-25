@@ -7,7 +7,7 @@ import "CustomControl"
 Rectangle {
     id: root
 //    property real ratio: Math.sqrt(Math.min(rect_bottom.width / 5, rect_bottom.height)) * 0.1
-
+    signal viewTask()
     color: "transparent"
     TLInfoDisplayPage {
         id: rect_info_display
@@ -42,9 +42,10 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        socket_manager.connectToHost("192.168.8.143", "32432")
-                        socket_manager.sendAllPower(true)
-                        stack_view.replace(task_settings_page)
+//                        socket_manager.connectToHost("192.168.8.143", "32432")
+//                        socket_manager.sendAllPower(true)
+//                        stack_view.replace(task_settings_page)
+                        viewTask()
                     }
                 }
             }

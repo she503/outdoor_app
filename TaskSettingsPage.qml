@@ -251,8 +251,8 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             Rectangle {
                 id: btn_start_task
-                width: 60 * rate
-                height: 30 * rate
+                width: 75 * rate
+                height: 25 * rate
                 color: "transparent"
                 anchors {
                     right: parent.horizontalCenter
@@ -281,6 +281,7 @@ Rectangle {
                             if (can_work) {
                                 rec_task_control.visible = false
                                 rec_header_bar.visible = false
+                                rec_header_bar.height = 0
                                 rec_ref_lines.visible = false
                                 rec_split.visible = false
                                 turn_task_page = true
@@ -293,8 +294,8 @@ Rectangle {
             }
             Rectangle {
                 id: btn_cancle_task
-                width: 60 * rate
-                height: 30 * rate
+                width: 75 * rate
+                height: 25 * rate
                 color: "transparent"
                 anchors {
                     left: parent.horizontalCenter
@@ -350,7 +351,7 @@ Rectangle {
                 Rectangle {
                     id: btn_not_match
                     width: 75 * rate
-                    height: 22 * rate
+                    height: 25 * rate
                     color: "transparent"
                     anchors.verticalCenter: parent.verticalCenter
                     Image {
@@ -386,7 +387,7 @@ Rectangle {
                 Rectangle {
                     id: btn_match
                     width: 75 * rate
-                    height: 22 * rate
+                    height: 25 * rate
                     color: "transparent"
                     anchors.verticalCenter: parent.verticalCenter
                     Image {
@@ -430,7 +431,7 @@ Rectangle {
                     id: btn_resure
                     visible: false
                     width: 75 * rate
-                    height: 22 * rate
+                    height: 25 * rate
                     color: "transparent"
                     anchors.verticalCenter: parent.verticalCenter
                     Image {
@@ -463,7 +464,6 @@ Rectangle {
                 }
             }
         }
-
         BusyIndicator{
             id:busy
             z: 5
@@ -479,12 +479,43 @@ Rectangle {
                 }
             }
         }
-
-
-
     }
-
-
+    Rectangle {
+        id: rec_regions_error_load
+        visible: false
+        anchors.fill: parent
+        color: "red"
+        opacity: 0.3
+        Rectangle {
+            anchors.fill: parent
+            anchors.margins: 5 * rate
+            color: "transparent"
+            Image {
+                anchors.fill: parent
+                source: "qrc:/res/pictures/background_glow1.png"
+            }
+            Text {
+                id: text_regions_message
+                text: qsTr("Get regions filed!")
+                color: "red"
+                anchors.centerIn: parent
+                font.pixelSize: 20 * rate
+                font.bold: true
+            }
+        }
+    }
+    Connections {
+        target: socket_manager
+        onUpdateRegionsInfo: {
+            if (!status) {
+                rec_regions_error_load.visible = true
+                rec_glow_background.visible = false
+            } else {
+                rec_regions_error_load.visible = false
+                rec_glow_background.visible = true
+            }
+        }
+    }
 
     TLDialog {
         id: dialog_match_warn
@@ -500,5 +531,4 @@ Rectangle {
             dialog_match_warn.close()
         }
     }
-    
 }

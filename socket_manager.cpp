@@ -120,6 +120,8 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
                 this->parseReferenceLine(obj);
             } else if (message_type == "pipline_file") {
                 emit this->parsePiplineInfoData(obj);
+            } else if (message_type == "regions_info") {
+                emit this->parseRegionsInfo(obj);
             }
             else {
                 qDebug() << "other message type!!!";
@@ -151,6 +153,12 @@ void SocketManager::testfunction()
 void SocketManager::parseRosInfoData(const QJsonObject &obj)
 {
 
+}
+
+void SocketManager::parseRegionsInfo(const QJsonObject &obj)
+{
+    int regions_status = obj.value("status").toInt();
+    emit updateRegionsInfo(regions_status);
 }
 
 void SocketManager::parsePiplineInfoData(const QJsonObject &obj)

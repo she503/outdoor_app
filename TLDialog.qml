@@ -34,6 +34,7 @@ Dialog {
                         font.pixelSize: 15 * rate
                         color:dia_title_color
                         anchors.centerIn: parent
+                        font.bold: true
                     }
                 }
                 Rectangle {

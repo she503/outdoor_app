@@ -10,6 +10,7 @@
         <file>TaskSettingsPage.qml</file>
         <file>VehicleItem.qml</file>
         <file>MonitorPage.qml</file>
+        <file>MapDisplayPage.qml</file>
     </qresource>
     <qresource prefix="/CustomControl">
         <file>TLTextField.qml</file>

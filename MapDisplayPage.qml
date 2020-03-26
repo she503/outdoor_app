@@ -10,9 +10,11 @@ Page {
     height: parent.height
     clip: true
 
-    //    property var var_driving_area: []
-    //    property var var_point_feature: []
-    //    property var var_polyline_feature: []
+    property int task_type: -1
+    property var points
+    onPointsChanged: {
+        canvas_others.requestPaint()
+    }
 
     property var var_trees: []
     property var var_signals: []
@@ -42,8 +44,6 @@ Page {
     property real max_y: Number.NEGATIVE_INFINITY
     property real max_x: Number.NEGATIVE_INFINITY
     property real real_rate: 2.8
-    property real car_in_center_rate: 0.2
-    property real map_min_scale_rate: 0.3
 
     property var choosePoint: []
     property alias choose_marker: choose_marker
@@ -389,98 +389,63 @@ Page {
                     x: canvas_background.x
                     y: canvas_background.y
 
-                    function drawReferenceLine(ctx, reference_line) {
-                        if (reference_line.length === 0) {
-                            return
-                        }
+                    function drawPoint(ctx, points){
                         ctx.save()
-                        ctx.lineWidth = 0.5
-                        ctx.strokeStyle = "red"
-                        for (var i = 0; i < reference_line.length; ++i) {
-                            ctx.beginPath()
-                            var first_point = geometryToPixel(reference_line[i][0][0], reference_line[i][0][1])
-                            ctx.moveTo(first_point[0], first_point[1])
-                            for (var j = 0; j < reference_line[i].length; ++j) {
-                                var point3 = geometryToPixel(reference_line[i][j][0], reference_line[i][j][1])
-                                ctx.lineTo(point3[0], point3[1])
-                            }
+                        ctx.strokeStyle = "#00ff00"
+                        ctx.fillStyle = "rgba(238,64,0,0.5)"
+                        var point = geometryToPixel(points[0][0], points[0][1])
+                        ctx.beginPath()
+                        ctx.arc(point[0],point[1],4,0,2*Math.PI)
+                        ctx.fill()
+                        ctx.stroke()
+                        ctx.restore()
+//                        map.x = 0
+//                        map.y = 0
+                    }
+
+                    function drawRegion(ctx, points){
+                        ctx.save()
+                        ctx.beginPath()
+                        var first_point = geometryToPixel(points[0][0], points[0][1])
+                        ctx.moveTo(first_point[0], first_point[1])
+                        for (var i = 1; i < points.length; ++i) {
+                            var point = geometryToPixel(points[i][0], points[i][1])
+                            ctx.lineTo(point[0], point[1])
                         }
+                        ctx.moveTo(first_point[0], first_point[1])
+                        ctx.strokeStyle = "#EE4000"
+                        ctx.fillStyle = "rgba(238,64,0,0.5)"
                         ctx.stroke()
                         ctx.restore()
                     }
 
-                    function drawPlanningPath(ctx, planning_path) {
-                        if (planning_path.length === 0) {
-                            return
-                        }
-
+                    function drawLine(ctx, points){
                         ctx.save()
                         ctx.lineWidth = 0.5
                         ctx.strokeStyle = "#00ff00"
                         ctx.beginPath()
-                        var first_point = geometryToPixel(planning_path[0][0], planning_path[0][1])
+                        var first_point = geometryToPixel(points[0][0], points[0][1])
                         ctx.moveTo(first_point[0], first_point[1])
-                        for (var i = 0; i < planning_path.length; ++i) {
-                            var point3 = geometryToPixel(planning_path[i][0], planning_path[i][1])
+                        for (var i = 0; i < points.length; ++i) {
+                            var point3 = geometryToPixel(points[i][0], points[i][1])
                             ctx.lineTo(point3[0], point3[1])
                         }
                         ctx.stroke()
                         ctx.restore()
                     }
 
-                    function drawObstacles(ctx, obstacles, is_polygon) {
-                        if (obstacles.length === 0) {
-                            return
-                        }
-                        if (is_polygon) {
-                            ctx.save()
-                            ctx.lineWidth = 0.5
-                            ctx.strokeStyle = "#ff00ff"
-                            ctx.fillStyle = "rgba(255,255,0,0.5)"
-                            for (var i = 0; i < obstacles.length; ++i) {
-                                ctx.beginPath()
-                                var first_point = geometryToPixel(obstacles[i][0][0], obstacles[i][0][1])
-                                ctx.moveTo(first_point[0], first_point[1])
-                                for (var j = 0; j < obstacles[i].length; ++j) {
-                                    var point3 = geometryToPixel(obstacles[i][j][0], obstacles[i][j][1])
-                                    ctx.lineTo(point3[0], point3[1])
-                                }
-                                ctx.closePath()
-                                ctx.stroke()
-                                ctx.fill()
-                            }
-
-                            ctx.restore()
-                        } else {
-                            ctx.save()
-                            ctx.strokeStyle = "#EE4000"
-                            ctx.fillStyle = "rgba(238,64,0,0.5)"
-                            //                            console.info(obstacles[0].length)
-                            for (var i = 0; i < obstacles[0].length; ++i) {
-                                var point = geometryToPixel(obstacles[0][i][0], obstacles[0][i][1])
-                                ctx.beginPath()
-                                ctx.arc(point[0],point[1],1.0,0,2*Math.PI)
-                                ctx.fill()
-                                ctx.stroke()
-                            }
-                            ctx.restore()
-                        }
-
-                    }
-
-
-
                     onPaint: {
                         var ctx = getContext("2d")
                         ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
-                        drawReferenceLine(ctx, var_reference_line)
-                        drawPlanningPath(ctx, var_planning_path)
-                        drawObstacles(ctx, var_obstacles, obstacles_is_polygon)
-                    }
-                }
-                VehicleItem {
-                    id: vehicle
+                        if (root.task_type == 1) {
+                            drawLine(ctx, root.points)
+                        } else if (root.task_type == 2) {
+                            drawPoint(ctx, root.points)
 
+                        } else if (root.task_type == 3) {
+                            drawRegion(ctx, root.points)
+                        }
+                    }
                 }
             }
         }
@@ -490,7 +455,7 @@ Page {
         id:parea
         anchors.fill: parent
         pinch.maximumScale: 8
-        pinch.minimumScale: root.map_min_scale_rate
+        pinch.minimumScale: 0.5
         pinch.dragAxis:Pinch.XAndYAxis
         pinch.target: map
 
@@ -498,12 +463,6 @@ Page {
             id: dragArea
             anchors.fill: parent
             drag.target: map
-            onDoubleClicked: {
-                map.x = (map.width / 2 - vehicle.x ) * /*Math.sqrt*/(map.scale)
-                map.y = (map.height / 2 - vehicle.y) * /*Math.sqrt*/(map.scale)
-                canvas_background.requestPaint()
-                canvas_others.requestPaint()
-            }
             onWheel: {
                 if(wheel.angleDelta.y > 0 ){
                     map.scale += 0.2
@@ -522,41 +481,6 @@ Page {
                     return
                 }
             }
-        }
-    }
-
-    //Obstacles
-    Connections {
-        target: socket_manager
-        onUpdatePerceptionObstacles: {
-            var_obstacles = obstacles
-            obstacles_is_polygon = is_polygon
-            canvas_others.requestPaint()
-        }
-    }
-
-    //Location
-    Connections {
-        target: socket_manager
-        onUpdateLocalization: {
-            var pixel_pos = geometryToPixel(X, Y)
-            vehicle.x = pixel_pos[0] - vehicle.width / 2
-            vehicle.y = pixel_pos[1] - vehicle.height / 2
-
-            if (map.scale > root.car_in_center_rate) {
-                map.x = (map.width / 2 - vehicle.x - vehicle.width / 2) * (map.scale)
-                map.y = (map.height / 2 - vehicle.y - vehicle.height / 2) * (map.scale)
-            }
-            vehicle.rotation = -heading
-        }
-    }
-
-    //Planning Path
-    Connections {
-        target: socket_manager
-        onUpdatePlanningPath: {
-            var_planning_path = path
-            canvas_others.requestPaint()
         }
     }
 
@@ -630,17 +554,12 @@ Page {
                                                 (map.height / map_height)
             map_rate *= real_rate
 
-            if (min_x < 50) {
-                vehicle.width = 2.1 * map_rate
-                vehicle.height = 0.7 * map_rate
-            } else {
-                vehicle.width = 6.6 * map_rate
-                vehicle.height = 2.2 * map_rate
-            }
             canvas_background.requestPaint()
 
             map.x = 0
             map.y = 0
         }
     }
+
+
 }

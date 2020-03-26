@@ -1,9 +1,9 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
+import QtGraphicalEffects 1.0
 import QtQuick.Controls.Styles 1.4
-import QtQuick.Controls 1.4 as Control_14
-import "CustomControl"
+import "./CustomControl"
 
 Rectangle {
     id: root
@@ -17,10 +17,55 @@ Rectangle {
     property bool can_work: false
     property real header_bar_index: 0
 
+    property var map_status: -1
+    property string error: ""
+    property string choose_map_name: ""
+    property var tasks_list
+    property var choose_task_type: -1
+    property var choose_task_points
+
     signal backToHomePage()
     signal mapIndexChanged(var current_index)
     onMapIndexChanged: {
 
+    }
+    FontLoader {
+        id: font_hanzhen;
+        source: "qrc:/res/font/hanzhen.ttf"
+    }
+
+    Connections {
+        target: socket_manager
+        onUpdateMapsName: {
+            list_model_areas.clear()
+            map_areas = maps_name
+            map_status = 1
+            for (var i = 0; i < map_areas.length; ++i) {
+                list_model_areas.append({"map_name":map_areas[i]})
+            }
+        }
+        onGetMapInfoError: {
+            map_status = 0
+            error = error_message
+        }
+        onUpdateTasksName: {
+//          tasks
+            tasks_list = tasks
+            task_list_model.clear()
+            for (var i = 0; i < tasks_list.length; ++i) {
+                task_list_model.append({"idcard": i,"check_box_text": tasks_list[i]})
+            }
+        }
+        onUpdateTaskData: {
+            for(var key in obj) {
+                if (key === "task_type") {
+                    monitor_page.task_type = obj[key]
+                } else {
+                    monitor_page.points = obj[key]
+                }
+            }
+
+        }
     }
 
     Rectangle {
@@ -37,208 +82,148 @@ Rectangle {
             width: parent.width * 0.9
             height: parent.height * 0.88
             anchors.centerIn: parent
+            color: "transparent"
+            visible: root.map_status === 1 ? true : false
             Rectangle {
                 id: rec_header_bar
                 width: parent.width
-                height: parent.height * 0.07 * rate
-                Rectangle {
-                    width: parent.width
-                    height: 2
-                    anchors.bottom: parent.bottom
-                    anchors.left: parent.left
-                    anchors.topMargin: 1
-                    color: "lightblue"
-                }
+                height: parent.height * 0.1
+                color: "white"
                 ListView {
                     id: list_view_areas
                     clip: true
                     anchors.fill: parent
-                    model: list_model_areas
                     orientation:ListView.Horizontal
-                    boundsBehavior:Flickable.StopAtBounds
-                    delegate: RowLayout {
-                        id: grid_areas
-                        visible: true
-                        width: parent.width
-                        height: parent.height
-                        Repeater {
-                            model: attributes
-                            Rectangle {
-                                width: rec_header_bar.width / (map_areas.length + 2)
-                                height: parent.height
-                                border.color: "transparent"
-//                                color: ListView.isCurrentItem ? "blue" : "red"
-                                Image {
-                                    id: bac_areas
-                                    anchors.fill: parent
-                                    source: ListView.isCurrentItem ? "qrc:/res/pictures/map_areas_focus.png": "qrc:/res/pictures/map_areas_normal.png"
-                                    Text {
-                                        text: qsTr(modelData)
-                                        anchors.centerIn: parent
-                                        font.pixelSize: 15 * rate * ratio
-                                    }
+                    spacing: width * 0.02
+                    //                    boundsBehavior:Flickable.StopAtBounds
+                    delegate: ItemDelegate {
+                        width: list_view_areas.width / 4
+                        height: list_view_areas.height
+                        Rectangle {
+                            width: parent.width
+                            height: parent.height
+                            border.color: "transparent"
+                            Image {
+                                id: bac_areas
+                                anchors.fill: parent
+                                source: ListView.isCurrentItem ? "qrc:/res/pictures/map_areas_focus.png": "qrc:/res/pictures/map_areas_normal.png"
+                                Text {
+                                    text: qsTr(model.map_name)
+                                    anchors.centerIn: parent
+                                    font.pixelSize: 15 * rate * ratio
                                 }
-                                MouseArea {
-                                    anchors.fill: parent
-                                    propagateComposedEvents: true
-                                    onPressed: {
-                                        list_view_areas.currentIndex = index
-                                        header_bar_index = index
-                                        list_model.clear()
-                                        list_model.initListModel()
-                                        rec_ref_lines.visible = true
-                                        rec_checked_location.visible = true
-                                        btn_not_match.visible = true
-                                        btn_match.visible = true
-                                        note_text.visible = false
-                                        btn_resure.visible = false
-                                        bac_areas.source = "qrc:/res/pictures/map_areas_focus.png"
-//                                        list_model_areas.clear()
-//                                        list_model_areas.initListModel()
-                                    }
-                                    onReleased: {
-                                        bac_areas.source = "qrc:/res/pictures/map_areas_normal.png"
-                                    }
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                propagateComposedEvents: true
+                                onPressed: {
+                                    socket_manager.parseMapData(model.map_name)
+                                    root.choose_map_name = model.map_name
+                                    rec_checked_location.visible = true
+                                    btn_not_match.visible = true
+                                    btn_match.visible = true
+                                    note_text.visible = false
+                                    btn_resure.visible = false
+                                }
+                                onReleased: {
+                                    bac_areas.source = "qrc:/res/pictures/map_areas_normal.png"
                                 }
                             }
                         }
                     }
-                }
-                ListModel {
-                    id: list_model_areas
-                    function initListModel() {
-                        var mapAttr = []
-                        for (var i = 0; i < map_areas.length; ++i) {
-                            mapAttr.push({attrName: map_areas[i]})
-                        }
-                        var mapElem = {attributes: mapAttr}
-                        append(mapElem)
-                    }
-                    Component.onCompleted: {
-                        initListModel()
+                    model: ListModel {
+                        id: list_model_areas
                     }
                 }
             }
+
             Rectangle {
-                id: rec_split
+                id: rect_decoration
                 width: parent.width
-                height: 1
-                anchors.bottom: rec_header_bar.bottom
-                anchors.left: parent.left
-                anchors.topMargin: 1
-                color: "white"
+                height: 2
+                anchors {
+                    top: rec_header_bar.bottom
+                    left: parent.left
+                }
+                color: "lightblue"
             }
+
             Rectangle {
-                id: map_view
                 width: parent.width
-                height: rec_task_page.height - rec_header_bar.height
-                anchors.left: parent.left
-                anchors.top: rec_split.bottom
-                color: "transparent"
+                height: rec_task_page.height - rec_header_bar.height - rect_decoration.height
+                anchors.top: rect_decoration.bottom
+                MapDisplayPage {
+                    id: monitor_page
+                    width:parent.width
+                    height: parent.height
+
+                }
+
                 Rectangle {
                     id: rec_ref_lines
-                    visible: false
+                    visible: true
                     z: 1
                     width: parent.width * 0.2
                     height: parent.height
-                    Rectangle {
-                        width: 1
-                        height: parent.height
-                        anchors.top: parent.top
-                        anchors.right: parent.right
-                        color: "lightgrey"
+                    color: "transparent"
+                    LinearGradient {
+                        anchors.fill: parent
+                        start: Qt.point(0, 0)
+                        end: Qt.point(parent.width, 0)
+                        gradient: Gradient {
+                            GradientStop { position: 0.0; color: Qt.rgba(0, 0, 0, 0.5)}
+                            GradientStop { position: 1.0; color: Qt.rgba(255, 255, 255, 0.5)}
+                        }
                     }
                     ListView {
                         id: list_view
                         clip: true
                         anchors.fill: parent
-                        model: list_model
+                        orientation:ListView.Vertical
+                        spacing: height * 0.02
+                        currentIndex: -1
                         delegate: ItemDelegate {
-                            id: list_delegate
-                            checkable: true
-                            width: parent.width
-                            contentItem: ColumnLayout {
-                                id: grid
-                                visible: true
-                                ButtonGroup { id: radio_group }
-                                Repeater {
-                                    model: attributes
-                                    CheckBox {
-                                        id: control
-                                        text: attrName
-                                        font.pixelSize: 15 * rate * ratio
-                                        indicator: Rectangle {
-                                            anchors.verticalCenter: control.verticalCenter
-                                            implicitWidth: rate * 25 * ratio
-                                            implicitHeight: rate * 25 * ratio
-                                            radius: width / 2
-                                            border.color: "grey"
-                                            border.width: 1
-                                            Image {
-                                                visible: control.checked
-                                                //                                            anchors.margins: 4
-                                                source: "qrc:/res/pictures/finish_2.png"
-                                                fillMode: Image.PreserveAspectFit
-                                                anchors.fill: parent
-                                            }
-                                        }
-                                        onClicked: {
-                                            //                                        if (name === qsTr("map1#")) {
-                                            //                                            sel_map = index
-                                            //                                            mapIndexChanged(sel_map)
-                                            //                                        } else if (name === qsTr("map2#")){
-                                            //                                            sel_map = index
-                                            //                                        } else if (name === qsTr("map3#")) {
-                                            //                                            sel_map = index
-                                            //                                        }
-                                        }
+                            id: item
+                            property int id_card: model.idcard
+                            Rectangle {
+                                id: check_style
+                                width: parent.width * 0.1
+                                height: width
+                                anchors.verticalCenter: parent.verticalCenter
+                                radius: height / 2
+                                border.color: "black"
+                                border.width: 1
+                                Image {
+                                    visible: list_view.currentIndex == item.id_card ? true : false
+                                    source: "qrc:/res/pictures/finish.png"
+                                    fillMode: Image.PreserveAspectFit
+                                    anchors.fill: parent
+                                }
+                            }
+                            Text {
+                                clip: true
+                                text: model.check_box_text
+                                horizontalAlignment: Text.AlignLeft
+                                verticalAlignment: Text.AlignVCenter
+                                width: parent.width * 0.7
+                                height: parent.height
+                                anchors.left: check_style.right
+                                anchors.leftMargin: parent.width * 0.05
+                                font.pixelSize: height * 0.4
+                                color: list_view.currentIndex == item.id_card ? "lightblue" : "black"
+                            }
+                            onClicked: {
+                                list_view.currentIndex = index
+                                socket_manager.getTasksData(model.check_box_text)
+                            }
+                        }
+                        model: ListModel {
+                            id: task_list_model
+                        }
 
-                                        ButtonGroup.group : {
-                                            if(true) {
-                                                return radio_group
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        states: [
-                            State {
-                                name: "expanded"
-                                when: list_delegate.checked
-                                PropertyChanges {
-                                    target: grid
-                                    visible: true
-                                }
-                            }
-                        ]
-                    }
-                    ListModel {
-                        id: list_model
-                        function initListModel() {
-                            var mapAttr = []
-                            for (var i = 0; i < ref_lines[header_bar_index].length; ++i) {
-                                mapAttr.push({attrName: ref_lines[header_bar_index][i]})
-                            }
-                            var mapElem = {attributes: mapAttr}
-                            append(mapElem)
-                        }
-                        Component.onCompleted: {
-                            initListModel()
-                        }
                     }
                 }
 
-                Rectangle {
-                    width: map_view.width
-                    height: map_view.height
-                    Layout.minimumWidth: parent.width * 0.1
-                    MonitorPage {
-                        id: monitor_page
-                        width:parent.width
-                        height: parent.height
-                    }
-                }
             }
         }
 
@@ -282,8 +267,8 @@ Rectangle {
                                 rec_task_control.visible = false
                                 rec_header_bar.visible = false
                                 rec_header_bar.height = 0
+                                rect_decoration.visible = false
                                 rec_ref_lines.visible = false
-                                rec_split.visible = false
                                 turn_task_page = true
                             } else {
                                 dialog_match_warn.open()
@@ -481,6 +466,23 @@ Rectangle {
         }
     }
 
+    Rectangle {
+        id: rect_error
+        width: parent.width * 0.9
+        height: parent.height * 0.88
+        anchors.centerIn: parent
+        color: "white"
+        visible: !rec_task_page.visible
+        Text {
+            anchors.fill: parent
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            font.family: font_hanzhen.name
+            font.pixelSize: height * 0.05
+            text: root.error
+        }
+    }
+
     TLDialog {
         id: dialog_match_warn
         width: root.width * 0.4
@@ -495,4 +497,6 @@ Rectangle {
             dialog_match_warn.close()
         }
     }
+
+
 }

@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 1.4 as Control_14
@@ -16,8 +16,6 @@ Rectangle {
     HomePage {
         id: home_page
         onViewTask: {
-            socket_manager.connectToHost("192.168.8.143", "32432")
-            socket_manager.sendAllPower(true)
             stack_view.replace(task_settings_page)
             rec_turn_view.visible = true
             list_view.visible = false
@@ -33,14 +31,19 @@ Rectangle {
 //        }
 //    }
     property Component user_manage_page: UserManagePage { }
+
     property Component task_settings_page: TaskSettingsPage {
         onBackToHomePage: {
             stack_view.replace(home_page)
+        }
+        Component.onCompleted: {
+            socket_manager.getMapsName()
         }
     }
     property Component help_document_page: HelpDocumentPage { }
     property Component about_machine_page: AboutMachinePage { }
     signal mainPageChanged(var current_index)
+
     onMainPageChanged: {
         if (current_index === 0) {
             stack_view.replace(home_page)
@@ -49,8 +52,6 @@ Rectangle {
         } else if (current_index === 2) {
             turn_task_page = false
             stack_view.replace(task_settings_page)
-            socket_manager.connectToHost("192.168.8.143", "32432")
-            socket_manager.sendAllPower(true)
         } else if (current_index === 3) {
             stack_view.replace(help_document_page)
         } else if (current_index === 4) {
@@ -267,6 +268,8 @@ Rectangle {
                 currentIndex: 0
                 highlight: Rectangle {color: "transparent"}
                 clip: true
+
+                highlightFollowsCurrentItem: false
                 delegate: ItemDelegate {
                     id: item
                     height: list_view.height / 5

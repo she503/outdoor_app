@@ -300,7 +300,7 @@ Rectangle {
         Rectangle {
             id: rect_list
             width: parent.width * 0.8
-            height: parent.height * 0.4
+            height: parent.height * 0.45
             clip: true
             color: "transparent"
             anchors {

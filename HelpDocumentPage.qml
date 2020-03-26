@@ -31,6 +31,9 @@ Rectangle {
                         "qrc:/res/html/test.html"
                     }
                 }
+                onLoadProgressChanged: {
+                    console.info(loadProgress)
+                }
             }
         }
     }

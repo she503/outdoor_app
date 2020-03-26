@@ -110,7 +110,8 @@ Rectangle {
                                 Text {
                                     text: qsTr(model.map_name)
                                     anchors.centerIn: parent
-                                    font.pixelSize: 15 * rate * ratio
+                                    font.pixelSize: 17 * rate * ratio
+                                    font.family: "Helvetica"
                                 }
                             }
                             MouseArea {
@@ -119,6 +120,7 @@ Rectangle {
                                 onPressed: {
                                     socket_manager.parseMapData(model.map_name)
                                     root.choose_map_name = model.map_name
+                                    can_work = false
                                     rec_checked_location.visible = true
                                     btn_not_match.visible = true
                                     btn_match.visible = true
@@ -187,11 +189,11 @@ Rectangle {
                             property int id_card: model.idcard
                             Rectangle {
                                 id: check_style
-                                width: parent.width * 0.1
+                                width: rate * 27 * ratio
                                 height: width
                                 anchors.verticalCenter: parent.verticalCenter
                                 radius: height / 2
-                                border.color: "black"
+                                border.color: "grey"
                                 border.width: 1
                                 Image {
                                     visible: list_view.currentIndex == item.id_card ? true : false
@@ -209,7 +211,8 @@ Rectangle {
                                 height: parent.height
                                 anchors.left: check_style.right
                                 anchors.leftMargin: parent.width * 0.05
-                                font.pixelSize: height * 0.4
+                                font.pixelSize: 15 * rate * ratio
+                                font.family: "Helvetica"
                                 color: list_view.currentIndex == item.id_card ? "lightblue" : "black"
                             }
                             onClicked: {

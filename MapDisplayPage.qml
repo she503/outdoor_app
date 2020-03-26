@@ -44,6 +44,8 @@ Page {
     property real max_y: Number.NEGATIVE_INFINITY
     property real max_x: Number.NEGATIVE_INFINITY
     property real real_rate: 2.8
+    property real car_in_center_rate: 0.2
+    property real map_min_scale_rate: 0.3
 
     property var choosePoint: []
     property alias choose_marker: choose_marker
@@ -446,6 +448,10 @@ Page {
                             drawRegion(ctx, root.points)
                         }
                     }
+                    VehicleItem {
+                        id: vehicle
+
+                    }
                 }
             }
         }
@@ -455,7 +461,7 @@ Page {
         id:parea
         anchors.fill: parent
         pinch.maximumScale: 8
-        pinch.minimumScale: 0.5
+        pinch.minimumScale: root.map_min_scale_rate
         pinch.dragAxis:Pinch.XAndYAxis
         pinch.target: map
 
@@ -490,6 +496,22 @@ Page {
         onUpdateReferenceLine: {
             var_reference_line = reference_line
             canvas_others.requestPaint()
+        }
+    }
+
+    //Location
+    Connections {
+        target: socket_manager
+        onUpdateLocalization: {
+            var pixel_pos = geometryToPixel(X, Y)
+            vehicle.x = pixel_pos[0] - vehicle.width / 2
+            vehicle.y = pixel_pos[1] - vehicle.height / 2
+
+            if (map.scale > root.car_in_center_rate) {
+                map.x = (map.width / 2 - vehicle.x - vehicle.width / 2) * (map.scale)
+                map.y = (map.height / 2 - vehicle.y - vehicle.height / 2) * (map.scale)
+            }
+            vehicle.rotation = -heading
         }
     }
 
@@ -554,6 +576,13 @@ Page {
                                                 (map.height / map_height)
             map_rate *= real_rate
 
+            if (min_x < 50) {
+                vehicle.width = 2.1 * map_rate
+                vehicle.height = 0.7 * map_rate
+            } else {
+                vehicle.width = 6.6 * map_rate
+                vehicle.height = 2.2 * map_rate
+            }
             canvas_background.requestPaint()
 
             map.x = 0

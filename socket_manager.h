@@ -67,7 +67,6 @@ signals:
     void updateLocalization(const QString& time, const QString& X, const QString& Y, const QString& heading,
                             const QString& state);
     void sendpiplineFile(const QString& path, const QString& file_data);
-    void updateRegionsInfo(const int& status);
 
 
     /**
@@ -89,8 +88,6 @@ private:
     /**
      * @brief 地图相关
      */
-    void parseRegionsInfo(const QJsonObject& obj);
-
     void parsePiplineInfoData(const QJsonObject& obj);
     void parsePlanningPath(const QJsonObject& obj);
     void parsePerceptionObstacles(const QJsonObject& obj);

@@ -480,42 +480,6 @@ Rectangle {
             }
         }
     }
-    Rectangle {
-        id: rec_regions_error_load
-        visible: false
-        anchors.fill: parent
-        color: "red"
-        opacity: 0.3
-        Rectangle {
-            anchors.fill: parent
-            anchors.margins: 5 * rate
-            color: "transparent"
-            Image {
-                anchors.fill: parent
-                source: "qrc:/res/pictures/background_glow1.png"
-            }
-            Text {
-                id: text_regions_message
-                text: qsTr("Get regions filed!")
-                color: "red"
-                anchors.centerIn: parent
-                font.pixelSize: 20 * rate
-                font.bold: true
-            }
-        }
-    }
-    Connections {
-        target: socket_manager
-        onUpdateRegionsInfo: {
-            if (!status) {
-                rec_regions_error_load.visible = true
-                rec_glow_background.visible = false
-            } else {
-                rec_regions_error_load.visible = false
-                rec_glow_background.visible = true
-            }
-        }
-    }
 
     TLDialog {
         id: dialog_match_warn

@@ -24,6 +24,10 @@ Rectangle {
     property var choose_task_type: -1
     property var choose_task_points
 
+
+    property var checked_tasks_name: []
+    property var test_car_init_point
+
     signal backToHomePage()
     signal mapIndexChanged(var current_index)
     onMapIndexChanged: {
@@ -52,19 +56,15 @@ Rectangle {
 //          tasks
             tasks_list = tasks
             task_list_model.clear()
+            if (tasks_list.length === 0 ) {
+                vbar.visible = false
+            } else {
+                vbar.visible = true
+            }
+
             for (var i = 0; i < tasks_list.length; ++i) {
                 task_list_model.append({"idcard": i,"check_box_text": tasks_list[i]})
             }
-        }
-        onUpdateTaskData: {
-            for(var key in obj) {
-                if (key === "task_type") {
-                    monitor_page.task_type = obj[key]
-                } else {
-                    monitor_page.points = obj[key]
-                }
-            }
-
         }
     }
 
@@ -152,6 +152,7 @@ Rectangle {
                     width:parent.width
                     height: parent.height
 
+
                 }
 
                 Rectangle {
@@ -173,13 +174,15 @@ Rectangle {
                     ListView {
                         id: list_view
                         clip: true
-                        anchors.fill: parent
+                        width: parent.width
+                        height: parent.height * 0.8
                         orientation:ListView.Vertical
                         spacing: height * 0.02
                         currentIndex: -1
                         delegate: ItemDelegate {
                             id: item
                             property int id_card: model.idcard
+                            property bool is_active: false
                             Rectangle {
                                 id: check_style
                                 width: parent.width * 0.1
@@ -189,13 +192,14 @@ Rectangle {
                                 border.color: "black"
                                 border.width: 1
                                 Image {
-                                    visible: list_view.currentIndex == item.id_card ? true : false
+                                    visible: item.is_active ? true : false
                                     source: "qrc:/res/pictures/finish.png"
                                     fillMode: Image.PreserveAspectFit
                                     anchors.fill: parent
                                 }
                             }
                             Text {
+                                id: checked_text
                                 clip: true
                                 text: model.check_box_text
                                 horizontalAlignment: Text.AlignLeft
@@ -205,15 +209,72 @@ Rectangle {
                                 anchors.left: check_style.right
                                 anchors.leftMargin: parent.width * 0.05
                                 font.pixelSize: height * 0.4
-                                color: list_view.currentIndex == item.id_card ? "lightblue" : "black"
+                                color: item.is_active ? "lightblue" : "black"
                             }
                             onClicked: {
                                 list_view.currentIndex = index
-                                socket_manager.getTasksData(model.check_box_text)
+                                item.is_active = !item.is_active
+                                if (item.is_active) {
+                                    root.checked_tasks_name.push(checked_text.text)
+                                } else {
+                                    var temp_str = []
+                                    for (var i = 0 ; i < root.checked_tasks_name.length; ++i) {
+                                       if (checked_text.text === root.checked_tasks_name[i]) {
+                                           continue
+                                       } else {
+                                           temp_str.push(root.checked_tasks_name[i])
+                                       }
+                                    }
+                                    root.checked_tasks_name = temp_str
+                                }
+                                    socket_manager.getTasksData(root.checked_tasks_name)
                             }
                         }
                         model: ListModel {
                             id: task_list_model
+                        }
+
+
+                        ScrollBar.vertical: ScrollBar {
+                            id: vbar
+                            visible: false
+                              hoverEnabled: true
+                              active: hovered || pressed
+                              orientation: Qt.Vertical
+                              size: 0.1
+                              anchors.top: parent.top
+                              anchors.right: parent.right
+                              anchors.bottom: parent.bottom
+                              policy: ScrollBar.AlwaysOn
+                              contentItem: Rectangle {
+                                        implicitWidth: 4
+                                        implicitHeight: 10
+                                        radius: width / 2
+                                        color: vbar.pressed ? "#ffffaa" : "#c2f4c6"
+                                    }
+                         }
+                    }
+
+
+
+                    Rectangle {
+                        id: btn_task_confirm
+                        width: parent.width
+                        height: parent.height * 0.2
+                        anchors.top: list_view.bottom
+                        color: Qt.rgba(0, 255, 0, 0.5)
+                        Text {
+                            text: qsTr("confirm")
+                            anchors.fill: parent
+                            font.pixelSize: width / 6
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+
+                            }
                         }
 
                     }

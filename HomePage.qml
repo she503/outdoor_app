@@ -42,9 +42,6 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-//                        socket_manager.connectToHost("192.168.8.143", "32432")
-//                        socket_manager.sendAllPower(true)
-//                        stack_view.replace(task_settings_page)
                         viewTask()
                     }
                 }

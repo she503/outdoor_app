@@ -414,10 +414,12 @@ Page {
                             var point = geometryToPixel(points[i][0], points[i][1])
                             ctx.lineTo(point[0], point[1])
                         }
-                        ctx.moveTo(first_point[0], first_point[1])
+//                        ctx.moveTo(first_point[0], first_point[1])
+                        ctx.closePath()
                         ctx.strokeStyle = "#EE4000"
                         ctx.fillStyle = "rgba(238,64,0,0.5)"
                         ctx.stroke()
+                        ctx.fill()
                         ctx.restore()
                     }
 

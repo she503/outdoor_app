@@ -1,4 +1,4 @@
-import QtQuick 2.7
+import QtQuick 2.9
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
@@ -49,7 +49,6 @@ Rectangle {
             error = error_message
         }
         onUpdateTasksName: {
-//          tasks
             tasks_list = tasks
             task_list_model.clear()
             for (var i = 0; i < tasks_list.length; ++i) {
@@ -177,54 +176,99 @@ Rectangle {
                             GradientStop { position: 1.0; color: Qt.rgba(255, 255, 255, 0.5)}
                         }
                     }
+
+
+
                     ListView {
                         id: list_view
                         clip: true
                         anchors.fill: parent
-                        orientation:ListView.Vertical
-                        spacing: height * 0.02
-                        currentIndex: -1
                         delegate: ItemDelegate {
-                            id: item
-                            property int id_card: model.idcard
-                            Rectangle {
-                                id: check_style
-                                width: rate * 27 * ratio
-                                height: width
-                                anchors.verticalCenter: parent.verticalCenter
-                                radius: height / 2
-                                border.color: "grey"
-                                border.width: 1
-                                Image {
-                                    visible: list_view.currentIndex == item.id_card ? true : false
-                                    source: "qrc:/res/pictures/finish.png"
-                                    fillMode: Image.PreserveAspectFit
-                                    anchors.fill: parent
+                            width: parent.width
+                            height: 40 * rate
+                            contentItem: ColumnLayout {
+                                CheckBox {
+                                    id: control
+                                    text: model.check_box_text
+                                    font.pixelSize: 15 * rate * ratio
+                                    indicator: Rectangle {
+                                        anchors.verticalCenter: control.verticalCenter
+                                        implicitWidth: rate * 30 * ratio
+                                        implicitHeight: rate * 30 * ratio
+                                        radius: width / 2
+                                        border.color: "grey"
+                                        border.width: 1
+                                        Image {
+                                            visible: control.checked
+                                            source: "qrc:/res/pictures/finish.png"
+                                            fillMode: Image.PreserveAspectFit
+                                            anchors.fill: parent
+                                        }
+                                    }
+                                    onClicked: {
+                                        if (control.checked) {
+
+                                        } else {
+
+                                            socket_manager.getTasksData(model.check_box_text)
+                                        }
+                                    }
                                 }
-                            }
-                            Text {
-                                clip: true
-                                text: model.check_box_text
-                                horizontalAlignment: Text.AlignLeft
-                                verticalAlignment: Text.AlignVCenter
-                                width: parent.width * 0.7
-                                height: parent.height
-                                anchors.left: check_style.right
-                                anchors.leftMargin: parent.width * 0.05
-                                font.pixelSize: 15 * rate * ratio
-                                font.family: "Helvetica"
-                                color: list_view.currentIndex == item.id_card ? "lightblue" : "black"
-                            }
-                            onClicked: {
-                                list_view.currentIndex = index
-                                socket_manager.getTasksData(model.check_box_text)
                             }
                         }
                         model: ListModel {
                             id: task_list_model
                         }
-
                     }
+
+//                    ListView {
+//                        id: list_view
+//                        clip: true
+//                        anchors.fill: parent
+//                        orientation:ListView.Vertical
+//                        spacing: height * 0.02
+//                        currentIndex: -1
+//                        delegate: ItemDelegate {
+//                            id: item
+//                            property int id_card: model.idcard
+//                            Rectangle {
+//                                id: check_style
+//                                width: rate * 27 * ratio
+//                                height: width
+//                                anchors.verticalCenter: parent.verticalCenter
+//                                radius: height / 2
+//                                border.color: "grey"
+//                                border.width: 1
+//                                Image {
+//                                    visible: list_view.currentIndex == item.id_card ? true : false
+//                                    source: "qrc:/res/pictures/finish.png"
+//                                    fillMode: Image.PreserveAspectFit
+//                                    anchors.fill: parent
+//                                }
+//                            }
+//                            Text {
+//                                clip: true
+//                                text: model.check_box_text
+//                                horizontalAlignment: Text.AlignLeft
+//                                verticalAlignment: Text.AlignVCenter
+//                                width: parent.width * 0.7
+//                                height: parent.height
+//                                anchors.left: check_style.right
+//                                anchors.leftMargin: parent.width * 0.05
+//                                font.pixelSize: 15 * rate * ratio
+//                                font.family: "Helvetica"
+//                                color: list_view.currentIndex == item.id_card ? "lightblue" : "black"
+//                            }
+//                            onClicked: {
+//                                list_view.currentIndex = index
+//                                socket_manager.getTasksData(model.check_box_text)
+//                            }
+//                        }
+//                        model: ListModel {
+//                            id: task_list_model
+//                        }
+
+//                    }
                 }
 
             }

@@ -33,6 +33,7 @@ Rectangle {
     onMapIndexChanged: {
 
     }
+
     FontLoader {
         id: font_hanzhen;
         source: "qrc:/res/font/hanzhen.ttf"
@@ -95,10 +96,11 @@ Rectangle {
                     anchors.fill: parent
                     orientation:ListView.Horizontal
                     spacing: width * 0.02
-                    //                    boundsBehavior:Flickable.StopAtBounds
+                    currentIndex: -1
                     delegate: ItemDelegate {
                         width: list_view_areas.width / 4
                         height: list_view_areas.height
+
                         Rectangle {
                             width: parent.width
                             height: parent.height
@@ -117,8 +119,13 @@ Rectangle {
                                 anchors.fill: parent
                                 propagateComposedEvents: true
                                 onPressed: {
+                                    list_view_areas.currentIndex = index
                                     socket_manager.parseMapData(model.map_name)
                                     root.choose_map_name = model.map_name
+                                    rec_checked_location.visible = true
+                                    monitor_page.choose_marker.visible = true
+                                    rect_info_choose_map.visible = false
+                                    rec_ref_lines.visible = false
                                 }
                                 onReleased: {
                                     bac_areas.source = "qrc:/res/pictures/map_areas_normal.png"
@@ -132,6 +139,8 @@ Rectangle {
                 }
             }
 
+
+
             Rectangle {
                 id: rect_decoration
                 width: parent.width
@@ -143,6 +152,22 @@ Rectangle {
                 color: "lightblue"
             }
 
+            Rectangle {
+                id: rect_info_choose_map
+                visible: true
+                width: parent.width
+                height: parent.height * 0.1
+                color: Qt.rgba(0, 200, 0, 0.3)
+                anchors.top: rect_decoration.bottom
+                z:2
+                Text {
+                    text: qsTr("Please choose a map in top")
+                    anchors.fill: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    font.pixelSize: height * 0.2
+                }
+            }
             Rectangle {
                 width: parent.width
                 height: rec_task_page.height - rec_header_bar.height - rect_decoration.height
@@ -157,7 +182,7 @@ Rectangle {
 
                 Rectangle {
                     id: rec_ref_lines
-                    visible: true
+                    visible: false
                     z: 1
                     width: parent.width * 0.2
                     height: parent.height
@@ -254,32 +279,7 @@ Rectangle {
                                     }
                          }
                     }
-
-
-
-                    Rectangle {
-                        id: btn_task_confirm
-                        width: parent.width
-                        height: parent.height * 0.2
-                        anchors.top: list_view.bottom
-                        color: Qt.rgba(0, 255, 0, 0.5)
-                        Text {
-                            text: qsTr("confirm")
-                            anchors.fill: parent
-                            font.pixelSize: width / 6
-                            verticalAlignment: Text.AlignVCenter
-                            horizontalAlignment: Text.AlignHCenter
-                        }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-
-                            }
-                        }
-
-                    }
                 }
-
             }
         }
 
@@ -369,12 +369,14 @@ Rectangle {
 
         Rectangle{
             id: rec_checked_location
+            visible: false
             color: "transparent"
             width: rec_glow_background.width
             height: rec_glow_background.height * 0.1
             anchors.bottom: rec_task_control.top
             anchors.horizontalCenter: parent.horizontalCenter
             Image {
+                id: choose_point
                 width: parent.width * 0.96
                 height: parent.height * 0.9
                 anchors.verticalCenter: parent.verticalCenter
@@ -387,75 +389,15 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin: 15 * rate
-                Rectangle {
-                    id: btn_not_match
-                    width: 75 * rate
-                    height: 22 * rate
-                    color: "transparent"
-                    anchors.verticalCenter: parent.verticalCenter
-                    Image {
-                        anchors.fill: parent
-                        source: "qrc:/res/pictures/btn_style1.png"
-                        fillMode: Image.PreserveAspectFit
-                        horizontalAlignment: Image.AlignHCenter
-                        verticalAlignment: Image.AlignVCenter
-                        Text {
-                            text: qsTr("Not Matched")
-                            anchors.centerIn: parent
-                            color: "blue"
-                            font.pixelSize: 13 * rate * ratio
-                            font.family: "Arial"
-                            font.weight: Font.Thin
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                        }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                isMatched = false
-                                can_work = false
-                                monitor_page.choose_marker.visible = true
-                                btn_not_match.visible = false
-                                btn_match.visible = false
-                                btn_resure.visible = true
-                                note_text.visible = true
-                            }
-                        }
-                    }
+
+                Component.onCompleted: {
+                    isMatched = false
+                    can_work = false
+                    monitor_page.choose_marker.visible = false
+                    btn_resure.visible = true
+                    note_text.visible = true
                 }
-                Rectangle {
-                    id: btn_match
-                    width: 75 * rate
-                    height: 22 * rate
-                    color: "transparent"
-                    anchors.verticalCenter: parent.verticalCenter
-                    Image {
-                        anchors.fill: parent
-                        source: "qrc:/res/pictures/btn_style1.png"
-                        fillMode: Image.PreserveAspectFit
-                        horizontalAlignment: Image.AlignHCenter
-                        verticalAlignment: Image.AlignVCenter
-                        Text {
-                            text: qsTr("Matched")
-                            anchors.centerIn: parent
-                            color: "blue"
-                            font.pixelSize: 13 * rate * ratio
-                            font.family: "Arial"
-                            font.weight: Font.Thin
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                        }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                isMatched = true
-                                can_work = true
-                                rec_checked_location.visible = false
-                                monitor_page.choose_marker.visible = false
-                            }
-                        }
-                    }
-                }
+
                 Text {
                     id: note_text
                     visible: false
@@ -480,7 +422,7 @@ Rectangle {
                         horizontalAlignment: Image.AlignHCenter
                         verticalAlignment: Image.AlignVCenter
                         Text {
-                            text: qsTr("Resure")
+                            text: qsTr("SURE")
                             anchors.centerIn: parent
                             color: "blue"
                             font.pixelSize: 13 * rate * ratio
@@ -496,7 +438,9 @@ Rectangle {
                                 can_work = true
                                 rec_checked_location.visible = false
                                 monitor_page.choose_marker.visible = false
-                                busy.running = true
+//                                busy.running = true
+                                dialog_resure.open()
+
                             }
                         }
                     }
@@ -516,6 +460,7 @@ Rectangle {
                 running: busy.running
                 onTriggered: {
                     busy.running = false
+                    rec_ref_lines.visible = true
                 }
             }
         }
@@ -550,6 +495,30 @@ Rectangle {
         is_single_btn: true
         onOkClicked: {
             dialog_match_warn.close()
+        }
+    }
+
+    TLDialog {
+        id: dialog_resure
+        width: root.width * 0.4
+        height: root.height * 0.3
+        x: (root.width - width) / 2
+        y: (root.height - height) / 2
+        dia_title: qsTr("Are u sure?")
+        dia_title_color: "red"
+        dia_image_source: "qrc:/res/pictures/smile.png"
+        is_single_btn: false
+        onOkClicked: {
+            dialog_resure.close()
+            busy.running = true
+
+        }
+        onCencelClicked: {
+            isMatched = false
+            can_work = false
+            rec_checked_location.visible = true
+            monitor_page.choose_marker.visible = true
+            dialog_resure.close()
         }
     }
 

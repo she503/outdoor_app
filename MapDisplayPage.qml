@@ -111,8 +111,8 @@ Page {
                 Canvas {
                     id: canvas_background
 
-                    width: map_width * map_rate
-                    height: map_height * map_rate
+                    width: map_width * map_rate + 20
+                    height: map_height * map_rate +20
 
 //                    x: (map_background.width - canvas_background.width) / 2
 //                    y: (map_background.height - canvas_background.height) / 2
@@ -586,6 +586,10 @@ Page {
 
             map.x = (map_background.width - canvas_background.width) / 2
             map.y = (map_background.height - canvas_background.height ) / 2
+            task_points = []
+            task_regions = []
+            task_lines = []
+            canvas_others.requestPaint()
         }
     }
 

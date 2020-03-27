@@ -12,8 +12,7 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
     _socket->setReadBufferSize(10 * 1024 * 1024);
 
 //    this->connectToHost("192.168.8.165", "32432");
-//    this->connectToHost("192.168.8.163", "32432");
-    this->connectToHost("192.168.8.143", "32432");
+    this->connectToHost("192.168.43.148", "32432");
 
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));
     connect(_socket, SIGNAL(disconnected()), this, SLOT(disConnet()));
@@ -36,10 +35,9 @@ bool SocketManager::connectToHost(const QString &ip, const QString &port)
         return false;
     } else {
         QJsonObject object;
-        object.insert("message_type", "device_connected");
+        object.insert("message_type", "mobile_client_connected");
         object.insert("sender", "mobile_client");
         QJsonDocument doc(object);
-//        qDebug() << object;
         this->sendSocketMessage(doc.toJson());
         return true;
     }
@@ -148,19 +146,31 @@ void SocketManager::parseRosInfoData(const QJsonObject &obj)
 
 }
 
-void SocketManager::getTasksData(const QString &task_name)
+void SocketManager::getTasksData(const QStringList &task_name)
 {
     if(_tasks.size() <= 0) {
         return;
     }
-     qint8 task_type = _tasks.value(task_name).first;
-     QVariantList points = _tasks.value(task_name).second;
 
-     QJsonObject obj;
-     obj.insert("task_type", task_type);
-     obj.insert(task_name, QJsonArray::fromVariantList(points));
+    QVariantList points;
+    QVariantList regions;
+    QVariantList lines;
 
-     emit updateTaskData(obj);
+    for (int i = 0; i < task_name.size(); ++i) {
+
+        qint8 task_type = _tasks.value(task_name.at(i)).first;
+        QVariantList task_data = _tasks.value(task_name.at(i)).second;
+
+        if (task_type == 1) {
+            lines.push_back(task_data);
+        } else if (task_type == 2) {
+            points.push_back(task_data);
+        } else if (task_type == 3) {
+            regions.push_back(task_data);
+        }
+    }
+
+    emit updateTaskData(points, regions, lines);
 
 }
 

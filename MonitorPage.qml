@@ -98,12 +98,9 @@ Page {
                 color:"transparent"
                 Canvas {
                     id: canvas_background
+                    width: map_width * map_rate
+                    height: map_height * map_rate
 
-                    width: map_width * map_rate  + 100
-                    height: map_height * map_rate  + 100
-
-                    x: (map_background.width - canvas_background.width) / 2
-                    y: (map_background.height - canvas_background.height) / 2
 
                     function cacuDis(sx,sy,tx,ty){
                         return Math.sqrt(Math.pow(tx-sx,2)+Math.pow(ty-sy,2))
@@ -383,8 +380,8 @@ Page {
 
                 Canvas {
                     id: canvas_others
-                    width: map_width * map_rate  + 10
-                    height: map_height * map_rate + 10
+                    width: map_width * map_rate
+                    height: map_height * map_rate
 
                     x: canvas_background.x
                     y: canvas_background.y
@@ -513,6 +510,7 @@ Page {
             }
             onClicked: {
                 if (!isMatched) {
+                    console.info("11111111111111111111")
                     var x = map.width / 2 - ( map.width / 2 - mouse.x + map.x) / map.scale
                     var y = map.height / 2 - ( map.height / 2 - mouse.y + map.y) / map.scale
                     root.choosePoint = [x, y]
@@ -639,8 +637,9 @@ Page {
             }
             canvas_background.requestPaint()
 
-            map.x = 0
-            map.y = 0
+
+           // map.x = (map_background.width - canvas_background.width) / 2
+            //map.y =100// (map_background.height - canvas_background.height ) / 2
         }
     }
 }

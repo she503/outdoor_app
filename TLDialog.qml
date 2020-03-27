@@ -8,6 +8,8 @@ Dialog {
     property string dia_title_color: ""
     property string dia_image_source: ""
     signal okClicked()
+
+    signal cencelClicked()
     background: Rectangle {
         anchors.fill: parent
         color: "transparent"
@@ -78,7 +80,7 @@ Dialog {
                                 MouseArea {
                                     anchors.fill: parent
                                     onClicked: {
-                                        dialog_info.close()
+                                       cencelClicked()// dialog_info.close()
                                     }
                                 }
                             }

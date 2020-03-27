@@ -13,23 +13,19 @@ Rectangle {
     property var text_process: ["map1#", "1h", "80%", "20min"]
     property bool turn_task_page: false
 
-    HomePage {
-        id: home_page
-        onViewTask: {
-            stack_view.replace(task_settings_page)
-            rec_turn_view.visible = true
-            list_view.visible = false
-        }
-    }
-//    property Component home_page: HomePage {
+//    HomePage {
+//        id: home_page
 //        onViewTask: {
-//            socket_manager.connectToHost("192.168.8.143", "32432")
-//            socket_manager.sendAllPower(true)
 //            stack_view.replace(task_settings_page)
 //            rec_turn_view.visible = true
 //            list_view.visible = false
 //        }
 //    }
+    property Component home_page: HomePage {
+        onViewTask: {
+            stack_view.replace(task_settings_page)
+        }
+    }
     property Component user_manage_page: UserManagePage { }
 
     property Component task_settings_page: TaskSettingsPage {

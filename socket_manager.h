@@ -45,7 +45,7 @@ public:
       */
     Q_INVOKABLE void parseMapData(const QString& map_name);
 
-    Q_INVOKABLE void getTasksData(const QString& task_name);
+    Q_INVOKABLE void getTasksData(const QStringList &task_name);
 
     /**
      * @brief get maps name
@@ -89,7 +89,7 @@ signals:
     void getMapInfoError(const QString& error_message);
 
     void updateTasksName(const QStringList& tasks);
-    void updateTaskData(const QJsonObject& obj);
+    void updateTaskData(const QVariantList& points, const QVariantList& regions, const QVariantList& lines);
 private slots:
     void readSocketData(/*const QByteArray& buffer*/);
 

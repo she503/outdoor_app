@@ -11,10 +11,10 @@ Page {
     clip: true
 
     property int task_type: -1
-    property var points
-    onPointsChanged: {
-        canvas_others.requestPaint()
-    }
+//    property var points
+//    onPointsChanged: {
+//        canvas_others.requestPaint()
+//    }
 
     property var var_trees: []
     property var var_signals: []
@@ -43,12 +43,22 @@ Page {
     property real min_y: Number.POSITIVE_INFINITY
     property real max_y: Number.NEGATIVE_INFINITY
     property real max_x: Number.NEGATIVE_INFINITY
-    property real real_rate: 2.8
-    property real car_in_center_rate: 0.2
-    property real map_min_scale_rate: 0.3
+    property real real_rate: 1
 
     property var choosePoint: []
     property alias choose_marker: choose_marker
+
+    property var vehicle_point
+
+    property var task_points: []
+    property var task_regions: []
+    property var task_lines: []
+
+    onVehicle_pointChanged: {
+        var po = geometryToPixel(vehicle_point[0], vehicle_point[1])
+        vehicle.x = po[0] - 7
+        vehicle.y = po[1] - 3
+    }
 
     function geometryToPixel(X, Y) {
         var x = (X - min_x) * map_rate
@@ -101,11 +111,11 @@ Page {
                 Canvas {
                     id: canvas_background
 
-                    width: map_width * map_rate  + 100
-                    height: map_height * map_rate  + 100
+                    width: map_width * map_rate + 20
+                    height: map_height * map_rate +20
 
-                    x: (map_background.width - canvas_background.width) / 2
-                    y: (map_background.height - canvas_background.height) / 2
+//                    x: (map_background.width - canvas_background.width) / 2
+//                    y: (map_background.height - canvas_background.height) / 2
 
                     function cacuDis(sx,sy,tx,ty){
                         return Math.sqrt(Math.pow(tx-sx,2)+Math.pow(ty-sy,2))
@@ -392,69 +402,84 @@ Page {
                     y: canvas_background.y
 
                     function drawPoint(ctx, points){
+                        if (points.length === 0) {
+                            return;
+                        }
+
                         ctx.save()
                         ctx.strokeStyle = "#00ff00"
                         ctx.fillStyle = "rgba(238,64,0,0.5)"
-                        var point = geometryToPixel(points[0][0], points[0][1])
-                        ctx.beginPath()
-                        ctx.arc(point[0],point[1],4,0,2*Math.PI)
-                        ctx.fill()
-                        ctx.stroke()
+                        for (var i = 0 ; i < points.length; ++i) {
+                            for (var j = 0; j < points[i].length; ++j) {
+                            var point = geometryToPixel(points[i][j][0], points[i][j][1])
+                            ctx.beginPath()
+                            ctx.arc(point[0],point[1],4,0,2*Math.PI)
+                            ctx.fill()
+                            ctx.stroke()
+                            }
+                        }
                         ctx.restore()
-//                        map.x = 0
-//                        map.y = 0
                     }
 
                     function drawRegion(ctx, points){
-                        ctx.save()
-                        ctx.beginPath()
-                        var first_point = geometryToPixel(points[0][0], points[0][1])
-                        ctx.moveTo(first_point[0], first_point[1])
-                        for (var i = 1; i < points.length; ++i) {
-                            var point = geometryToPixel(points[i][0], points[i][1])
-                            ctx.lineTo(point[0], point[1])
+                        if (points.length === 0) {
+                            return;
                         }
-//                        ctx.moveTo(first_point[0], first_point[1])
-                        ctx.closePath()
-                        ctx.strokeStyle = "#EE4000"
-                        ctx.fillStyle = "rgba(238,64,0,0.5)"
-                        ctx.stroke()
-                        ctx.fill()
+
+                        ctx.save()
+                        ctx.strokeStyle = "#ff4000"
+                        ctx.fillStyle = "rgba(0,244,0,0.5)"
+                        for (var j = 0; j < points.length; ++j) {
+                            ctx.beginPath()
+                            var first_point = geometryToPixel(points[j][0][0], points[j][0][1])
+                            ctx.moveTo(first_point[0], first_point[1])
+                            for (var i = 1; i < points[j].length; ++i) {
+                                var point = geometryToPixel(points[j][i][0], points[j][i][1])
+                                ctx.lineTo(point[0], point[1])
+                            }
+                            ctx.lineTo(first_point[0], first_point[1])
+                            ctx.closePath()
+                            ctx.fill()
+                            ctx.stroke()
+                        }
                         ctx.restore()
                     }
 
                     function drawLine(ctx, points){
+                        if (points.length === 0) {
+                            return
+                        }
+
                         ctx.save()
                         ctx.lineWidth = 0.5
                         ctx.strokeStyle = "#00ff00"
-                        ctx.beginPath()
-                        var first_point = geometryToPixel(points[0][0], points[0][1])
-                        ctx.moveTo(first_point[0], first_point[1])
-                        for (var i = 0; i < points.length; ++i) {
-                            var point3 = geometryToPixel(points[i][0], points[i][1])
-                            ctx.lineTo(point3[0], point3[1])
+                        for (var j = 0; j < points.length; ++j) {
+                            ctx.beginPath()
+                            var first_point = geometryToPixel(points[j][0], points[j][1])
+                            ctx.moveTo(first_point[0], first_point[1])
+                            for (var i = 0; i < points[j].length; ++i) {
+                                var point3 = geometryToPixel(points[j][i][0], points[j][i][1])
+                                ctx.lineTo(point3[0], point3[1])
+                            }
+                            ctx.stroke()
                         }
-                        ctx.stroke()
                         ctx.restore()
                     }
 
                     onPaint: {
                         var ctx = getContext("2d")
                         ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
-                        if (root.task_type == 1) {
-                            drawLine(ctx, root.points)
-                        } else if (root.task_type == 2) {
-                            drawPoint(ctx, root.points)
-
-                        } else if (root.task_type == 3) {
-                            drawRegion(ctx, root.points)
-                        }
-                    }
-                    VehicleItem {
-                        id: vehicle
-
+                        drawLine(ctx, root.task_lines)
+                        drawPoint(ctx, root.task_points)
+                        drawRegion(ctx, root.task_regions)
                     }
                 }
+            }
+
+            VehicleItem {
+                id: vehicle
+                x: 0
+                y: 0
             }
         }
     }
@@ -463,7 +488,7 @@ Page {
         id:parea
         anchors.fill: parent
         pinch.maximumScale: 8
-        pinch.minimumScale: root.map_min_scale_rate
+        pinch.minimumScale: 0.3
         pinch.dragAxis:Pinch.XAndYAxis
         pinch.target: map
 
@@ -489,31 +514,6 @@ Page {
                     return
                 }
             }
-        }
-    }
-
-    //Reference Line
-    Connections {
-        target: socket_manager
-        onUpdateReferenceLine: {
-            var_reference_line = reference_line
-            canvas_others.requestPaint()
-        }
-    }
-
-    //Location
-    Connections {
-        target: socket_manager
-        onUpdateLocalization: {
-            var pixel_pos = geometryToPixel(X, Y)
-            vehicle.x = pixel_pos[0] - vehicle.width / 2
-            vehicle.y = pixel_pos[1] - vehicle.height / 2
-
-            if (map.scale > root.car_in_center_rate) {
-                map.x = (map.width / 2 - vehicle.x - vehicle.width / 2) * (map.scale)
-                map.y = (map.height / 2 - vehicle.y - vehicle.height / 2) * (map.scale)
-            }
-            vehicle.rotation = -heading
         }
     }
 
@@ -587,10 +587,23 @@ Page {
             }
             canvas_background.requestPaint()
 
-            map.x = 0
-            map.y = 0
+            map.x = (map_background.width - canvas_background.width) / 2
+            map.y = (map_background.height - canvas_background.height ) / 2
+            task_points = []
+            task_regions = []
+            task_lines = []
+            canvas_others.requestPaint()
         }
     }
 
-
+    //task
+    Connections {
+        target: socket_manager
+        onUpdateTaskData: {
+            task_points = points    //task_points[0]
+            task_regions = regions
+            task_lines = lines
+            canvas_others.requestPaint()
+        }
+    }
 }

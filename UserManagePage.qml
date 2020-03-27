@@ -254,7 +254,7 @@ Rectangle {
 //                        message_account.title = qsTr("Success")
 //                        message_account.message_level = 1
 //                        message_text.text = "( " + root.checked_user_name + qsTr(" )user was deleted !")
-                        message_account.dia_title = "( " + root.checked_user_name + qsTr(" )user was deleted !")
+                        message_account.dia_title = qsTr("user ") + root.checked_user_name + qsTr(" was deleted !")
                         message_account.dia_title_color = "#4F94CD"
                         message_account.dia_image_source = "qrc:/res/pictures/smile.png"
                         message_account.open()
@@ -269,8 +269,6 @@ Rectangle {
                 id: btn_update
                 width: parent.width * 0.2
                 height: parent.height * 0.5
-
-
                 contentItem: Text {
                     anchors.fill: parent
                     font.pixelSize: parent.height * 0.5
@@ -388,7 +386,7 @@ Rectangle {
             height: parent.height * 0.3
             anchors{
                 top: rect_list.bottom
-                topMargin: parent.height * 0.08
+                topMargin: parent.height * 0.04
                 right: parent.right
                 rightMargin: parent.width * 0.08
             }
@@ -481,6 +479,7 @@ Rectangle {
                     top: pwd_rect.bottom
                     topMargin: parent.height * 0.08
                     right: parent.right
+                    horizontalCenter: parent.horizontalCenter
                 }
             }
 

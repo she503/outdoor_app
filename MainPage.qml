@@ -240,7 +240,7 @@ Rectangle {
                     color: "transparent"
                     Column {
                         Repeater {
-                            model: ["Current map: ", "Worked hours: ", "Finished: ", "Estimated time: "]
+                            model: [qsTr("Current map: "), qsTr("Worked hours: "), qsTr("Finished: "), qsTr("Estimated time: ")]
                             Rectangle {
                                 width: rec_peocess.width
                                 height: rec_peocess.height * 0.25
@@ -281,7 +281,7 @@ Rectangle {
                         color: "transparent"
                         Image {
                             id: img_background
-                            source: list_view.currentIndex == item.id_num ? model.focus_source : model.no_focus_source
+                            source: model.focus_source
                             opacity: list_view.currentIndex == item.id_num ? 1 : 0.3
                             anchors.fill: parent
                             fillMode: Image.PreserveAspectFit
@@ -296,29 +296,23 @@ Rectangle {
                 model: ListModel {
                     ListElement {
                         id_num: 0
-                        focus_source: "qrc:/res/pictures/home_focus.png"
-                        no_focus_source: "qrc:/res/pictures/home_no.png"
-
+                        focus_source: "qrc:/res/pictures/home.png"
                     }
                     ListElement {
                         id_num: 1
-                        focus_source: "qrc:/res/pictures/user_focus.png"
-                        no_focus_source: "qrc:/res/pictures/user_no.png"
+                        focus_source: "qrc:/res/pictures/user.png"
                     }
                     ListElement {
                         id_num: 2
-                        focus_source: "qrc:/res/pictures/setting_focus.png"
-                        no_focus_source: "qrc:/res/pictures/setting_no.png"
+                        focus_source: "qrc:/res/pictures/setting.png"
                     }
                     ListElement {
                         id_num: 3
-                        focus_source: "qrc:/res/pictures/help_focus.png"
-                        no_focus_source: "qrc:/res/pictures/help_no.png"
+                        focus_source: "qrc:/res/pictures/help.png"
                     }
                     ListElement {
                         id_num: 4
-                        focus_source: "qrc:/res/pictures/about_focus.png"
-                        no_focus_source: "qrc:/res/pictures/about_no.png"
+                        focus_source: "qrc:/res/pictures/about.png"
                     }
                 }
             }

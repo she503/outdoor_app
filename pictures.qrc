@@ -29,11 +29,6 @@
         <file>res/html/test.html</file>
         <file>res/pictures/back.png</file>
         <file>res/pictures/login_background.png</file>
-        <file>res/pictures/home_focus.png</file>
-        <file>res/pictures/about_no.png</file>
-        <file>res/pictures/help_no.png</file>
-        <file>res/pictures/setting_no.png</file>
-        <file>res/pictures/user_no.png</file>
         <file>res/pictures/main_background.png</file>
         <file>res/pictures/states_no.png</file>
         <file>res/pictures/states_success.png</file>
@@ -59,15 +54,14 @@
         <file>res/pictures/sad.png</file>
         <file>res/pictures/smile.png</file>
         <file>res/pictures/user_nomal_background.png</file>
-        <file>res/pictures/about_focus.png</file>
-        <file>res/pictures/help_focus.png</file>
-        <file>res/pictures/home_no.png</file>
-        <file>res/pictures/setting_focus.png</file>
-        <file>res/pictures/user_focus.png</file>
         <file>res/font/BRLNSR.TTF</file>
         <file>res/font/FZDHTJW.TTF</file>
         <file>res/font/FZHTJW.TTF</file>
         <file>res/font/hanzhen.ttf</file>
         <file>res/font/msyh.ttf</file>
+        <file>res/language/translation_chinese.qm</file>
+        <file>res/pictures/home.png</file>
+        <file>res/pictures/user.png</file>
+        <file>res/pictures/logo_2.png</file>
     </qresource>
 </RCC>

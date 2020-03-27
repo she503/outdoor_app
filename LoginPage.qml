@@ -49,7 +49,7 @@ Item{
             id: lab_name
             width: rect_login.width
             height: rect_login.height * 0.15
-            text: qsTr("中振同辂")
+            text: qsTr("tonglu")
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             font.bold: true

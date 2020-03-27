@@ -8,20 +8,22 @@ Rectangle {
     color: "transparent"
     Rectangle {
         id: rec_glow_background
-        anchors.fill: parent
-        anchors.margins: 5 * rate
+        height: parent.width > parent.height ? parent.height * 0.9 : parent.width * 0.9 * 0.787
+        width: parent.width > parent.height ? parent.height * 0.9 * 1.27 : parent.width * 0.9
+        anchors.centerIn: parent
         color: "transparent"
         Image {
             anchors.fill: parent
             source: "qrc:/res/pictures/background_glow1.png"
         }
         Rectangle {
-            width: parent.width * 0.9
-            height: parent.height * 0.88
+            width: parent.width * 0.88
+            height: parent.height * 0.85
             anchors.centerIn: parent
             color: "white"
             WebView {
                 id: webVie1
+                visible: false
                 anchors.fill: parent
                 url: {
                     if (account_manager.isAndroid) {
@@ -32,9 +34,29 @@ Rectangle {
                     }
                 }
                 onLoadProgressChanged: {
-                    console.info(loadProgress)
+                    if (loadProgress < 100) {
+                        busy.running = true
+                    }
+                }
+
+            }
+            BusyIndicator{
+                id: busy
+                running: false
+                width: parent.height * 0.2
+                height: width
+                anchors.centerIn: parent
+                Timer{
+                    running: busy.running
+                    onTriggered: {
+                        if (webVie1.loadProgress == 100) {
+                            busy.running = false
+                            webVie1.visible = true
+                        }
+                    }
                 }
             }
         }
+
     }
 }

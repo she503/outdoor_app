@@ -16,11 +16,11 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
     QtWebView::initialize();
-//    QTranslator trans;
-//    if (!trans.load(":/language/translation_chinese.qm")) {
-//        qDebug() << "faild to load translation qm !!!";
-//    }
-//    app.installTranslator(&trans);
+    QTranslator trans;
+    if (!trans.load(":/res/language/translation_chinese.qm")) {
+        qDebug() << "faild to load translation qm !!!";
+    }
+    app.installTranslator(&trans);
     QQmlApplicationEngine engine;
 
     AccountManager* account_manager = new AccountManager(&engine);

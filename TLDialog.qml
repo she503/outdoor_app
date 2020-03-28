@@ -32,8 +32,9 @@ Dialog {
                     width: parent.width
                     height: parent.height * 0.3
                     Label {
+                        anchors.fill: parent
                         text: qsTr(dia_title)
-                        font.pixelSize: 15 * rate
+                        font.pixelSize: height * 0.5
                         color:dia_title_color
                         anchors.centerIn: parent
                         font.bold: true
@@ -53,12 +54,12 @@ Dialog {
                     width: parent.width
                     height: parent.height * 0.2
                     Row {
-                        spacing: 10 * rate
+                        spacing: parent.width * 0.1
                         anchors.centerIn: parent
 
                         Rectangle {
-                            width: 50 * rate
-                            height: 25 * rate
+                            width: parent.width * 0.5
+                            height: parent.height * 0.5
                             visible: !is_single_btn
                             color: "transparent"
                             Image {
@@ -68,10 +69,10 @@ Dialog {
                                 horizontalAlignment: Image.AlignHCenter
                                 verticalAlignment: Image.AlignVCenter
                                 Text {
-                                    anchors.centerIn: parent
+                                    anchors.fill: parent
                                     color: "white"
                                     text: qsTr("No")
-                                    font.pixelSize: 12 * rate
+                                    font.pixelSize: height * 0.5
                                     font.family: "Arial"
                                     font.weight: Font.Thin
                                     horizontalAlignment: Text.AlignHCenter
@@ -86,8 +87,8 @@ Dialog {
                             }
                         }
                         Rectangle {
-                            width: 50 * rate
-                            height: 25 * rate
+                            width: parent.width * 0.5
+                            height: parent.height * 0.5
                             color: "transparent"
                             Image {
                                 anchors.fill: parent
@@ -97,9 +98,9 @@ Dialog {
                                 verticalAlignment: Image.AlignVCenter
                                 Text {
                                     text: qsTr("Ok")
-                                    anchors.centerIn: parent
+                                    anchors.fill: parent
                                     color: "white"
-                                    font.pixelSize: 12 * rate
+                                    font.pixelSize: height * 0.5
                                     font.family: "Arial"
                                     font.weight: Font.Thin
                                     horizontalAlignment: Text.AlignHCenter

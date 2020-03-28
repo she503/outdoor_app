@@ -10,6 +10,8 @@ Page {
     height: parent.height
     clip: true
 
+    property var paint_begin_point: 20
+
     property var var_trees: []
     property var var_signals: []
     property var var_stop_signs: []
@@ -23,11 +25,6 @@ Page {
     property var var_roads_include: []
     property var var_roads_exclude: []
 
-
-    property var var_planning_path: []
-    property var var_reference_line: []
-    property var var_perception_obstacles: []
-    property var var_obstacles: []
 
     property real map_width: 0
     property real map_height: 0
@@ -52,34 +49,20 @@ Page {
     }
 
     function geometryToPixel(X, Y) {
-        var x = (X - min_x) * map_rate
-        var y = (Y - max_y) * -map_rate
+        var x = (X - min_x) * map_rate + paint_begin_point
+        var y = (Y - max_y) * -map_rate + paint_begin_point
         //        console.info([x,y])
         return [x, y]
     }
 
     function pixelToGeometry(X, Y) {
-        var x = X / map_rate + min_x
-        var y = Y / -map_rate + max_y
+        var x = (X - paint_begin_point) / map_rate + min_x
+        var y = (Y - paint_begin_point) / -map_rate + max_y
         return [x, y]
     }
 
-    function setCheckedLocationStatus() {
-        btn_not_match.visible = true
-        btn_match.visible = true
-        note_text.visible = false
-        btn_resure.visible = false
-        choose_marker.visible = false
-    }
 
-    SplitView {
-        id:split
-        z:2
-        anchors.fill: parent
-        orientation: Qt.Horizontal
-        resizing: true
-
-        Rectangle {
+    Rectangle {
             id: map
             width: parent.width * 0.78
             height: parent.height
@@ -101,13 +84,8 @@ Page {
                 color:"transparent"
                 Canvas {
                     id: canvas_background
-
-                    width: map_width * map_rate + 20
-                    height: map_height * map_rate +20
-
-//                    x: (map_background.width - canvas_background.width) / 2
-//                    y: (map_background.height - canvas_background.height) / 2
-
+                    width: map_width * map_rate + paint_begin_point * 2
+                    height: map_height * map_rate + paint_begin_point * 2
                     function cacuDis(sx,sy,tx,ty){
                         return Math.sqrt(Math.pow(tx-sx,2)+Math.pow(ty-sy,2))
                     }
@@ -386,8 +364,8 @@ Page {
 
                 Canvas {
                     id: canvas_others
-                    width: map_width * map_rate  + 10
-                    height: map_height * map_rate + 10
+                    width: map_width * map_rate  + paint_begin_point * 2
+                    height: map_height * map_rate + paint_begin_point * 2
 
                     x: canvas_background.x
                     y: canvas_background.y
@@ -467,7 +445,7 @@ Page {
                 }
             }
         }
-    }
+
 
     PinchArea{
         id:parea
@@ -485,13 +463,17 @@ Page {
                 if(wheel.angleDelta.y > 0 ){
                     map.scale += 0.2
                 }else{
-                    map.scale -= 0.2
+                    if (map.scale <= 0) {
+                        return
+                    }
+                    map.scale -= 0.1
                 }
             }
             onClicked: {
                 var x = map.width / 2 - ( map.width / 2 - mouse.x + map.x) / map.scale
                 var y = map.height / 2 - ( map.height / 2 - mouse.y + map.y) / map.scale
                 root.choosePoint = [x, y]
+                console.info(root.choosePoint)
             }
         }
     }
@@ -520,8 +502,6 @@ Page {
             var all_x = []
             var all_y = []
 
-            //            console.info(var_clear_areas_include)
-            //            var has_less_than_0 = false
             for (var i = 0; i < var_road_edges.length; ++i) {
                 min_x = var_road_edges[0][0][0][0]
                 max_x = var_road_edges[0][0][0][0]

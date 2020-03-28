@@ -8,11 +8,7 @@ ApplicationWindow {
     width: 640
     height: 480
 
-    property bool has_error: false
     property Component main_page: MainPage {
-        onBackToHomePage: {
-            stack_view.replace(main_page)
-        }
     }
 
     property Component login_page: LoginPage {
@@ -23,18 +19,6 @@ ApplicationWindow {
         }
     }
 
-    Timer {
-        interval: 2000
-        running: true
-        repeat: true
-        onTriggered: {
-            if (has_error) {
-                has_error = false
-            } else {
-                has_error = true
-            }
-        }
-    }
     StackView {
         id: stack_view
         anchors.fill: parent

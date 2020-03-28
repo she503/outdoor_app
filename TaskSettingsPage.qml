@@ -102,14 +102,15 @@ Rectangle {
                         Rectangle {
                             width: parent.width
                             height: parent.height
-                            border.color: list_view_areas.currentIndex === parent.id_card ?
-                                              Qt.rgba(0,191,255, 0.8) : Qt.rgba( 105, 105, 105 , 0.5)
+                            color: list_view_areas.currentIndex === parent.id_card ?
+                                              Qt.rgba(0,191,255, 0.8) : Qt.rgba(205,133,63, 0.5)
+                            border.color:  Qt.rgba(205,133,63, 0.5)
                             Text {
                                 text: model.map_name
                                 anchors.fill: parent
-                                horizontalAlignment: Text.AlignLeft
+                                horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
-                                color: white
+                                color: "black"
                             }
                         }
                     }
@@ -213,7 +214,7 @@ Rectangle {
                                 anchors.left: check_style.right
                                 anchors.leftMargin: parent.width * 0.05
                                 font.pixelSize: height * 0.4
-                                color: item.is_active ? "lightblue" : "black"
+                                color: item.is_active ? "red" : "black"
                             }
                             onClicked: {
                                 list_view.currentIndex = index
@@ -272,8 +273,8 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             Rectangle {
                 id: btn_start_task
-                width: parent.width * 0.1
-                height: parent.height * 0.8
+                width: parent.width * 0.2
+                height: parent.height
                 color: "transparent"
                 anchors {
                     right: parent.horizontalCenter
@@ -290,7 +291,7 @@ Rectangle {
                         text: qsTr("Start")
                         anchors.fill: parent
                         color: "red"
-                        font.pixelSize: height * 0.5
+                        font.pixelSize: height * 0.4
                         font.family: "Arial"
                         font.weight: Font.Thin
                         horizontalAlignment: Text.AlignHCenter
@@ -305,7 +306,6 @@ Rectangle {
                                 rec_header_bar.height = 0
                                 rect_decoration.visible = false
                                 rec_ref_lines.visible = false
-                                turn_task_page = true
 
 
                                 socket_manager.sentMapTasksName(root.checked_tasks_name)
@@ -336,7 +336,7 @@ Rectangle {
                         text: qsTr("Cancle")
                         anchors.fill: parent
                         color: "blue"
-                        font.pixelSize: height * 0.5
+                        font.pixelSize: height * 0.3
                         font.family: "Arial"
                         font.weight: Font.Thin
                         horizontalAlignment: Text.AlignHCenter
@@ -374,10 +374,10 @@ Rectangle {
             Text {
                 id: note_text
                 text: qsTr("move and choose point!")//移动选点!
-                width: parent.width * 0.8
+                width: parent.width * 0.7
                 height: parent.height
                 font.family: "Helvetica"
-                font.pointSize: height * 0.5
+                font.pixelSize: height * 0.5
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
                 color: "red"
@@ -387,6 +387,7 @@ Rectangle {
                 width: parent.width * 0.2
                 height: parent.height
                 anchors.right: parent.right
+                anchors.rightMargin: parent.width * 0.1
                 color: "transparent"
                 Image {
                     anchors.fill: parent
@@ -396,7 +397,7 @@ Rectangle {
                         text: qsTr("SURE")
                         anchors.fill: parent
                         color: "blue"
-                        font.pixelSize: height * 0.5
+                        font.pixelSize: height * 0.4
                         font.family: "Arial"
                         font.weight: Font.Thin
                         horizontalAlignment: Text.AlignHCenter
@@ -413,6 +414,7 @@ Rectangle {
             }
 
         }
+
         BusyIndicator{
             id:busy
             z: 5
@@ -432,6 +434,7 @@ Rectangle {
                 }
             }
         }
+
     }
 
     Rectangle {

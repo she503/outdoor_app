@@ -53,68 +53,68 @@ Dialog {
                 Rectangle {
                     width: parent.width
                     height: parent.height * 0.2
-                    Row {
-                        spacing: parent.width * 0.1
-                        anchors.centerIn: parent
 
-                        Rectangle {
-                            width: parent.width * 0.5
-                            height: parent.height * 0.5
-                            visible: !is_single_btn
-                            color: "transparent"
-                            Image {
+
+                    Rectangle {
+                        id: btn_no
+                        width: parent.width * 0.5
+                        height: parent.height
+                        visible: !is_single_btn
+                        color: "transparent"
+                        Image {
+                            anchors.fill: parent
+                            source: "qrc:/res/pictures/btn_style2.png"
+                            fillMode: Image.PreserveAspectFit
+                            horizontalAlignment: Image.AlignHCenter
+                            verticalAlignment: Image.AlignVCenter
+                            Text {
                                 anchors.fill: parent
-                                source: "qrc:/res/pictures/btn_style2.png"
-                                fillMode: Image.PreserveAspectFit
-                                horizontalAlignment: Image.AlignHCenter
-                                verticalAlignment: Image.AlignVCenter
-                                Text {
-                                    anchors.fill: parent
-                                    color: "white"
-                                    text: qsTr("No")
-                                    font.pixelSize: height * 0.5
-                                    font.family: "Arial"
-                                    font.weight: Font.Thin
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment: Text.AlignVCenter
-                                }
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                       cencelClicked()// dialog_info.close()
-                                    }
-                                }
+                                color: "black"
+                                text: qsTr("No")
+                                font.pixelSize: height * 0.8
+                                font.family: "Arial"
+                                font.weight: Font.Thin
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
                             }
-                        }
-                        Rectangle {
-                            width: parent.width * 0.5
-                            height: parent.height * 0.5
-                            color: "transparent"
-                            Image {
+                            MouseArea {
                                 anchors.fill: parent
-                                source: "qrc:/res/pictures/btn_style2.png"
-                                fillMode: Image.PreserveAspectFit
-                                horizontalAlignment: Image.AlignHCenter
-                                verticalAlignment: Image.AlignVCenter
-                                Text {
-                                    text: qsTr("Ok")
-                                    anchors.fill: parent
-                                    color: "white"
-                                    font.pixelSize: height * 0.5
-                                    font.family: "Arial"
-                                    font.weight: Font.Thin
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment: Text.AlignVCenter
-                                }
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        okClicked()
-                                    }
+                                onClicked: {
+                                    cencelClicked()// dialog_info.close()
                                 }
                             }
                         }
                     }
+                    Rectangle {
+                        width: parent.width * 0.5
+                        height: parent.height
+                        color: "transparent"
+                        anchors.left: btn_no.right
+                        Image {
+                            anchors.fill: parent
+                            source: "qrc:/res/pictures/btn_style2.png"
+                            fillMode: Image.PreserveAspectFit
+                            horizontalAlignment: Image.AlignHCenter
+                            verticalAlignment: Image.AlignVCenter
+                            Text {
+                                text: qsTr("Ok")
+                                anchors.fill: parent
+                                color: "black"
+                                font.pixelSize: height * 0.8
+                                font.family: "Arial"
+                                font.weight: Font.Thin
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    okClicked()
+                                }
+                            }
+                        }
+                    }
+
                 }
             }
         }

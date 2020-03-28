@@ -62,10 +62,20 @@ Page {
     }
 
 
+    onHeightChanged: {
+        map.x = (map.width - canvas_background.width) / 2 + root.paint_begin_point * 2
+        map.y = (map.height - canvas_background.height ) / 2
+    }
+    onWidthChanged: {
+        map.x = (map.width - canvas_background.width) / 2 + root.paint_begin_point * 2
+        map.y = (map.height - canvas_background.height ) / 2
+    }
+
     Rectangle {
             id: map
             width: parent.width * 0.78
             height: parent.height
+
             Image {
                 id: choose_marker
                 z: 1
@@ -81,11 +91,13 @@ Page {
                 id: map_background
                 width: parent.width
                 height: parent.height
-                color:"transparent"
+                color: "transparent"
                 Canvas {
                     id: canvas_background
                     width: map_width * map_rate + paint_begin_point * 2
                     height: map_height * map_rate + paint_begin_point * 2
+
+
                     function cacuDis(sx,sy,tx,ty){
                         return Math.sqrt(Math.pow(tx-sx,2)+Math.pow(ty-sy,2))
                     }
@@ -359,6 +371,7 @@ Page {
 
                         drawTrees(ctx, var_trees)
                         drawSigns(ctx, var_signals)
+
                     }
                 }
 
@@ -473,7 +486,6 @@ Page {
                 var x = map.width / 2 - ( map.width / 2 - mouse.x + map.x) / map.scale
                 var y = map.height / 2 - ( map.height / 2 - mouse.y + map.y) / map.scale
                 root.choosePoint = [x, y]
-                console.info(root.choosePoint)
             }
         }
     }
@@ -482,6 +494,8 @@ Page {
     Connections {
         target: socket_manager
         onUpdateMapData: {
+
+            map.scale = 1
             min_x = Number.POSITIVE_INFINITY
             min_y = Number.POSITIVE_INFINITY
             max_y = Number.NEGATIVE_INFINITY
@@ -529,7 +543,6 @@ Page {
                 }
             }
 
-
             map_width = max_x - min_x
             map_height = max_y - min_y
 
@@ -537,15 +550,18 @@ Page {
                                                 (map.height / map_height)
             map_rate *= real_rate
 
+            map.x = (map.width - canvas_background.width) / 2 + root.paint_begin_point * 2
+            map.y = (map.height - canvas_background.height ) / 2
 
             canvas_background.requestPaint()
 
-            map.x = (map_background.width - canvas_background.width) / 2
-            map.y = (map_background.height - canvas_background.height ) / 2
+
             task_points = []
             task_regions = []
             task_lines = []
             canvas_others.requestPaint()
+
+
         }
     }
 

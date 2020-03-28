@@ -44,7 +44,7 @@ Rectangle {
                 Column {
                    width: parent.width
                    height: parent.height
-                    Repeater {
+                   Repeater {
                         delegate: Rectangle {
                             width: parent.width
                             height: parent.height / (list_model.count )

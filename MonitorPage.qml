@@ -45,13 +45,9 @@ Page {
     property real car_in_center_rate: 0.2
     property real map_min_scale_rate: 0.3
 
-    property var choosePoint: []
-    property alias choose_marker: choose_marker
-
     function geometryToPixel(X, Y) {
         var x = (X - min_x) * map_rate
         var y = (Y - max_y) * -map_rate
-        //        console.info([x,y])
         return [x, y]
     }
 
@@ -66,7 +62,6 @@ Page {
         btn_match.visible = true
         note_text.visible = false
         btn_resure.visible = false
-        choose_marker.visible = false
     }
 
     SplitView {
@@ -80,17 +75,7 @@ Page {
             id: map
             width: parent.width * 0.78
             height: parent.height
-            Image {
-                id: choose_marker
-                z: 1
-                visible: false
-                source: "qrc:/res/pictures/gps.png"
-                width: 28
-                height: 28
-                x: choosePoint[0] - width / 2
-                y: choosePoint[1] - height
-                fillMode: Image.PreserveAspectFit
-            }
+
             Rectangle {
                 id: map_background
                 width: parent.width
@@ -477,7 +462,6 @@ Page {
                 }
                 VehicleItem {
                     id: vehicle
-
                 }
             }
         }
@@ -506,18 +490,6 @@ Page {
                     map.scale += 0.2
                 }else{
                     map.scale -= 0.2
-                }
-            }
-            onClicked: {
-                if (!isMatched) {
-                    console.info("11111111111111111111")
-                    var x = map.width / 2 - ( map.width / 2 - mouse.x + map.x) / map.scale
-                    var y = map.height / 2 - ( map.height / 2 - mouse.y + map.y) / map.scale
-                    root.choosePoint = [x, y]
-                    var pos = pixelToGeometry(x,y)
-                    socket_manager.sendClickPointPos(pos[0],pos[1])
-                } else {
-                    return
                 }
             }
         }

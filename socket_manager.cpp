@@ -11,8 +11,8 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
     _socket = new QTcpSocket(this);
     _socket->setReadBufferSize(10 * 1024 * 1024);
 
-//    this->connectToHost("192.168.8.165", "32432");
-    this->connectToHost("192.168.43.148", "32432");
+    this->connectToHost("192.168.8.165", "32432");
+//    this->connectToHost("192.168.43.148", "32432");
 
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));
     connect(_socket, SIGNAL(disconnected()), this, SLOT(disConnet()));
@@ -35,7 +35,7 @@ bool SocketManager::connectToHost(const QString &ip, const QString &port)
         return false;
     } else {
         QJsonObject object;
-        object.insert("message_type", "mobile_client_connected");
+        object.insert("message_type", "device_connected");
         object.insert("sender", "mobile_client");
         QJsonDocument doc(object);
         this->sendSocketMessage(doc.toJson());
@@ -71,7 +71,7 @@ bool SocketManager::sendData(const QByteArray &data)
 bool SocketManager::sendClickPointPos(const QString &pos_x, const QString &pos_y)
 {
     QJsonObject object;
-    object.insert("message_type", "clicked_point");
+    object.insert("message_type", "initial_localization");
     object.insert("x", pos_x);
     object.insert("y", pos_y);
     QJsonDocument doc(object);
@@ -101,7 +101,7 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
         if (error.error == QJsonParseError::NoError) {
             QJsonObject obj = doc.object();
             QString message_type = obj.value("message_type").toString();
-            if (message_type == "ros_message") {
+            /*if (message_type == "ros_message") {
                 this->parseRosInfoData(obj);
             } else if (message_type == "localization_info") {
                 this->parseLocalization(obj);
@@ -111,8 +111,10 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
                 this->parsePerceptionObstacles(obj);
             } else if (message_type == "reference_line") {
                 this->parseReferenceLine(obj);
-            }else if (message_type == "all_tasks_info") {//all_tasks_info
+            } else */if (message_type == "all_maps_area_info") {//all_tasks_info
                 this->parseRegionsInfo(obj);
+            } else if (message_type == "set_map_and_get_tasks") {
+                this->parsseMapTasksData(obj);
             }
             else {
                 qDebug() << obj;
@@ -141,10 +143,10 @@ void SocketManager::testfunction()
     time->start();
 }
 
-void SocketManager::parseRosInfoData(const QJsonObject &obj)
-{
+//void SocketManager::parseRosInfoData(const QJsonObject &obj)
+//{
 
-}
+//}
 
 void SocketManager::getTasksData(const QStringList &task_name)
 {
@@ -174,15 +176,26 @@ void SocketManager::getTasksData(const QStringList &task_name)
 
 }
 
+void SocketManager::getMapTask(const QString &map_name)
+{
+    QJsonObject obj;
+    obj.insert("message_type", "map_selected");
+    obj.insert("map_name", map_name);
+    QJsonDocument doc(obj);
+    this->sendSocketMessage(doc.toJson());
+}
+
 void SocketManager::parseRegionsInfo(const QJsonObject &obj)
 {
-    qint8 status = obj.value("get_maps_name_status").toInt();
+    qint8 status = obj.value("status").toInt();
     if (status == 0) {
-        QString error_message = obj.value("get_maps_message").toString();
+        QString error_message = obj.value("message").toString();
         qDebug() << "[SocketManager::parseRegionsInfo]: " << error_message;
         emit getMapInfoError(error_message);
         return;
     }
+    _map_name_list.clear();
+    _maps.clear();
     QJsonObject map_obj = obj.value("maps").toObject();
 
 
@@ -190,41 +203,40 @@ void SocketManager::parseRegionsInfo(const QJsonObject &obj)
 
     for(it = map_obj.begin(); it != map_obj.end(); ++it) {
         QString map_name = it.key();
-        QJsonObject map_temp_obj = it.value().toObject().value("map_info").toObject();
-        QJsonObject map_task_obj = it.value().toObject().value("tasks_info").toObject();
+        QJsonObject map_temp_obj = it.value().toObject();
         _map_name_list.push_back(map_name);
 
-        QStringList tasks_name;
-        QJsonObject::iterator it_tasks;
-        for(it_tasks = map_task_obj.begin(); it_tasks != map_task_obj.end(); ++it_tasks) {
-            tasks_name.push_back(it_tasks.key());
-        }
-        _task_name.insert(map_name, tasks_name);
-        QPair<QJsonObject, QJsonObject> maps_tasks_obj(map_temp_obj, map_task_obj);
-        _maps.insert(map_name, maps_tasks_obj);
+        _maps.insert(map_name, map_temp_obj);
        }
 }
 
-void SocketManager::parseLocalization(const QJsonObject &obj)
+
+
+void SocketManager::parsseMapTasksData(const QJsonObject &obj)
 {
-    QString time = obj.value("time").toString();
-    QString X = obj.value("X").toString();
-    QString Y = obj.value("Y").toString();
-    QString heading = obj.value("heading").toString();
-    QString state = obj.value("state").toString();
-    emit updateLocalization(time, X, Y, heading, state);
+    qint8 status = obj.value("status").toInt();
+    QString message  = obj.value("message").toString();
+
+    if (status == 0) {
+        qDebug() << "[SocketManager::parsseMapTasksData]: " << message;
+        return;
+    } else {
+        QJsonObject task_data_obj = obj.value("tasks").toObject();
+        this->parseTasksName(task_data_obj);
+    }
+
 }
 
-void SocketManager::parseTasksName(const QString& name)
+void SocketManager::parseTasksName(const QJsonObject& tasks_obj)
 {
+    _tasks.clear();
+    _task_name.clear();
     if (_maps.size() <= 0) {
         return;
     }
-    QJsonObject tasks_obj = _maps.value(name).second;
 
-    QJsonObject::Iterator it;
+    QJsonObject::const_iterator it;//Iterator it;
 
-    QStringList tasks_list;
     for(it = tasks_obj.begin(); it != tasks_obj.end(); ++it) {
         QJsonObject temp_obj = it.value().toObject();
         QString task_name = temp_obj.value("name").toString();
@@ -234,36 +246,47 @@ void SocketManager::parseTasksName(const QString& name)
 
         QPair<qint8, QVariantList> type_point(task_type, points);
         _tasks.insert(task_name, type_point);
-        tasks_list.push_back(task_name);
+        _task_name.push_back(task_name);
     }
-    _task_name.insert(name, tasks_list);
-    emit updateTasksName(tasks_list);
+    emit updateTasksName(_task_name);
 }
 
-void SocketManager::parsePlanningPath(const QJsonObject &obj)
+
+
+void SocketManager::getMapsName()
 {
-    QVariantList path = obj.value("path").toVariant().toList();
-    emit updatePlanningPath(path);
+    if (_map_name_list.size() != 0 ) {
+        emit updateMapsName(_map_name_list);
+    } else {
+
+    }
 }
 
-void SocketManager::parsePerceptionObstacles(const QJsonObject &obj)
+void SocketManager::sentMapTasksName(const QStringList &task_list)
 {
-    QVariantList obstacles = obj.value("obstacles").toVariant().toList();
-    bool is_polygon = obj.value("is_polygon").toBool();
-    emit updatePerceptionObstacles(obstacles, is_polygon);
+    QJsonObject obj;
+    obj.insert("message_type", "set_tasks");
+    obj.insert("tasks_name",QJsonArray::fromStringList(task_list));
+    QJsonDocument doc(obj);
+    this->sendSocketMessage(doc.toJson());
+
 }
 
-void SocketManager::parsePerceptionRoadEdge(const QJsonObject &obj)
+bool SocketManager::sendSocketMessage(const QByteArray &message)
 {
-    QVariantList road_edge = obj.value("road_edge").toVariant().toList();;
-    emit updatePerceptionRoadEdge(road_edge);
-}
-
-void SocketManager::parseReferenceLine(const QJsonObject &obj)
-{
-    QVariantList reference_line;
-    reference_line.append(obj.value("line").toVariant());
-    emit updateReferenceLine(reference_line);
+    if (!_socket->isWritable()) {
+        return false;
+    }
+    QByteArray temp_message = message;
+    temp_message += '$';
+    qint64 write_result = _socket->write(temp_message);
+    bool is_flush = _socket->flush();
+    if (write_result != -1 && is_flush) {
+        if (write_result != 0) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void SocketManager::parseMapData(const QString& name)
@@ -271,8 +294,8 @@ void SocketManager::parseMapData(const QString& name)
     if (_maps.size() == 0) {
         return;
     }
-    this->parseTasksName(name);
-    QJsonObject obj = _maps.value(name).first;
+    QJsonObject obj = _maps.value(name);
+
     QVariantList var_trees;
     var_trees = this->parseTrees(obj);
 
@@ -338,31 +361,41 @@ void SocketManager::parseMapData(const QString& name)
                        var_roads_include, var_roads_exclude);
 }
 
-void SocketManager::getMapsName()
-{
-    if (_map_name_list.size() != 0 ) {
-        emit updateMapsName(_map_name_list);
-    } else {
+//void SocketManager::parseLocalization(const QJsonObject &obj)
+//{
+//    QString time = obj.value("time").toString();
+//    QString X = obj.value("X").toString();
+//    QString Y = obj.value("Y").toString();
+//    QString heading = obj.value("heading").toString();
+//    QString state = obj.value("state").toString();
+//    emit updateLocalization(time, X, Y, heading, state);
+//}
 
-    }
-}
+//void SocketManager::parsePlanningPath(const QJsonObject &obj)
+//{
+//    QVariantList path = obj.value("path").toVariant().toList();
+//    emit updatePlanningPath(path);
+//}
 
-bool SocketManager::sendSocketMessage(const QByteArray &message)
-{
-    if (!_socket->isWritable()) {
-        return false;
-    }
-    QByteArray temp_message = message;
-    temp_message += '$';
-    qint64 write_result = _socket->write(temp_message);
-    bool is_flush = _socket->flush();
-    if (write_result != -1 && is_flush) {
-        if (write_result != 0) {
-            return true;
-        }
-    }
-    return false;
-}
+//void SocketManager::parsePerceptionObstacles(const QJsonObject &obj)
+//{
+//    QVariantList obstacles = obj.value("obstacles").toVariant().toList();
+//    bool is_polygon = obj.value("is_polygon").toBool();
+//    emit updatePerceptionObstacles(obstacles, is_polygon);
+//}
+
+//void SocketManager::parsePerceptionRoadEdge(const QJsonObject &obj)
+//{
+//    QVariantList road_edge = obj.value("road_edge").toVariant().toList();;
+//    emit updatePerceptionRoadEdge(road_edge);
+//}
+
+//void SocketManager::parseReferenceLine(const QJsonObject &obj)
+//{
+//    QVariantList reference_line;
+//    reference_line.append(obj.value("line").toVariant());
+//    emit updateReferenceLine(reference_line);
+//}
 
 QVariantList SocketManager::parseSignals(const QJsonObject &obj)
 {

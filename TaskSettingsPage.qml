@@ -126,6 +126,8 @@ Rectangle {
                                     monitor_page.choose_marker.visible = true
                                     rect_info_choose_map.visible = false
                                     rec_ref_lines.visible = false
+
+                                    root.choose_map_name = model.map_name
                                 }
                                 onReleased: {
                                     bac_areas.source = "qrc:/res/pictures/map_areas_normal.png"
@@ -255,7 +257,7 @@ Rectangle {
                                     }
                                     root.checked_tasks_name = temp_str
                                 }
-                                    socket_manager.getTasksData(root.checked_tasks_name)
+                                socket_manager.getTasksData(root.checked_tasks_name)
                             }
                         }
                         model: ListModel {
@@ -282,55 +284,6 @@ Rectangle {
                                     }
                          }
                     }
-
-//                    ListView {
-//                        id: list_view
-//                        clip: true
-//                        anchors.fill: parent
-//                        orientation:ListView.Vertical
-//                        spacing: height * 0.02
-//                        currentIndex: -1
-//                        delegate: ItemDelegate {
-//                            id: item
-//                            property int id_card: model.idcard
-//                            Rectangle {
-//                                id: check_style
-//                                width: rate * 27 * ratio
-//                                height: width
-//                                anchors.verticalCenter: parent.verticalCenter
-//                                radius: height / 2
-//                                border.color: "grey"
-//                                border.width: 1
-//                                Image {
-//                                    visible: list_view.currentIndex == item.id_card ? true : false
-//                                    source: "qrc:/res/pictures/finish.png"
-//                                    fillMode: Image.PreserveAspectFit
-//                                    anchors.fill: parent
-//                                }
-//                            }
-//                            Text {
-//                                clip: true
-//                                text: model.check_box_text
-//                                horizontalAlignment: Text.AlignLeft
-//                                verticalAlignment: Text.AlignVCenter
-//                                width: parent.width * 0.7
-//                                height: parent.height
-//                                anchors.left: check_style.right
-//                                anchors.leftMargin: parent.width * 0.05
-//                                font.pixelSize: 15 * rate * ratio
-//                                font.family: "Helvetica"
-//                                color: list_view.currentIndex == item.id_card ? "lightblue" : "black"
-//                            }
-//                            onClicked: {
-//                                list_view.currentIndex = index
-//                                socket_manager.getTasksData(model.check_box_text)
-//                            }
-//                        }
-//                        model: ListModel {
-//                            id: task_list_model
-//                        }
-
-//                    }
                 }
             }
         }
@@ -378,6 +331,9 @@ Rectangle {
                                 rect_decoration.visible = false
                                 rec_ref_lines.visible = false
                                 turn_task_page = true
+
+
+                                socket_manager.sentMapTasksName(root.checked_tasks_name)
                             } else {
                                 dialog_match_warn.open()
                             }
@@ -492,6 +448,7 @@ Rectangle {
                                 can_work = true
                                 rec_checked_location.visible = false
                                 monitor_page.choose_marker.visible = false
+
 //                                busy.running = true
                                 dialog_resure.open()
 
@@ -563,6 +520,13 @@ Rectangle {
         is_single_btn: false
         onOkClicked: {
             dialog_resure.close()
+
+            monitor_page.sendInitPoint()
+
+            rect_decoration.visible = false
+            rec_header_bar.visible = false
+            rec_header_bar.height = 0
+            socket_manager.getMapTask( root.choose_map_name )
             busy.running = true
 
         }

@@ -10,12 +10,6 @@ Page {
     height: parent.height
     clip: true
 
-    property int task_type: -1
-//    property var points
-//    onPointsChanged: {
-//        canvas_others.requestPaint()
-//    }
-
     property var var_trees: []
     property var var_signals: []
     property var var_stop_signs: []
@@ -34,7 +28,6 @@ Page {
     property var var_reference_line: []
     property var var_perception_obstacles: []
     property var var_obstacles: []
-    property bool obstacles_is_polygon: false
 
     property real map_width: 0
     property real map_height: 0
@@ -48,16 +41,14 @@ Page {
     property var choosePoint: []
     property alias choose_marker: choose_marker
 
-    property var vehicle_point
-
     property var task_points: []
     property var task_regions: []
     property var task_lines: []
 
-    onVehicle_pointChanged: {
-        var po = geometryToPixel(vehicle_point[0], vehicle_point[1])
-        vehicle.x = po[0] - 7
-        vehicle.y = po[1] - 3
+    signal sendInitPoint()
+    onSendInitPoint: {
+        var pos = pixelToGeometry(choosePoint[0],choosePoint[1])
+        socket_manager.sendClickPointPos(pos[0],pos[1])
     }
 
     function geometryToPixel(X, Y) {
@@ -475,12 +466,6 @@ Page {
                     }
                 }
             }
-
-            VehicleItem {
-                id: vehicle
-                x: 0
-                y: 0
-            }
         }
     }
 
@@ -504,15 +489,9 @@ Page {
                 }
             }
             onClicked: {
-                if (!isMatched) {
-                    var x = map.width / 2 - ( map.width / 2 - mouse.x + map.x) / map.scale
-                    var y = map.height / 2 - ( map.height / 2 - mouse.y + map.y) / map.scale
-                    root.choosePoint = [x, y]
-                    var pos = pixelToGeometry(x,y)
-                    socket_manager.sendClickPointPos(pos[0],pos[1])
-                } else {
-                    return
-                }
+                var x = map.width / 2 - ( map.width / 2 - mouse.x + map.x) / map.scale
+                var y = map.height / 2 - ( map.height / 2 - mouse.y + map.y) / map.scale
+                root.choosePoint = [x, y]
             }
         }
     }
@@ -578,13 +557,7 @@ Page {
                                                 (map.height / map_height)
             map_rate *= real_rate
 
-            if (min_x < 50) {
-                vehicle.width = 2.1 * map_rate
-                vehicle.height = 0.7 * map_rate
-            } else {
-                vehicle.width = 6.6 * map_rate
-                vehicle.height = 2.2 * map_rate
-            }
+
             canvas_background.requestPaint()
 
             map.x = (map_background.width - canvas_background.width) / 2

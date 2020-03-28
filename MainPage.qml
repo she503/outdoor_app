@@ -1,33 +1,19 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
-import QtQuick.Controls 1.4 as Control_14
 import "CustomControl"
 
 Rectangle {
     id: root
 
     color: "transparent"
-    signal backToHomePage()
-    property real ratio: Math.sqrt(Math.min(rec_left.width / 3, rec_power_control.height)) * 0.1
-    property var text_process: ["map1#", "1h", "80%", "20min"]
-    property bool turn_task_page: false
 
-//    HomePage {
-//        id: home_page
-//        onViewTask: {
-//            stack_view.replace(task_settings_page)
-//            rec_turn_view.visible = true
-//            list_view.visible = false
-//        }
-//    }
     property Component home_page: HomePage {
         onViewTask: {
             stack_view.replace(task_settings_page)
         }
     }
     property Component user_manage_page: UserManagePage { }
-
     property Component task_settings_page: TaskSettingsPage {
         onBackToHomePage: {
             stack_view.replace(home_page)
@@ -38,6 +24,8 @@ Rectangle {
     }
     property Component help_document_page: HelpDocumentPage { }
     property Component about_machine_page: AboutMachinePage { }
+
+    signal backToHomePage()
     signal mainPageChanged(var current_index)
 
     onMainPageChanged: {
@@ -46,21 +34,11 @@ Rectangle {
         } else if (current_index === 1) {
             stack_view.replace(user_manage_page)
         } else if (current_index === 2) {
-            turn_task_page = false
             stack_view.replace(task_settings_page)
         } else if (current_index === 3) {
             stack_view.replace(help_document_page)
         } else if (current_index === 4) {
             stack_view.replace(about_machine_page)
-        }
-    }
-    onTurn_task_pageChanged: {
-        if (turn_task_page) {
-            rec_turn_view.visible = true
-            list_view.visible = false
-        } else {
-            list_view.visible = true
-            rec_turn_view.visible = false
         }
     }
 
@@ -69,6 +47,7 @@ Rectangle {
         source: "qrc:/res/pictures/main_background.png"
         anchors.fill: parent
     }
+
     Rectangle {
         id: rect_title
         width: parent.width
@@ -90,7 +69,7 @@ Rectangle {
             id: rec_left
             height: parent.height
             width: height / 5 * 2.4
-            color: "transparent"
+            color: "red"
             Rectangle {
                 id: rec_turn_view
                 visible: false
@@ -226,34 +205,7 @@ Rectangle {
                             fillMode: Image.PreserveAspectFit
                         }
                     }
-                }
-                Rectangle {
-                    id: rec_peocess
-                    width: parent.width
-                    height:  parent.height * 0.2
-                    anchors.top: rec_pic_car.bottom
-                    anchors.left: parent.left
-                    color: "transparent"
-                    Column {
-                        Repeater {
-                            model: [qsTr("Current map: "), qsTr("Worked hours: "), qsTr("Finished: "), qsTr("Estimated time: ")]
-                            Rectangle {
-                                width: rec_peocess.width
-                                height: rec_peocess.height * 0.25
-                                color: "transparent"
-                                Text {
-                                    anchors {
-                                        top: parent.top
-                                        left: parent.left
-                                        leftMargin: rec_peocess.width * 0.05
-                                    }
-                                    text: qsTr(modelData + "  " + text_process[index])
-                                    font.pixelSize: rate * 15 * ratio
-                                    color: "white"
-                                }
-                            }
-                        }
-                    }
+
                 }
             }
 

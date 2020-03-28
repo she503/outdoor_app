@@ -6,8 +6,6 @@ import "./CustomControl"
 
 Rectangle {
     id: root
-//    property real ratio: Math.sqrt(Math.min(rect_bottom.width / 5, rect_bottom.height)) * 0.1
-    signal viewTask()
     color: "transparent"
     TLInfoDisplayPage {
         id: rect_info_display

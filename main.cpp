@@ -23,11 +23,13 @@ int main(int argc, char *argv[])
     app.installTranslator(&trans);
     QQmlApplicationEngine engine;
 
-    AccountManager* account_manager = new AccountManager(&engine);
-    engine.rootContext()->setContextProperty("account_manager", account_manager);
 
     SocketManager* socket_manager = new SocketManager(&engine);
     engine.rootContext()->setContextProperty("socket_manager", socket_manager);
+
+    AccountManager* account_manager = new AccountManager(&engine);
+    engine.rootContext()->setContextProperty("account_manager", account_manager);
+    account_manager->setSocket(socket_manager);
 
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())

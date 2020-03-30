@@ -169,14 +169,14 @@ Item{
 
                 }
                 onClicked: {
-                    socket_manager.accountLogin(username.text, password.text)
+                    account_manager.accountLogin(username.text, password.text)
                 }
             }
         }
     }
 
     Connections {
-        target: socket_manager
+        target: account_manager
         onEmitCheckOutLogin: {
             if (status === 0) {
                 message_login_faild.dia_title = message
@@ -187,21 +187,6 @@ Item{
         }
     }
 
-//    Dialog {
-//        id: message_login_faild
-//        width: root.width * 0.4
-//        height: root.height * 0.3
-//        x:(root.width - width) / 2
-//        y: (root.height - height) / 2
-
-//        title: qsTr("faild!")
-
-//        contentItem: TextArea {
-//            id: login_label
-//            text: qsTr("Please checkout username and password...")
-//        }
-//        standardButtons: Dialog.Yes
-//    }
     TLDialog {
         id: message_login_faild
         width: root.width * 0.4

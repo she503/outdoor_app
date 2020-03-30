@@ -20,6 +20,8 @@ public:
     explicit SocketManager(QObject *parent = nullptr);
     ~SocketManager();
 
+        bool sendSocketMessage(const QByteArray& message);
+
     /**
     * @brief 连接服务器
     */
@@ -65,6 +67,7 @@ public:
     Q_INVOKABLE void accountUpdate(const QString& username, const QString& password, const int& level);
 
 signals:
+    void checkoutLogin(const QJsonObject& obj);
     // login about
     void emitCheckOutLogin(const int& status, const QString& message);
     void emitAllAccountInfo(const QJsonObject& accounts_info);
@@ -120,7 +123,7 @@ private:
 
 
     void testfunction();
-    bool sendSocketMessage(const QByteArray& message);
+
     void parseRosInfoData(const QJsonObject& obj);
 
     //login about

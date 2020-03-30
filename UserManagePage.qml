@@ -64,7 +64,7 @@ Rectangle {
                             message_account.dia_image_source = "qrc:/res/pictures/sad.png"
                             message_account.open()
                         } else {
-                            socket_manager.accountUpdate(root.checked_user_name, field_new_pwd.text, root.checked_user_level)
+                            account_manager.accountUpdate(root.checked_user_name, field_new_pwd.text, root.checked_user_level)
                      }
                     }
                 }
@@ -155,7 +155,7 @@ Rectangle {
                     if (root.checked_user_level == 2 && root.admin_num === 1) {
 
                     } else {
-                        socket_manager.accountDelete(root.checked_user_name)
+                        account_manager.accountDelete(root.checked_user_name)
 
                     }
 
@@ -403,7 +403,7 @@ Rectangle {
                         return
                     } else {
                         var level = radio_btn.checked_num
-                        socket_manager.accountAdd(btn_add_username.text, btn_add_pwd.text, level)
+                        account_manager.accountAdd(btn_add_username.text, btn_add_pwd.text, level)
 //                        var states = account_manager.addUser(btn_add_username.text, btn_add_pwd.text, level)
 
                     }
@@ -496,32 +496,16 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        socket_manager.getAllAccounts()
+        account_manager.getAllAccounts()
     }
 
     Connections {
         target: account_manager
-        onEmitAllAccountInfo: {
-            root.v_accounts_info = accounts_info
 
-            var nomal_level = qsTr("nomal_level")
-            var admin_level = qsTr("admin_level")
-
-            for (var key in root.v_accounts_info) {
-                if (accounts_info[key] === 0) {
-                    console.info("error user level")
-                } else if (accounts_info[key] === 1) {
-                    user_list_model.append({"user_name": key, "level": nomal_level, "user_level": accounts_info[key]})
-                } else if (accounts_info[key] === 2) {
-                    user_list_model.append({"user_name": key, "level": admin_level, "user_level": accounts_info[key]})
-                    ++root.admin_num;
-                }
-            }
-        }
     }
 
     Connections {
-        target: socket_manager
+        target: account_manager
         onEmitAddAccountCB: {
             switch (states) {
             case 0:
@@ -554,6 +538,7 @@ Rectangle {
             var admin_level = qsTr("admin_level")
 
             for (var key in root.v_accounts_info) {
+                console.info(key)
                 if (root.v_accounts_info[key] === 0) {
                     console.info("error user level")
                 } else if (root.v_accounts_info[key] === 1) {

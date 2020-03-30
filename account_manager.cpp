@@ -1,225 +1,115 @@
 #include "account_manager.h"
 
 #include <QCoreApplication>
-#include <QDir>
-#include <QFile>
-#include <QDataStream>
 #include <QDebug>
 
 AccountManager::AccountManager(QObject *parent) : QObject(parent)
 {
-    this->readAccountsInfo();
-    _current_user_name = "";
+
 }
 
 AccountManager::~AccountManager()
 {
-    this->writeAccountsInfo();
+
 }
 
-void AccountManager::setSocket(QTcpSocket *socket)
+void AccountManager::setSocket(SocketManager *socket)
 {
     _socket = socket;
+    connect(_socket, SIGNAL(checkoutLogin(QJsonObject)), this, SLOT(checkoutLogin(QJsonObject)));
 }
 
-int AccountManager::addUser(const QString &user_name, const QString &pass_word, const int level)
+void AccountManager::accountAdd(const QString &username, const QString &password, const int &level)
 {
-    if (_account_info_map.contains(user_name)) {
-        return 0;
-    }
-    if (!this->isLegalUserName(user_name)) {
-        return 2;
-    }
-    if (!this->isLegalPassWord(pass_word)) {
-        return 3;
-    }
-    if (!this->isLegalLevel(level)) {
-        return 4;
-    }
-
-    QPair<QString, PermissionLevel> account_info(
-                pass_word,PermissionLevel(level));
-    _account_info_map[user_name] = account_info;
-    this->writeAccountsInfo();
-    return 1;
-}
-
-int AccountManager::updateUser(const QString &user_name, const QString &pass_word, const int level)
-{
-    if (!_account_info_map.contains(user_name)) {
-        return 0;
-    }
-    if (!this->isLegalPassWord(pass_word)) {
-        return 2;
-    }
-    if (!this->isLegalLevel(level)) {
-        return 3;
-    }
-
-    QPair<QString, PermissionLevel> account_info(
-                pass_word,PermissionLevel(level));
-    _account_info_map[user_name] = account_info;
-    this->writeAccountsInfo();
-    return 1;
-}
-
-int AccountManager::deleteUser(const QString &user_name)
-{
-    if (!_account_info_map.contains(user_name)) {
-        return 0;
-    }
-
-    QMap<QString, QPair<QString, PermissionLevel> >::iterator iter =
-            _account_info_map.find(user_name);
-    _account_info_map.erase(iter);
-    this->writeAccountsInfo();
-    return 1;
-}
-
-int AccountManager::checkLogin(const QString &user_name, const QString &pass_word)
-{
-    if (!_account_info_map.contains(user_name)) {
-        return 0;
-    }
-    QMap<QString, QPair<QString, PermissionLevel> >::const_iterator
-            iter = _account_info_map.find(user_name);
-    if (iter.value().first != pass_word) {
-        return 1;
-    }
-    _current_user_name = user_name;
-    return 2;
-}
-
-int AccountManager::getCurrentAccountLevel() const
-{
-    QMap<QString, QPair<QString, PermissionLevel> >::const_iterator
-            iter = _account_info_map.find(_current_user_name);
-    if (iter == _account_info_map.constEnd()) {
-        return int(PermissionLevel::UNKNOWN);
-    }
-    return int(iter.value().second);
-}
-
-bool AccountManager::getAllAcountInfo() //const
-{
-    if (_account_info_map.isEmpty()) {
-        return false;
-    }
     QJsonObject obj;
-
-    int user_level = getCurrentAccountLevel();
-
-    if (user_level == 1) {
-        obj.insert(_current_user_name, int(user_level));
-    } else if (user_level == 2) {
-        QMap<QString, QPair<QString, PermissionLevel> >::const_iterator
-                iter = _account_info_map.constBegin();
-        while (iter != _account_info_map.constEnd()) {
-            obj.insert(iter.key(), int(iter.value().second));
-            ++iter;
-        }
-    }
-    emit emitAllAccountInfo(obj);
-    return true;
+    obj.insert("message_type", int(MessageType::MESSAGE_ADD_ACCOUNT));
+    obj.insert("name", username);
+    obj.insert("password", password);
+    obj.insert("permission_level", level);
+    QJsonDocument doc(obj);
+    _socket->sendSocketMessage(doc.toJson());
 }
 
-void AccountManager::readAccountsInfo()
+void AccountManager::accountUpdate(const QString &username, const QString &password, const int &level)
 {
-    QString account_file_path;
-    QString account_file_dir;
-#if defined(Q_OS_ANDROID)
-    account_file_path = "/data/data/tonglu.tergeo_app/accounts/accounts.tl";
-    account_file_dir = "/data/data/tonglu.tergeo_app/accounts/";
-#else
-    QString current_path = QCoreApplication::applicationDirPath();
-    account_file_dir = current_path + "/res";
-    account_file_path = current_path + "/res/accounts.tl";
-#endif
-    QDir account_dir(account_file_dir);
-    if (!account_dir.exists()) {
-        account_dir.mkpath(account_file_dir);
-    }
-    if (!this->readAccountsFromFile(account_file_path)) {
-        QPair<QString, PermissionLevel> account_info("password", PermissionLevel::ADMIN);
-        _account_info_map["admin"] = account_info;
-        this->writeAccountsInfo();
-    }
+    QJsonObject obj;
+    obj.insert("message_type", int(MESSAGE_UPDATE_ACCOUNT));
+    obj.insert("name", username);
+    obj.insert("password", password);
+    obj.insert("permission_level", level);
+    QJsonDocument doc(obj);
+    _socket->sendSocketMessage(doc.toJson());
 }
 
-void AccountManager::writeAccountsInfo()
+void AccountManager::accountDelete(const QString &username)
 {
-    QString account_file_path;
-#if defined(Q_OS_ANDROID)
-    account_file_path = "/data/data/tonglu.tergeo_app/accounts/accounts.tl";
-    emit isAndroid();
-#else
-    QString current_path = QCoreApplication::applicationDirPath();
-    account_file_path = current_path + "/res/accounts.tl";
-#endif
-    QFile out_file(account_file_path);
-    if (!out_file.open(QIODevice::WriteOnly)) {
-        return;
-    }
-    QDataStream out_stream(&out_file);
-    out_stream << _account_info_map.size();
-    QMap<QString, QPair<QString, PermissionLevel> >::const_iterator
-            iter = _account_info_map.constBegin();
-    while (iter != _account_info_map.constEnd()) {
-        out_stream << iter.key() << iter.value().first << int(iter.value().second);
-        ++iter;
+    QJsonObject obj;
+    obj.insert("message_type", int(MESSAGE_DELETE_ACCOUNT));
+    obj.insert("name", username);
+    QJsonDocument doc(obj);
+    _socket->sendSocketMessage(doc.toJson());
+}
+
+void AccountManager::accountLogin(const QString &username, const QString &password)
+{
+    QJsonObject obj;
+    obj.insert("message_type", int(MessageType::MESSAGE_LOGIN));
+    obj.insert("name", username);
+    obj.insert("password", password);
+    QJsonDocument doc(obj);
+    _socket->sendSocketMessage(doc.toJson());
+}
+
+void AccountManager::getAllAccounts()
+{
+    if (!_all_accounts_obj.empty()) {
+        emit emitAllAccountInfo(_all_accounts_obj);
     }
 }
 
-bool AccountManager::readAccountsFromFile(const QString &file)
+void AccountManager::checkoutLogin(const QJsonObject &obj)
 {
-    QFile account_file(file);
-    if (!account_file.exists()) {
-        return false;
-    }
-
-    if (!account_file.open(QIODevice::ReadOnly)) {
-        return false;
-    }
-
-    QDataStream in_file(&account_file);
-    int account_num = 0;
-    in_file >> account_num;
-
-    if (account_num <= 0) {
-        return false;
-    }
-    for (int i = 0; i < account_num; ++i) {
-        QString user_name = "";
-        QString pass_word = "";
-        int level = 0;
-        in_file >> user_name >> pass_word >> level;
-        if (level < 0 || level > 2) {
-            level = 0;
-        }
-        QPair<QString, PermissionLevel> account_info(pass_word, PermissionLevel(level));
-        _account_info_map[user_name] = account_info;
-    }
-    return true;
+    int status = obj.value("status").toInt();
+    QString message = obj.value("message").toString();
+    emit emitCheckOutLogin(status, message);
 }
 
-bool AccountManager::isLegalUserName(const QString &user_name)
+void AccountManager::parserAddStatus(const QJsonObject &obj)
 {
-    // TODO: 判断用户名是否符合要求
-    return true;
+    int status = obj.value("status").toInt();
+    QString message = obj.value("message").toString();
+    emit emitAddAccountCB(status, message);
 }
 
-bool AccountManager::isLegalPassWord(const QString &pass_word)
+void AccountManager::parseDeleteStatus(const QJsonObject &obj)
 {
-    // TODO: 判断密码是否符合要求
-    return true;
+    int status = obj.value("status").toInt();
+    QString message = obj.value("message").toString();
+    emit emitDeleteAccountCB(status, message);
 }
 
-bool AccountManager::isLegalLevel(const int level)
+void AccountManager::parseUpdateStatus(const QJsonObject &obj)
 {
-    if (level >= 1 && level <= 2) {
-        return true;
+    int status = obj.value("status").toInt();
+    QString message = obj.value("message").toString();
+    emit emitUpdateAccountCB(status, message);
+}
+
+void AccountManager::parseAllAccountsInfo(const QJsonObject &obj)
+{
+    QJsonObject accounts_info = obj.value("accounts_info").toObject();
+
+    QJsonObject account_username_level;
+    QJsonObject::const_iterator it = accounts_info.begin();
+    while (it != accounts_info.end()) {
+        QString username = it.key();
+        QJsonObject temp = it.value().toObject();
+        int permission_level = temp.value("permission_level").toInt();
+        account_username_level.insert(username, permission_level);
+        ++it;
     }
-    return false;
+    _all_accounts_obj = account_username_level;
+    emit emitAllAccountInfo(account_username_level);
 }
 
 

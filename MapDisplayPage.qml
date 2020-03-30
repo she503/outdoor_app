@@ -42,6 +42,14 @@ Page {
     property var task_regions: []
     property var task_lines: []
 
+    property var begin_points: []
+    property var charge_points: []
+
+    property var choose_map_name: "value"
+    onChoose_map_nameChanged: {
+
+    }
+
     signal sendInitPoint()
     onSendInitPoint: {
         var pos = pixelToGeometry(choosePoint[0],choosePoint[1])
@@ -87,6 +95,37 @@ Page {
                 y: choosePoint[1] - height
                 fillMode: Image.PreserveAspectFit
             }
+            Image {
+                id: img_begin
+                z: 10
+                width: 10
+                height: 10
+                visible: false
+                x: -100
+                y: -100
+                Rectangle {
+                    anchors.fill: parent
+                    radius: height / 2
+                    color: "red"
+                }
+            }
+
+            Image {
+                id: img_charge
+                width: 10
+                height: 10
+                visible: false
+                x: -100
+                y: -100
+                z: 10
+                Rectangle {
+                    anchors.fill: parent
+                    radius: height / 2
+                    color: "yellow"
+                }
+            }
+
+
             Rectangle {
                 id: map_background
                 width: parent.width
@@ -456,6 +495,7 @@ Page {
                         drawRegion(ctx, root.task_regions)
                     }
                 }
+
             }
         }
 
@@ -495,6 +535,8 @@ Page {
         target: socket_manager
         onUpdateMapData: {
 
+            img_charge.visible = false
+            img_begin.visible = false
             map.scale = 1
             min_x = Number.POSITIVE_INFINITY
             min_y = Number.POSITIVE_INFINITY
@@ -573,6 +615,52 @@ Page {
             task_regions = regions
             task_lines = lines
             canvas_others.requestPaint()
+        }
+    }
+
+    Connections {
+        target: socket_manager
+        onUpdateMapFeature: {
+
+            root.begin_points = begin_point
+            root.charge_points = charge_point
+            var point_x = 0
+            var point_y = 0
+            var is_point = false
+            for(var key in begin_point) {
+                if (key === "x") {
+                    point_x = begin_point[key]
+
+                } else if (key === "y") {
+                    point_y = begin_point[key]
+                    is_point = true
+                }
+                if (is_point) {
+                    var pixel_pos = geometryToPixel(point_x, point_y)
+                    img_begin.x = pixel_pos[0] - img_begin.width / 2
+                    img_begin.y = pixel_pos[1] - img_begin.height / 2
+                    img_begin.visible = true
+                }
+            }
+
+            var point_xx = 0
+            var point_yy = 0
+            var is_pointt = false
+            for(var keyy in charge_point) {
+                if (keyy === "x") {
+                    point_xx = charge_point[key]
+                } else if (keyy === "y") {
+                    point_yy = charge_point[key]
+                    is_pointt = true
+                }
+                if (is_pointt) {
+                    var pixel_poss = geometryToPixel(point_xx, point_yy)
+                    img_charge.x = pixel_poss[0] - img_charge.width / 2
+                    img_charge.y = pixel_poss[1] - img_charge.height / 2
+                    img_charge.visible = true
+                }
+            }
+
         }
     }
 }

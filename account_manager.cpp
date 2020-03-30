@@ -17,6 +17,11 @@ AccountManager::~AccountManager()
     this->writeAccountsInfo();
 }
 
+void AccountManager::setSocket(QTcpSocket *socket)
+{
+    _socket = socket;
+}
+
 int AccountManager::addUser(const QString &user_name, const QString &pass_word, const int level)
 {
     if (_account_info_map.contains(user_name)) {

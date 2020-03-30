@@ -5,14 +5,15 @@
 #include <QThread>
 #include <QDataStream>
 #include <QTimer>
+#include "utils.h"
 
 SocketManager::SocketManager(QObject *parent) : QObject(parent)
 {
     _socket = new QTcpSocket(this);
     _socket->setReadBufferSize(10 * 1024 * 1024);
 
-    this->connectToHost("192.168.8.165", "32432");
-//    this->connectToHost("192.168.43.148", "32432");
+    this->connectToHost("127.0.0.1", "32432");
+//    this->connectToHost("192.168.8.165", "32432");
 
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));
     connect(_socket, SIGNAL(disconnected()), this, SLOT(disConnet()));
@@ -35,8 +36,7 @@ bool SocketManager::connectToHost(const QString &ip, const QString &port)
         return false;
     } else {
         QJsonObject object;
-        object.insert("message_type", "device_connected");
-        object.insert("sender", "mobile_client");
+        object.insert("message_type", int(MESSAGE_NEW_DEIVCE_CONNECT));
         QJsonDocument doc(object);
         this->sendSocketMessage(doc.toJson());
         return true;
@@ -71,7 +71,7 @@ bool SocketManager::sendData(const QByteArray &data)
 bool SocketManager::sendClickPointPos(const QString &pos_x, const QString &pos_y)
 {
     QJsonObject object;
-    object.insert("message_type", "initial_localization");
+    object.insert("message_type", MESSAGE_INIT_LOCALIZATION);
     object.insert("x", pos_x);
     object.insert("y", pos_y);
     QJsonDocument doc(object);
@@ -100,24 +100,33 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
         QJsonDocument doc = QJsonDocument::fromJson(_buffer, &error);
         if (error.error == QJsonParseError::NoError) {
             QJsonObject obj = doc.object();
-            QString message_type = obj.value("message_type").toString();
-            /*if (message_type == "ros_message") {
-                this->parseRosInfoData(obj);
-            } else if (message_type == "localization_info") {
-                this->parseLocalization(obj);
-            } else if (message_type == "planning_path") {
-                this->parsePlanningPath(obj);
-            } else if (message_type == "obstacles_info") {
-                this->parsePerceptionObstacles(obj);
-            } else if (message_type == "reference_line") {
-                this->parseReferenceLine(obj);
-            } else */if (message_type == "all_maps_area_info") {//all_tasks_info
+            MessageType message_type = MessageType(obj.value("message_type").toInt());
+            qDebug() << message_type;
+            switch (message_type) {
+            case MessageType::MESSAGE_MAPS_INFO:
                 this->parseRegionsInfo(obj);
-            } else if (message_type == "set_map_and_get_tasks") {
+                break;
+            case MessageType::MESSAGE_TASKS_INFO:
                 this->parsseMapTasksData(obj);
-            }
-            else {
-                qDebug() << obj;
+                break;
+            case  MessageType::MESSAGE_LOGIN_RST:
+                this->checkOutLogin(obj);
+                break;
+            case MessageType::MESSAGE_ADD_ACCOUNT_RST:
+                this->parserAddStatus(obj);
+                break;
+            case MessageType::MESSAGE_DELETE_ACCOUNT_RST:
+                this->parseDeleteStatus(obj);
+                break;
+            case MessageType::MESSAGE_UPDATE_ACCOUNT_RST:
+                this->parseUpdateStatus(obj);
+                break;
+            case MessageType::MESSAGE_ALL_ACCOUNTS_INFO:
+                this->parseAllAccountsInfo(obj);
+                break;
+            default:
+                qDebug() << "======>" <<obj;
+                break;
             }
         } else {
             qDebug() << "[SocketManager::readSocketData]: json error  " << error.errorString();
@@ -125,6 +134,21 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
         }
     }
     _buffer = buffer_list.at(complete_buffer_num);
+}
+
+void SocketManager::getAllAccountInfo(const QJsonObject &obj)
+{
+    QJsonObject account_username_level;
+    QJsonObject::const_iterator it = obj.begin();
+    while (it != obj.end()) {
+        QString username = it.key();
+        QJsonObject temp = it.value().toObject();
+        int permission_level = temp.value("permission_level").toInt();
+        account_username_level.insert(username, permission_level);
+        ++it;
+    }
+    _all_accounts_obj = account_username_level;
+    emit emitAllAccountInfo(account_username_level);
 }
 
 void SocketManager::testfunction()
@@ -143,10 +167,6 @@ void SocketManager::testfunction()
     time->start();
 }
 
-//void SocketManager::parseRosInfoData(const QJsonObject &obj)
-//{
-
-//}
 
 void SocketManager::getTasksData(const QStringList &task_name)
 {
@@ -179,7 +199,7 @@ void SocketManager::getTasksData(const QStringList &task_name)
 void SocketManager::getMapTask(const QString &map_name)
 {
     QJsonObject obj;
-    obj.insert("message_type", "map_selected");
+    obj.insert("message_type", int(MESSAGE_SET_MAP));
     obj.insert("map_name", map_name);
     QJsonDocument doc(obj);
     this->sendSocketMessage(doc.toJson());
@@ -198,16 +218,26 @@ void SocketManager::parseRegionsInfo(const QJsonObject &obj)
     _maps.clear();
     QJsonObject map_obj = obj.value("maps").toObject();
 
-
     QJsonObject::Iterator it;
 
     for(it = map_obj.begin(); it != map_obj.end(); ++it) {
         QString map_name = it.key();
         QJsonObject map_temp_obj = it.value().toObject();
+        QJsonObject area_obj = map_temp_obj.value("area").toObject();
         _map_name_list.push_back(map_name);
+        _maps.insert(map_name, area_obj);
 
-        _maps.insert(map_name, map_temp_obj);
+        QJsonObject features_obj = map_temp_obj.value("features").toObject();
+
+        QJsonObject feature_temp_obj;
+        QJsonObject begin_point_obj = features_obj.value("begin_point").toObject();
+        QJsonObject charge_point_obj = features_obj.value("charge_point").toObject();
+        feature_temp_obj.insert("begin_point", begin_point_obj);
+        feature_temp_obj.insert("charge_point", charge_point_obj);
+        _feature_obj.insert(map_name, feature_temp_obj);
        }
+
+
 }
 
 
@@ -265,11 +295,70 @@ void SocketManager::getMapsName()
 void SocketManager::sentMapTasksName(const QStringList &task_list)
 {
     QJsonObject obj;
-    obj.insert("message_type", "set_tasks");
+    obj.insert("message_type", int(MESSAGE_SET_TASKS));
     obj.insert("tasks_name",QJsonArray::fromStringList(task_list));
     QJsonDocument doc(obj);
     this->sendSocketMessage(doc.toJson());
 
+}
+
+void SocketManager::getFeature(const QString &map_name)
+{
+    if (_feature_obj.empty()) {
+        return;
+    }
+    QJsonObject feature_obj = _feature_obj.value(map_name).toObject();
+    QJsonObject begin_obj = feature_obj.value("begin_point").toObject();
+    QJsonObject charge_obj = feature_obj.value("charge_point").toObject();
+    emit updateMapFeature(begin_obj, charge_obj);
+}
+
+void SocketManager::accountLogin(const QString &username, const QString &password)
+{
+    QJsonObject obj;
+    obj.insert("message_type", int(MessageType::MESSAGE_LOGIN));
+    obj.insert("name", username);
+    obj.insert("password", password);
+    QJsonDocument doc(obj);
+    this->sendSocketMessage(doc.toJson());
+}
+
+void SocketManager::accountAdd(const QString &username, const QString &password, const int &level)
+{
+    QJsonObject obj;
+    obj.insert("message_type", int(MessageType::MESSAGE_ADD_ACCOUNT));
+    obj.insert("name", username);
+    obj.insert("password", password);
+    obj.insert("permission_level", level);
+    QJsonDocument doc(obj);
+    this->sendSocketMessage(doc.toJson());
+}
+
+void SocketManager::getAllAccounts()
+{
+    if (!_all_accounts_obj.empty()) {
+        emit emitAllAccountInfo(_all_accounts_obj);
+    }
+}
+
+void SocketManager::accountDelete(const QString &username)
+{
+    QJsonObject obj;
+    obj.insert("message_type", int(MESSAGE_DELETE_ACCOUNT));
+    obj.insert("name", username);
+    QJsonDocument doc(obj);
+    this->sendSocketMessage(doc.toJson());
+}
+
+void SocketManager::accountUpdate(const QString &username, const QString &password, const int &level)
+{
+    QJsonObject obj;
+    obj.insert("message_type", int(MESSAGE_UPDATE_ACCOUNT));
+    obj.insert("name", username);
+    obj.insert("password", password);
+    obj.insert("permission_level", level);
+    QJsonDocument doc(obj);
+    this->sendSocketMessage(doc.toJson());
 }
 
 bool SocketManager::sendSocketMessage(const QByteArray &message)
@@ -287,6 +376,40 @@ bool SocketManager::sendSocketMessage(const QByteArray &message)
         }
     }
     return false;
+}
+
+void SocketManager::checkOutLogin(const QJsonObject &obj)
+{
+    int status = obj.value("status").toInt();
+    QString message = obj.value("message").toString();
+    emit emitCheckOutLogin(status, message);
+}
+
+void SocketManager::parserAddStatus(const QJsonObject &obj)
+{
+    int status = obj.value("status").toInt();
+    QString message = obj.value("message").toString();
+    emit emitAddAccountCB(status, message);
+}
+
+void SocketManager::parseDeleteStatus(const QJsonObject &obj)
+{
+    int status = obj.value("status").toInt();
+    QString message = obj.value("message").toString();
+    emit emitDeleteAccountCB(status, message);
+}
+
+void SocketManager::parseUpdateStatus(const QJsonObject &obj)
+{
+    int status = obj.value("status").toInt();
+    QString message = obj.value("message").toString();
+    emit emitUpdateAccountCB(status, message);
+}
+
+void SocketManager::parseAllAccountsInfo(const QJsonObject &obj)
+{
+    QJsonObject accounts_info = obj.value("accounts_info").toObject();
+    this->getAllAccountInfo(accounts_info);
 }
 
 void SocketManager::parseMapData(const QString& name)

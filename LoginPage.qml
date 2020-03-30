@@ -7,7 +7,7 @@ Item{
     property real rate: Math.min(width, height) / 400
     property var user_level: 0
     property var user_name: ""
-    property string test_text: "1"
+    property string test_text: "root"
     signal successToLogin()
 
     FontLoader {
@@ -169,22 +169,20 @@ Item{
 
                 }
                 onClicked: {
-                    var emun_login_status = account_manager.checkLogin(username.text, password.text)
-                    if ( emun_login_status === 0) {
-//                        message_login_faild.title = qsTr("error")
-//                        login_label.text = qsTr("user name is not exit")
-                        message_login_faild.dia_title = qsTr("user name is not exit")
-                        message_login_faild.open()
-                    } else if (emun_login_status === 1) {
-//                        message_login_faild.title = qsTr("error")
-//                        login_label.text = qsTr("error password")
-                        message_login_faild.dia_title = qsTr("error password")
-                        message_login_faild.open()
-                    } else if (emun_login_status === 2) {
-                        root.user_level = account_manager.getCurrentAccountLevel()
-                        root.successToLogin()
-                    }
+                    socket_manager.accountLogin(username.text, password.text)
                 }
+            }
+        }
+    }
+
+    Connections {
+        target: socket_manager
+        onEmitCheckOutLogin: {
+            if (status === 0) {
+                message_login_faild.dia_title = message
+                message_login_faild.open()
+            } else if (status === 1) {
+                root.successToLogin()
             }
         }
     }

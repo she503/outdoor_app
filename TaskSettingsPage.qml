@@ -92,11 +92,13 @@ Rectangle {
                             list_view_areas.currentIndex = index
 
                             root.choose_map_name = model.map_name
+                            monitor_page.choose_map_name = model.map_name
                             rec_checked_location.visible = true
                             monitor_page.choose_marker.visible = true
                             rect_info_choose_map.visible = false
                             rec_ref_lines.visible = false
                             socket_manager.parseMapData(model.map_name)
+                            socket_manager.getFeature(model.map_name)
                         }
 
                         Rectangle {

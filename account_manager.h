@@ -6,6 +6,7 @@
 #include <QPair>
 #include <QJsonObject>
 #include <QList>
+#include <QTcpSocket>
 
 class AccountManager : public QObject
 {
@@ -19,6 +20,7 @@ public:
         NORMAL = 1,
         ADMIN = 2
     };
+    void setSocket(QTcpSocket *socket);
 
     /**
      * @brief 添加用户
@@ -76,6 +78,7 @@ private:
 private:
     QString _current_user_name;
     QMap<QString, QPair<QString, PermissionLevel> > _account_info_map;
+    QTcpSocket* _socket;
 };
 
 #endif // ACCOUNT_MANAGER_H

@@ -56,13 +56,28 @@ public:
     Q_INVOKABLE void getMapsName();
 
     Q_INVOKABLE void sentMapTasksName(const QStringList& task_list);
+    Q_INVOKABLE void getFeature(const QString& map_name);
+
+    Q_INVOKABLE void accountLogin(const QString& username, const QString& password);
+    Q_INVOKABLE void accountAdd(const QString& username, const QString& password, const int& level);
+    Q_INVOKABLE void getAllAccounts();
+    Q_INVOKABLE void accountDelete(const QString& username);
+    Q_INVOKABLE void accountUpdate(const QString& username, const QString& password, const int& level);
 
 signals:
+    // login about
+    void emitCheckOutLogin(const int& status, const QString& message);
+    void emitAllAccountInfo(const QJsonObject& accounts_info);
+    void emitAddAccountCB(const int& status, const QString& message);
+    void emitDeleteAccountCB(const int& status, const QString& message);
+    void emitUpdateAccountCB(const int& status, const QString& message);
+
     // app断开连接发出信号
     void appDisconnected();
     
     // 数据发送
     void sendDataToSocket(const QByteArray& data);
+
 
     /**
      * @brief 地图相关
@@ -94,13 +109,27 @@ signals:
 
     void updateTasksName(const QStringList& tasks);
     void updateTaskData(const QVariantList& points, const QVariantList& regions, const QVariantList& lines);
+
+    void updateMapFeature(const QJsonObject& begin_point, const QJsonObject& charge_point);
 private slots:
     void readSocketData(/*const QByteArray& buffer*/);
 
 private:
+    //map
+    void getAllAccountInfo(const QJsonObject& obj);
+
+
     void testfunction();
     bool sendSocketMessage(const QByteArray& message);
     void parseRosInfoData(const QJsonObject& obj);
+
+    //login about
+    void checkOutLogin(const QJsonObject& obj);
+    void parserAddStatus(const QJsonObject& obj);
+    void parseDeleteStatus(const QJsonObject& obj);
+    void parseUpdateStatus(const QJsonObject& obj);
+    void parseAllAccountsInfo(const QJsonObject& obj);
+
 
     /**
       * @brief get maps tasks
@@ -139,6 +168,9 @@ private:
     QMap<QString, QPair<qint8, QVariantList>> _tasks;
     QStringList _map_name_list;
     QStringList _task_name;
+
+    QJsonObject _all_accounts_obj;
+    QJsonObject _feature_obj;
 
     /**
      * @brief test

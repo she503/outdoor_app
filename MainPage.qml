@@ -12,6 +12,7 @@ Rectangle {
     property real ratio: Math.sqrt(Math.min(rec_left.width / 3, rec_power_control.height)) * 0.1
     property var text_process: ["map1#", "1h", "80%", "20min"]
     property bool turn_task_page: false
+    property var error_message: []
 
 //    HomePage {
 //        id: home_page
@@ -74,6 +75,91 @@ Rectangle {
         width: parent.width
         height: parent.height * 0.082
         color: "transparent"
+        Button {
+            id: btn_error
+            visible: has_error
+            height: parent.height * 0.8
+            width: height
+            anchors {
+                right: parent.right
+                rightMargin: 5 * rate
+                verticalCenter: parent.verticalCenter
+            }
+            background: Rectangle {
+                implicitWidth: 83
+                implicitHeight: 37
+                color: "transparent"
+                radius: width / 2
+                Image {
+                    anchors.fill: parent
+                    source: "qrc:/res/pictures/warn.png"
+                    fillMode: Image.PreserveAspectFit
+                }
+            }
+            onClicked: {
+                if(draw_error.visible){
+                    draw_error.close()
+                }else{
+                    draw_error.open()
+                }
+            }
+        }
+    }
+    Drawer {
+        id: draw_error
+        visible: false
+        y: rect_title.height
+        width: parent.width / 2
+        height: parent.height / 2
+        modal: true
+        dim: false
+        edge: Qt.RightEdge
+        closePolicy: Popup.NoAutoClose | Popup.CloseOnPressOutside
+        background: Rectangle{
+            color: "transparent"
+            Image {
+                anchors.fill: parent
+                source: "qrc:/res/pictures/background_glow1.png"
+            }
+        }
+        Rectangle {
+            id: rec_message_head
+            width: parent.width
+            height: parent.height * 0.1
+            color: "lightblue"
+            Text {
+                text: qsTr("message:")
+                width: parent.width
+                height: parent.height
+                font.pixelSize: rate * 15 * ratio
+            }
+        }
+        Rectangle {
+            id: rec_message_info
+            width: parent.width
+            height: parent.height * 0.9
+            anchors.top: rec_message_head.bottom
+            border.width: 1
+            border.color: "grey"
+            color: "lightgreen"
+            Column {
+                spacing: 5
+                Repeater {
+                    model: 4
+                    Rectangle {
+                        width:  rec_message_info.width
+                        height: 20
+                        color: "transparent"
+                        Text {
+                            text: qsTr("error code status:  " + index)
+                            width: parent.width
+                            height: parent.height
+                            font.pixelSize: rate * 15 * ratio
+                        }
+                    }
+                }
+            }
+        }
 
     }
 

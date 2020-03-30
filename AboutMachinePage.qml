@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.3
 Rectangle {
     id: root
     color: "transparent"
+    property string url_name: "http://www.tonglurobot.com/"
     Rectangle {
         id: rec_glow_background
         height: parent.width > parent.height ? parent.height * 0.9 : parent.width * 0.9 * 0.787
@@ -23,7 +24,7 @@ Rectangle {
             Rectangle {
                 id: rec_company_info
                 width: parent.width
-                height: parent.height * 0.4
+                height: parent.height * 0.6
                 color: "transparent"
                 Image {
                     height: parent.height / 2
@@ -36,14 +37,38 @@ Rectangle {
             Rectangle {
                 id: rec_car_info
                 width: parent.width
-                height: parent.height * 0.6
+                height: parent.height * 0.4
                 anchors {
                     top: rec_company_info.bottom
                 }
                 color: "transparent"
+                Button {
+                    id: btn_url
+                    width: parent.width * 0.2
+                    height: parent.height * 0.3
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    contentItem: Text {
+                        text: qsTr("contact us")
+                        color: "grey"
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pixelSize: width * 0.2
+                    }
+                    background: Rectangle {
+                        implicitWidth: 83
+                        implicitHeight: 37
+                        color: btn_url.down ? "lightblue" : "#7EC0EE"
+                        radius: width / 2
+                    }
+                    onReleased: {
+                        Qt.openUrlExternally(url_name)
+                    }
+                }
+
                 Column {
-                   width: parent.width
-                   height: parent.height
+                    visible: false
+                    width: parent.width
+                    height: parent.height
                     Repeater {
                         delegate: Rectangle {
                             width: parent.width

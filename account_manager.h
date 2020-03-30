@@ -56,7 +56,7 @@ signals:
 
 private slots:
     void checkoutLogin(const QJsonObject& obj);
-    void parserAddStatus(const QJsonObject& obj);
+    void parseAddStatus(const QJsonObject& obj);
     void parseDeleteStatus(const QJsonObject& obj);
     void parseUpdateStatus(const QJsonObject& obj);
     void parseAllAccountsInfo(const QJsonObject& obj);

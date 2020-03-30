@@ -17,6 +17,11 @@ void AccountManager::setSocket(SocketManager *socket)
 {
     _socket = socket;
     connect(_socket, SIGNAL(checkoutLogin(QJsonObject)), this, SLOT(checkoutLogin(QJsonObject)));
+    connect(_socket, SIGNAL(addUser(QJsonObject)), this, SLOT(parseAddStatus(QJsonObject)));
+    connect(_socket, SIGNAL(deleteUser(QJsonObject)), this, SLOT(parseDeleteStatus(QJsonObject)));
+    connect(_socket, SIGNAL(updateUser(QJsonObject)), this, SLOT(parseUpdateStatus(QJsonObject)));
+    connect(_socket, SIGNAL(allUser(QJsonObject)), this, SLOT(parseAllAccountsInfo(QJsonObject)));
+
 }
 
 void AccountManager::accountAdd(const QString &username, const QString &password, const int &level)
@@ -74,7 +79,7 @@ void AccountManager::checkoutLogin(const QJsonObject &obj)
     emit emitCheckOutLogin(status, message);
 }
 
-void AccountManager::parserAddStatus(const QJsonObject &obj)
+void AccountManager::parseAddStatus(const QJsonObject &obj)
 {
     int status = obj.value("status").toInt();
     QString message = obj.value("message").toString();

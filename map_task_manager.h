@@ -3,6 +3,9 @@
 
 #include <QObject>
 
+#include "utils.h"
+#include "socket_manager.h"
+
 class MapTaskManager : public QObject
 {
     Q_OBJECT

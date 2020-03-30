@@ -68,6 +68,11 @@ public:
 
 signals:
     void checkoutLogin(const QJsonObject& obj);
+    void addUser(const QJsonObject& obj);
+    void deleteUser(const QJsonObject& obj);
+    void updateUser(const QJsonObject& obj);
+    void allUser(const QJsonObject& obj);
+
     // login about
     void emitCheckOutLogin(const int& status, const QString& message);
     void emitAllAccountInfo(const QJsonObject& accounts_info);

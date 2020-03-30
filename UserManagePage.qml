@@ -393,9 +393,6 @@ Rectangle {
                 onClicked: {
                     if (btn_add_pwd.text === "" || btn_add_username.text === "" ||
                             radio_btn.checked_num === -1) {
-//                        message_account.title = qsTr("empty error")
-//                        message_account.message_level = 0
-//                        message_text.text = qsTr("some information is empty!!!")
                         message_account.dia_title = qsTr("some information is empty!!!")
                         message_account.dia_title_color = "red"
                         message_account.dia_image_source = "qrc:/res/pictures/sad.png"
@@ -404,8 +401,6 @@ Rectangle {
                     } else {
                         var level = radio_btn.checked_num
                         account_manager.accountAdd(btn_add_username.text, btn_add_pwd.text, level)
-//                        var states = account_manager.addUser(btn_add_username.text, btn_add_pwd.text, level)
-
                     }
                 }
             }
@@ -501,13 +496,8 @@ Rectangle {
 
     Connections {
         target: account_manager
-
-    }
-
-    Connections {
-        target: account_manager
         onEmitAddAccountCB: {
-            switch (states) {
+            switch (status) {
             case 0:
                 message_account.dia_title = qsTr("user name has exited !")
                 message_account.dia_title_color = "red"
@@ -538,7 +528,6 @@ Rectangle {
             var admin_level = qsTr("admin_level")
 
             for (var key in root.v_accounts_info) {
-                console.info(key)
                 if (root.v_accounts_info[key] === 0) {
                     console.info("error user level")
                 } else if (root.v_accounts_info[key] === 1) {

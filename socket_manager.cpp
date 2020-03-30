@@ -101,6 +101,7 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
         if (error.error == QJsonParseError::NoError) {
             QJsonObject obj = doc.object();
             MessageType message_type = MessageType(obj.value("message_type").toInt());
+            qDebug() << message_type;
             switch (message_type) {
             case MessageType::MESSAGE_MAPS_INFO:
                 this->parseRegionsInfo(obj);
@@ -113,16 +114,20 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
 //                this->checkOutLogin(obj);
                 break;
             case MessageType::MESSAGE_ADD_ACCOUNT_RST:
-                this->parserAddStatus(obj);
+                emit addUser(obj);
+//                this->parserAddStatus(obj);
                 break;
             case MessageType::MESSAGE_DELETE_ACCOUNT_RST:
-                this->parseDeleteStatus(obj);
+                emit deleteUser(obj);
+//                this->parseDeleteStatus(obj);
                 break;
             case MessageType::MESSAGE_UPDATE_ACCOUNT_RST:
-                this->parseUpdateStatus(obj);
+                emit updateUser(obj);
+//                this->parseUpdateStatus(obj);
                 break;
             case MessageType::MESSAGE_ALL_ACCOUNTS_INFO:
-                this->parseAllAccountsInfo(obj);
+                emit allUser(obj);
+//                this->parseAllAccountsInfo(obj);
                 break;
             default:
                 qDebug() << "======>" <<obj;

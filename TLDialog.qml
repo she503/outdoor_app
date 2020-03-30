@@ -32,8 +32,9 @@ Dialog {
                     width: parent.width
                     height: parent.height * 0.3
                     Label {
+                        anchors.fill: parent
                         text: qsTr(dia_title)
-                        font.pixelSize: 15 * rate
+                        font.pixelSize: height * 0.5
                         color:dia_title_color
                         anchors.centerIn: parent
                         font.bold: true
@@ -52,68 +53,68 @@ Dialog {
                 Rectangle {
                     width: parent.width
                     height: parent.height * 0.2
-                    Row {
-                        spacing: 10 * rate
-                        anchors.centerIn: parent
 
-                        Rectangle {
-                            width: 50 * rate
-                            height: 25 * rate
-                            visible: !is_single_btn
-                            color: "transparent"
-                            Image {
+
+                    Rectangle {
+                        id: btn_no
+                        width: parent.width * 0.5
+                        height: parent.height
+                        visible: !is_single_btn
+                        color: "transparent"
+                        Image {
+                            anchors.fill: parent
+                            source: "qrc:/res/pictures/btn_style2.png"
+                            fillMode: Image.PreserveAspectFit
+                            horizontalAlignment: Image.AlignHCenter
+                            verticalAlignment: Image.AlignVCenter
+                            Text {
                                 anchors.fill: parent
-                                source: "qrc:/res/pictures/btn_style2.png"
-                                fillMode: Image.PreserveAspectFit
-                                horizontalAlignment: Image.AlignHCenter
-                                verticalAlignment: Image.AlignVCenter
-                                Text {
-                                    anchors.centerIn: parent
-                                    color: "white"
-                                    text: qsTr("No")
-                                    font.pixelSize: 12 * rate
-                                    font.family: "Arial"
-                                    font.weight: Font.Thin
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment: Text.AlignVCenter
-                                }
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                       cencelClicked()// dialog_info.close()
-                                    }
-                                }
+                                color: "black"
+                                text: qsTr("No")
+                                font.pixelSize: height * 0.8
+                                font.family: "Arial"
+                                font.weight: Font.Thin
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
                             }
-                        }
-                        Rectangle {
-                            width: 50 * rate
-                            height: 25 * rate
-                            color: "transparent"
-                            Image {
+                            MouseArea {
                                 anchors.fill: parent
-                                source: "qrc:/res/pictures/btn_style2.png"
-                                fillMode: Image.PreserveAspectFit
-                                horizontalAlignment: Image.AlignHCenter
-                                verticalAlignment: Image.AlignVCenter
-                                Text {
-                                    text: qsTr("Ok")
-                                    anchors.centerIn: parent
-                                    color: "white"
-                                    font.pixelSize: 12 * rate
-                                    font.family: "Arial"
-                                    font.weight: Font.Thin
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment: Text.AlignVCenter
-                                }
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        okClicked()
-                                    }
+                                onClicked: {
+                                    cencelClicked()// dialog_info.close()
                                 }
                             }
                         }
                     }
+                    Rectangle {
+                        width: parent.width * 0.5
+                        height: parent.height
+                        color: "transparent"
+                        anchors.left: btn_no.right
+                        Image {
+                            anchors.fill: parent
+                            source: "qrc:/res/pictures/btn_style2.png"
+                            fillMode: Image.PreserveAspectFit
+                            horizontalAlignment: Image.AlignHCenter
+                            verticalAlignment: Image.AlignVCenter
+                            Text {
+                                text: qsTr("Ok")
+                                anchors.fill: parent
+                                color: "black"
+                                font.pixelSize: height * 0.8
+                                font.family: "Arial"
+                                font.weight: Font.Thin
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    okClicked()
+                                }
+                            }
+                        }
+                    }
+
                 }
             }
         }

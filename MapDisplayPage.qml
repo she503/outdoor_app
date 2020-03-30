@@ -10,11 +10,7 @@ Page {
     height: parent.height
     clip: true
 
-    property int task_type: -1
-//    property var points
-//    onPointsChanged: {
-//        canvas_others.requestPaint()
-//    }
+    property var paint_begin_point: 20
 
     property var var_trees: []
     property var var_signals: []
@@ -30,12 +26,6 @@ Page {
     property var var_roads_exclude: []
 
 
-    property var var_planning_path: []
-    property var var_reference_line: []
-    property var var_perception_obstacles: []
-    property var var_obstacles: []
-    property bool obstacles_is_polygon: false
-
     property real map_width: 0
     property real map_height: 0
     property real map_rate: 1
@@ -48,50 +38,44 @@ Page {
     property var choosePoint: []
     property alias choose_marker: choose_marker
 
-    property var vehicle_point
-
     property var task_points: []
     property var task_regions: []
     property var task_lines: []
 
-    onVehicle_pointChanged: {
-        var po = geometryToPixel(vehicle_point[0], vehicle_point[1])
-        vehicle.x = po[0] - 7
-        vehicle.y = po[1] - 3
+    signal sendInitPoint()
+    onSendInitPoint: {
+        var pos = pixelToGeometry(choosePoint[0],choosePoint[1])
+        socket_manager.sendClickPointPos(pos[0],pos[1])
     }
 
     function geometryToPixel(X, Y) {
-        var x = (X - min_x) * map_rate
-        var y = (Y - max_y) * -map_rate
+        var x = (X - min_x) * map_rate + paint_begin_point
+        var y = (Y - max_y) * -map_rate + paint_begin_point
         //        console.info([x,y])
         return [x, y]
     }
 
     function pixelToGeometry(X, Y) {
-        var x = X / map_rate + min_x
-        var y = Y / -map_rate + max_y
+        var x = (X - paint_begin_point) / map_rate + min_x
+        var y = (Y - paint_begin_point) / -map_rate + max_y
         return [x, y]
     }
 
-    function setCheckedLocationStatus() {
-        btn_not_match.visible = true
-        btn_match.visible = true
-        note_text.visible = false
-        btn_resure.visible = false
-        choose_marker.visible = false
+
+    onHeightChanged: {
+        map.x = (map.width - canvas_background.width) / 2 + root.paint_begin_point * 2
+        map.y = (map.height - canvas_background.height ) / 2
+    }
+    onWidthChanged: {
+        map.x = (map.width - canvas_background.width) / 2 + root.paint_begin_point * 2
+        map.y = (map.height - canvas_background.height ) / 2
     }
 
-    SplitView {
-        id:split
-        z:2
-        anchors.fill: parent
-        orientation: Qt.Horizontal
-        resizing: true
-
-        Rectangle {
+    Rectangle {
             id: map
             width: parent.width * 0.78
             height: parent.height
+
             Image {
                 id: choose_marker
                 z: 1
@@ -107,15 +91,12 @@ Page {
                 id: map_background
                 width: parent.width
                 height: parent.height
-                color:"transparent"
+                color: "transparent"
                 Canvas {
                     id: canvas_background
+                    width: map_width * map_rate + paint_begin_point * 2
+                    height: map_height * map_rate + paint_begin_point * 2
 
-                    width: map_width * map_rate + 20
-                    height: map_height * map_rate +20
-
-//                    x: (map_background.width - canvas_background.width) / 2
-//                    y: (map_background.height - canvas_background.height) / 2
 
                     function cacuDis(sx,sy,tx,ty){
                         return Math.sqrt(Math.pow(tx-sx,2)+Math.pow(ty-sy,2))
@@ -390,13 +371,14 @@ Page {
 
                         drawTrees(ctx, var_trees)
                         drawSigns(ctx, var_signals)
+
                     }
                 }
 
                 Canvas {
                     id: canvas_others
-                    width: map_width * map_rate  + 10
-                    height: map_height * map_rate + 10
+                    width: map_width * map_rate  + paint_begin_point * 2
+                    height: map_height * map_rate + paint_begin_point * 2
 
                     x: canvas_background.x
                     y: canvas_background.y
@@ -475,14 +457,8 @@ Page {
                     }
                 }
             }
-
-            VehicleItem {
-                id: vehicle
-                x: 0
-                y: 0
-            }
         }
-    }
+
 
     PinchArea{
         id:parea
@@ -500,19 +476,16 @@ Page {
                 if(wheel.angleDelta.y > 0 ){
                     map.scale += 0.2
                 }else{
-                    map.scale -= 0.2
+                    if (map.scale <= 0) {
+                        return
+                    }
+                    map.scale -= 0.1
                 }
             }
             onClicked: {
-                if (!isMatched) {
-                    var x = map.width / 2 - ( map.width / 2 - mouse.x + map.x) / map.scale
-                    var y = map.height / 2 - ( map.height / 2 - mouse.y + map.y) / map.scale
-                    root.choosePoint = [x, y]
-                    var pos = pixelToGeometry(x,y)
-                    socket_manager.sendClickPointPos(pos[0],pos[1])
-                } else {
-                    return
-                }
+                var x = map.width / 2 - ( map.width / 2 - mouse.x + map.x) / map.scale
+                var y = map.height / 2 - ( map.height / 2 - mouse.y + map.y) / map.scale
+                root.choosePoint = [x, y]
             }
         }
     }
@@ -521,6 +494,8 @@ Page {
     Connections {
         target: socket_manager
         onUpdateMapData: {
+
+            map.scale = 1
             min_x = Number.POSITIVE_INFINITY
             min_y = Number.POSITIVE_INFINITY
             max_y = Number.NEGATIVE_INFINITY
@@ -541,8 +516,6 @@ Page {
             var all_x = []
             var all_y = []
 
-            //            console.info(var_clear_areas_include)
-            //            var has_less_than_0 = false
             for (var i = 0; i < var_road_edges.length; ++i) {
                 min_x = var_road_edges[0][0][0][0]
                 max_x = var_road_edges[0][0][0][0]
@@ -570,7 +543,6 @@ Page {
                 }
             }
 
-
             map_width = max_x - min_x
             map_height = max_y - min_y
 
@@ -578,21 +550,18 @@ Page {
                                                 (map.height / map_height)
             map_rate *= real_rate
 
-            if (min_x < 50) {
-                vehicle.width = 2.1 * map_rate
-                vehicle.height = 0.7 * map_rate
-            } else {
-                vehicle.width = 6.6 * map_rate
-                vehicle.height = 2.2 * map_rate
-            }
+            map.x = (map.width - canvas_background.width) / 2 + root.paint_begin_point * 2
+            map.y = (map.height - canvas_background.height ) / 2
+
             canvas_background.requestPaint()
 
-            map.x = (map_background.width - canvas_background.width) / 2
-            map.y = (map_background.height - canvas_background.height ) / 2
+
             task_points = []
             task_regions = []
             task_lines = []
             canvas_others.requestPaint()
+
+
         }
     }
 

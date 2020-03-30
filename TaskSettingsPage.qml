@@ -29,8 +29,9 @@ Rectangle {
     }
 
     Connections {
-        target: socket_manager
+        target: map_task_manager
         onUpdateMapsName: {
+            console.info(maps_name)
             list_model_areas.clear()
             map_areas = maps_name
             map_status = 1
@@ -97,8 +98,8 @@ Rectangle {
                             monitor_page.choose_marker.visible = true
                             rect_info_choose_map.visible = false
                             rec_ref_lines.visible = false
-                            socket_manager.parseMapData(model.map_name)
-                            socket_manager.getFeature(model.map_name)
+                            map_task_manager.parseMapData(model.map_name)
+                            map_task_manager.getFeature(model.map_name)
                         }
 
                         Rectangle {
@@ -234,7 +235,7 @@ Rectangle {
                                     }
                                     root.checked_tasks_name = temp_str
                                 }
-                                socket_manager.getTasksData(root.checked_tasks_name)
+                                map_task_manager.getTasksData(root.checked_tasks_name)
                             }
                         }
                         model: ListModel {
@@ -310,7 +311,7 @@ Rectangle {
                                 rec_ref_lines.visible = false
 
 
-                                socket_manager.sentMapTasksName(root.checked_tasks_name)
+                                map_task_manager.sentMapTasksName(root.checked_tasks_name)
                             } else {
                                 dialog_match_warn.open()
                             }
@@ -489,7 +490,7 @@ Rectangle {
             rect_decoration.visible = false
             rec_header_bar.visible = false
             rec_header_bar.height = 0
-            socket_manager.getMapTask( root.choose_map_name )
+            map_task_manager.getMapTask( root.choose_map_name )
             busy.running = true
             rec_task_control.visible = true
             root.is_matched = true

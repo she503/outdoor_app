@@ -12,7 +12,7 @@ Rectangle {
     property Component user_manage_page: UserManagePage { }
     property Component task_settings_page: TaskSettingsPage {
         Component.onCompleted: {
-            socket_manager.getMapsName()
+            map_task_manager.getMapsName()
         }
     }
     property Component help_document_page: HelpDocumentPage { }

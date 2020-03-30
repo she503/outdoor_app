@@ -53,7 +53,7 @@ Page {
     signal sendInitPoint()
     onSendInitPoint: {
         var pos = pixelToGeometry(choosePoint[0],choosePoint[1])
-        socket_manager.sendClickPointPos(pos[0],pos[1])
+        map_task_manager.sendClickPointPos(pos[0],pos[1])
     }
 
     function geometryToPixel(X, Y) {
@@ -532,7 +532,7 @@ Page {
 
     //Map
     Connections {
-        target: socket_manager
+        target: map_task_manager
         onUpdateMapData: {
 
             img_charge.visible = false
@@ -609,7 +609,7 @@ Page {
 
     //task
     Connections {
-        target: socket_manager
+        target: map_task_manager
         onUpdateTaskData: {
             task_points = points    //task_points[0]
             task_regions = regions
@@ -619,7 +619,7 @@ Page {
     }
 
     Connections {
-        target: socket_manager
+        target: map_task_manager
         onUpdateMapFeature: {
 
             root.begin_points = begin_point

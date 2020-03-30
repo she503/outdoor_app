@@ -9,6 +9,7 @@
 
 #include "socket_manager.h"
 #include "account_manager.h"
+#include "map_task_manager.h"
 
 
 int main(int argc, char *argv[])
@@ -30,6 +31,10 @@ int main(int argc, char *argv[])
     AccountManager* account_manager = new AccountManager(&engine);
     engine.rootContext()->setContextProperty("account_manager", account_manager);
     account_manager->setSocket(socket_manager);
+
+    MapTaskManager* map_task_manager = new MapTaskManager(&engine);
+    engine.rootContext()->setContextProperty("map_task_manager", map_task_manager);
+    map_task_manager->setSocket(socket_manager);
 
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())

@@ -5,15 +5,33 @@ import QtQuick.Controls 2.2
 
 
 Rectangle {
-    id: rec_peocess
+    id: root
     width: parent.width
     height:  parent.height * 0.2
     anchors.top: rec_pic_car.bottom
     anchors.left: parent.left
     color: "transparent"
+    Rectangle {
+        id: rect_info
+        width: parent.width
+        height: parent.height * 0.4
+        TLInfoDisplayPage {
+            id: tl_info_display
+            anchors.fill: parent
+        }
+    }
+//    Rectangle {
+//        id: rect_logo
+//        width: parent.width
+//        height: parent.height * 0.2
+//        Image {
+
+//        }
+//    }
+
     Column {
         Repeater {
-            model: [qsTr("Current map: "), qsTr("Worked hours: "), qsTr("Finished: "), qsTr("Estimated time: ")]
+            model: [qsTr("Current map: "), qsTr("Worked hours: "), qsTr("progress percent: "), qsTr("Estimated time: ")]
             Rectangle {
                 width: rec_peocess.width
                 height: rec_peocess.height * 0.25

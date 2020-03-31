@@ -92,12 +92,24 @@ signals:
     void setTaskInfo(const int& status, const QString& message);
 
     void updateRefLine(const QVariantList& ref_line);
+
+    void updateLocalizationInfo(const QString& time, const QString& x, const QString& y,
+                                const QString& heading, const QString& state);
+    void updateChassisInfo(const QString& time, const QString& speed, const QString& omega,
+                           const QString& brak_state, const QString& dirve_mode);
+    void updateObstacleInfo(const bool& is_polygon, const QVariantList& obstacles);
+    void updatePlanningInfo();
 private slots:
 
     void parseRegionsInfo(const  QJsonObject& obj);
     void parsseMapTasksData(const QJsonObject& obj);
     void localizationInitCB(const QJsonObject& obj);
     void setTaskCB(const QJsonObject& obj);
+
+    void parseLocalizationInfo(const  QJsonObject& obj);
+    void parseChassisInfo(const  QJsonObject& obj);
+    void parseObstacleInfo(const  QJsonObject& obj);
+    void parsePlanningInfo(const  QJsonObject& obj);
 
 private:
     SocketManager* _socket;

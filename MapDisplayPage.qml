@@ -25,6 +25,9 @@ Page {
     property var var_roads_include: []
     property var var_roads_exclude: []
 
+    property var var_obstacles: []
+    property var obstacles_is_polygon: []
+
     property var var_ref_line: []
 
 
@@ -35,7 +38,7 @@ Page {
     property real min_y: Number.POSITIVE_INFINITY
     property real max_y: Number.NEGATIVE_INFINITY
     property real max_x: Number.NEGATIVE_INFINITY
-    property real real_rate: 1
+    property real real_rate: 3
 
     property var choosePoint: []
     property alias choose_marker: choose_marker
@@ -48,9 +51,7 @@ Page {
     property var charge_points: []
 
     property var choose_map_name: "value"
-    onChoose_map_nameChanged: {
 
-    }
 
     signal sendInitPoint()
     onSendInitPoint: {
@@ -497,6 +498,61 @@ Page {
                     }
                 }
                 Canvas {
+                    id: canvas_planning
+                    width: map_width * map_rate  + paint_begin_point * 2
+                    height: map_height * map_rate + paint_begin_point * 2
+
+                    x: canvas_background.x
+                    y: canvas_background.y
+                    function drawObstacles(ctx, obstacles, is_polygon) {
+                        if (obstacles.length === 0) {
+                            return
+                        }
+                        if (is_polygon) {
+                            ctx.save()
+                            ctx.lineWidth = 0.5
+                            ctx.strokeStyle = "#ff00ff"
+                            ctx.fillStyle = "rgba(255,255,0,0.5)"
+                            for (var i = 0; i < obstacles.length; ++i) {
+                                ctx.beginPath()
+                                var first_point = geometryToPixel(obstacles[i][0][0], obstacles[i][0][1])
+                                ctx.moveTo(first_point[0], first_point[1])
+                                for (var j = 0; j < obstacles[i].length; ++j) {
+                                    var point3 = geometryToPixel(obstacles[i][j][0], obstacles[i][j][1])
+                                    ctx.lineTo(point3[0], point3[1])
+                                }
+                                ctx.closePath()
+                                ctx.stroke()
+                                ctx.fill()
+                            }
+
+                            ctx.restore()
+                        } else {
+                            ctx.save()
+                            ctx.strokeStyle = "#EE4000"
+                            ctx.fillStyle = "rgba(238,64,0,0.5)"
+                            //                            console.info(obstacles[0].length)
+                            for (var i = 0; i < obstacles[0].length; ++i) {
+                                var point = geometryToPixel(obstacles[0][i][0], obstacles[0][i][1])
+                                ctx.beginPath()
+                                ctx.arc(point[0],point[1],1.0,0,2*Math.PI)
+                                ctx.fill()
+                                ctx.stroke()
+                            }
+                            ctx.restore()
+                        }
+
+                    }
+
+                    onPaint: {
+                        var ctx = getContext("2d")
+                        ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
+                        drawObstacles(ctx, root.var_obstacles, root.obstacles_is_polygon)
+                    }
+
+                }
+
+                Canvas {
                     id: canvas_ref_line
                     width: map_width * map_rate  + paint_begin_point * 2
                     height: map_height * map_rate + paint_begin_point * 2
@@ -527,6 +583,10 @@ Page {
                         ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
                         drawRefLine(ctx, root.var_ref_line)
                     }
+                }
+                VehicleItem {
+                    id: vehicle
+                    visible: false
                 }
             }
         }
@@ -567,9 +627,9 @@ Page {
         target: map_task_manager
         onUpdateMapData: {
 
+            map.scale = 1 / root.real_rate
             img_charge.visible = false
             img_begin.visible = false
-            map.scale = 1
             min_x = Number.POSITIVE_INFINITY
             min_y = Number.POSITIVE_INFINITY
             max_y = Number.NEGATIVE_INFINITY
@@ -624,8 +684,8 @@ Page {
                                                 (map.height / map_height)
             map_rate *= real_rate
 
-            map.x = (map.width - canvas_background.width) / 2 + root.paint_begin_point * 2
-            map.y = (map.height - canvas_background.height ) / 2
+            map.x = (map.width - canvas_background.width) / 2 / root.real_rate + root.paint_begin_point * 2
+            map.y = (map.height - canvas_background.height) / 2 / root.real_rate
 
             canvas_background.requestPaint()
 
@@ -635,6 +695,13 @@ Page {
             task_lines = []
             canvas_others.requestPaint()
 
+            if (min_x < 50) {
+                vehicle.width = 2.1 * map_rate
+                vehicle.height = 0.7 * map_rate
+            } else {
+                vehicle.width = 6.6 * map_rate
+                vehicle.height = 2.2 * map_rate
+            }
 
         }
     }
@@ -702,6 +769,20 @@ Page {
             root.var_ref_line = ref_line
             canvas_ref_line.requestPaint()
         }
+        onUpdateLocalizationInfo: {
+            vehicle.visible = true
+            var pixel_pos = geometryToPixel(x, y)
+            vehicle.x = pixel_pos[0] - vehicle.width / 2
+            vehicle.y = pixel_pos[1] - vehicle.height / 2
+
+            vehicle.rotation = -heading
+        }
+        onUpdateObstacleInfo: {
+            var_obstacles = obstacles
+            obstacles_is_polygon = is_polygon
+            canvas_planning.requestPaint()
+        }
+
     }
 
 }

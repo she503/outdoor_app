@@ -12,6 +12,13 @@ void MapTaskManager::setSocket(SocketManager *socket)
     connect(_socket, SIGNAL(tasksData(QJsonObject)), this, SLOT(parsseMapTasksData(QJsonObject)));
     connect(_socket, SIGNAL(localizationInitRST(QJsonObject)), this, SLOT(localizationInitCB(QJsonObject)));
     connect(_socket, SIGNAL(setTasksRST(QJsonObject)), this, SLOT(setTaskCB(QJsonObject)));
+
+    connect(_socket, SIGNAL(localizationInfo(QJsonObject)), this, SLOT(parseLocalizationInfo(QJsonObject)));
+    connect(_socket, SIGNAL(chassisInfo(QJsonObject)), this, SLOT(parseChassisInfo(QJsonObject)));
+    connect(_socket, SIGNAL(obstaclesInfo(QJsonObject)), this, SLOT(parseObstacleInfo(QJsonObject)));
+    connect(_socket, SIGNAL(planningInfo(QJsonObject)), this, SLOT(parsePlanningInfo(QJsonObject)));
+
+
 }
 
 bool MapTaskManager::sendClickPointPos(const QString &pos_x, const QString &pos_y)
@@ -133,6 +140,40 @@ void MapTaskManager::setTaskCB(const QJsonObject &obj)
         QVariantList pts = temp_obj.value("pts").toArray().toVariantList();
         emit updateRefLine(pts);
     }
+}
+
+void MapTaskManager::parseLocalizationInfo(const QJsonObject &obj)
+{
+    QString time = obj.value("time").toString();
+    QString x = obj.value("X").toString();
+    QString y = obj.value("Y").toString();
+    QString heading = obj.value("heading").toString();
+    QString state = obj.value("state").toString();
+
+    emit updateLocalizationInfo(time, x, y, heading, state);
+}
+
+void MapTaskManager::parseChassisInfo(const QJsonObject &obj)
+{
+    QString time = obj.value("time").toString();
+    QString speed = obj.value("speed").toString();
+    QString omega = obj.value("omega").toString();
+    QString brake_state = obj.value("brak_state").toString();
+    QString drive_mode = obj.value("drive_mode").toString();
+    emit updateChassisInfo(time, speed, omega, brake_state, drive_mode);
+}
+
+void MapTaskManager::parseObstacleInfo(const QJsonObject &obj)
+{
+    bool is_polygon = obj.value("is_polygon").toBool();
+    QVariantList obstacles = obj.value("obstacles").toArray().toVariantList();
+
+    emit updateObstacleInfo(is_polygon, obstacles);
+}
+
+void MapTaskManager::parsePlanningInfo(const QJsonObject &obj)
+{
+
 }
 void MapTaskManager::parseRegionsInfo(const QJsonObject &obj)
 {

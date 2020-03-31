@@ -57,6 +57,11 @@ signals:
     void sendDataToSocket(const QByteArray& data);
 
 
+    //
+    void localizationInfo(const QJsonObject& obj);
+    void chassisInfo(const QJsonObject& obj);
+    void obstaclesInfo(const QJsonObject& obj);
+    void planningInfo(const QJsonObject& obj);
 
     /**
      * @brief 发给ui显示的数据

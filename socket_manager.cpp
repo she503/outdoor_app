@@ -112,14 +112,26 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_ALL_ACCOUNTS_INFO:
                 emit allUser(obj);
                 break;
-            case MESSAGE_SET_INIT_LOCALIZATION_RST:
+            case MessageType::MESSAGE_SET_INIT_LOCALIZATION_RST:
                 emit localizationInitRST(obj);
                 break;
-            case MESSAGE_SET_TASKS_RST:
+            case MessageType::MESSAGE_SET_TASKS_RST:
                 emit setTasksRST(obj);
                 break;
+            case MessageType::MESSAGE_LOCALIZATION_INFO:
+                emit localizationInfo(obj);
+                break;
+            case MessageType::MESSAGE_CHASSIS_INFO:
+                emit chassisInfo(obj);
+                break;
+            case MessageType::MESSAGE_PERCEPTION_OBSTACLES:
+                emit obstaclesInfo(obj);
+                break;
+            case MessageType::MESSAGE_PLANNING_COMMAND_PATH:
+                emit planningInfo(obj);
+                break;
             default:
-//                qDebug() << "======>" <<obj;
+                qDebug() << "======>" <<obj;
                 break;
             }
         } else {

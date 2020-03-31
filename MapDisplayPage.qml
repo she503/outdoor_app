@@ -567,11 +567,12 @@ Page {
                             return
                         }
 
+                        console.info(ref_line_curren_index)
                         ctx.save()
-                        ctx.lineWidth = 2
+                        ctx.lineWidth = 3
                         ctx.strokeStyle = "#00ff00"
                         ctx.beginPath()
-                        var first_point = geometryToPixel(points[0][0], points[0][1])
+                        var first_point = geometryToPixel(points[ref_line_curren_index][0], points[ref_line_curren_index][1])
                         ctx.moveTo(first_point[0], first_point[1])
                         for (var i = ref_line_curren_index; i < points.length; ++i) {
                             var point3 = geometryToPixel(points[i][0], points[i][1])

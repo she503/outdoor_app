@@ -169,7 +169,6 @@ Rectangle {
 //                    fillMode: Image.PreserveAspectFit
 //                }
 //            }
-
 //        }
 //    }
 //}

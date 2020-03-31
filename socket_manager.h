@@ -50,6 +50,8 @@ signals:
     void localizationInitRST(const QJsonObject& obj);
     void setTasksRST(const QJsonObject& obj);
 
+    void taskProcessInfo(const QJsonObject& obj);
+
     // app断开连接发出信号
     void appDisconnected();
     

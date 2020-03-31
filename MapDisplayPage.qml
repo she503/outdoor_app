@@ -29,6 +29,7 @@ Page {
     property var obstacles_is_polygon: []
 
     property var var_ref_line: []
+    property real ref_line_curren_index: 0
 
 
     property real map_width: 0
@@ -38,7 +39,7 @@ Page {
     property real min_y: Number.POSITIVE_INFINITY
     property real max_y: Number.NEGATIVE_INFINITY
     property real max_x: Number.NEGATIVE_INFINITY
-    property real real_rate: 3
+    property real real_rate: 2.0
 
     property var choosePoint: []
     property alias choose_marker: choose_marker
@@ -73,19 +74,20 @@ Page {
 
 
     onHeightChanged: {
-        map.x = (map.width - canvas_background.width) / 2 + root.paint_begin_point * 2
-        map.y = (map.height - canvas_background.height ) / 2
+        map.x = (map.width - canvas_background.width) / 2 / root.real_rate + root.paint_begin_point * 2
+        map.y = (map.height - canvas_background.height) / 2 / root.real_rate
+
     }
     onWidthChanged: {
-        map.x = (map.width - canvas_background.width) / 2 + root.paint_begin_point * 2
-        map.y = (map.height - canvas_background.height ) / 2
+        map.x = (map.width - canvas_background.width) / 2 / root.real_rate + root.paint_begin_point * 2
+        map.y = (map.height - canvas_background.height) / 2 / root.real_rate
+
     }
 
     Rectangle {
             id: map
             width: parent.width * 0.78
             height: parent.height
-
             Image {
                 id: choose_marker
                 z: 1
@@ -564,20 +566,33 @@ Page {
                         if (points.length === 0) {
                             return
                         }
+
                         ctx.save()
                         ctx.lineWidth = 1
                         ctx.strokeStyle = "#ff0000"
                         ctx.beginPath()
                         var first_point = geometryToPixel(points[0][0], points[0][1])
                         ctx.moveTo(first_point[0], first_point[1])
-                        for (var i = 0; i < points.length; ++i) {
-                            var point3 = geometryToPixel(points[i][0], points[i][1])
-                            ctx.lineTo(point3[0], point3[1])
+                        for (var i = 0; i < ref_line_curren_index; ++i) {
+                                var point3 = geometryToPixel(points[i][0], points[i][1])
+                                ctx.lineTo(point3[0], point3[1])
                         }
                         ctx.stroke()
                         ctx.restore()
-                    }
 
+                        ctx.save()
+                        ctx.lineWidth = 2
+                        ctx.strokeStyle = "#00ff00"
+                        ctx.beginPath()
+                        for (var i = ref_line_curren_index; i < points.length; ++i) {
+                                var first_pointt = geometryToPixel(points[ref_line_curren_index][0], points[ref_line_curren_index][1])
+                                ctx.moveTo(first_pointt[0], first_pointt[1])
+                                var point = geometryToPixel(points[i][0], points[i][1])
+                                ctx.lineTo(point[0], point[1])
+                        }
+                        ctx.stroke()
+                        ctx.restore()
+                        }
                     onPaint: {
                         var ctx = getContext("2d")
                         ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
@@ -620,6 +635,7 @@ Page {
                 root.choosePoint = [x, y]
             }
         }
+
     }
 
     //Map
@@ -706,17 +722,6 @@ Page {
         }
     }
 
-    //task
-    Connections {
-        target: map_task_manager
-        onUpdateTaskData: {
-            task_points = points    //task_points[0]
-            task_regions = regions
-            task_lines = lines
-            canvas_others.requestPaint()
-        }
-    }
-
     Connections {
         target: map_task_manager
         onUpdateMapFeature: {
@@ -761,6 +766,12 @@ Page {
             }
 
         }
+        onUpdateTaskData: {
+            task_points = points    //task_points[0]
+            task_regions = regions
+            task_lines = lines
+            canvas_others.requestPaint()
+        }
     }
 
     Connections {
@@ -783,6 +794,10 @@ Page {
             canvas_planning.requestPaint()
         }
 
+        onUpdateTaskProcessInfo: {
+            ref_line_curren_index = current_index
+            canvas_ref_line.requestPaint()
+        }
     }
 
 }

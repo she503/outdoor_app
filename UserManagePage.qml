@@ -505,13 +505,6 @@ Rectangle {
                 message_account.open()
                 break;
             case 1:
-                var leve_name = ""
-                if (level === 1) {
-                    leve_name = qsTr("nomal_user")
-                } else if (level === 2) {
-                    leve_name = qsTr("admin_user")
-                    ++root.admin_num
-                }
                 message_account.dia_title = qsTr("a new user was added")
                 message_account.dia_title_color = "#4F94CD"
                 message_account.dia_image_source = "qrc:/res/pictures/smile.png"

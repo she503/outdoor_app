@@ -99,6 +99,8 @@ signals:
                            const QString& brak_state, const QString& dirve_mode);
     void updateObstacleInfo(const bool& is_polygon, const QVariantList& obstacles);
     void updatePlanningInfo();
+
+    void updateTaskProcessInfo(const int& current_index, const float& progress);
 private slots:
 
     void parseRegionsInfo(const  QJsonObject& obj);
@@ -106,10 +108,11 @@ private slots:
     void localizationInitCB(const QJsonObject& obj);
     void setTaskCB(const QJsonObject& obj);
 
-    void parseLocalizationInfo(const  QJsonObject& obj);
-    void parseChassisInfo(const  QJsonObject& obj);
-    void parseObstacleInfo(const  QJsonObject& obj);
-    void parsePlanningInfo(const  QJsonObject& obj);
+    void parseLocalizationInfo(const QJsonObject& obj);
+    void parseChassisInfo(const QJsonObject& obj);
+    void parseObstacleInfo(const QJsonObject& obj);
+    void parsePlanningInfo(const QJsonObject& obj);
+    void parseTaskProcessInfo(const QJsonObject& obj);
 
 private:
     SocketManager* _socket;

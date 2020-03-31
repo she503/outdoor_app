@@ -18,7 +18,7 @@ void MapTaskManager::setSocket(SocketManager *socket)
     connect(_socket, SIGNAL(obstaclesInfo(QJsonObject)), this, SLOT(parseObstacleInfo(QJsonObject)));
     connect(_socket, SIGNAL(planningInfo(QJsonObject)), this, SLOT(parsePlanningInfo(QJsonObject)));
 
-
+    connect(_socket, SIGNAL(taskProcessInfo(QJsonObject)), this, SLOT(parseTaskProcessInfo(QJsonObject)));
 }
 
 bool MapTaskManager::sendClickPointPos(const QString &pos_x, const QString &pos_y)
@@ -174,6 +174,13 @@ void MapTaskManager::parseObstacleInfo(const QJsonObject &obj)
 void MapTaskManager::parsePlanningInfo(const QJsonObject &obj)
 {
 
+}
+
+void MapTaskManager::parseTaskProcessInfo(const QJsonObject &obj)
+{
+    int current_index = obj.value("current_index").toInt();
+    float progress = obj.value("progress").toDouble();
+    emit updateTaskProcessInfo(current_index, progress);
 }
 void MapTaskManager::parseRegionsInfo(const QJsonObject &obj)
 {

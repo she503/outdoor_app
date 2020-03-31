@@ -22,7 +22,96 @@ Rectangle {
     property string choose_map_name: ""
     property var tasks_list: []
     property var checked_tasks_name: []
+
     property bool is_init_success: false
+    property bool is_set_tasks_success: false
+
+    property string cb_info: ""
+
+    onIs_matchedChanged: {
+        rec_ref_lines.visible = is_matched ? false : true
+
+    }
+
+    onIs_init_successChanged: {
+        if (!is_init_success) {
+            rect_decoration.visible = true
+            rec_header_bar.visible = true
+            rec_header_bar.height = rec_task_page.height * 0.1
+            root.is_matched = false
+            monitor_page.choose_marker.visible = true
+            rec_ref_lines.visible = false
+            dialog_match_warn.dia_title = root.cb_info
+            dialog_match_warn.open()
+        } else {
+            rect_decoration.visible = false
+            rec_header_bar.visible = false
+            rec_header_bar.height = 0
+             map_task_manager.getMapTask( root.choose_map_name )
+            rec_task_control.visible = true
+            rec_checked_location.visible = false
+            rec_ref_lines.visible = true
+        }
+    }
+    onIs_set_tasks_successChanged: {
+        if(!is_set_tasks_success) {
+            rect_decoration.visible = true
+            rec_header_bar.visible = true
+            rec_task_control.visible = false
+            rec_header_bar.height = rec_task_page.height * 0.1
+            rec_checked_location.visible = true
+            root.is_matched = false
+            monitor_page.choose_marker.visible = true
+            dialog_match_warn.dia_title = root.cb_info
+            dialog_match_warn.open()
+        } else {
+            rec_task_control.visible = false
+            rec_header_bar.visible = false
+            rec_header_bar.height = 0
+            rect_decoration.visible = false
+            rec_ref_lines.visible = false
+        }
+    }
+
+    function chooseMapPage() {
+        rec_header_bar.visible = true
+        rec_header_bar.height = rec_task_page.height * 0.1
+        rect_decoration.visible = true
+        rec_checked_location.visible = true
+
+        rec_task_control.visible = false
+        rec_ref_lines.visible = false
+
+        monitor_page.choose_marker.visible = true
+
+        task_list_model.clear()
+    }
+
+    function confirmMapPage() {
+        rec_header_bar.visible = false
+        rec_header_bar.height = 0
+        rect_decoration.visible = false
+        rec_checked_location.visible = false
+
+//        rec_task_control.visible = true
+        rec_ref_lines.visible = true
+
+        monitor_page.choose_marker.visible = false
+        btn_start_task.visible = false
+        rec_task_control.visible = true
+
+        map_task_manager.getMapTask( root.choose_map_name )
+    }
+
+    function chooseTaskPage() {
+        btn_start_task.visible = true
+        rec_task_control.visible = true
+    }
+
+    function startTaskPage() {
+        rec_task_control.visible = false
+        rec_ref_lines.visible = false
+    }
 
     FontLoader {
         id: font_hanzhen;
@@ -58,45 +147,23 @@ Rectangle {
         }
         onLocalizationInitInfo: {
             if (status === 0) {
-
-                rect_decoration.visible = true
-                rec_header_bar.visible = true
-                rec_header_bar.height = rec_task_page.height * 0.1
-                root.is_matched = false
-                monitor_page.choose_marker.visible = true
+                root.chooseMapPage()
                 dialog_match_warn.dia_title = message
                 dialog_match_warn.open()
-                 busy.running = false
             } else if (status === 1) {
-                rect_decoration.visible = false
-                rec_header_bar.visible = false
-                rec_header_bar.height = 0//rec_task_page.height * 0.1
-                root.is_init_success = true
-                 map_task_manager.getMapTask( root.choose_map_name )
-                rec_task_control.visible = true
-                rec_checked_location.visible = false
-                busy.running = false
-                rec_ref_lines.visible = true
+                root.confirmMapPage()
             }
+            busy.running = false
         }
         onSetTaskInfo: {
             if (status === 0) {
-                rect_decoration.visible = true
-                rec_header_bar.visible = true
-                rec_task_control.visible = false
-                rec_header_bar.height = rec_task_page.height * 0.1
-                root.is_matched = false
-                monitor_page.choose_marker.visible = true
+                root.chooseTaskPage()
                 dialog_match_warn.dia_title = message
                 dialog_match_warn.open()
-                busy.running = false
             } else if (status === 1) {
-                rec_task_control.visible = false
-                rec_header_bar.visible = false
-                rec_header_bar.height = 0
-                rect_decoration.visible = false
-                rec_ref_lines.visible = false
+                root.startTaskPage()
             }
+            busy.running = false
         }
     }
 
@@ -132,18 +199,13 @@ Rectangle {
                         height: list_view_areas.height
                         property int id_card: model.id_card
                         onPressed: {
-                            if (list_view_areas.currentIndex != index) {
-                                rec_task_control.visible = false
-                            }
-
+                            root.chooseMapPage()
                             list_view_areas.currentIndex = index
 
                             root.choose_map_name = model.map_name
                             monitor_page.choose_map_name = model.map_name
-                            rec_checked_location.visible = true
-                            monitor_page.choose_marker.visible = true
                             rect_info_choose_map.visible = false
-                            rec_ref_lines.visible = false
+
                             map_task_manager.parseMapData(model.map_name)
                             map_task_manager.getFeature(model.map_name)
                         }
@@ -268,6 +330,7 @@ Rectangle {
                                 color: item.is_active ? "red" : "black"
                             }
                             onClicked: {
+                                root.chooseTaskPage()
                                 list_view.currentIndex = index
                                 item.is_active = !item.is_active
                                 if (item.is_active) {
@@ -341,8 +404,8 @@ Rectangle {
                     Text {
                         text: qsTr("Start")
                         anchors.fill: parent
-                        color: "red"
-                        font.pixelSize: height * 0.4
+                        color: "lightgreen"
+                        font.pixelSize: height * 0.3
                         font.family: "Arial"
                         font.weight: Font.Thin
                         horizontalAlignment: Text.AlignHCenter
@@ -377,12 +440,23 @@ Rectangle {
                     Text {
                         text: qsTr("Cancle")
                         anchors.fill: parent
-                        color: "blue"
+                        color: "lightgreen"
                         font.pixelSize: height * 0.3
                         font.family: "Arial"
                         font.weight: Font.Thin
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
+                    }
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        if (root.checked_tasks_name.length <= 0) {
+                            dialog_match_warn.dia_title = qsTr("error, you must choose a task least")
+                            dialog_match_warn.open()
+                        } else {
+                            root.chooseMapPage()
+                        }
                     }
                 }
             }
@@ -506,11 +580,10 @@ Rectangle {
         onOkClicked: {
             dialog_resure.close()
             monitor_page.sendInitPoint()
+            busy.running = true
         }
         onCencelClicked: {
-            is_matched = false
-            rec_checked_location.visible = true
-            monitor_page.choose_marker.visible = true
+            root.chooseMapPage()
             dialog_resure.close()
         }
     }

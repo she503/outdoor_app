@@ -38,7 +38,7 @@ HEADERS += \
     map_task_manager.h \
     utils.h
 
-TRANSLATIONS = translation_chinese.ts
+TRANSLATIONS = tergeo_app_zh_CN.ts
 
 DISTFILES += \
     android/AndroidManifest.xml \

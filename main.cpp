@@ -18,12 +18,11 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     QtWebView::initialize();
     QTranslator trans;
-    if (!trans.load(":/res/language/translation_chinese.qm")) {
+    if (!trans.load("../tergeo_app_zh_CN.qm")) {
         qDebug() << "faild to load translation qm !!!";
     }
     app.installTranslator(&trans);
     QQmlApplicationEngine engine;
-
 
     SocketManager* socket_manager = new SocketManager(&engine);
     engine.rootContext()->setContextProperty("socket_manager", socket_manager);

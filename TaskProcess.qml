@@ -20,17 +20,19 @@ Rectangle {
             anchors.fill: parent
         }
     }
-//    Rectangle {
-//        id: rect_logo
-//        width: parent.width
-//        height: parent.height * 0.2
-//        Image {
-
-//        }
-//    }
+    Rectangle {
+        id: rect_logo
+        width: parent.width
+        height: parent.height * 0.2
+        Image {
+            anchors.fill: parent
+//            source:
+        }
+    }
 
     Column {
         Repeater {
+
             model: [qsTr("Current map: "), qsTr("Worked hours: "), qsTr("progress percent: "), qsTr("Estimated time: ")]
             Rectangle {
                 width: rec_peocess.width

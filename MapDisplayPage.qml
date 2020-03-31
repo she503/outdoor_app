@@ -569,7 +569,7 @@ Page {
 
                         ctx.save()
                         ctx.lineWidth = 1
-                        ctx.strokeStyle = "#00ff00"
+                        ctx.strokeStyle = "#4169E1"
                         ctx.beginPath()
                         var first_point = geometryToPixel(points[0][0], points[0][1])
                         ctx.moveTo(first_point[0], first_point[1])

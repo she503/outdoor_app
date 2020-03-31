@@ -567,33 +567,15 @@ Page {
                             return
                         }
 
-                        console.info(ref_line_curren_index)
-                        ctx.save()
-                        ctx.lineWidth = 3
-                        ctx.strokeStyle = "#00ff00"
-                        ctx.beginPath()
-                        var first_point = geometryToPixel(points[ref_line_curren_index][0], points[ref_line_curren_index][1])
-                        ctx.moveTo(first_point[0], first_point[1])
-                        for (var i = ref_line_curren_index; i < points.length; ++i) {
-                            var point3 = geometryToPixel(points[i][0], points[i][1])
-                            ctx.lineTo(point3[0], point3[1])
-                        }
-                        ctx.stroke()
-                        ctx.restore()
-
-                        if (ref_line_curren_index <= 0) {
-                            return
-                        }
-
                         ctx.save()
                         ctx.lineWidth = 1
-                        ctx.strokeStyle = "#ff0000"
+                        ctx.strokeStyle = "#00ff00"
                         ctx.beginPath()
-                        for (var i = 0; i < ref_line_curren_index; ++i) {
-                            var first_pointt = geometryToPixel(points[ref_line_curren_index][0], points[ref_line_curren_index][1])
-                            ctx.moveTo(first_pointt[0], first_pointt[1])
-                            var point = geometryToPixel(points[i][0], points[i][1])
-                            ctx.lineTo(point[0], point[1])
+                        var first_point = geometryToPixel(points[0][0], points[0][1])
+                        ctx.moveTo(first_point[0], first_point[1])
+                        for (var i = 0; i < points.length; ++i) {
+                            var point3 = geometryToPixel(points[i][0], points[i][1])
+                            ctx.lineTo(point3[0], point3[1])
                         }
                         ctx.stroke()
                         ctx.restore()
@@ -604,6 +586,46 @@ Page {
                         drawRefLine(ctx, root.var_ref_line)
                     }
                 }
+
+                Canvas {
+                    id: canvas_red_ref_line
+                    width: map_width * map_rate  + paint_begin_point * 2
+                    height: map_height * map_rate + paint_begin_point * 2
+
+                    x: canvas_background.x
+                    y: canvas_background.y
+
+                    function drawRefLine(ctx, points) {
+                        if (points.length === 0) {
+                            return
+                        }
+
+                        if (ref_line_curren_index <= 0) {
+                            return
+                        }
+
+                        console.info(ref_line_curren_index)
+                        ctx.save()
+                        ctx.lineWidth = 2
+                        ctx.strokeStyle = "#ff0000"
+                        ctx.beginPath()
+                        for (var i = 0; i < ref_line_curren_index; ++i) {
+                            var first_pointt = geometryToPixel(points[0][0], points[0][1])
+                            ctx.moveTo(first_pointt[0], first_pointt[1])
+                            var point = geometryToPixel(points[i][0], points[i][1])
+                            ctx.lineTo(point[0], point[1])
+                        }
+                        ctx.stroke()
+                        ctx.restore()
+                    }
+                    onPaint: {
+                        var ctx = getContext("2d")
+                        ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
+                        drawRefLine(ctx, root.var_ref_line);
+
+                    }
+                }
+
                 VehicleItem {
                     id: vehicle
                     visible: false
@@ -801,7 +823,7 @@ Page {
 
         onUpdateTaskProcessInfo: {
             ref_line_curren_index = current_index
-            canvas_ref_line.requestPaint()
+            canvas_red_ref_line.requestPaint()
         }
     }
 

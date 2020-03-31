@@ -173,7 +173,8 @@ void MapTaskManager::parseObstacleInfo(const QJsonObject &obj)
 
 void MapTaskManager::parsePlanningInfo(const QJsonObject &obj)
 {
-
+    QVariantList planning_path = obj.value("path").toArray().toVariantList();
+    emit updatePlanningInfo(planning_path);
 }
 
 void MapTaskManager::parseTaskProcessInfo(const QJsonObject &obj)

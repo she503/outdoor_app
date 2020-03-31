@@ -98,7 +98,7 @@ signals:
     void updateChassisInfo(const QString& time, const QString& speed, const QString& omega,
                            const QString& brak_state, const QString& dirve_mode);
     void updateObstacleInfo(const bool& is_polygon, const QVariantList& obstacles);
-    void updatePlanningInfo();
+    void updatePlanningInfo(const QVariantList& planning_path);
 
     void updateTaskProcessInfo(const int& current_index, const float& progress);
 private slots:

@@ -30,6 +30,7 @@ Page {
 
     property var var_ref_line: []
     property real ref_line_curren_index: 0
+    property var var_planning_path: []
 
 
     property real map_width: 0
@@ -569,7 +570,7 @@ Page {
 
                         ctx.save()
                         ctx.lineWidth = 1
-                        ctx.strokeStyle = "#4169E1"
+                        ctx.strokeStyle = "#00ff00"//
                         ctx.beginPath()
                         var first_point = geometryToPixel(points[0][0], points[0][1])
                         ctx.moveTo(first_point[0], first_point[1])
@@ -618,10 +619,29 @@ Page {
                         ctx.stroke()
                         ctx.restore()
                     }
+
+                    function drawPlanningLine(ctx, points) {
+                        if (points.length === 0) {
+                            return
+                        }
+                        ctx.save()
+                        ctx.lineWidth = 1
+                        ctx.strokeStyle = "#4169E1"
+                        ctx.beginPath()
+                        for (var i = 0; i < points.length; ++i) {
+                            var first_pointt = geometryToPixel(points[0][0], points[0][1])
+                            ctx.moveTo(first_pointt[0], first_pointt[1])
+                            var point = geometryToPixel(points[i][0], points[i][1])
+                            ctx.lineTo(point[0], point[1])
+                        }
+                        ctx.stroke()
+                        ctx.restore()
+                    }
                     onPaint: {
                         var ctx = getContext("2d")
                         ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
                         drawRefLine(ctx, root.var_ref_line);
+                        drawPlanningLine(ctx, root.var_planning_path);
 
                     }
                 }
@@ -823,6 +843,10 @@ Page {
 
         onUpdateTaskProcessInfo: {
             ref_line_curren_index = current_index
+            canvas_red_ref_line.requestPaint()
+        }
+        onUpdatePlanningInfo: {
+            var_planning_path = planning_path
             canvas_red_ref_line.requestPaint()
         }
     }

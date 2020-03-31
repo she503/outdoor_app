@@ -55,6 +55,8 @@ private:
     void parseTasksName(const QJsonObject& tasks_obj);
 
 
+
+
     QVariantList parseSignals(const QJsonObject &obj);
     QVariantList parseTrees(const QJsonObject &obj);
     QVariantList parseStopSigns(const QJsonObject &obj);
@@ -85,10 +87,17 @@ signals:
 
     void updateMapFeature(const QJsonObject& begin_point, const QJsonObject& charge_point);
     void getMapInfoError(const QString& error_message);
+
+    void localizationInitInfo(const int& status, const QString& message);
+    void setTaskInfo(const int& status, const QString& message);
+
+    void updateRefLine(const QVariantList& ref_line);
 private slots:
 
     void parseRegionsInfo(const  QJsonObject& obj);
     void parsseMapTasksData(const QJsonObject& obj);
+    void localizationInitCB(const QJsonObject& obj);
+    void setTaskCB(const QJsonObject& obj);
 
 private:
     SocketManager* _socket;

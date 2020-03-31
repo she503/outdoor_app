@@ -22,6 +22,7 @@ Rectangle {
     property string choose_map_name: ""
     property var tasks_list: []
     property var checked_tasks_name: []
+    property bool is_init_success: false
 
     FontLoader {
         id: font_hanzhen;
@@ -31,7 +32,6 @@ Rectangle {
     Connections {
         target: map_task_manager
         onUpdateMapsName: {
-            console.info(maps_name)
             list_model_areas.clear()
             map_areas = maps_name
             map_status = 1
@@ -54,6 +54,48 @@ Rectangle {
 
             for (var i = 0; i < tasks_list.length; ++i) {
                 task_list_model.append({"idcard": i,"check_box_text": tasks_list[i]})
+            }
+        }
+        onLocalizationInitInfo: {
+            if (status === 0) {
+
+                rect_decoration.visible = true
+                rec_header_bar.visible = true
+                rec_header_bar.height = rec_task_page.height * 0.1
+                root.is_matched = false
+                monitor_page.choose_marker.visible = true
+                dialog_match_warn.dia_title = message
+                dialog_match_warn.open()
+                 busy.running = false
+            } else if (status === 1) {
+                rect_decoration.visible = false
+                rec_header_bar.visible = false
+                rec_header_bar.height = 0//rec_task_page.height * 0.1
+                root.is_init_success = true
+                 map_task_manager.getMapTask( root.choose_map_name )
+                rec_task_control.visible = true
+                rec_checked_location.visible = false
+                busy.running = false
+                rec_ref_lines.visible = true
+            }
+        }
+        onSetTaskInfo: {
+            if (status === 0) {
+                rect_decoration.visible = true
+                rec_header_bar.visible = true
+                rec_task_control.visible = false
+                rec_header_bar.height = rec_task_page.height * 0.1
+                root.is_matched = false
+                monitor_page.choose_marker.visible = true
+                dialog_match_warn.dia_title = message
+                dialog_match_warn.open()
+                busy.running = false
+            } else if (status === 1) {
+                rec_task_control.visible = false
+                rec_header_bar.visible = false
+                rec_header_bar.height = 0
+                rect_decoration.visible = false
+                rec_ref_lines.visible = false
             }
         }
     }
@@ -90,6 +132,10 @@ Rectangle {
                         height: list_view_areas.height
                         property int id_card: model.id_card
                         onPressed: {
+                            if (list_view_areas.currentIndex != index) {
+                                rec_task_control.visible = false
+                            }
+
                             list_view_areas.currentIndex = index
 
                             root.choose_map_name = model.map_name
@@ -183,7 +229,7 @@ Rectangle {
                         id: list_view
                         clip: true
                         width: parent.width
-                        height: parent.height * 0.8
+                        height: parent.height
                         orientation:ListView.Vertical
                         spacing: height * 0.02
                         currentIndex: -1
@@ -196,6 +242,8 @@ Rectangle {
                                 width: parent.width * 0.1
                                 height: width
                                 anchors.verticalCenter: parent.verticalCenter
+                                anchors.left: parent.left
+                                anchors.leftMargin: parent.width * 0.1
                                 radius: height / 2
                                 border.color: "black"
                                 border.width: 1
@@ -212,7 +260,7 @@ Rectangle {
                                 text: model.check_box_text
                                 horizontalAlignment: Text.AlignLeft
                                 verticalAlignment: Text.AlignVCenter
-                                width: parent.width * 0.7
+                                width: parent.width
                                 height: parent.height
                                 anchors.left: check_style.right
                                 anchors.leftMargin: parent.width * 0.05
@@ -253,10 +301,10 @@ Rectangle {
                             anchors.top: parent.top
                             anchors.right: parent.right
                             anchors.bottom: parent.bottom
-                            policy: ScrollBar.AlwaysOn
+                            policy: ScrollBar.AsNeeded
                             contentItem: Rectangle {
                                 implicitWidth: 4
-                                implicitHeight: 10
+                                implicitHeight: 1
                                 radius: width / 2
                                 color: vbar.pressed ? "#ffffaa" : "#c2f4c6"
                             }
@@ -303,18 +351,9 @@ Rectangle {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            if (can_work) {
-                                rec_task_control.visible = false
-                                rec_header_bar.visible = false
-                                rec_header_bar.height = 0
-                                rect_decoration.visible = false
-                                rec_ref_lines.visible = false
 
+                            map_task_manager.sentMapTasksName(root.checked_tasks_name)
 
-                                map_task_manager.sentMapTasksName(root.checked_tasks_name)
-                            } else {
-                                dialog_match_warn.open()
-                            }
                         }
                     }
                 }
@@ -345,11 +384,6 @@ Rectangle {
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                        }
-                    }
                 }
             }
         }
@@ -360,7 +394,8 @@ Rectangle {
             color: "transparent"
             width: rec_glow_background.width
             height: rec_glow_background.height * 0.1
-            anchors.bottom: rec_task_control.top
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: parent.height * 0.06
             anchors.horizontalCenter: parent.horizontalCenter
 
             Image {
@@ -400,7 +435,7 @@ Rectangle {
                         text: qsTr("SURE")
                         anchors.fill: parent
                         color: "blue"
-                        font.pixelSize: height * 0.4
+                        font.pixelSize: height * 0.3
                         font.family: "Arial"
                         font.weight: Font.Thin
                         horizontalAlignment: Text.AlignHCenter
@@ -412,10 +447,8 @@ Rectangle {
                             dialog_resure.open()
                         }
                     }
-
                 }
             }
-
         }
 
         BusyIndicator{
@@ -425,19 +458,7 @@ Rectangle {
             width: parent.height * 0.2
             height: width
             anchors.centerIn: parent
-            Timer{
-                interval: 2000
-                running: busy.running
-                onTriggered: {
-                    busy.running = false
-                    rec_ref_lines.visible = true
-
-                    root.can_work = true
-                    rec_checked_location.visible = false
-                }
-            }
         }
-
     }
 
     Rectangle {
@@ -484,24 +505,15 @@ Rectangle {
         is_single_btn: false
         onOkClicked: {
             dialog_resure.close()
-
             monitor_page.sendInitPoint()
-
-            rect_decoration.visible = false
-            rec_header_bar.visible = false
-            rec_header_bar.height = 0
-            map_task_manager.getMapTask( root.choose_map_name )
-            busy.running = true
-            rec_task_control.visible = true
-            root.is_matched = true
-            monitor_page.choose_marker.visible = false
         }
         onCencelClicked: {
             is_matched = false
-            can_work = false
             rec_checked_location.visible = true
             monitor_page.choose_marker.visible = true
             dialog_resure.close()
         }
     }
+
+
 }

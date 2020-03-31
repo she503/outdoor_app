@@ -25,6 +25,8 @@ Page {
     property var var_roads_include: []
     property var var_roads_exclude: []
 
+    property var var_ref_line: []
+
 
     property real map_width: 0
     property real map_height: 0
@@ -59,7 +61,6 @@ Page {
     function geometryToPixel(X, Y) {
         var x = (X - min_x) * map_rate + paint_begin_point
         var y = (Y - max_y) * -map_rate + paint_begin_point
-        //        console.info([x,y])
         return [x, y]
     }
 
@@ -495,7 +496,38 @@ Page {
                         drawRegion(ctx, root.task_regions)
                     }
                 }
+                Canvas {
+                    id: canvas_ref_line
+                    width: map_width * map_rate  + paint_begin_point * 2
+                    height: map_height * map_rate + paint_begin_point * 2
 
+                    x: canvas_background.x
+                    y: canvas_background.y
+
+                    function drawRefLine(ctx, points) {
+                        if (points.length === 0) {
+                            return
+                        }
+                        ctx.save()
+                        ctx.lineWidth = 1
+                        ctx.strokeStyle = "#ff0000"
+                        ctx.beginPath()
+                        var first_point = geometryToPixel(points[0][0], points[0][1])
+                        ctx.moveTo(first_point[0], first_point[1])
+                        for (var i = 0; i < points.length; ++i) {
+                            var point3 = geometryToPixel(points[i][0], points[i][1])
+                            ctx.lineTo(point3[0], point3[1])
+                        }
+                        ctx.stroke()
+                        ctx.restore()
+                    }
+
+                    onPaint: {
+                        var ctx = getContext("2d")
+                        ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
+                        drawRefLine(ctx, root.var_ref_line)
+                    }
+                }
             }
         }
 
@@ -663,4 +695,13 @@ Page {
 
         }
     }
+
+    Connections {
+        target: map_task_manager
+        onUpdateRefLine: {
+            root.var_ref_line = ref_line
+            canvas_ref_line.requestPaint()
+        }
+    }
+
 }

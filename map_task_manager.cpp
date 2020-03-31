@@ -5,6 +5,15 @@ MapTaskManager::MapTaskManager(QObject *parent) : QObject(parent)
 
 }
 
+void MapTaskManager::setSocket(SocketManager *socket)
+{
+    _socket = socket;
+    connect(_socket, SIGNAL(mapsInfo(QJsonObject)), this, SLOT(parseRegionsInfo(QJsonObject)));
+    connect(_socket, SIGNAL(tasksData(QJsonObject)), this, SLOT(parsseMapTasksData(QJsonObject)));
+    connect(_socket, SIGNAL(localizationInitRST(QJsonObject)), this, SLOT(localizationInitCB(QJsonObject)));
+    connect(_socket, SIGNAL(setTasksRST(QJsonObject)), this, SLOT(setTaskCB(QJsonObject)));
+}
+
 bool MapTaskManager::sendClickPointPos(const QString &pos_x, const QString &pos_y)
 {
     QJsonObject object;
@@ -81,12 +90,7 @@ void MapTaskManager::sentMapTasksName(const QStringList &task_list)
     _socket->sendSocketMessage(doc.toJson());
 }
 
-void MapTaskManager::setSocket(SocketManager *socket)
-{
-    _socket = socket;
-    connect(_socket, SIGNAL(mapsInfo(QJsonObject)), this, SLOT(parseRegionsInfo(QJsonObject)));
-    connect(_socket, SIGNAL(tasksData(QJsonObject)), this, SLOT(parsseMapTasksData(QJsonObject)));
-}
+
 
 void MapTaskManager::parseTasksName(const QJsonObject &tasks_obj)
 {
@@ -110,6 +114,25 @@ void MapTaskManager::parseTasksName(const QJsonObject &tasks_obj)
         _task_name.push_back(task_name);
     }
     emit updateTasksName(_task_name);
+}
+
+void MapTaskManager::localizationInitCB(const QJsonObject &obj)
+{
+    int status = obj.value("status").toInt();
+    QString message = obj.value("message").toString();
+    emit localizationInitInfo(status, message);
+}
+
+void MapTaskManager::setTaskCB(const QJsonObject &obj)
+{
+    int status = obj.value("status").toInt();
+    QString message = obj.value("message").toString();
+    emit setTaskInfo(status, message);
+    if (status == 1) {
+        QJsonObject temp_obj = obj.value("ref_line").toObject();
+        QVariantList pts = temp_obj.value("pts").toArray().toVariantList();
+        emit updateRefLine(pts);
+    }
 }
 void MapTaskManager::parseRegionsInfo(const QJsonObject &obj)
 {

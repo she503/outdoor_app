@@ -10,7 +10,8 @@ Rectangle {
 
     property Component home_page: HomePage {   }
     property Component user_manage_page: UserManagePage { }
-    property Component task_settings_page: TaskSettingsPage {
+    TaskSettingsPage {
+        id: task_settings_page
         Component.onCompleted: {
             map_task_manager.getMapsName()
         }
@@ -164,5 +165,4 @@ Rectangle {
             dialog_machine_back.close()
         }
     }
-
 }

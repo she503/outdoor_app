@@ -12,8 +12,8 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
     _socket = new QTcpSocket(this);
     _socket->setReadBufferSize(10 * 1024 * 1024);
 
-    this->connectToHost("127.0.0.1", "32432");
-//    this->connectToHost("192.168.8.165", "32432");
+//    this->connectToHost("127.0.0.1", "32432");
+    this->connectToHost("192.168.8.165", "32432");
 
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));
     connect(_socket, SIGNAL(disconnected()), this, SLOT(disConnet()));
@@ -112,8 +112,14 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_ALL_ACCOUNTS_INFO:
                 emit allUser(obj);
                 break;
+            case MESSAGE_SET_INIT_LOCALIZATION_RST:
+                emit localizationInitRST(obj);
+                break;
+            case MESSAGE_SET_TASKS_RST:
+                emit setTasksRST(obj);
+                break;
             default:
-                qDebug() << "======>" <<obj;
+//                qDebug() << "======>" <<obj;
                 break;
             }
         } else {

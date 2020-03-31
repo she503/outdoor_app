@@ -47,6 +47,9 @@ signals:
     void updateUser(const QJsonObject& obj);
     void allUser(const QJsonObject& obj);
 
+    void localizationInitRST(const QJsonObject& obj);
+    void setTasksRST(const QJsonObject& obj);
+
     // app断开连接发出信号
     void appDisconnected();
     

@@ -15,12 +15,12 @@ ApplicationWindow {
         width: root.width
         height: root.height
         onSuccessToLogin: {
-            stack_view.replace(main_page)
+            stack_view_main.replace(main_page)
         }
     }
 
     StackView {
-        id: stack_view
+        id: stack_view_main
         anchors.fill: parent
         initialItem: login_page
 

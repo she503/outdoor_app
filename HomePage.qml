@@ -7,6 +7,7 @@ import "./CustomControl"
 Rectangle {
     id: root
     color: "transparent"
+    signal viewTask()
     TLInfoDisplayPage {
         id: rect_info_display
         width: parent.width
@@ -40,6 +41,7 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
+                        viewTask()
                     }
                 }
             }

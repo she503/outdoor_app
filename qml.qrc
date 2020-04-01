@@ -12,6 +12,7 @@
         <file>MonitorPage.qml</file>
         <file>MapDisplayPage.qml</file>
         <file>TaskProcess.qml</file>
+        <file>ErrorMessage.qml</file>
     </qresource>
     <qresource prefix="/CustomControl">
         <file>TLTextField.qml</file>

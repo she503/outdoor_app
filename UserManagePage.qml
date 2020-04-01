@@ -10,12 +10,21 @@ Rectangle {
 
     property string checked_user_name: ""
     property int checked_user_level: 0
-    property int user_level: 0
+    property int v_user_level: 0
+    property string v_user_name: ""
     property int admin_num: 0
     property real rate: Math.min(width, height) / 400
 
     color: "transparent"
 
+    Connections {
+        target: account_manager
+        onEmitNameAndLevel: {
+            nomal_user_name_text.text = user_name
+            v_user_level = level
+            console.info([user_name,level])
+        }
+    }
 
     Dialog {
         id: message_update_uer
@@ -33,6 +42,7 @@ Rectangle {
             spacing: height * 0.05
             TextField {
                 id: field_old_pwd
+                visible: root.v_user_level > root.checked_user_level ? false : true
                 width: parent.width * 0.9
                 height: parent.height * 0.3
                 placeholderText: qsTr("Please enter old pwd")
@@ -64,7 +74,11 @@ Rectangle {
                             message_account.dia_image_source = "qrc:/res/pictures/sad.png"
                             message_account.open()
                         } else {
-                            account_manager.accountUpdate(root.checked_user_name, field_new_pwd.text, root.checked_user_level)
+                            if(root.v_user_level <= root.checked_user_level) {
+                                account_manager.accountUpdate(root.checked_user_name, field_new_pwd.text, root.checked_user_level, field_old_pwd.text, true)
+                            } else {
+                                account_manager.accountUpdate(root.checked_user_name, field_new_pwd.text, root.checked_user_level)
+                            }
                      }
                     }
                 }
@@ -248,7 +262,7 @@ Rectangle {
                         font.pixelSize: item_de.height * 0.8
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
-                        color: "white"
+                        color: "black"
                     }
                     Text {
                         id: text_level
@@ -261,7 +275,7 @@ Rectangle {
                         font.pixelSize: item_de.height * 0.8
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
-                        color: "white"
+                        color: "black" //: "white"
                         property int user_level: model.user_level
                     }
                     onClicked: {
@@ -414,7 +428,7 @@ Rectangle {
         width: parent.width > parent.height ? parent.height * 0.9 * 1.27 : parent.width * 0.9
         anchors.centerIn: parent
         color: "transparent"
-        visible: root.user_level === 1 ? true : false
+        visible: root.v_user_level === 1 ? true : false
         Image {
             id: img
             anchors.fill: parent
@@ -456,7 +470,7 @@ Rectangle {
                     rightMargin: width * 0.4
                 }
                 onClicked: {
-                    root.checked_user_name = rect_nomal_user_name_text.user_name.trim()
+                    root.checked_user_name = root.v_user_name
                     root.checked_user_level = 1
                     message_update_uer.open()
                 }
@@ -472,19 +486,23 @@ Rectangle {
                 horizontalCenter: parent.horizontalCenter
             }
             color: "transparent"
-            property var user_name: "error"
             Component.onCompleted: {
                 for (var key in root.v_accounts_info) {
-                    rect_nomal_user_name_text.user_name = key
+                    if (key === root.user_name)
+                    {
+                        root.user_level = root.v_accounts_info[key]
+                    }
+
                 }
             }
 
             Text {
+                id: nomal_user_name_text
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font.pixelSize: parent.height * 0.1
-                text: rect_nomal_user_name_text.user_name
+                text: ""
                 color: "white"
             }
         }
@@ -492,6 +510,7 @@ Rectangle {
 
     Component.onCompleted: {
         account_manager.getAllAccounts()
+        account_manager.getCurrentUserLevel()
     }
 
     Connections {

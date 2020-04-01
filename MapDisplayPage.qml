@@ -613,9 +613,9 @@ Page {
                     ctx.lineWidth = 2
                     ctx.strokeStyle = "#00ff00"
                     ctx.beginPath()
+                    var first_pointt = geometryToPixel(points[0][0], points[0][1])
+                    ctx.moveTo(first_pointt[0], first_pointt[1])
                     for (var i = 0; i < ref_line_curren_index; ++i) {
-                        var first_pointt = geometryToPixel(points[0][0], points[0][1])
-                        ctx.moveTo(first_pointt[0], first_pointt[1])
                         var point = geometryToPixel(points[i][0], points[i][1])
                         ctx.lineTo(point[0], point[1])
                     }
@@ -631,9 +631,9 @@ Page {
                     ctx.lineWidth = 1
                     ctx.strokeStyle = "#4169E1"
                     ctx.beginPath()
+                    var first_pointt = geometryToPixel(points[0][0], points[0][1])
+                    ctx.moveTo(first_pointt[0], first_pointt[1])
                     for (var i = 0; i < points.length; ++i) {
-                        var first_pointt = geometryToPixel(points[0][0], points[0][1])
-                        ctx.moveTo(first_pointt[0], first_pointt[1])
                         var point = geometryToPixel(points[i][0], points[i][1])
                         ctx.lineTo(point[0], point[1])
                     }

@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QJsonObject>
+#include <QMap>
 #include "socket_manager.h"
 #include "utils.h"
 
@@ -24,7 +25,8 @@ public:
     /**
      * @brief 更新用户
      */
-    Q_INVOKABLE void accountUpdate(const QString& username, const QString& password, const int& level);
+    Q_INVOKABLE void accountUpdate(const QString& username, const QString& password,
+                                   const int& level, QString old_pwd = "", bool need_old_pwd = false);
 
 
     /**
@@ -45,6 +47,7 @@ public:
     Q_INVOKABLE void getAllAccounts();
 
 
+    Q_INVOKABLE void getCurrentUserLevel();
 
 signals:
     void emitCheckOutLogin(const int& status, const QString& message);
@@ -52,6 +55,7 @@ signals:
     void emitAddAccountCB(const int& status, const QString& message);
     void emitDeleteAccountCB(const int& status, const QString& message);
     void emitUpdateAccountCB(const int& status, const QString& message);
+    void emitNameAndLevel(const QString& user_name, const int& level);
 
 
 private slots:
@@ -66,6 +70,10 @@ private:
 
     SocketManager* _socket;
     QJsonObject _all_accounts_obj;
+    QMap<QString, QPair<QString, PermissionLevel>> _accounts_map;
+    QString _username;
+    QString _password;
+    int _level;
 };
 
 #endif // ACCOUNT_MANAGER_H

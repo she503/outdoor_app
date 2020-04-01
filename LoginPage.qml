@@ -6,7 +6,7 @@ Item{
 
     property real rate: Math.min(width, height) / 400
     property var user_level: 0
-    property var user_name: ""
+    property string user_name: ""
     property string test_text: "root"
     signal successToLogin()
 
@@ -170,6 +170,7 @@ Item{
                 }
                 onClicked: {
                     account_manager.accountLogin(username.text, password.text)
+                    root.user_name = username.text
                 }
             }
         }

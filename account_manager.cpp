@@ -35,8 +35,20 @@ void AccountManager::accountAdd(const QString &username, const QString &password
     _socket->sendSocketMessage(doc.toJson());
 }
 
-void AccountManager::accountUpdate(const QString &username, const QString &password, const int &level)
+void AccountManager::accountUpdate(const QString &username, const QString &password, const int &level,
+                                   QString old_pwd, bool need_old_pwd)
 {
+    if (need_old_pwd ) {
+        QString real_old_pwd = _accounts_map.value(username).first;
+        qDebug() << real_old_pwd << old_pwd;
+        if (real_old_pwd != old_pwd) {
+            QJsonObject temp_obj;
+            temp_obj.insert("status", 0);
+            temp_obj.insert("message", "error old pwd");
+            parseUpdateStatus(temp_obj);
+        }
+        return;
+    }
     QJsonObject obj;
     obj.insert("message_type", int(MESSAGE_UPDATE_ACCOUNT));
     obj.insert("name", username);
@@ -63,6 +75,8 @@ void AccountManager::accountLogin(const QString &username, const QString &passwo
     obj.insert("password", password);
     QJsonDocument doc(obj);
     _socket->sendSocketMessage(doc.toJson());
+    _username = username;
+    _password = password;
 }
 
 void AccountManager::getAllAccounts()
@@ -72,11 +86,23 @@ void AccountManager::getAllAccounts()
     }
 }
 
+void AccountManager::getCurrentUserLevel()
+{
+    emit emitNameAndLevel(_username, _level);
+}
+
 void AccountManager::checkoutLogin(const QJsonObject &obj)
 {
     int status = obj.value("status").toInt();
     QString message = obj.value("message").toString();
+    int level = obj.value("level").toInt();
     emit emitCheckOutLogin(status, message);
+    if (status == 1) {
+        _level = level;
+    } else if (status == 0) {
+        _username = "";
+        _password = "";
+    }
 }
 
 void AccountManager::parseAddStatus(const QJsonObject &obj)
@@ -110,8 +136,11 @@ void AccountManager::parseAllAccountsInfo(const QJsonObject &obj)
         QString username = it.key();
         QJsonObject temp = it.value().toObject();
         int permission_level = temp.value("permission_level").toInt();
+        QString password = temp.value("password").toString();
         account_username_level.insert(username, permission_level);
         ++it;
+        QPair<QString, PermissionLevel> level_pwd(password, (PermissionLevel)permission_level);
+        _accounts_map.insert(username, level_pwd);
     }
     _all_accounts_obj = account_username_level;
     emit emitAllAccountInfo(account_username_level);

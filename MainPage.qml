@@ -9,9 +9,10 @@ Rectangle {
     color: "transparent"
 
     property Component home_page: HomePage {   }
-    property Component user_manage_page: UserManagePage { }
+    property Component user_manage_page: UserManagePage {}
     TaskSettingsPage {
         id: task_settings_page
+
         Component.onCompleted: {
 
            map_task_manager.getMapsName()

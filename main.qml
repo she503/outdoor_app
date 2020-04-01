@@ -8,10 +8,10 @@ ApplicationWindow {
     width: 640
     height: 480
 
-    property Component main_page: MainPage {
-    }
+    property Component main_page: MainPage { }
 
-    property Component login_page: LoginPage {
+    LoginPage {
+        id: login_page
         width: root.width
         height: root.height
         onSuccessToLogin: {

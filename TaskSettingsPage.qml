@@ -36,6 +36,7 @@ Rectangle {
     }
 
     function confirmMapPage() {
+        rect_info_choose_map.visible = false
         rec_header_bar.visible = false
         rec_header_bar.height = 0
         rect_decoration.visible = false
@@ -47,15 +48,18 @@ Rectangle {
         btn_start_task.visible = false
         rec_task_control.visible = true
 
-        map_task_manager.getMapTask( root.choose_map_name )
+//        map_task_manager.getMapTask( root.choose_map_name )
     }
 
     function chooseTaskPage() {
+        confirmMapPage()
         btn_start_task.visible = true
         rec_task_control.visible = true
     }
 
     function startTaskPage() {
+        chooseTaskPage()
+        rect_info_choose_map.visible = false
         rec_task_control.visible = false
         rec_ref_lines.visible = false
     }
@@ -80,6 +84,7 @@ Rectangle {
             error = error_message
         }
         onUpdateTasksName: {
+            busy.running = false
             tasks_list = tasks
             task_list_model.clear()
             if (tasks_list.length <= 4 ) {
@@ -91,29 +96,42 @@ Rectangle {
             for (var i = 0; i < tasks_list.length; ++i) {
                 task_list_model.append({"idcard": i,"check_box_text": tasks_list[i]})
             }
+            confirmMapPage()
         }
-        onLocalizationInitInfo: {
-            if (status === 0) {
-                root.chooseMapPage()
-                dialog_match_warn.dia_title = message
-                dialog_match_warn.open()
-            } else if (status === 1) {
-                root.confirmMapPage()
-            }
+//        onLocalizationInitInfo: {
+//            if (status === 0) {
+//                root.chooseMapPage()
+//                dialog_match_warn.dia_title = message
+//                dialog_match_warn.open()
+//            } else if (status === 1) {
+//                root.confirmMapPage()
+//            }
+//            busy.running = false
+//        }
+//        onSetTaskInfo: {
+//            if (status === 0) {
+//                root.chooseTaskPage()
+//                dialog_match_warn.dia_title = message
+//                dialog_match_warn.open()
+//            } else if (status === 1) {
+//                root.startTaskPage()
+//            }
+//            busy.running = false
+//        }
+        onUpdateSetMapAndInitPosInfo: {
             busy.running = false
+            dialog_match_warn.dia_title = message
+            dialog_match_warn.open()
         }
-        onSetTaskInfo: {
-            if (status === 0) {
-                root.chooseTaskPage()
-                dialog_match_warn.dia_title = message
-                dialog_match_warn.open()
-            } else if (status === 1) {
-                root.startTaskPage()
-            }
-            busy.running = false
+        onUpdateMapAndTasksInfo: {
+            root.choose_map_name = map_name
+            root.confirmMapPage()
+        }
+        onUpdateMapAndTaskInfo: {
+            root.choose_map_name = map_name
+            root.startTaskPage()
         }
     }
-
     Rectangle {
         id: rec_glow_background
         anchors.fill: parent
@@ -214,7 +232,6 @@ Rectangle {
                     id: monitor_page
                     width:parent.width
                     height: parent.height
-
                 }
 
                 Rectangle {

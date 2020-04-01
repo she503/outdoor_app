@@ -91,8 +91,17 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             QJsonObject obj = doc.object();
             MessageType message_type = MessageType(obj.value("message_type").toInt());
             switch (message_type) {
-            case MessageType::MESSAGE_MAPS_INFO:
+            case MessageType::MESSAGE_ALL_MAPS_INFO:
                 emit mapsInfo(obj);
+                break;
+            case MessageType::MESSAGE_CURRENT_MAP_AND_TASKS:
+                emit sendMapAndTasks(obj); //yi ge di tu he gai di tu de suo you can kao xian
+                break;
+            case MessageType::MESSAGE_CURRENT_MAP_AND_TASK:
+                emit sendMapAndTask(obj); // yi ge di tu he dui ying de yi jing xuan ze hao de can kao xian
+                break;
+            case MessageType::MESSAGE_SET_MAP_INIT_POSE_RST:
+                emit setMapAndInitPosRST(obj);
                 break;
             case MessageType::MESSAGE_TASKS_INFO:
                 emit tasksData(obj);
@@ -112,9 +121,9 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_ALL_ACCOUNTS_INFO:
                 emit allUser(obj);
                 break;
-            case MessageType::MESSAGE_SET_INIT_LOCALIZATION_RST:
-                emit localizationInitRST(obj);
-                break;
+//            case MessageType::MESSAGE_SET_INIT_LOCALIZATION_RST:
+//                emit localizationInitRST(obj);
+//                break;
             case MessageType::MESSAGE_SET_TASKS_RST:
                 emit setTasksRST(obj);
                 break;
@@ -130,7 +139,7 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_PLANNING_COMMAND_PATH:
                 emit planningInfo(obj);
                 break;
-            case MessageType::MESSAGE_TAK_INFO:
+            case MessageType::MESSAGE_TASK_INFO:
                 emit taskProcessInfo(obj);
                 break;
             default:

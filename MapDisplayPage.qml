@@ -58,12 +58,13 @@ Page {
     signal sendInitPoint()
     onSendInitPoint: {
         var pos = pixelToGeometry(choosePoint[0],choosePoint[1])
-        map_task_manager.sendClickPointPos(pos[0],pos[1])
+        map_task_manager.sendInitPosAndMapName(root.choose_map_name,pos[0],pos[1])
     }
 
     function geometryToPixel(X, Y) {
         var x = (X - min_x) * map_rate + paint_begin_point
         var y = (Y - max_y) * -map_rate + paint_begin_point
+
         return [x, y]
     }
 
@@ -210,6 +211,10 @@ Page {
                 }
 
                 function drawIncludeArea(ctx, include_area, color, line_width) {
+                    if (include_area.length <= 0) {
+                        return
+                    }
+
                     ctx.save()
                     ctx.beginPath()
                     ctx.fillStyle = color
@@ -534,7 +539,6 @@ Page {
                         ctx.save()
                         ctx.strokeStyle = "#EE4000"
                         ctx.fillStyle = "rgba(238,64,0,0.5)"
-                        //                            console.info(obstacles[0].length)
                         for (var i = 0; i < obstacles[0].length; ++i) {
                             var point = geometryToPixel(obstacles[0][i][0], obstacles[0][i][1])
                             ctx.beginPath()
@@ -570,7 +574,7 @@ Page {
 
                     ctx.save()
                     ctx.lineWidth = 1
-                    ctx.strokeStyle = "#00ff00"//
+                    ctx.strokeStyle = "#ff0000"//
                     ctx.beginPath()
                     var first_point = geometryToPixel(points[0][0], points[0][1])
                     ctx.moveTo(first_point[0], first_point[1])
@@ -605,10 +609,9 @@ Page {
                         return
                     }
 
-                    console.info(ref_line_curren_index)
                     ctx.save()
                     ctx.lineWidth = 2
-                    ctx.strokeStyle = "#ff0000"
+                    ctx.strokeStyle = "#00ff00"
                     ctx.beginPath()
                     for (var i = 0; i < ref_line_curren_index; ++i) {
                         var first_pointt = geometryToPixel(points[0][0], points[0][1])
@@ -688,7 +691,6 @@ Page {
     Connections {
         target: map_task_manager
         onUpdateMapData: {
-
             map.scale = 1 / root.real_rate
             img_charge.visible = false
             img_begin.visible = false
@@ -708,6 +710,7 @@ Page {
             var_parking_spaces = parking_spaces
             var_roads_include = roads_include
             var_roads_exclude = roads_exclude
+
 
             var all_x = []
             var all_y = []
@@ -744,6 +747,7 @@ Page {
 
             map_rate = map_width > map_height ? (map.width / map_width) :
                                                 (map.height / map_height)
+
             map_rate *= real_rate
 
             map.x = (map.width - canvas_background.width) / 2 / root.real_rate + root.paint_begin_point * 2

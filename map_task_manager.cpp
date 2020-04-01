@@ -2,13 +2,18 @@
 
 MapTaskManager::MapTaskManager(QObject *parent) : QObject(parent)
 {
-
+    _is_map_task = false;
+    _is_map_tasks = false;
 }
 
 void MapTaskManager::setSocket(SocketManager *socket)
 {
     _socket = socket;
     connect(_socket, SIGNAL(mapsInfo(QJsonObject)), this, SLOT(parseRegionsInfo(QJsonObject)));
+    connect(_socket, SIGNAL(sendMapAndTasks(QJsonObject)), this, SLOT(parseMapAndTasksInfo(QJsonObject)));
+    connect(_socket, SIGNAL(sendMapAndTask(QJsonObject)), this, SLOT(parseMapAndTaskInfo(QJsonObject)));
+    connect(_socket, SIGNAL(setMapAndInitPosRST(QJsonObject)), this, SLOT(parseSetMapAndInitPosInfo(QJsonObject)));
+
     connect(_socket, SIGNAL(tasksData(QJsonObject)), this, SLOT(parseMapTasksData(QJsonObject)));
     connect(_socket, SIGNAL(localizationInitRST(QJsonObject)), this, SLOT(localizationInitCB(QJsonObject)));
     connect(_socket, SIGNAL(setTasksRST(QJsonObject)), this, SLOT(setTaskCB(QJsonObject)));
@@ -21,10 +26,11 @@ void MapTaskManager::setSocket(SocketManager *socket)
     connect(_socket, SIGNAL(taskProcessInfo(QJsonObject)), this, SLOT(parseTaskProcessInfo(QJsonObject)));
 }
 
-bool MapTaskManager::sendClickPointPos(const QString &pos_x, const QString &pos_y)
+bool MapTaskManager::sendInitPosAndMapName(const QString& map_name, const QString &pos_x, const QString &pos_y)
 {
     QJsonObject object;
-    object.insert("message_type", int(MESSAGE_SET_INIT_LOCALIZATION));
+    object.insert("message_type", int(MESSAGE_SET_MAP_INIT_POSE));
+    object.insert("map_name", map_name);
     object.insert("x", pos_x);
     object.insert("y", pos_y);
     QJsonDocument doc(object);
@@ -70,14 +76,10 @@ void MapTaskManager::getFeature(const QString &map_name)
     emit updateMapFeature(begin_obj, charge_obj);
 }
 
-void MapTaskManager::getMapTask(const QString &map_name)
-{
-    QJsonObject obj;
-    obj.insert("message_type", int(MESSAGE_SET_MAP));
-    obj.insert("map_name", map_name);
-    QJsonDocument doc(obj);
-    _socket->sendSocketMessage(doc.toJson());
-}
+//void MapTaskManager::getMapTask(const QString &map_name)
+//{
+////    parseTasksName
+//}
 
 void MapTaskManager::getMapsName()
 {
@@ -95,6 +97,22 @@ void MapTaskManager::sentMapTasksName(const QStringList &task_list)
     obj.insert("tasks_name",QJsonArray::fromStringList(task_list));
     QJsonDocument doc(obj);
     _socket->sendSocketMessage(doc.toJson());
+}
+
+bool MapTaskManager::judgeIsMapTasks()
+{
+    if (_is_map_tasks) {
+        this->parseMapData(_map_name_list.at(0));
+        this->parseTasksName(_task_data_obj);
+        emit updateMapAndTasksInfo(_map_name_list.at(0));
+        return true;
+    }
+    if (_is_map_task) {
+        this->parseMapData(_map_name_list.at(0));
+        emit updateRefLine(_pts);
+        emit updateMapAndTaskInfo(_map_name_list.at(0));
+        return true;
+    }
 }
 
 
@@ -135,11 +153,11 @@ void MapTaskManager::setTaskCB(const QJsonObject &obj)
     int status = obj.value("status").toInt();
     QString message = obj.value("message").toString();
     emit setTaskInfo(status, message);
-    if (status == 1) {
-        QJsonObject temp_obj = obj.value("ref_line").toObject();
-        QVariantList pts = temp_obj.value("pts").toArray().toVariantList();
-        emit updateRefLine(pts);
-    }
+//    if (status == 1) {
+//        QJsonObject temp_obj = obj.value("ref_line").toObject();
+//        QVariantList pts = temp_obj.value("pts").toArray().toVariantList();
+//        emit updateRefLine(pts);
+//    }
 }
 
 void MapTaskManager::parseLocalizationInfo(const QJsonObject &obj)
@@ -216,6 +234,69 @@ void MapTaskManager::parseRegionsInfo(const QJsonObject &obj)
     }
 }
 
+void MapTaskManager::parseMapAndTasksInfo(const QJsonObject &obj)
+{
+    int status = obj.value("status").toInt();
+    QString message = obj.value("message").toString();
+    if (status == 1) {
+        _maps.clear();
+        _map_name_list.clear();
+        QJsonObject area_obj = obj.value("area").toObject();
+        QString map_name = area_obj.value("name").toString();
+        _maps.insert(map_name, area_obj);
+
+        _is_map_tasks = true;
+        _map_name_list.push_back(map_name);
+
+
+        _task_data_obj = obj.value("tasks").toObject();
+
+
+        this->parseTasksName(_task_data_obj);
+    } else {
+        qDebug() << "[MapTaskManager::parseMapAndTasksInfo]: " << message;
+    }
+}
+
+void MapTaskManager::parseMapAndTaskInfo(const QJsonObject &obj)
+{
+    int status = obj.value("status").toInt();
+    QString message = obj.value("message").toString();
+    if (status == 1) {
+        _maps.clear();
+        _map_name_list.clear();
+        _is_map_task = true;
+        QJsonObject area_obj = obj.value("area").toObject();
+        QString map_name = area_obj.value("name").toString();
+        _maps.insert(map_name, area_obj);
+        _map_name_list.push_back(map_name);
+
+
+        QJsonObject ref_line_obj = obj.value("ref_line").toObject();
+        QVariantList pts = ref_line_obj.value("pts").toArray().toVariantList();
+        _pts = pts;
+
+        QJsonObject cb_obj;
+        cb_obj.insert("message_type", int(MESSAGE_CURRENT_MAP_AND_TASK_RST));
+        QJsonDocument doc(cb_obj);
+        _socket->sendSocketMessage(doc.toJson());
+
+        emit updateRefLine(_pts);
+        emit updateMapAndTaskInfo(_map_name_list.at(0));
+
+    } else {
+        qDebug() << "[MapTaskManager::parseMapAndTaskInfo]: " << message;
+    }
+}
+
+void MapTaskManager::parseSetMapAndInitPosInfo(const QJsonObject &obj)
+{
+    QString message = obj.value("message").toString();
+    int status = obj.value("status").toInt();
+    qDebug() <<"[ MapTaskManager::parseSetMapAndInitPosInfo]:" << status;
+    emit updateSetMapAndInitPosInfo(message);
+}
+
 void MapTaskManager::parseMapTasksData(const QJsonObject &obj)
 {
     qint8 status = obj.value("status").toInt();
@@ -239,7 +320,6 @@ void MapTaskManager::parseMapData(const QString &map_name)
         return;
     }
     QJsonObject obj = _maps.value(map_name);
-
     QVariantList var_trees;
     var_trees = this->parseTrees(obj);
 
@@ -364,11 +444,11 @@ QVariantList MapTaskManager::parseRoadEdges(const QJsonObject &obj)
         QJsonObject temp_obj = obj.value("road_edges").toObject();
         for (int i = 0; i < temp_obj.size(); ++i) {
             QJsonObject pos_obj = temp_obj.value(QString::number(i)).toObject();
-                QJsonArray temp_arr;
-                temp_arr.append(pos_obj.value("pos"));
-                temp_arr.append(pos_obj.value("type"));
-                QVariant pos = temp_arr;
-                list.append(pos);
+            QJsonArray temp_arr;
+            temp_arr.append(pos_obj.value("pos"));
+            temp_arr.append(pos_obj.value("type"));
+            QVariant pos = temp_arr;
+            list.append(pos);
         }
     }
     return list;
@@ -381,11 +461,11 @@ QVariantList MapTaskManager::parseLaneLines(const QJsonObject &obj)
         QJsonObject temp_obj = obj.value("lane_lines").toObject();
         for (int i = 0; i < temp_obj.size(); ++i) {
             QJsonObject pos_obj = temp_obj.value(QString::number(i)).toObject();
-                QJsonArray temp_arr;
-                temp_arr.append(pos_obj.value("pos"));
-                temp_arr.append(pos_obj.value("type"));
-                QVariant pos = temp_arr;
-                list.append(pos);
+            QJsonArray temp_arr;
+            temp_arr.append(pos_obj.value("pos"));
+            temp_arr.append(pos_obj.value("type"));
+            QVariant pos = temp_arr;
+            list.append(pos);
         }
     }
     return list;

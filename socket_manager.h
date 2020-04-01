@@ -38,8 +38,15 @@ public:
     Q_INVOKABLE bool sendData(const QByteArray& data);
 
 signals:
-    void tasksData(const QJsonObject& obj);
     void mapsInfo(const QJsonObject& obj);
+    void sendMapAndTasks(const QJsonObject& obj);
+    void sendMapAndTask(const QJsonObject& obj);
+    void setMapAndInitPosRST(const QJsonObject& obj);
+
+
+    void tasksData(const QJsonObject& obj);
+
+
     void checkoutLogin(const QJsonObject& obj);
     void addUser(const QJsonObject& obj);
     void deleteUser(const QJsonObject& obj);

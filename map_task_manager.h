@@ -15,7 +15,7 @@ public:
     /**
      * @brief 地图点击初始化
      */
-    Q_INVOKABLE bool sendClickPointPos(const QString& pos_x, const QString& pos_y);
+    Q_INVOKABLE bool sendInitPosAndMapName(const QString &map_name, const QString& pos_x, const QString& pos_y);
 
     /**
       * @brief send map info by param map_name
@@ -32,10 +32,10 @@ public:
       */
     Q_INVOKABLE void getFeature(const QString& map_name);
 
-    /**
-      * @brief get map tasks name
-      */
-    Q_INVOKABLE void getMapTask(const QString& map_name);
+//    /**
+//      * @brief get map tasks name
+//      */
+//    Q_INVOKABLE void getMapTask(const QString& map_name);
 
     /**
      * @brief get maps name
@@ -47,6 +47,7 @@ public:
       */
     Q_INVOKABLE void sentMapTasksName(const QStringList& task_list);
 
+    Q_INVOKABLE bool judgeIsMapTasks();
 
 public:
     void setSocket(SocketManager* socket);
@@ -69,6 +70,7 @@ private:
     QList<QVariantList> parseParkingSpaces(const QJsonObject &obj);
     QList<QVariantList> parseRoads(const QJsonObject &obj);
 signals:
+
     void updateMapData(const QVariantList& trees, const QVariantList& signs,
                        const QVariantList& stop_signs, const QVariantList& speed_bumps,
                        const QVariantList& road_edges, const QVariantList& lane_lines,
@@ -101,9 +103,18 @@ signals:
     void updatePlanningInfo(const QVariantList& planning_path);
 
     void updateTaskProcessInfo(const int& current_index, const float& progress);
+
+    void updateSetMapAndInitPosInfo(const QString& message);
+    void updateMapAndTasksInfo(const QString& map_name);
+    void updateMapAndTaskInfo(const QString& map_name);
 private slots:
 
     void parseRegionsInfo(const  QJsonObject& obj);
+    void parseMapAndTasksInfo(const QJsonObject& obj);
+    void parseMapAndTaskInfo(const QJsonObject& obj);
+    void parseSetMapAndInitPosInfo(const QJsonObject& obj);
+
+
     void parseMapTasksData(const QJsonObject& obj);
     void localizationInitCB(const QJsonObject& obj);
     void setTaskCB(const QJsonObject& obj);
@@ -121,6 +132,11 @@ private:
     QStringList _map_name_list;
     QStringList _task_name;
     QJsonObject _feature_obj;
+    QJsonObject _task_data_obj;
+    QVariantList _pts;
+
+    bool _is_map_tasks;
+    bool _is_map_task;
 
 
 };

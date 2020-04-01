@@ -13,7 +13,8 @@ Rectangle {
     TaskSettingsPage {
         id: task_settings_page
         Component.onCompleted: {
-            map_task_manager.getMapsName()
+
+           map_task_manager.getMapsName()
         }
     }
     property Component help_document_page: HelpDocumentPage { }
@@ -28,6 +29,7 @@ Rectangle {
             stack_view.replace(user_manage_page)
         } else if (current_index === 2) {
             stack_view.replace(task_settings_page)
+            map_task_manager.judgeIsMapTasks()
         } else if (current_index === 3) {
             stack_view.replace(help_document_page)
         } else if (current_index === 4) {

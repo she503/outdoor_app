@@ -9,8 +9,6 @@ Rectangle {
     id: root
     color: "transparent"
     property var map_areas: []
-    property bool is_matched: true
-    property bool can_work: false
 
     /*
       @ map_status  ===> -1: init param; 0: load map faildX; 1: load map success;
@@ -22,56 +20,6 @@ Rectangle {
     property string choose_map_name: ""
     property var tasks_list: []
     property var checked_tasks_name: []
-
-    property bool is_init_success: false
-    property bool is_set_tasks_success: false
-
-    property string cb_info: ""
-
-    onIs_matchedChanged: {
-        rec_ref_lines.visible = is_matched ? false : true
-
-    }
-
-    onIs_init_successChanged: {
-        if (!is_init_success) {
-            rect_decoration.visible = true
-            rec_header_bar.visible = true
-            rec_header_bar.height = rec_task_page.height * 0.1
-            root.is_matched = false
-            monitor_page.choose_marker.visible = true
-            rec_ref_lines.visible = false
-            dialog_match_warn.dia_title = root.cb_info
-            dialog_match_warn.open()
-        } else {
-            rect_decoration.visible = false
-            rec_header_bar.visible = false
-            rec_header_bar.height = 0
-             map_task_manager.getMapTask( root.choose_map_name )
-            rec_task_control.visible = true
-            rec_checked_location.visible = false
-            rec_ref_lines.visible = true
-        }
-    }
-    onIs_set_tasks_successChanged: {
-        if(!is_set_tasks_success) {
-            rect_decoration.visible = true
-            rec_header_bar.visible = true
-            rec_task_control.visible = false
-            rec_header_bar.height = rec_task_page.height * 0.1
-            rec_checked_location.visible = true
-            root.is_matched = false
-            monitor_page.choose_marker.visible = true
-            dialog_match_warn.dia_title = root.cb_info
-            dialog_match_warn.open()
-        } else {
-            rec_task_control.visible = false
-            rec_header_bar.visible = false
-            rec_header_bar.height = 0
-            rect_decoration.visible = false
-            rec_ref_lines.visible = false
-        }
-    }
 
     function chooseMapPage() {
         rec_header_bar.visible = true
@@ -93,7 +41,6 @@ Rectangle {
         rect_decoration.visible = false
         rec_checked_location.visible = false
 
-//        rec_task_control.visible = true
         rec_ref_lines.visible = true
 
         monitor_page.choose_marker.visible = false

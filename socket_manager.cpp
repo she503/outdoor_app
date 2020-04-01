@@ -17,7 +17,7 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
 
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));
     connect(_socket, SIGNAL(disconnected()), this, SLOT(disConnet()));
-    testfunction();
+
 }
 
 SocketManager::~SocketManager()
@@ -143,22 +143,6 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
         }
     }
     _buffer = buffer_list.at(complete_buffer_num);
-}
-
-void SocketManager::testfunction()
-{
-    QTimer *time = new QTimer();
-
-    time->setInterval(100);
-    connect(time,&QTimer::timeout,[=](){
-        soc = (soc + 1) % 100;
-        speed = (speed + 1) % 30;
-        water_volume = (water_volume + 1) % 100;
-        emit updateBatteryInfo(QString::number(soc));
-        emit updateVehicleSpeed(QString::number(speed));
-        emit updateWaterVolume(QString::number(water_volume));
-    });
-    time->start();
 }
 
 bool SocketManager::sendSocketMessage(const QByteArray &message)

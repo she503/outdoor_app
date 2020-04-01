@@ -104,7 +104,7 @@ signals:
 private slots:
 
     void parseRegionsInfo(const  QJsonObject& obj);
-    void parsseMapTasksData(const QJsonObject& obj);
+    void parseMapTasksData(const QJsonObject& obj);
     void localizationInitCB(const QJsonObject& obj);
     void setTaskCB(const QJsonObject& obj);
 

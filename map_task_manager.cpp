@@ -9,7 +9,7 @@ void MapTaskManager::setSocket(SocketManager *socket)
 {
     _socket = socket;
     connect(_socket, SIGNAL(mapsInfo(QJsonObject)), this, SLOT(parseRegionsInfo(QJsonObject)));
-    connect(_socket, SIGNAL(tasksData(QJsonObject)), this, SLOT(parsseMapTasksData(QJsonObject)));
+    connect(_socket, SIGNAL(tasksData(QJsonObject)), this, SLOT(parseMapTasksData(QJsonObject)));
     connect(_socket, SIGNAL(localizationInitRST(QJsonObject)), this, SLOT(localizationInitCB(QJsonObject)));
     connect(_socket, SIGNAL(setTasksRST(QJsonObject)), this, SLOT(setTaskCB(QJsonObject)));
 
@@ -216,13 +216,13 @@ void MapTaskManager::parseRegionsInfo(const QJsonObject &obj)
     }
 }
 
-void MapTaskManager::parsseMapTasksData(const QJsonObject &obj)
+void MapTaskManager::parseMapTasksData(const QJsonObject &obj)
 {
     qint8 status = obj.value("status").toInt();
     QString message  = obj.value("message").toString();
 
     if (status == 0) {
-        qDebug() << "[SocketManager::parsseMapTasksData]: " << message;
+        qDebug() << "[SocketManager::parseMapTasksData]: " << message;
         return;
     } else {
         QJsonObject task_data_obj = obj.value("tasks").toObject();

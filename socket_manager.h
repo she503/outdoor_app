@@ -37,7 +37,6 @@ public:
      */
     Q_INVOKABLE bool sendData(const QByteArray& data);
 
-    void testfunction();
 signals:
     void tasksData(const QJsonObject& obj);
     void mapsInfo(const QJsonObject& obj);
@@ -77,20 +76,9 @@ signals:
 private slots:
     void readSocketData(/*const QByteArray& buffer*/);
 
-
-
 private:
     QTcpSocket* _socket;
     QByteArray _buffer;
-
-
-    /**
-     * @brief test
-     */
-    int soc;
-    int speed;
-    int water_volume;
-    int operate_method;
 };
 
 #endif // SOCKET_MANAGER_H

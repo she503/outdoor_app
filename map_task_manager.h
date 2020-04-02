@@ -107,7 +107,7 @@ signals:
     void updateLocalizationInfo(const QString& time, const QString& x, const QString& y,
                                 const QString& heading, const QString& state);
     void updateChassisInfo(const QString& time, const QString& speed, const QString& omega,
-                           const QString& brak_state, const QString& dirve_mode);
+                           const int& brak_state, const int& drive_mode);
     void updateObstacleInfo(const bool& is_polygon, const QVariantList& obstacles);
     void updatePlanningInfo(const QVariantList& planning_path);
     void updatePlanningRefInfo(const QVariantList& planning_path);

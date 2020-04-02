@@ -12,38 +12,38 @@ Rectangle {
     property real btn_size: min_length * 0.8
 
     color: "transparent"
-//    Connections {
-//        target: socket_manager
-//        onUpdateBatteryInfo: {
-//            var v_soc = soc;
-//            var n_soc = Number(v_soc)
-//            if (n_soc <= 20) {
-//                soc_color.color = "red"
-//            } else if (n_soc > 20 && n_soc <= 50) {
-//                soc_color.color = "orange"
-//            } else if (n_soc > 50) {
-//                soc_color.color = "#00ff24"
-//            }
-//            text_soc.text = v_soc
-//        }
-//        onUpdateVehicleSpeed: {
+    //    Connections {
+    //        target: socket_manager
+    //        onUpdateBatteryInfo: {
+    //            var v_soc = soc;
+    //            var n_soc = Number(v_soc)
+    //            if (n_soc <= 20) {
+    //                soc_color.color = "red"
+    //            } else if (n_soc > 20 && n_soc <= 50) {
+    //                soc_color.color = "orange"
+    //            } else if (n_soc > 50) {
+    //                soc_color.color = "#00ff24"
+    //            }
+    //            text_soc.text = v_soc
+    //        }
+    //        onUpdateVehicleSpeed: {
 
-//        }
-//        onUpdateWaterVolume: {
-//            var v_water_volume = water_volume
-//            text_water.color = v_water_volume
-//            var n_water_volume = Number(v_water_volume)
+    //        }
+    //        onUpdateWaterVolume: {
+    //            var v_water_volume = water_volume
+    //            text_water.color = v_water_volume
+    //            var n_water_volume = Number(v_water_volume)
 
-//            if (n_water_volume <= 20) {
-////                color_water.color = "red"
-//            } else if (n_water_volume > 20 && n_water_volume <= 50) {
-////                color_water.color = "orange"
-//            } else if (n_water_volume > 50) {
-////                color_water.color = "#00ff24"
-//            }
-//            text_water.text = v_water_volume
-//        }
-//    }
+    //            if (n_water_volume <= 20) {
+    ////                color_water.color = "red"
+    //            } else if (n_water_volume > 20 && n_water_volume <= 50) {
+    ////                color_water.color = "orange"
+    //            } else if (n_water_volume > 50) {
+    ////                color_water.color = "#00ff24"
+    //            }
+    //            text_water.text = v_water_volume
+    //        }
+    //    }
 
     Connections {
         target: map_task_manager
@@ -58,6 +58,12 @@ Rectangle {
                 text_speed.color = "red"
             }
             text_speed.text = n_speed
+
+            if (drive_mode === 0) {
+                img_switch.source = "qrc:/res/pictures/switch_operate.png"
+            } else if (drive_mode === 1) {
+                img_switch.source = "qrc:/res/pictures/switch_auto.png"
+            }
         }
     }
 
@@ -87,7 +93,7 @@ Rectangle {
                     z: 2
                     id: text_soc
                     text: qsTr("1")
-                    width: parent.width * 0.6
+                    width: parent.width * 0.5
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
@@ -153,7 +159,7 @@ Rectangle {
                 Text {
                     id: text_water
                     text: qsTr("1")
-                    width: parent.width * 0.6
+                    width: parent.width * 0.5
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
@@ -189,6 +195,7 @@ Rectangle {
         color: "transparent"
         anchors.left: bac_water.right
         Image {
+            id: img_switch
             width: length
             height: length
             source: "qrc:/res/pictures/switch_operate.png"  //"qrc:/res/pictures/switch_auto.png"
@@ -245,7 +252,7 @@ Rectangle {
                     Text {
                         id: text_speed
                         text: qsTr("1")
-                        width: parent.width * 0.6
+                        width: parent.width * 0.5
                         height: parent.height
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignRight

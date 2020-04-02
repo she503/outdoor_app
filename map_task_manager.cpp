@@ -214,8 +214,8 @@ void MapTaskManager::parseChassisInfo(const QJsonObject &obj)
     QString time = obj.value("time").toString();
     QString speed = obj.value("speed").toString();
     QString omega = obj.value("omega").toString();
-    QString brake_state = obj.value("brak_state").toString();
-    QString drive_mode = obj.value("drive_mode").toString();
+    int brake_state = obj.value("brak_state").toInt();
+    int drive_mode = obj.value("drive_mode").toInt();
     emit updateChassisInfo(time, speed, omega, brake_state, drive_mode);
 }
 

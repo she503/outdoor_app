@@ -329,23 +329,15 @@ Rectangle {
                     horizontalAlignment: Text.AlignRight
                     color: "#1a7ec0"
                     font.pixelSize: height * 0.5
-                    anchors{
-                        top: parent.top
-                        topMargin: parent.height * 0.2
-                        left: parent.left
-                    }
+                    anchors.verticalCenter: parent.verticalCenter
                 }
 
                 TLTextField {
                     id: btn_add_username
                     width: parent.width * 0.6
                     height: parent.height
-                    anchors {
-                        top: parent.top
-                        topMargin: parent.height * 0.1
-                        left: text_use.right
-                        leftMargin: parent.width * 0.05
-                    }
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
                     btn_radius:  height * 0.2
                     placeholderText: qsTr("enter new user name.")
                     pic_name: "qrc:/res/pictures/username.png"
@@ -369,21 +361,15 @@ Rectangle {
                     horizontalAlignment: Text.AlignRight
                     color: "#1a7ec0"
                     font.pixelSize: height * 0.5
-                    anchors{
-                        top: parent.top
-                        left: parent.left
-                    }
+                    anchors.verticalCenter: parent.verticalCenter
                 }
                 TLTextField {
                     id: btn_add_pwd
                     width: parent.width * 0.6
                     height: parent.height
                     anchors {
-                        top: parent.top
-                        topMargin: parent.height * 0.1
-                        left: text_pwd.right
-                        leftMargin: parent.width * 0.05
-
+                        verticalCenter: parent.verticalCenter
+                        right: parent.right
                     }
                     btn_radius:  height * 0.2
                     placeholderText: qsTr("enter new password.")

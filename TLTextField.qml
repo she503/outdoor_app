@@ -14,9 +14,10 @@ TextField {
     placeholderText: qsTr("enter the context.")
     font.family: "Arial"
     font.pixelSize: height * 0.5
-    font.weight: Font.Thin
     antialiasing: true
     leftPadding: font.pixelSize * 2
+
+
 
     background: Rectangle {
         radius: root.btn_radius

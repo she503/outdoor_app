@@ -9,8 +9,6 @@ Rectangle {
     id: root
     color: "transparent"
     property var map_areas: []
-    property bool is_matched: true
-    property bool can_work: false
 
     /*
       @ map_status  ===> -1: init param; 0: load map faildX; 1: load map success;
@@ -23,13 +21,65 @@ Rectangle {
     property var tasks_list: []
     property var checked_tasks_name: []
 
+    function chooseMapPage() {
+        rec_header_bar.visible = true
+        rec_header_bar.height = rec_task_page.height * 0.1
+        rect_decoration.visible = true
+        rec_checked_location.visible = true
+
+        rec_task_control.visible = false
+        rec_ref_lines.visible = false
+
+        monitor_page.choose_marker.visible = true
+
+        task_list_model.clear()
+    }
+
+    function confirmMapPage() {
+        rect_info_choose_map.visible = false
+        rec_header_bar.visible = false
+        rec_header_bar.height = 0
+        rect_decoration.visible = false
+        rec_checked_location.visible = false
+
+        rec_ref_lines.visible = true
+
+        monitor_page.choose_marker.visible = false
+        btn_start_task.visible = false
+        rec_task_control.visible = true
+
+//        map_task_manager.getMapTask( root.choose_map_name )
+    }
+
+    function chooseTaskPage() {
+        confirmMapPage()
+        btn_start_task.visible = true
+        rec_task_control.visible = true
+    }
+
+    function startTaskPage() {
+
+        chooseTaskPage()
+        btn_start_task.visible = false
+        rect_info_choose_map.visible = false
+        rec_task_control.visible = false
+        rec_ref_lines.visible = false
+    }
+
     FontLoader {
         id: font_hanzhen;
         source: "qrc:/res/font/hanzhen.ttf"
     }
 
+
+
+    Component.onCompleted: {
+
+       map_task_manager.getMapsName()
+    }
+
     Connections {
-        target: socket_manager
+        target: map_task_manager
         onUpdateMapsName: {
             list_model_areas.clear()
             map_areas = maps_name
@@ -43,6 +93,7 @@ Rectangle {
             error = error_message
         }
         onUpdateTasksName: {
+            busy.running = false
             tasks_list = tasks
             task_list_model.clear()
             if (tasks_list.length <= 4 ) {
@@ -54,9 +105,42 @@ Rectangle {
             for (var i = 0; i < tasks_list.length; ++i) {
                 task_list_model.append({"idcard": i,"check_box_text": tasks_list[i]})
             }
+            confirmMapPage()
+        }
+//        onLocalizationInitInfo: {
+//            if (status === 0) {
+//                root.chooseMapPage()
+//                dialog_match_warn.dia_title = message
+//                dialog_match_warn.open()
+//            } else if (status === 1) {
+//                root.confirmMapPage()
+//            }
+//            busy.running = false
+//        }
+//        onSetTaskInfo: {
+//            if (status === 0) {
+//                root.chooseTaskPage()
+//                dialog_match_warn.dia_title = message
+//                dialog_match_warn.open()
+//            } else if (status === 1) {
+//                root.startTaskPage()
+//            }
+//            busy.running = false
+//        }
+        onUpdateSetMapAndInitPosInfo: {
+            busy.running = false
+            dialog_match_warn.dia_content = message
+            dialog_match_warn.open()
+        }
+        onUpdateMapAndTasksInfo: {
+            root.choose_map_name = map_name
+            root.confirmMapPage()
+        }
+        onUpdateMapAndTaskInfo: {
+            root.choose_map_name = map_name
+            root.startTaskPage()
         }
     }
-
     Rectangle {
         id: rec_glow_background
         anchors.fill: parent
@@ -89,14 +173,15 @@ Rectangle {
                         height: list_view_areas.height
                         property int id_card: model.id_card
                         onPressed: {
+                            root.chooseMapPage()
                             list_view_areas.currentIndex = index
 
                             root.choose_map_name = model.map_name
-                            rec_checked_location.visible = true
-                            monitor_page.choose_marker.visible = true
+                            monitor_page.choose_map_name = model.map_name
                             rect_info_choose_map.visible = false
-                            rec_ref_lines.visible = false
-                            socket_manager.parseMapData(model.map_name)
+
+                            map_task_manager.parseMapData(model.map_name)
+                            map_task_manager.getFeature(model.map_name)
                         }
 
                         Rectangle {
@@ -156,7 +241,6 @@ Rectangle {
                     id: monitor_page
                     width:parent.width
                     height: parent.height
-
                 }
 
                 Rectangle {
@@ -180,7 +264,7 @@ Rectangle {
                         id: list_view
                         clip: true
                         width: parent.width
-                        height: parent.height * 0.8
+                        height: parent.height
                         orientation:ListView.Vertical
                         spacing: height * 0.02
                         currentIndex: -1
@@ -193,6 +277,8 @@ Rectangle {
                                 width: parent.width * 0.1
                                 height: width
                                 anchors.verticalCenter: parent.verticalCenter
+                                anchors.left: parent.left
+                                anchors.leftMargin: parent.width * 0.1
                                 radius: height / 2
                                 border.color: "black"
                                 border.width: 1
@@ -209,7 +295,7 @@ Rectangle {
                                 text: model.check_box_text
                                 horizontalAlignment: Text.AlignLeft
                                 verticalAlignment: Text.AlignVCenter
-                                width: parent.width * 0.7
+                                width: parent.width
                                 height: parent.height
                                 anchors.left: check_style.right
                                 anchors.leftMargin: parent.width * 0.05
@@ -217,6 +303,7 @@ Rectangle {
                                 color: item.is_active ? "red" : "black"
                             }
                             onClicked: {
+                                root.chooseTaskPage()
                                 list_view.currentIndex = index
                                 item.is_active = !item.is_active
                                 if (item.is_active) {
@@ -232,7 +319,7 @@ Rectangle {
                                     }
                                     root.checked_tasks_name = temp_str
                                 }
-                                socket_manager.getTasksData(root.checked_tasks_name)
+                                map_task_manager.getTasksData(root.checked_tasks_name)
                             }
                         }
                         model: ListModel {
@@ -250,10 +337,10 @@ Rectangle {
                             anchors.top: parent.top
                             anchors.right: parent.right
                             anchors.bottom: parent.bottom
-                            policy: ScrollBar.AlwaysOn
+                            policy: ScrollBar.AsNeeded
                             contentItem: Rectangle {
                                 implicitWidth: 4
-                                implicitHeight: 10
+                                implicitHeight: 1
                                 radius: width / 2
                                 color: vbar.pressed ? "#ffffaa" : "#c2f4c6"
                             }
@@ -290,8 +377,8 @@ Rectangle {
                     Text {
                         text: qsTr("Start")
                         anchors.fill: parent
-                        color: "red"
-                        font.pixelSize: height * 0.4
+                        color: "lightgreen"
+                        font.pixelSize: height * 0.3
                         font.family: "Arial"
                         font.weight: Font.Thin
                         horizontalAlignment: Text.AlignHCenter
@@ -300,18 +387,7 @@ Rectangle {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            if (can_work) {
-                                rec_task_control.visible = false
-                                rec_header_bar.visible = false
-                                rec_header_bar.height = 0
-                                rect_decoration.visible = false
-                                rec_ref_lines.visible = false
-                                turn_task_page = true
-
-                                socket_manager.sentMapTasksName(root.checked_tasks_name)
-                            } else {
-                                dialog_match_warn.open()
-                            }
+                            map_task_manager.sentMapTasksName(root.checked_tasks_name)
                         }
                     }
                 }
@@ -335,16 +411,22 @@ Rectangle {
                     Text {
                         text: qsTr("Cancle")
                         anchors.fill: parent
-                        color: "blue"
+                        color: "lightgreen"
                         font.pixelSize: height * 0.3
                         font.family: "Arial"
                         font.weight: Font.Thin
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        if (root.checked_tasks_name.length <= 0) {
+                            dialog_match_warn.dia_title = qsTr("error, you must choose a task least")
+                            dialog_match_warn.open()
+                        } else {
+                            root.chooseMapPage()
                         }
                     }
                 }
@@ -357,7 +439,8 @@ Rectangle {
             color: "transparent"
             width: rec_glow_background.width
             height: rec_glow_background.height * 0.1
-            anchors.bottom: rec_task_control.top
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: parent.height * 0.06
             anchors.horizontalCenter: parent.horizontalCenter
 
             Image {
@@ -397,7 +480,7 @@ Rectangle {
                         text: qsTr("SURE")
                         anchors.fill: parent
                         color: "blue"
-                        font.pixelSize: height * 0.4
+                        font.pixelSize: height * 0.3
                         font.family: "Arial"
                         font.weight: Font.Thin
                         horizontalAlignment: Text.AlignHCenter
@@ -409,10 +492,8 @@ Rectangle {
                             dialog_resure.open()
                         }
                     }
-
                 }
             }
-
         }
 
         BusyIndicator{
@@ -422,19 +503,7 @@ Rectangle {
             width: parent.height * 0.2
             height: width
             anchors.centerIn: parent
-            Timer{
-                interval: 2000
-                running: busy.running
-                onTriggered: {
-                    busy.running = false
-                    rec_ref_lines.visible = true
-
-                    root.can_work = true
-                    rec_checked_location.visible = false
-                }
-            }
         }
-
     }
 
     Rectangle {
@@ -456,17 +525,9 @@ Rectangle {
 
     TLDialog {
         id: dialog_match_warn
-        width: root.width * 0.4
-        height: root.height * 0.3
         x: (root.width - width) / 2
         y: (root.height - height) / 2
-        dia_title: qsTr("Warn!")
-        dia_title_color: "red"
-        dia_image_source: "qrc:/res/pictures/sad.png"
-        is_single_btn: true
-        onOkClicked: {
-            dialog_match_warn.close()
-        }
+        dia_title: "error"
     }
 
     TLDialog {
@@ -475,30 +536,23 @@ Rectangle {
         height: root.height * 0.3
         x: (root.width - width) / 2
         y: (root.height - height) / 2
-        dia_title: qsTr("Are u sure?")
-        dia_title_color: "red"
-        dia_image_source: "qrc:/res/pictures/smile.png"
+        dia_title: qsTr("Repeat")
+        dia_content: qsTr("Are you sure?")
+        status: 1
+        ok: true
+        cancel_text: qsTr("cancel")
+        ok_text: qsTr("yes")
         is_single_btn: false
         onOkClicked: {
             dialog_resure.close()
-
             monitor_page.sendInitPoint()
-
-            rect_decoration.visible = false
-            rec_header_bar.visible = false
-            rec_header_bar.height = 0
-            socket_manager.getMapTask( root.choose_map_name )
             busy.running = true
-            rec_task_control.visible = true
-            root.is_matched = true
-            monitor_page.choose_marker.visible = false
         }
         onCencelClicked: {
-            is_matched = false
-            can_work = false
-            rec_checked_location.visible = true
-            monitor_page.choose_marker.visible = true
+            root.chooseMapPage()
             dialog_resure.close()
         }
     }
+
+
 }

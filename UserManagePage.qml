@@ -10,12 +10,20 @@ Rectangle {
 
     property string checked_user_name: ""
     property int checked_user_level: 0
-    property int user_level: 0
+    property int v_user_level: 0
+    property string v_user_name: ""
     property int admin_num: 0
     property real rate: Math.min(width, height) / 400
 
     color: "transparent"
 
+    Connections {
+        target: account_manager
+        onEmitNameAndLevel: {
+            nomal_user_name_text.text = user_name
+            v_user_level = level
+        }
+    }
 
     Dialog {
         id: message_update_uer
@@ -33,6 +41,7 @@ Rectangle {
             spacing: height * 0.05
             TextField {
                 id: field_old_pwd
+                visible: root.v_user_level > root.checked_user_level ? false : true
                 width: parent.width * 0.9
                 height: parent.height * 0.3
                 placeholderText: qsTr("Please enter old pwd")
@@ -57,43 +66,19 @@ Rectangle {
                     height: parent.height
                     text: qsTr("OK")
                     onClicked: {
-                        if (field_old_pwd.text === "" || field_new_pwd.text === "") {
-//                            message_account.title = qsTr("password formart error")
-//                            message_account.message_level = 0
-//                            message_text.text = qsTr("password cannot be empty!!!")
+                        if (field_new_pwd.text.trim() === "") {
+
                             message_account.dia_title = qsTr("password cannot be empty!!!")
                             message_account.dia_title_color = "red"
                             message_account.dia_image_source = "qrc:/res/pictures/sad.png"
                             message_account.open()
                         } else {
-                            var states = account_manager.updateUser(root.checked_user_name, field_new_pwd.text, root.checked_user_level)
-                            switch(states) {
-                            case 0:
-//                                message_account.title = qsTr("error")
-//                                message_account.message_level = 0
-//                                message_text.text = qsTr("user name dont exist!!!")
-                                message_account.dia_title = qsTr("user name dont exist!!!")
-                                message_account.dia_title_color = "red"
-                                message_account.dia_image_source = "qrc:/res/pictures/sad.png"
-                                message_account.open()
-                                break;
-                            case 1:
-//                                message_account.title = qsTr("Success")
-//                                message_account.message_level = 1
-//                                message_text.text = qsTr("password had be changed!!!")
-                                message_account.dia_title = qsTr("password had be changed!!!")
-                                message_account.dia_title_color = "#4F94CD"
-                                message_account.dia_image_source = "qrc:/res/pictures/smile.png"
-                                message_account.open()
-                                break;
-                            case 2:
-                                break;
-                            case 3:
-                                break;
+                            if(root.v_user_level <= root.checked_user_level) {
+                                account_manager.accountUpdate(root.checked_user_name, field_new_pwd.text, root.checked_user_level, field_old_pwd.text, true)
+                            } else {
+                                account_manager.accountUpdate(root.checked_user_name, field_new_pwd.text, root.checked_user_level)
                             }
-
-
-                        }
+                     }
                     }
                 }
                 Button {
@@ -127,64 +112,6 @@ Rectangle {
         }
     }
 
-//    Dialog {
-//        id: message_account
-//        width: root.width * 0.7
-//        height: root.height * 0.5
-//        x:(root.width - width) / 2
-//        y: (root.height - height) / 2
-//        title: qsTr("")
-//        /*
-//              @param
-//                    0: error
-//                    1: success
-//                    2: infomation
-//              */
-//        property int message_level: 0
-//        onMessage_levelChanged: {
-//            if (message_account.message_level === 0) {
-//                back_color.color = "#DB7093"
-//            } else if (message_account.message_level === 1) {
-//                back_color.color = "#00FA9A"
-//            }
-//        }
-
-//        background: Rectangle {
-//            id: back_color
-//            anchors.fill: parent
-//            color: {
-//                if (message_account.message_level === 0) {
-//                    color = "#DB7093"
-//                } else if (message_account.message_level === 1) {
-//                    color = "#00FA9A"
-//                }
-//            }
-//        }
-
-//        TextArea {
-//            id: message_text
-//            width: parent.contentWidth * 0.8
-//            height: parent.contentHeight * 0.8
-//            text: ""
-//        }
-
-//        Button {
-//            id: btn_ok
-//            width: parent.contentWidth * 0.8
-//            height: parent.contentHeight * 0.2
-//            anchors{
-//                right: parent.right
-//                bottom: parent.bottom
-//            }
-//            text: "OK"
-//            onClicked: {
-//                message_account.close()
-//                message_text.text = ""
-//                message_account.title = ""
-//            }
-//        }
-
-//    }
 
     Rectangle {
         id: bg
@@ -238,29 +165,19 @@ Rectangle {
                 }
 
                 onClicked: {
-                    if (root.checked_user_level == 2 && root.admin_num === 1) {
-//                        message_account.title = qsTr("error")
-//                        message_account.message_level = 0
-//                        message_text.text = qsTr("This one user is last admin, you are not allowed to delete it!")
+                    if (root.checked_user_level >= root.v_user_level){
+                        message_account.dia_title = qsTr("you dont have permission to delete this account!!!")
                         message_account.dia_title_color = "red"
-                        message_account.dia_title = qsTr("This one user is last admin,\n you are not allowed to delete it!")
                         message_account.dia_image_source = "qrc:/res/pictures/sad.png"
                         message_account.open()
 
-                    } else {
-                        account_manager.deleteUser(root.checked_user_name)
-                        user_list_model.remove(list_view_user.currentIndex)
-                        list_view_user.currentIndex = -1
-//                        message_account.title = qsTr("Success")
-//                        message_account.message_level = 1
-//                        message_text.text = "( " + root.checked_user_name + qsTr(" )user was deleted !")
-                        message_account.dia_title = qsTr("user ") + root.checked_user_name + qsTr(" was deleted !")
-                        message_account.dia_title_color = "#4F94CD"
-                        message_account.dia_image_source = "qrc:/res/pictures/smile.png"
+                    } else if ( root.checked_user_level === 2 && root.admin_num === 1) {
+                        message_account.dia_title = qsTr("you cant delete last admin account!!!")
+                        message_account.dia_title_color = "red"
+                        message_account.dia_image_source = "qrc:/res/pictures/sad.png"
                         message_account.open()
-                        if (root.checked_user_level == 2) {
-                            --root.admin_num
-                        }
+                    } else {
+                        account_manager.accountDelete(root.checked_user_name)
                     }
 
                 }
@@ -309,6 +226,8 @@ Rectangle {
                 id: list_view_user
                 width: parent.width
                 height: parent.height
+                currentIndex: -1
+                spacing: 12 * rate
 
                 anchors {
                     top: parent.top
@@ -316,13 +235,12 @@ Rectangle {
                     topMargin: parent.height * 0.02
                     leftMargin: parent.height * 0.015
                 }
-                currentIndex: -1
-                spacing: 12 * rate
+
                 delegate: ItemDelegate {
                     id: item_de
                     width: list_view_user.width
                     height: list_view_user.height * 0.1
-                    highlighted: ListView.isCurrentItem
+//                    highlighted: ListView.isCurrentItem
 
                     Rectangle {
                         id: rect_circle
@@ -333,12 +251,13 @@ Rectangle {
                         border.color: "#87CEFA"
                         anchors.verticalCenter: parent.verticalCenter
                         Rectangle {
+                            id: rect_center
                             anchors.centerIn: rect_circle
                             width: parent.width * 0.5
                             height: width
                             radius: width / 2
                             color: "#00BFFF"
-                            visible: item_de.highlighted
+                            visible: item_de.focus
                         }
                     }
                     Text {
@@ -352,7 +271,7 @@ Rectangle {
                         font.pixelSize: item_de.height * 0.8
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
-                        color: "white"
+                        color: "black"
                     }
                     Text {
                         id: text_level
@@ -365,13 +284,15 @@ Rectangle {
                         font.pixelSize: item_de.height * 0.8
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
-                        color: "white"
+                        color: "black" //: "white"
                         property int user_level: model.user_level
                     }
                     onClicked: {
+
                         list_view_user.currentIndex = index
                         root.checked_user_name = model.user_name
                         root.checked_user_level = text_level.user_level
+
                     }
                 }
                 model: ListModel {
@@ -497,9 +418,6 @@ Rectangle {
                 onClicked: {
                     if (btn_add_pwd.text === "" || btn_add_username.text === "" ||
                             radio_btn.checked_num === -1) {
-//                        message_account.title = qsTr("empty error")
-//                        message_account.message_level = 0
-//                        message_text.text = qsTr("some information is empty!!!")
                         message_account.dia_title = qsTr("some information is empty!!!")
                         message_account.dia_title_color = "red"
                         message_account.dia_image_source = "qrc:/res/pictures/sad.png"
@@ -507,41 +425,7 @@ Rectangle {
                         return
                     } else {
                         var level = radio_btn.checked_num
-                        var states = account_manager.addUser(btn_add_username.text, btn_add_pwd.text, level)
-                        switch (states) {
-                        case 0:
-//                            message_account.title = qsTr("error")
-//                            message_account.message_level = 0
-//                            message_text.text = qsTr("user name has exited !")
-                            message_account.dia_title = qsTr("user name has exited !")
-                            message_account.dia_title_color = "red"
-                            message_account.dia_image_source = "qrc:/res/pictures/sad.png"
-                            message_account.open()
-                            break;
-                        case 1:
-                            var leve_name = ""
-                            if (level === 1) {
-                                leve_name = qsTr("nomal_user")
-                            } else if (level === 2) {
-                                leve_name = qsTr("admin_user")
-                                ++root.admin_num
-                            }
-                            user_list_model.append({"user_name": btn_add_username.text, "level": leve_name, "user_level": level})
-//                            message_account.title = qsTr("Success")
-//                            message_account.message_level = 1
-//                            message_text.text = qsTr("a new user was added")
-                            message_account.dia_title = qsTr("a new user was added")
-                            message_account.dia_title_color = "#4F94CD"
-                            message_account.dia_image_source = "qrc:/res/pictures/smile.png"
-                            message_account.open()
-                            break;
-                        case 2:
-                            break;
-                        case 3:
-                            break;
-                        case 4:
-                            break;
-                        }
+                        account_manager.accountAdd(btn_add_username.text, btn_add_pwd.text, level)
                     }
                 }
             }
@@ -555,7 +439,7 @@ Rectangle {
         width: parent.width > parent.height ? parent.height * 0.9 * 1.27 : parent.width * 0.9
         anchors.centerIn: parent
         color: "transparent"
-        visible: root.user_level === 1 ? true : false
+        visible: root.v_user_level === 1 ? true : false
         Image {
             id: img
             anchors.fill: parent
@@ -597,7 +481,7 @@ Rectangle {
                     rightMargin: width * 0.4
                 }
                 onClicked: {
-                    root.checked_user_name = rect_nomal_user_name_text.user_name.trim()
+                    root.checked_user_name = root.v_user_name
                     root.checked_user_level = 1
                     message_update_uer.open()
                 }
@@ -613,47 +497,109 @@ Rectangle {
                 horizontalCenter: parent.horizontalCenter
             }
             color: "transparent"
-            property var user_name: "error"
             Component.onCompleted: {
                 for (var key in root.v_accounts_info) {
-                    rect_nomal_user_name_text.user_name = key
+                    if (key === root.user_name)
+                    {
+                        root.user_level = root.v_accounts_info[key]
+                    }
+
                 }
             }
 
             Text {
+                id: nomal_user_name_text
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font.pixelSize: parent.height * 0.1
-                text: rect_nomal_user_name_text.user_name
+                text: ""
                 color: "white"
             }
         }
     }
 
     Component.onCompleted: {
-        account_manager.getAllAcountInfo()
-        root.user_level = account_manager.getCurrentAccountLevel()
+        account_manager.getAllAccounts()
+        account_manager.getCurrentUserLevel()
     }
 
     Connections {
         target: account_manager
+        onEmitAddAccountCB: {
+            switch (status) {
+            case 0:
+                message_account.dia_title = qsTr("user name has exited !")
+                message_account.dia_title_color = "red"
+                message_account.dia_image_source = "qrc:/res/pictures/sad.png"
+                message_account.open()
+                break;
+            case 1:
+                message_account.dia_title = qsTr("a new user was added")
+                message_account.dia_title_color = "#4F94CD"
+                message_account.dia_image_source = "qrc:/res/pictures/smile.png"
+                message_account.open()
+                break;
+            }
+        }
         onEmitAllAccountInfo: {
+            root.admin_num = 0
             root.v_accounts_info = accounts_info
+            user_list_model.clear()
 
             var nomal_level = qsTr("nomal_level")
             var admin_level = qsTr("admin_level")
 
+
             for (var key in root.v_accounts_info) {
-                if (accounts_info[key] === 0) {
+                if (root.v_accounts_info[key] === 0) {
                     console.info("error user level")
-                } else if (accounts_info[key] === 1) {
-                    user_list_model.append({"user_name": key, "level": nomal_level, "user_level": accounts_info[key]})
-                } else if (accounts_info[key] === 2) {
+                } else if (root.v_accounts_info[key] === 1) {
+                    user_list_model.append({ "user_name": key, "level": nomal_level, "user_level": accounts_info[key]})
+                } else if (root.v_accounts_info[key] === 2) {
                     user_list_model.append({"user_name": key, "level": admin_level, "user_level": accounts_info[key]})
                     ++root.admin_num;
                 }
             }
         }
+        onEmitDeleteAccountCB: {
+            switch(status) {
+            case 0:
+                message_account.dia_title_color = "red"
+                message_account.dia_title = message//qsTr("This one user is last admin,\n you are not allowed to delete it!")
+                message_account.dia_image_source = "qrc:/res/pictures/sad.png"
+                message_account.open()
+
+                break;
+            case 1:
+                list_view_user.currentIndex = -1
+                message_account.dia_title = qsTr("user ") + root.checked_user_name + qsTr(" was deleted !")
+                message_account.dia_title_color = "#4F94CD"
+                message_account.dia_image_source = "qrc:/res/pictures/smile.png"
+                message_account.open()
+                message_update_uer.close()
+                if (root.checked_user_level == 2) {
+                    --root.admin_num
+                }
+                break;
+            }
+        }
+        onEmitUpdateAccountCB: {
+            switch(status) {
+            case 0:
+                message_account.dia_title = message
+                message_account.dia_title_color = "red"
+                message_account.dia_image_source = "qrc:/res/pictures/sad.png"
+                message_account.open()
+                break;
+            case 1:
+                message_account.dia_title = qsTr("password had be changed!!!")
+                message_account.dia_title_color = "#4F94CD"
+                message_account.dia_image_source = "qrc:/res/pictures/smile.png"
+                message_account.open()
+                break;
+            }
+        }
     }
+
 }

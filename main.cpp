@@ -9,6 +9,7 @@
 
 #include "socket_manager.h"
 #include "account_manager.h"
+#include "map_task_manager.h"
 
 
 int main(int argc, char *argv[])
@@ -17,17 +18,22 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     QtWebView::initialize();
     QTranslator trans;
-    if (!trans.load(":/res/language/translation_chinese.qm")) {
+    if (!trans.load("../tergeo_app_zh_CN.qm")) {
         qDebug() << "faild to load translation qm !!!";
     }
     app.installTranslator(&trans);
     QQmlApplicationEngine engine;
 
-    AccountManager* account_manager = new AccountManager(&engine);
-    engine.rootContext()->setContextProperty("account_manager", account_manager);
-
     SocketManager* socket_manager = new SocketManager(&engine);
     engine.rootContext()->setContextProperty("socket_manager", socket_manager);
+
+    AccountManager* account_manager = new AccountManager(&engine);
+    engine.rootContext()->setContextProperty("account_manager", account_manager);
+    account_manager->setSocket(socket_manager);
+
+    MapTaskManager* map_task_manager = new MapTaskManager(&engine);
+    engine.rootContext()->setContextProperty("map_task_manager", map_task_manager);
+    map_task_manager->setSocket(socket_manager);
 
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())

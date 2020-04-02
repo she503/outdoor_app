@@ -9,10 +9,9 @@
         <file>AboutMachinePage.qml</file>
         <file>TaskSettingsPage.qml</file>
         <file>VehicleItem.qml</file>
-        <file>MonitorPage.qml</file>
         <file>MapDisplayPage.qml</file>
         <file>TaskProcess.qml</file>
-        <file>ErrorMessage.qml</file>
+        <file>MessageViewPage.qml</file>
     </qresource>
     <qresource prefix="/CustomControl">
         <file>TLTextField.qml</file>

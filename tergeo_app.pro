@@ -35,9 +35,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     account_manager.h \
     socket_manager.h \
-    map_task_manager.h
+    map_task_manager.h \
+    utils.h
 
-TRANSLATIONS = translation_chinese.ts
+TRANSLATIONS = tergeo_app_zh_CN.ts
 
 DISTFILES += \
     android/AndroidManifest.xml \

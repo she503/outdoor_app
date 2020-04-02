@@ -1,4 +1,4 @@
-import QtQuick 2.7
+import QtQuick 2.9
 import QtQuick.Controls 2.2
 import "CustomControl"
 
@@ -13,7 +13,6 @@ Rectangle {
     property var error_message_info: [error_list]
     property var error_level: 0//: ["debug", "warn", "error"]
     property var error_text_color: "red"//: ["yellow", "orange", "red"]
-
     onError_levelChanged: {
         if (error_level % 2 == 0 ) {
             error_text_color = "red"
@@ -21,34 +20,22 @@ Rectangle {
             error_text_color = "green"
         }
     }
-    onTurn_task_pageChanged: {
-        if (turn_task_page) {
-            setTurnState()
-        }
-    }
-    HomePage {
-        id: home_page
-        onViewTask: {
-            setTurnState()
-        }
-    }
-    function setTurnState()
-    {
-        list_view.visible = false
-        stack_view.replace(task_settings_page)
-    }
 
-//    property Component home_page: HomePage {   }
-    property Component user_manage_page: UserManagePage { }
-    property Component task_settings_page: TaskSettingsPage {
-        Component.onCompleted: {
-            socket_manager.getMapsName()
-        }
-    }
+    property Component user_manage_page: UserManagePage {}
+
     property Component help_document_page: HelpDocumentPage { }
     property Component about_machine_page: AboutMachinePage { }
 
     signal mainPageChanged(var current_index)
+
+
+    //to do
+    Connections {
+        target: map_task_manager
+        onUpdateMapAndTaskInfo: {
+            stack_menu.replace(task_process_page)
+        }
+    }
 
     onMainPageChanged: {
         if (current_index === 0) {
@@ -57,11 +44,24 @@ Rectangle {
             stack_view.replace(user_manage_page)
         } else if (current_index === 2) {
             stack_view.replace(task_settings_page)
+            map_task_manager.judgeIsMapTasks()
         } else if (current_index === 3) {
             stack_view.replace(help_document_page)
         } else if (current_index === 4) {
             stack_view.replace(about_machine_page)
         }
+    }
+
+    HomePage {
+        id: home_page
+        onSigEyeBtnPress: {
+            stack_menu.replace(task_process_page)
+            root.mainPageChanged(2)
+        }
+    }
+    TaskSettingsPage {
+        id: task_settings_page
+
     }
 
     Image {
@@ -75,13 +75,14 @@ Rectangle {
         width: parent.width
         height: parent.height * 0.082
         color: "transparent"
-        ErrorMessage {
-            id: error_message
+
+        MessageViewPage {
+            id: message_view
             height: parent.height * 0.8
             width: height
             anchors {
                 right: parent.right
-                rightMargin: height * 0.6
+                rightMargin: height *0.6
                 verticalCenter: parent.verticalCenter
             }
         }
@@ -96,19 +97,23 @@ Rectangle {
         width: height * 0.5
         height: parent.height - rect_title.height
         color: "transparent"
-        TaskProcess {
-            id: task_process
-            visible: !list_view.visible
-            width: parent.width
-            height:  parent.height
-            onBackToHomePage: {
-                stack_view_main.replace(main_page)
+
+        StackView {
+            id: stack_menu
+            anchors.fill: parent
+            initialItem: list_view
+
+            replaceEnter: Transition {
+
+            }
+            replaceExit: Transition {
+
             }
         }
+
         ListView {
             id: list_view
-            visible: true
-            anchors.fill: parent
+//            anchors.fill: parent
             spacing: height * 0.002
             currentIndex: 0
             highlight: Rectangle {color: "transparent"}
@@ -161,6 +166,23 @@ Rectangle {
             }
         }
 
+        TaskProcess{
+            id:task_process_page
+            visible: false
+              onSigBackBtnPress: {
+                  list_view.currentIndex = 0
+                  stack_menu.replace(list_view)
+                  stack_view.replace(home_page)
+              }
+
+              onSigStopBtnPress: {
+
+              }
+
+              onSigEndingBtnPress: {
+
+              }
+        }
     }
 
     Rectangle {
@@ -186,4 +208,31 @@ Rectangle {
         }
     }
 
+//    TLDialog {
+//        id: dialog_machine_warn
+//        width: root.width * 0.4
+//        height: root.height * 0.3
+//        x: (root.width - width) / 2
+//        y: (root.height - height) / 2
+//        dia_title: qsTr("Warn!")
+//        dia_title_color: "red"
+//        dia_image_source: "qrc:/res/pictures/sad.png"
+//        is_single_btn: true
+//        onOkClicked: {
+//            dialog_machine_warn.close()
+//        }
+//    }
+//    TLDialog {
+//        id: dialog_machine_back
+//        width: root.width * 0.4
+//        height: root.height * 0.4
+//        x: (root.width - width) / 2
+//        y: (root.height - height) / 2
+//        dia_title: qsTr("Back!")
+//        dia_title_color: "#4F94CD"
+//        dia_image_source: "qrc:/res/pictures/smile.png"
+//        onOkClicked: {
+//            dialog_machine_back.close()
+//        }
+//    }
 }

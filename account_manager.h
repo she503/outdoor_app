@@ -2,10 +2,10 @@
 #define ACCOUNT_MANAGER_H
 
 #include <QObject>
-#include <QMap>
-#include <QPair>
 #include <QJsonObject>
-#include <QList>
+#include <QMap>
+#include "socket_manager.h"
+#include "utils.h"
 
 class AccountManager : public QObject
 {
@@ -14,68 +14,66 @@ public:
     explicit AccountManager(QObject* parent = nullptr);
     ~AccountManager();
 
-    enum PermissionLevel {
-        UNKNOWN = 0,
-        NORMAL = 1,
-        ADMIN = 2
-    };
+    void setSocket(SocketManager *socket);
 
     /**
      * @brief 添加用户
-     * @return 0: 已包含此用户   1: 添加成功
-     *         2: 用户名格式错误 3: 密码格式错误  4: 权限级别错误
      */
-    Q_INVOKABLE int addUser(const QString& user_name, const QString& pass_word, const int level);
+    Q_INVOKABLE void accountAdd(const QString& username, const QString& password, const int& level);
+
 
     /**
      * @brief 更新用户
-     * @return 0: 没有此用户    1: 更新成功
-     *         2: 密码格式错误  3: 权限级别错误
      */
-    Q_INVOKABLE int updateUser(const QString& user_name, const QString& pass_word, const int level);
+    Q_INVOKABLE void accountUpdate(const QString& username, const QString& password,
+                                   const int& level, QString old_pwd = "", bool need_old_pwd = false);
+
 
     /**
      * @brief 删除用户
-     * @return 0: 没有此用户    1: 删除成功
      */
-    Q_INVOKABLE int deleteUser(const QString& user_name);
+    Q_INVOKABLE void accountDelete(const QString& username);
+
 
     /**
      * @brief 用户登录
-     * @return 0: 没有此用户    1: 密码错误
-     *         2: 登录成功
      */
-    Q_INVOKABLE int checkLogin(const QString& user_name, const QString& pass_word);
+    Q_INVOKABLE void accountLogin(const QString& username, const QString& password);
+
 
     /**
-     * @brief 获取当前用户权限等级
-     * @return 0: 位置等级    1: 普通用户    2: 管理员用户
+     * @brief 获取用户信息
      */
-    Q_INVOKABLE int getCurrentAccountLevel() const;
+    Q_INVOKABLE void getAllAccounts();
 
-    /**
-     * @brief 获取当前所有用户信息
-     * @return false: 当前用户信息为空   true: 获取成功
-     */
-    Q_INVOKABLE bool getAllAcountInfo();// const;
 
+    Q_INVOKABLE void getCurrentUserLevel();
 
 signals:
+    void emitCheckOutLogin(const int& status, const QString& message);
     void emitAllAccountInfo(const QJsonObject& accounts_info);
-    bool isAndroid();
+    void emitAddAccountCB(const int& status, const QString& message);
+    void emitDeleteAccountCB(const int& status, const QString& message);
+    void emitUpdateAccountCB(const int& status, const QString& message);
+    void emitNameAndLevel(const QString& user_name, const int& level);
+
+
+private slots:
+    void checkoutLogin(const QJsonObject& obj);
+    void parseAddStatus(const QJsonObject& obj);
+    void parseDeleteStatus(const QJsonObject& obj);
+    void parseUpdateStatus(const QJsonObject& obj);
+    void parseAllAccountsInfo(const QJsonObject& obj);
+
 
 private:
-    void readAccountsInfo();
-    void writeAccountsInfo();
-    bool readAccountsFromFile(const QString& file);
 
-    bool isLegalUserName(const QString& user_name);
-    bool isLegalPassWord(const QString& pass_word);
-    bool isLegalLevel(const int level);
-
-private:
-    QString _current_user_name;
-    QMap<QString, QPair<QString, PermissionLevel> > _account_info_map;
+    SocketManager* _socket;
+    QJsonObject _all_accounts_obj;
+    QMap<QString, QPair<QString, PermissionLevel>> _accounts_map;
+    QString _username;
+    QString _password;
+    int _level;
 };
 
 #endif // ACCOUNT_MANAGER_H

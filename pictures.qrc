@@ -59,9 +59,10 @@
         <file>res/font/FZHTJW.TTF</file>
         <file>res/font/hanzhen.ttf</file>
         <file>res/font/msyh.ttf</file>
-        <file>res/language/translation_chinese.qm</file>
         <file>res/pictures/home.png</file>
         <file>res/pictures/user.png</file>
         <file>res/pictures/logo_2.png</file>
+        <file>res/pictures/success_background.png</file>
+        <file>res/pictures/error_background.png</file>
     </qresource>
 </RCC>

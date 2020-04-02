@@ -12,21 +12,42 @@ Rectangle {
     property real btn_size: min_length * 0.8
 
     color: "transparent"
+//    Connections {
+//        target: socket_manager
+//        onUpdateBatteryInfo: {
+//            var v_soc = soc;
+//            var n_soc = Number(v_soc)
+//            if (n_soc <= 20) {
+//                soc_color.color = "red"
+//            } else if (n_soc > 20 && n_soc <= 50) {
+//                soc_color.color = "orange"
+//            } else if (n_soc > 50) {
+//                soc_color.color = "#00ff24"
+//            }
+//            text_soc.text = v_soc
+//        }
+//        onUpdateVehicleSpeed: {
+
+//        }
+//        onUpdateWaterVolume: {
+//            var v_water_volume = water_volume
+//            text_water.color = v_water_volume
+//            var n_water_volume = Number(v_water_volume)
+
+//            if (n_water_volume <= 20) {
+////                color_water.color = "red"
+//            } else if (n_water_volume > 20 && n_water_volume <= 50) {
+////                color_water.color = "orange"
+//            } else if (n_water_volume > 50) {
+////                color_water.color = "#00ff24"
+//            }
+//            text_water.text = v_water_volume
+//        }
+//    }
+
     Connections {
-        target: socket_manager
-        onUpdateBatteryInfo: {
-            var v_soc = soc;
-            var n_soc = Number(v_soc)
-            if (n_soc <= 20) {
-                soc_color.color = "red"
-            } else if (n_soc > 20 && n_soc <= 50) {
-                soc_color.color = "orange"
-            } else if (n_soc > 50) {
-                soc_color.color = "#00ff24"
-            }
-            text_soc.text = v_soc
-        }
-        onUpdateVehicleSpeed: {
+        target: map_task_manager
+        onUpdateChassisInfo: {
             var v_speed = speed
             var n_speed = Number(v_speed)
             if (n_speed <= 10) {
@@ -36,21 +57,7 @@ Rectangle {
             } else if (n_speed > 15) {
                 text_speed.color = "red"
             }
-            text_speed.text = n_speed / 10.0
-        }
-        onUpdateWaterVolume: {
-            var v_water_volume = water_volume
-            text_water.color = v_water_volume
-            var n_water_volume = Number(v_water_volume)
-
-            if (n_water_volume <= 20) {
-//                color_water.color = "red"
-            } else if (n_water_volume > 20 && n_water_volume <= 50) {
-//                color_water.color = "orange"
-            } else if (n_water_volume > 50) {
-//                color_water.color = "#00ff24"
-            }
-            text_water.text = v_water_volume
+            text_speed.text = n_speed
         }
     }
 

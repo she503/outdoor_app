@@ -69,7 +69,7 @@ Dialog {
 
         Text {
             id: content
-            text: "   " + root.dia_title//root.dia_content
+            text: "   " + root.dia_content//root.dia_content
             color: "black"
             width: parent.width * 0.8
             height: parent.height * 0.5

@@ -306,7 +306,7 @@ Rectangle {
                                 rec_header_bar.height = 0
                                 rect_decoration.visible = false
                                 rec_ref_lines.visible = false
-
+                                turn_task_page = true
 
                                 socket_manager.sentMapTasksName(root.checked_tasks_name)
                             } else {

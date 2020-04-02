@@ -13,6 +13,7 @@ Rectangle {
     property var error_message_info: [error_list]
     property var error_level: 0//: ["debug", "warn", "error"]
     property var error_text_color: "red"//: ["yellow", "orange", "red"]
+
     onError_levelChanged: {
         if (error_level % 2 == 0 ) {
             error_text_color = "red"
@@ -20,14 +21,23 @@ Rectangle {
             error_text_color = "green"
         }
     }
-
+    onTurn_task_pageChanged: {
+        if (turn_task_page) {
+            setTurnState()
+        }
+    }
     HomePage {
         id: home_page
         onViewTask: {
-            list_view.visible = false
-            stack_view.replace(task_settings_page)
+            setTurnState()
         }
     }
+    function setTurnState()
+    {
+        list_view.visible = false
+        stack_view.replace(task_settings_page)
+    }
+
 //    property Component home_page: HomePage {   }
     property Component user_manage_page: UserManagePage { }
     property Component task_settings_page: TaskSettingsPage {

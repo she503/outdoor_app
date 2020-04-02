@@ -11,6 +11,7 @@
         <file>VehicleItem.qml</file>
         <file>MapDisplayPage.qml</file>
         <file>TaskProcess.qml</file>
+        <file>MessageViewPage.qml</file>
     </qresource>
     <qresource prefix="/CustomControl">
         <file>TLTextField.qml</file>

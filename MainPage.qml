@@ -64,6 +64,16 @@ Rectangle {
         height: parent.height * 0.082
         color: "transparent"
 
+        MessageViewPage {
+            id: message_view
+            height: parent.height * 0.8
+            width: height
+            anchors {
+                right: parent.right
+                rightMargin: height *0.6
+                verticalCenter: parent.verticalCenter
+            }
+        }
     }
 
     Rectangle {

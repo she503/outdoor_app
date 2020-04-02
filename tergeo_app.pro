@@ -5,7 +5,8 @@ CONFIG += c++11 resources_big
 SOURCES += main.cpp \
     account_manager.cpp \
     socket_manager.cpp \
-    map_task_manager.cpp
+    map_task_manager.cpp \
+    ros_message_manager.cpp
 
 RESOURCES += qml.qrc \
     pictures.qrc
@@ -36,7 +37,8 @@ HEADERS += \
     account_manager.h \
     socket_manager.h \
     map_task_manager.h \
-    utils.h
+    utils.h \
+    ros_message_manager.h
 
 TRANSLATIONS = tergeo_app_zh_CN.ts
 

@@ -24,7 +24,17 @@ Rectangle {
             stack_menu.replace(task_process_page)
         }
     }
+    Connections {
+        target: map_task_manager
+        onUpdateStopTaskInfo: {
+            if (status === 1) {
+                root.mainPageChanged(0)
+                stack_menu.replace(list_view)
+                list_view.currentIndex = 0
 
+            }
+        }
+    }
     onMainPageChanged: {
         if (current_index === 0) {
             stack_view.replace(home_page)
@@ -33,22 +43,32 @@ Rectangle {
         } else if (current_index === 2) {
             stack_view.replace(task_settings_page)
             map_task_manager.judgeIsMapTasks()
+            map_task_manager.getFirstMap()
         } else if (current_index === 3) {
             stack_view.replace(help_document_page)
         } else if (current_index === 4) {
             stack_view.replace(about_machine_page)
         }
+        task_settings_page.checked_tasks_name = []
     }
 
     HomePage {
         id: home_page
         onSigEyeBtnPress: {
-            stack_menu.replace(task_process_page)
-            root.mainPageChanged(2)
+            if ( map_task_manager.getIsWorking() ) {
+                stack_menu.replace(list_view)
+                root.mainPageChanged(2)
+            } else {
+                dialog_working_states.open()
+            }
+
+
         }
     }
     TaskSettingsPage {
         id: task_settings_page
+        width: rect_right.width
+        height: rect_right.height
 
     }
 
@@ -100,7 +120,7 @@ Rectangle {
 
         ListView {
             id: list_view
-//            anchors.fill: parent
+            //            anchors.fill: parent
             spacing: height * 0.002
             currentIndex: 0
             highlight: Rectangle {color: "transparent"}
@@ -156,19 +176,19 @@ Rectangle {
         TaskProcess{
             id:task_process_page
             visible: false
-              onSigBackBtnPress: {
-                  list_view.currentIndex = 0
-                  stack_menu.replace(list_view)
-                  stack_view.replace(home_page)
-              }
+            onSigBackBtnPress: {
+                list_view.currentIndex = 0
+                stack_menu.replace(list_view)
+                stack_view.replace(home_page)
+            }
 
-              onSigStopBtnPress: {
+            onSigStopBtnPress: {
 
-              }
+            }
 
-              onSigEndingBtnPress: {
+            onSigEndingBtnPress: {
 
-              }
+            }
         }
     }
 
@@ -195,31 +215,24 @@ Rectangle {
         }
     }
 
-//    TLDialog {
-//        id: dialog_machine_warn
-//        width: root.width * 0.4
-//        height: root.height * 0.3
-//        x: (root.width - width) / 2
-//        y: (root.height - height) / 2
-//        dia_title: qsTr("Warn!")
-//        dia_title_color: "red"
-//        dia_image_source: "qrc:/res/pictures/sad.png"
-//        is_single_btn: true
-//        onOkClicked: {
-//            dialog_machine_warn.close()
-//        }
-//    }
-//    TLDialog {
-//        id: dialog_machine_back
-//        width: root.width * 0.4
-//        height: root.height * 0.4
-//        x: (root.width - width) / 2
-//        y: (root.height - height) / 2
-//        dia_title: qsTr("Back!")
-//        dia_title_color: "#4F94CD"
-//        dia_image_source: "qrc:/res/pictures/smile.png"
-//        onOkClicked: {
-//            dialog_machine_back.close()
-//        }
-//    }
+
+    TLDialog {
+        id: dialog_working_states
+        dia_title: qsTr("Error")
+        dia_content: qsTr("There is no task is working, you can click the \"setting\" btn to create one!")
+    }
+
+    //    TLDialog {
+    //        id: dialog_machine_back
+    //        width: root.width * 0.4
+    //        height: root.height * 0.4
+    //        x: (root.width - width) / 2
+    //        y: (root.height - height) / 2
+    //        dia_title: qsTr("Back!")
+    //        dia_title_color: "#4F94CD"
+    //        dia_image_source: "qrc:/res/pictures/smile.png"
+    //        onOkClicked: {
+    //            dialog_machine_back.close()
+    //        }
+    //    }
 }

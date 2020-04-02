@@ -6,6 +6,8 @@ Dialog {
     width: 300
     height: 200
 
+    x: (parent.width - width) / 2
+    y: (parent.height - height) / 2
     //test
     property string dia_image_source: "qrc:/res/pictures/sad.png"
     property bool is_single_btn: true
@@ -21,14 +23,8 @@ Dialog {
 
     property string dia_title: ""
     property string dia_content: ""
-    property string dia_background: "qrc:/res/pictures/error_background.png"
-    Component.onCompleted: {
-        if (status === 0) {
-            dia_background = "qrc:/res/pictures/error_background.png"
-        } else {
-            dia_background = "qrc:/res/pictures/success_background.png"
-        }
-    }
+    property string dia_background: status === 0 ? "qrc:/res/pictures/error_background.png" :
+                                               "qrc:/res/pictures/success_background.png"
 
     signal okClicked()
     signal cencelClicked()
@@ -36,7 +32,7 @@ Dialog {
         color: "transparent"
         Image {
             anchors.fill: parent
-            source: root.dia_background//"" //:
+            source: root.dia_background
         }
     }
 
@@ -49,7 +45,7 @@ Dialog {
             id: title
             width: parent.width * 0.8
             height: parent.height * 0.1
-            color: "red"
+            color: status === 0 ? "red" : "green"
             text: root.dia_title
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
@@ -69,7 +65,7 @@ Dialog {
 
         Text {
             id: content
-            text: "   " + root.dia_title//root.dia_content
+            text: "   " + root.dia_content//root.dia_content
             color: "black"
             width: parent.width * 0.8
             height: parent.height * 0.5

@@ -31,6 +31,7 @@ Page {
     property var var_ref_line: []
     property real ref_line_curren_index: 0
     property var var_planning_path: []
+    property var var_planning_ref_path: []
 
 
     property real map_width: 0
@@ -647,6 +648,37 @@ Page {
                     drawPlanningLine(ctx, root.var_planning_path);
                 }
             }
+            Canvas {
+                id: canvas_planning_ref_line
+                width: map_width * map_rate  + paint_begin_point * 2
+                height: map_height * map_rate + paint_begin_point * 2
+
+                x: canvas_background.x
+                y: canvas_background.y
+
+                function drawPlanningLine(ctx, points) {
+                    if (points.length === 0) {
+                        return
+                    }
+                    ctx.save()
+                    ctx.lineWidth = 1
+                    ctx.strokeStyle = "#4169E1"
+                    ctx.beginPath()
+                    var first_pointt = geometryToPixel(points[0][0], points[0][1])
+                    ctx.moveTo(first_pointt[0], first_pointt[1])
+                    for (var i = 0; i < points.length; ++i) {
+                        var point = geometryToPixel(points[i][0], points[i][1])
+                        ctx.lineTo(point[0], point[1])
+                    }
+                    ctx.stroke()
+                    ctx.restore()
+                }
+                onPaint: {
+                    var ctx = getContext("2d")
+                    ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
+                    drawPlanningLine(ctx, root.var_planning_ref_path);
+                }
+            }
 
             VehicleItem {
                 id: vehicle
@@ -852,6 +884,22 @@ Page {
         onUpdatePlanningInfo: {
             var_planning_path = planning_path
             canvas_red_ref_line.requestPaint()
+        }
+        onUpdatePlanningRefInfo: {
+            root.var_planning_ref_path = planning_path
+            canvas_planning_ref_line.requestPaint()
+        }
+    }
+
+    Connections {
+        target: map_task_manager
+        onUpdateStopTaskInfo: {
+            if (status === 1) {
+                var_ref_line = []
+                var_planning_path = []
+                ref_line_curren_index = 0
+                canvas_red_ref_line.requestPaint()
+            }
         }
     }
 

@@ -150,8 +150,18 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_PLANNING_COMMAND_PATH:
                 emit planningInfo(obj);
                 break;
+            case MessageType::MESSAGE_PLANNING_REF_LINE:
+                emit planningRefInfo(obj);
+                break;
             case MessageType::MESSAGE_TASK_INFO:
                 emit taskProcessInfo(obj);
+                break;
+            case MessageType::MESSAGE_PAUSE_TASK_RST:
+                emit pauseTaskRST(obj.value("current_status").toBool(),obj.value("status").toInt());
+                qDebug() << obj;
+                break;
+            case MessageType::MESSAGE_STOP_TASK_RST:
+                emit pauseStopTaskRST(obj.value("status").toInt());
                 break;
             default:
                 qDebug() << "======>" <<obj;

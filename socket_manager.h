@@ -54,7 +54,7 @@ signals:
     void updateUser(const QJsonObject& obj);
     void allUser(const QJsonObject& obj);
 
-    void localizationInitRST(const QJsonObject& obj);
+//    void localizationInitRST(const QJsonObject& obj);
     void setTasksRST(const QJsonObject& obj);
 
     void taskProcessInfo(const QJsonObject& obj);
@@ -71,6 +71,7 @@ signals:
     void chassisInfo(const QJsonObject& obj);
     void obstaclesInfo(const QJsonObject& obj);
     void planningInfo(const QJsonObject& obj);
+    void planningRefInfo(const QJsonObject& obj);
 
     /**
      * @brief 发给ui显示的数据
@@ -84,6 +85,8 @@ signals:
     //message
     void emitFaildToLogin(const QString& message);
 
+    void pauseTaskRST(const bool& is_pause, const int& status);
+    void pauseStopTaskRST(const int& status);
 
 private slots:
     void readSocketData(/*const QByteArray& buffer*/);

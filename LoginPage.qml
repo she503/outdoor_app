@@ -4,11 +4,11 @@ import "CustomControl"
 Item{
     id: root
 
-    property real rate: Math.min(width, height) / 400
+//    property real rate: Math.min(width, height) / 400
     property var user_level: 0
-    property string user_name: ""
     property string test_text: "root"
     signal successToLogin()
+
 
     FontLoader {
         id: font_hanzhen;
@@ -28,8 +28,9 @@ Item{
         Image {
             id: img_logo
             source: "qrc:/res/pictures/logo.png"
-            width: 200 * root.rate
-            height: 75 * root.rate
+            width: parent.width
+            height: parent.height * 0.5
+            fillMode: Image.PreserveAspectFit
             anchors {
                 horizontalCenter: parent.horizontalCenter
                 bottom: parent.bottom
@@ -169,8 +170,14 @@ Item{
 
                 }
                 onClicked: {
-                    account_manager.accountLogin(username.text, password.text)
-                    root.user_name = username.text
+                    if (socket_manager.judgeIsConnected()) {
+                        account_manager.accountLogin(username.text, password.text)
+//                        root.user_name = username.text
+                    } else {
+
+                    }
+
+
                 }
             }
         }
@@ -186,19 +193,27 @@ Item{
                 root.successToLogin()
             }
         }
+
+    }
+
+    Connections {
+        target: socket_manager
+        onEmitFaildToLogin: {
+            message_login_faild.dia_content = message
+            message_login_faild.open()
+        }
     }
 
     TLDialog {
         id: message_login_faild
-        width: root.width * 0.4
-        height: root.height * 0.3
-        x: (root.width - width) / 2 + 3.5 * rate
+        width: 300
+        height: 200
+        x: (root.width - width) / 2
         y: (root.height - height) / 2
-        dia_title: qsTr("error!")
-        dia_title_color: "red"
-        dia_image_source: "qrc:/res/pictures/sad.png"
-        is_single_btn: true
-        onOkClicked: {
+        dia_title: qsTr("connect error!")
+        status: 0
+        cancel_text: qsTr("OK")
+        onCancelChanged: {
             message_login_faild.close()
         }
     }

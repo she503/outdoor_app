@@ -38,6 +38,7 @@ bool SocketManager::connectToHost(const QString &ip, const QString &port)
         QJsonObject object;
         object.insert("message_type", int(MESSAGE_NEW_DEIVCE_CONNECT));
         QJsonDocument doc(object);
+        _is_connected = true;
         this->sendSocketMessage(doc.toJson());
         return true;
     }
@@ -66,6 +67,16 @@ bool SocketManager::sendData(const QByteArray &data)
         }
     }
     return false;
+}
+
+bool SocketManager::judgeIsConnected()
+{
+    QString message = tr("app cannot to connect server, please check your wifi and IP!");
+
+    if(!_is_connected) {
+        emit emitFaildToLogin(message);
+    }
+    return _is_connected;
 }
 
 void SocketManager::readSocketData(/*const QByteArray& buffer*/)

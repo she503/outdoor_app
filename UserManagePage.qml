@@ -22,7 +22,6 @@ Rectangle {
         onEmitNameAndLevel: {
             nomal_user_name_text.text = user_name
             v_user_level = level
-            console.info([user_name,level])
         }
     }
 
@@ -67,7 +66,7 @@ Rectangle {
                     height: parent.height
                     text: qsTr("OK")
                     onClicked: {
-                        if (field_old_pwd.text === "" || field_new_pwd.text === "") {
+                        if (field_new_pwd.text.trim() === "") {
 
                             message_account.dia_title = qsTr("password cannot be empty!!!")
                             message_account.dia_title_color = "red"
@@ -166,11 +165,19 @@ Rectangle {
                 }
 
                 onClicked: {
-                    if (root.checked_user_level == 2 && root.admin_num === 1) {
+                    if (root.checked_user_level >= root.v_user_level){
+                        message_account.dia_title = qsTr("you dont have permission to delete this account!!!")
+                        message_account.dia_title_color = "red"
+                        message_account.dia_image_source = "qrc:/res/pictures/sad.png"
+                        message_account.open()
 
+                    } else if ( root.checked_user_level === 2 && root.admin_num === 1) {
+                        message_account.dia_title = qsTr("you cant delete last admin account!!!")
+                        message_account.dia_title_color = "red"
+                        message_account.dia_image_source = "qrc:/res/pictures/sad.png"
+                        message_account.open()
                     } else {
                         account_manager.accountDelete(root.checked_user_name)
-
                     }
 
                 }
@@ -219,6 +226,8 @@ Rectangle {
                 id: list_view_user
                 width: parent.width
                 height: parent.height
+                currentIndex: -1
+                spacing: 12 * rate
 
                 anchors {
                     top: parent.top
@@ -226,13 +235,12 @@ Rectangle {
                     topMargin: parent.height * 0.02
                     leftMargin: parent.height * 0.015
                 }
-                currentIndex: -1
-                spacing: 12 * rate
+
                 delegate: ItemDelegate {
                     id: item_de
                     width: list_view_user.width
                     height: list_view_user.height * 0.1
-                    highlighted: ListView.isCurrentItem
+//                    highlighted: ListView.isCurrentItem
 
                     Rectangle {
                         id: rect_circle
@@ -243,12 +251,13 @@ Rectangle {
                         border.color: "#87CEFA"
                         anchors.verticalCenter: parent.verticalCenter
                         Rectangle {
+                            id: rect_center
                             anchors.centerIn: rect_circle
                             width: parent.width * 0.5
                             height: width
                             radius: width / 2
                             color: "#00BFFF"
-                            visible: item_de.highlighted
+                            visible: item_de.focus
                         }
                     }
                     Text {
@@ -279,9 +288,11 @@ Rectangle {
                         property int user_level: model.user_level
                     }
                     onClicked: {
+
                         list_view_user.currentIndex = index
                         root.checked_user_name = model.user_name
                         root.checked_user_level = text_level.user_level
+
                     }
                 }
                 model: ListModel {
@@ -539,11 +550,12 @@ Rectangle {
             var nomal_level = qsTr("nomal_level")
             var admin_level = qsTr("admin_level")
 
+
             for (var key in root.v_accounts_info) {
                 if (root.v_accounts_info[key] === 0) {
                     console.info("error user level")
                 } else if (root.v_accounts_info[key] === 1) {
-                    user_list_model.append({"user_name": key, "level": nomal_level, "user_level": accounts_info[key]})
+                    user_list_model.append({ "user_name": key, "level": nomal_level, "user_level": accounts_info[key]})
                 } else if (root.v_accounts_info[key] === 2) {
                     user_list_model.append({"user_name": key, "level": admin_level, "user_level": accounts_info[key]})
                     ++root.admin_num;
@@ -565,6 +577,7 @@ Rectangle {
                 message_account.dia_title_color = "#4F94CD"
                 message_account.dia_image_source = "qrc:/res/pictures/smile.png"
                 message_account.open()
+                message_update_uer.close()
                 if (root.checked_user_level == 2) {
                     --root.admin_num
                 }

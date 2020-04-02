@@ -46,8 +46,8 @@ void AccountManager::accountUpdate(const QString &username, const QString &passw
             temp_obj.insert("status", 0);
             temp_obj.insert("message", "error old pwd");
             parseUpdateStatus(temp_obj);
+            return;
         }
-        return;
     }
     QJsonObject obj;
     obj.insert("message_type", int(MESSAGE_UPDATE_ACCOUNT));

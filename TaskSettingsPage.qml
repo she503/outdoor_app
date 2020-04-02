@@ -58,7 +58,9 @@ Rectangle {
     }
 
     function startTaskPage() {
+
         chooseTaskPage()
+        btn_start_task.visible = false
         rect_info_choose_map.visible = false
         rec_task_control.visible = false
         rec_ref_lines.visible = false
@@ -67,6 +69,13 @@ Rectangle {
     FontLoader {
         id: font_hanzhen;
         source: "qrc:/res/font/hanzhen.ttf"
+    }
+
+
+
+    Component.onCompleted: {
+
+       map_task_manager.getMapsName()
     }
 
     Connections {
@@ -120,7 +129,7 @@ Rectangle {
 //        }
         onUpdateSetMapAndInitPosInfo: {
             busy.running = false
-            dialog_match_warn.dia_title = message
+            dialog_match_warn.dia_content = message
             dialog_match_warn.open()
         }
         onUpdateMapAndTasksInfo: {
@@ -378,9 +387,7 @@ Rectangle {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-
                             map_task_manager.sentMapTasksName(root.checked_tasks_name)
-
                         }
                     }
                 }
@@ -518,17 +525,9 @@ Rectangle {
 
     TLDialog {
         id: dialog_match_warn
-        width: root.width * 0.4
-        height: root.height * 0.3
         x: (root.width - width) / 2
         y: (root.height - height) / 2
-        dia_title: qsTr("Warn!")
-        dia_title_color: "red"
-        dia_image_source: "qrc:/res/pictures/sad.png"
-        is_single_btn: true
-        onOkClicked: {
-            dialog_match_warn.close()
-        }
+        dia_title: "error"
     }
 
     TLDialog {
@@ -537,9 +536,12 @@ Rectangle {
         height: root.height * 0.3
         x: (root.width - width) / 2
         y: (root.height - height) / 2
-        dia_title: qsTr("Are u sure?")
-        dia_title_color: "red"
-        dia_image_source: "qrc:/res/pictures/smile.png"
+        dia_title: qsTr("Repeat")
+        dia_content: qsTr("Are you sure?")
+        status: 1
+        ok: true
+        cancel_text: qsTr("cancel")
+        ok_text: qsTr("yes")
         is_single_btn: false
         onOkClicked: {
             dialog_resure.close()

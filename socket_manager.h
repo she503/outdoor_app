@@ -37,6 +37,7 @@ public:
      */
     Q_INVOKABLE bool sendData(const QByteArray& data);
 
+    Q_INVOKABLE bool judgeIsConnected();
 signals:
     void mapsInfo(const QJsonObject& obj);
     void sendMapAndTasks(const QJsonObject& obj);
@@ -80,12 +81,17 @@ signals:
     void updateOperateMethod(const QString& operate_method);
 
 
+    //message
+    void emitFaildToLogin(const QString& message);
+
+
 private slots:
     void readSocketData(/*const QByteArray& buffer*/);
 
 private:
     QTcpSocket* _socket;
     QByteArray _buffer;
+    bool _is_connected;
 };
 
 #endif // SOCKET_MANAGER_H

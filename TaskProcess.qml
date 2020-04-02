@@ -1,52 +1,201 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.2
-
+import "CustomControl"
 
 
 
 Rectangle {
     id: root
-    width: parent.width
-    height:  parent.height * 0.2
-    anchors.top: rec_pic_car.bottom
-    anchors.left: parent.left
+
     color: "transparent"
-    Rectangle {
-        id: rect_info
-        width: parent.width
-        height: parent.height * 0.4
-        TLInfoDisplayPage {
-            id: tl_info_display
-            anchors.fill: parent
-        }
-    }
-    Rectangle {
-        id: rect_logo
-        width: parent.width
-        height: parent.height * 0.2
-        Image {
-            anchors.fill: parent
-//            source:
+
+    property string map_name: ""
+    property string work_time: ""
+    property string progress: ""
+    property string title_color: "white"
+    property string font_color: "lightgreen"
+
+    signal sigBackBtnPress()
+    signal sigStopBtnPress()
+    signal sigEndingBtnPress()
+
+    Connections {
+        target: map_task_manager
+        onUpdateTaskProcessInfo: {
+            root.progress = progress * 100;
+
         }
     }
 
-    Column {
-        Repeater {
+    Column{
+        anchors.fill: parent
+        Rectangle {
+            id: rect_info
+            width: parent.width
+            height: parent.height * 0.4
+            color: "transparent"
+            TLInfoDisplayPage {
+                id: tl_info_display
+                anchors.fill: parent
+            }
+        }
+        Rectangle {
+            id: rect_btns
+            width: parent.width
+            height: parent.height * 0.1
+            color: "transparent"
+            Row {
+                property real btn_spacing: parent.width * 0.03
+                spacing: btn_spacing / 3
+                height: parent.height
+                width: parent.width
+                anchors.horizontalCenter: parent.horizontalCenter
+                Image {
+                    id: btn_back
+                    source: "qrc:/res/pictures/back.png"
+                    width: (parent.width -  parent.btn_spacing)/ 3
+                    height: parent.height
+                    fillMode: Image.PreserveAspectFit
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            root.sigBackBtnPress()
 
-            model: [qsTr("Current map: "), qsTr("Worked hours: "), qsTr("progress percent: "), qsTr("Estimated time: ")]
-            Rectangle {
-                width: rec_peocess.width
-                height: rec_peocess.height * 0.25
-                color: "transparent"
-                Text {
-                    anchors {
-                        top: parent.top
-                        left: parent.left
-                        leftMargin: rec_peocess.width * 0.05
+                        }
                     }
-                    text: qsTr(modelData + "  " + text_process[index])
-                    font.pixelSize: rate * 15 * ratio
-                    color: "white"
+                }
+                Image {
+                    id: btn_stop
+                    width: (parent.width -  parent.btn_spacing)/ 3
+                    height: parent.height
+                    source: "qrc:/res/pictures/progress_start.png"
+                    fillMode: Image.PreserveAspectFit
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            root.sigStopBtnPress()
+
+                        }
+                    }
+                }
+                Image {
+                    id: btn_ending
+                    width:  (parent.width -  parent.btn_spacing)/ 3
+                    height: parent.height
+                    source: "qrc:/res/pictures/power_on.png"
+                    fillMode: Image.PreserveAspectFit
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            root.sigEndingBtnPress()
+                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            id: rect_logo
+            width: parent.width
+            height: parent.height * 0.1
+            color: "transparent"
+            Image {
+                anchors.fill: parent
+                source: "qrc:/res/pictures/logo_2.png"
+                fillMode: Image.PreserveAspectFit
+            }
+        }
+        Rectangle {
+            id: rect_task_progress
+            width: parent.width
+            height: parent.height * 0.4
+            color: "transparent"
+            Column {
+                anchors.fill: parent
+                Rectangle {
+                    id: rect_map_name
+                    width: parent.width
+                    height: parent.height * 0.3
+                    color: "transparent"
+                    Text {
+                        id: text_1
+                        text: qsTr("Current map name: ")
+                        width: parent.width * 0.7
+                        height: parent.height
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignLeft
+                        font.pixelSize: width / 10
+                        color: root.title_color
+                    }
+                    Text {
+                        id: text_map_name
+                        text: root.map_name
+                        width: parent.width * 0.3
+                        height: parent.height
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pixelSize: width / 10
+                        anchors.left: text_1.right
+                        color: root.font_color
+                    }
+                }
+
+                Rectangle {
+                    id: rect_work_time
+                    width: parent.width
+                    height: parent.height * 0.3
+                    color: "transparent"
+                    Text {
+                        id: text_2
+                        text: qsTr("Work time: ")
+                        width: parent.width * 0.7
+                        height: parent.height
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignLeft
+                        font.pixelSize: width / 10
+                        color: root.title_color
+                    }
+                    Text {
+                        id: text_work_time
+                        text: root.work_time
+                        width: parent.width * 0.3
+                        height: parent.height
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pixelSize: width / 6
+                        anchors.left: text_2.right
+                        color: root.font_color
+                    }
+
+                }
+
+                Rectangle {
+                    id: rect_progress
+                    width: parent.width
+                    height: parent.height * 0.3
+                    color: "transparent"
+                    Text {
+                        id: text_3
+                        text: qsTr("task persent: ")
+                        width: parent.width * 0.7
+                        height: parent.height
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignLeft
+                        font.pixelSize: width / 10
+                        color: root.title_color
+                    }
+                    Text {
+                        id: text_progress
+                        text: root.progress + "%"
+                        width: parent.width * 0.3
+                        height: parent.height
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pixelSize: width / 6
+                        anchors.left: text_3.right
+                        color: root.font_color
+                    }
+
                 }
             }
         }

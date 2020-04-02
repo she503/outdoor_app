@@ -1,4 +1,4 @@
-import QtQuick 2.7
+import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import "CustomControl"
@@ -8,20 +8,22 @@ Rectangle {
 
     color: "transparent"
 
-    property Component home_page: HomePage {   }
+
     property Component user_manage_page: UserManagePage {}
-    TaskSettingsPage {
-        id: task_settings_page
 
-        Component.onCompleted: {
-
-           map_task_manager.getMapsName()
-        }
-    }
     property Component help_document_page: HelpDocumentPage { }
     property Component about_machine_page: AboutMachinePage { }
 
     signal mainPageChanged(var current_index)
+
+
+    //to do
+    Connections {
+        target: map_task_manager
+        onUpdateMapAndTaskInfo: {
+            stack_menu.replace(task_process_page)
+        }
+    }
 
     onMainPageChanged: {
         if (current_index === 0) {
@@ -36,6 +38,18 @@ Rectangle {
         } else if (current_index === 4) {
             stack_view.replace(about_machine_page)
         }
+    }
+
+    HomePage {
+        id: home_page
+        onSigEyeBtnPress: {
+            stack_menu.replace(task_process_page)
+            root.mainPageChanged(2)
+        }
+    }
+    TaskSettingsPage {
+        id: task_settings_page
+
     }
 
     Image {
@@ -61,9 +75,22 @@ Rectangle {
         height: parent.height - rect_title.height
         color: "transparent"
 
+        StackView {
+            id: stack_menu
+            anchors.fill: parent
+            initialItem: list_view
+
+            replaceEnter: Transition {
+
+            }
+            replaceExit: Transition {
+
+            }
+        }
+
         ListView {
             id: list_view
-            anchors.fill: parent
+//            anchors.fill: parent
             spacing: height * 0.002
             currentIndex: 0
             highlight: Rectangle {color: "transparent"}
@@ -116,6 +143,23 @@ Rectangle {
             }
         }
 
+        TaskProcess{
+            id:task_process_page
+            visible: false
+              onSigBackBtnPress: {
+                  list_view.currentIndex = 0
+                  stack_menu.replace(list_view)
+                  stack_view.replace(home_page)
+              }
+
+              onSigStopBtnPress: {
+
+              }
+
+              onSigEndingBtnPress: {
+
+              }
+        }
     }
 
     Rectangle {
@@ -141,31 +185,31 @@ Rectangle {
         }
     }
 
-    TLDialog {
-        id: dialog_machine_warn
-        width: root.width * 0.4
-        height: root.height * 0.3
-        x: (root.width - width) / 2
-        y: (root.height - height) / 2
-        dia_title: qsTr("Warn!")
-        dia_title_color: "red"
-        dia_image_source: "qrc:/res/pictures/sad.png"
-        is_single_btn: true
-        onOkClicked: {
-            dialog_machine_warn.close()
-        }
-    }
-    TLDialog {
-        id: dialog_machine_back
-        width: root.width * 0.4
-        height: root.height * 0.4
-        x: (root.width - width) / 2
-        y: (root.height - height) / 2
-        dia_title: qsTr("Back!")
-        dia_title_color: "#4F94CD"
-        dia_image_source: "qrc:/res/pictures/smile.png"
-        onOkClicked: {
-            dialog_machine_back.close()
-        }
-    }
+//    TLDialog {
+//        id: dialog_machine_warn
+//        width: root.width * 0.4
+//        height: root.height * 0.3
+//        x: (root.width - width) / 2
+//        y: (root.height - height) / 2
+//        dia_title: qsTr("Warn!")
+//        dia_title_color: "red"
+//        dia_image_source: "qrc:/res/pictures/sad.png"
+//        is_single_btn: true
+//        onOkClicked: {
+//            dialog_machine_warn.close()
+//        }
+//    }
+//    TLDialog {
+//        id: dialog_machine_back
+//        width: root.width * 0.4
+//        height: root.height * 0.4
+//        x: (root.width - width) / 2
+//        y: (root.height - height) / 2
+//        dia_title: qsTr("Back!")
+//        dia_title_color: "#4F94CD"
+//        dia_image_source: "qrc:/res/pictures/smile.png"
+//        onOkClicked: {
+//            dialog_machine_back.close()
+//        }
+//    }
 }

@@ -101,7 +101,7 @@ void MapTaskManager::sentMapTasksName(const QStringList &task_list)
 
 bool MapTaskManager::judgeIsMapTasks()
 {
-    if (_is_map_tasks) {
+    if (_is_map_tasks && !_is_map_task) {
         this->parseMapData(_map_name_list.at(0));
         this->parseTasksName(_task_data_obj);
         emit updateMapAndTasksInfo(_map_name_list.at(0));

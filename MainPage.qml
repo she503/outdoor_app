@@ -34,6 +34,8 @@ Rectangle {
         target: map_task_manager
         onUpdateMapAndTaskInfo: {
             stack_menu.replace(task_process_page)
+            stack_view.replace(task_settings_page)
+
         }
     }
     Connections {

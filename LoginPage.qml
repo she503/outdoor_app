@@ -206,6 +206,7 @@ Item{
     Connections {
         target: socket_manager
         onEmitFaildToLogin: {
+
             message_login_faild.dia_content = message
             message_login_faild.open()
         }

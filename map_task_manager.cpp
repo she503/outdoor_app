@@ -337,6 +337,7 @@ void MapTaskManager::parseMapAndTasksInfo(const QJsonObject &obj)
 
         this->parseTasksName(_task_data_obj);
     } else {
+        emit updateErrorToLoadMapOrNoneTasksInfo(message);
         qDebug() << "[MapTaskManager::parseMapAndTasksInfo]: " << message;
     }
 }

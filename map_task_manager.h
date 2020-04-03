@@ -82,6 +82,7 @@ private:
     QList<QVariantList> parseParkingSpaces(const QJsonObject &obj);
     QList<QVariantList> parseRoads(const QJsonObject &obj);
 signals:
+    void updateErrorToLoadMapOrNoneTasksInfo(const QString& message);
     void updateInitPosInfo(const int& status, const QString& message);
 
     void updateMapData(const QVariantList& trees, const QVariantList& signs,
@@ -118,7 +119,7 @@ signals:
 
     void updateTaskProcessInfo(const int& current_index, const float& progress);
 
-    void updateSetMapAndInitPosInfo(const QString& message);
+//    void updateSetMapAndInitPosInfo(const QString& message);
     void updateMapAndTasksInfo(const QString& map_name);
     void updateMapAndTaskInfo(const QString& map_name);
 

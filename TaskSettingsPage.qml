@@ -122,11 +122,11 @@ Rectangle {
             dialog_match_warn.dia_content = message
             dialog_match_warn.open()
         }
-        onUpdateSetMapAndInitPosInfo: {
-            busy.running = false
-            dialog_match_warn.dia_content = message
-            dialog_match_warn.open()
-        }
+//        onUpdateSetMapAndInitPosInfo: {
+//            busy.running = false
+//            dialog_match_warn.dia_content = message
+//            dialog_match_warn.open()
+//        }
         onUpdateMapAndTasksInfo: {
             root.choose_map_name = map_name
             root.confirmMapPage()
@@ -138,6 +138,14 @@ Rectangle {
         onUpdateInitPosInfo: {
 
         }
+        onUpdateErrorToLoadMapOrNoneTasksInfo: {
+            busy.running = false
+            dialog_match_warn.dia_title = qsTr("Error ")
+            dialog_match_warn.dia_content = message
+            dialog_match_warn.open()
+
+        }
+
         onUpdateMapName: {
             list_view_areas.currentIndex = index
             map_task_manager.parseMapData(map_name)

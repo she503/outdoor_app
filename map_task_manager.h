@@ -49,11 +49,20 @@ public:
 
     Q_INVOKABLE bool judgeIsMapTasks();
 
+    Q_INVOKABLE void sendPauseTaskCommond(const bool& is_pause);
+
+    Q_INVOKABLE void sendStopTaskCommond();
+
+    Q_INVOKABLE void getFirstMap();
+
+    Q_INVOKABLE bool getIsWorking();
+
 public:
     void setSocket(SocketManager* socket);
 private:
 
     void parseTasksName(const QJsonObject& tasks_obj);
+
 
 
 
@@ -90,7 +99,7 @@ signals:
     void updateMapFeature(const QJsonObject& begin_point, const QJsonObject& charge_point);
     void getMapInfoError(const QString& error_message);
 
-    void localizationInitInfo(const int& status, const QString& message);
+//    void localizationInitInfo(const int& status, const QString& message);
     void setTaskInfo(const int& status, const QString& message);
 
     void updateRefLine(const QVariantList& ref_line);
@@ -98,15 +107,19 @@ signals:
     void updateLocalizationInfo(const QString& time, const QString& x, const QString& y,
                                 const QString& heading, const QString& state);
     void updateChassisInfo(const QString& time, const QString& speed, const QString& omega,
-                           const QString& brak_state, const QString& dirve_mode);
+                           const int& brak_state, const int& drive_mode);
     void updateObstacleInfo(const bool& is_polygon, const QVariantList& obstacles);
     void updatePlanningInfo(const QVariantList& planning_path);
+    void updatePlanningRefInfo(const QVariantList& planning_path);
 
     void updateTaskProcessInfo(const int& current_index, const float& progress);
 
     void updateSetMapAndInitPosInfo(const QString& message);
     void updateMapAndTasksInfo(const QString& map_name);
     void updateMapAndTaskInfo(const QString& map_name);
+
+    void updatePauseTaskInfo(const bool& is_pause, const int& status);
+    void updateStopTaskInfo(const int& status);
 private slots:
 
     void parseRegionsInfo(const  QJsonObject& obj);
@@ -116,14 +129,18 @@ private slots:
 
 
     void parseMapTasksData(const QJsonObject& obj);
-    void localizationInitCB(const QJsonObject& obj);
+//    void localizationInitCB(const QJsonObject& obj);
     void setTaskCB(const QJsonObject& obj);
 
     void parseLocalizationInfo(const QJsonObject& obj);
     void parseChassisInfo(const QJsonObject& obj);
     void parseObstacleInfo(const QJsonObject& obj);
     void parsePlanningInfo(const QJsonObject& obj);
+    void parsePlanningRefInfo(const QJsonObject& obj);
     void parseTaskProcessInfo(const QJsonObject& obj);
+
+    void parsePauseTask(const bool& is_pause, const int &status);
+    void parseStopTask(const int& status);
 
 private:
     SocketManager* _socket;
@@ -137,6 +154,7 @@ private:
 
     bool _is_map_tasks;
     bool _is_map_task;
+    bool _is_working;
 
 
 };

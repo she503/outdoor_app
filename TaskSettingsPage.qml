@@ -36,7 +36,6 @@ Rectangle {
     }
 
     function confirmMapPage() {
-        rect_info_choose_map.visible = false
         rec_header_bar.visible = false
         rec_header_bar.height = 0
         rect_decoration.visible = false
@@ -61,7 +60,6 @@ Rectangle {
 
         chooseTaskPage()
         btn_start_task.visible = false
-        rect_info_choose_map.visible = false
         rec_task_control.visible = false
         rec_ref_lines.visible = false
     }
@@ -87,6 +85,7 @@ Rectangle {
             for (var i = 0; i < map_areas.length; ++i) {
                 list_model_areas.append({"id_card": i, "map_name":map_areas[i]})
             }
+            chooseMapPage()
         }
         onGetMapInfoError: {
             map_status = 0
@@ -117,16 +116,12 @@ Rectangle {
 //            }
 //            busy.running = false
 //        }
-//        onSetTaskInfo: {
-//            if (status === 0) {
-//                root.chooseTaskPage()
-//                dialog_match_warn.dia_title = message
-//                dialog_match_warn.open()
-//            } else if (status === 1) {
-//                root.startTaskPage()
-//            }
-//            busy.running = false
-//        }
+        onSetTaskInfo: {
+            root.chooseTaskPage()
+            dialog_match_warn.dia_title = qsTr("Error")//message
+            dialog_match_warn.dia_content = message
+            dialog_match_warn.open()
+        }
         onUpdateSetMapAndInitPosInfo: {
             busy.running = false
             dialog_match_warn.dia_content = message
@@ -178,7 +173,6 @@ Rectangle {
 
                             root.choose_map_name = model.map_name
                             monitor_page.choose_map_name = model.map_name
-                            rect_info_choose_map.visible = false
 
                             map_task_manager.parseMapData(model.map_name)
                             map_task_manager.getFeature(model.map_name)
@@ -214,23 +208,6 @@ Rectangle {
                     left: parent.left
                 }
                 color: "lightblue"
-            }
-
-            Rectangle {
-                id: rect_info_choose_map
-                visible: true
-                width: parent.width
-                height: parent.height * 0.1
-                color: Qt.rgba(0, 200, 0, 0.3)
-                anchors.top: rect_decoration.bottom
-                z:2
-                Text {
-                    text: qsTr("Please choose a map in top")
-                    anchors.fill: parent
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    font.pixelSize: height * 0.2
-                }
             }
 
             Rectangle {
@@ -364,7 +341,7 @@ Rectangle {
                 height: parent.height
                 color: "transparent"
                 anchors {
-                    right: parent.horizontalCenter
+                    right: parent.right
                     rightMargin: parent.width * 0.05
                     verticalCenter: parent.verticalCenter
                 }
@@ -388,45 +365,6 @@ Rectangle {
                         anchors.fill: parent
                         onClicked: {
                             map_task_manager.sentMapTasksName(root.checked_tasks_name)
-                        }
-                    }
-                }
-            }
-            Rectangle {
-                id: btn_cancle_task
-                width: parent.width * 0.2
-                height: parent.height
-                color: "transparent"
-                anchors {
-                    left: parent.horizontalCenter
-                    leftMargin: parent.width * 0.05
-                    verticalCenter: parent.verticalCenter
-                }
-                Image {
-                    anchors.fill: parent
-                    source: "qrc:/res/pictures/btn_style2.png"
-                    fillMode: Image.PreserveAspectFit
-                    horizontalAlignment: Image.AlignHCenter
-                    verticalAlignment: Image.AlignVCenter
-                    Text {
-                        text: qsTr("Cancle")
-                        anchors.fill: parent
-                        color: "lightgreen"
-                        font.pixelSize: height * 0.3
-                        font.family: "Arial"
-                        font.weight: Font.Thin
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                    }
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        if (root.checked_tasks_name.length <= 0) {
-                            dialog_match_warn.dia_title = qsTr("error, you must choose a task least")
-                            dialog_match_warn.open()
-                        } else {
-                            root.chooseMapPage()
                         }
                     }
                 }

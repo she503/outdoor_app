@@ -68,13 +68,52 @@ Rectangle {
                     id: btn_stop
                     width: (parent.width -  parent.btn_spacing)/ 3
                     height: parent.height
-                    source: "qrc:/res/pictures/progress_start.png"
+                    source: _is_pause ? "qrc:/res/pictures/progress_stop.png" :
+                                        "qrc:/res/pictures/progress_start.png"
                     fillMode: Image.PreserveAspectFit
+                    property bool _is_pause: false
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            root.sigStopBtnPress()
+                            map_task_manager.sendPauseTaskCommond(!btn_stop._is_pause)
+                            busy.running = true
+                        }
+                    }
+                    Connections {
+                        target: map_task_manager
+                        onUpdatePauseTaskInfo: {
+                            busy.running = false
 
+                            pause_stop_message.x = (parent.parent.parent.parent.width - width ) / 2
+                            pause_stop_message.y =  (parent.parent.parent.parent.height - height ) / 2
+                            y: (parent.parent.parent.parent.height - height ) / 2
+                            if (status === 0 ) {
+                                if (!btn_stop._is_pause) {
+                                    pause_stop_message.dia_title = qsTr("Error")
+                                    pause_stop_message.dia_content = qsTr("faild to start the task")
+                                    pause_stop_message.status = 0
+                                    pause_stop_message.open()
+                                } else if (btn_stop._is_pause) {
+                                    pause_stop_message.dia_title = qsTr("Error")
+                                    pause_stop_message.dia_content = qsTr("faild to stop the task")
+                                    pause_stop_message.status = 0
+                                    pause_stop_message.open()
+                                }
+                            } else if (status === 1 ) {
+                                if (!btn_stop._is_pause) {
+                                    pause_stop_message.dia_title = qsTr("Success")
+                                    pause_stop_message.dia_content = qsTr("success to pause the task, if you want start the task, please click this btn again.")
+                                    pause_stop_message.status = 1
+                                    pause_stop_message.open()
+
+                                } else if (btn_stop._is_pause) {
+                                    pause_stop_message.dia_title = qsTr("Success")
+                                    pause_stop_message.dia_content = qsTr("success to start the task")
+                                    pause_stop_message.status = 1
+                                    pause_stop_message.open()
+                                }
+                                btn_stop._is_pause = !is_pause
+                            }
                         }
                     }
                 }
@@ -87,7 +126,29 @@ Rectangle {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            root.sigEndingBtnPress()
+                            repeat_need_stop_task.x = (parent.parent.width - width ) / 2
+                            repeat_need_stop_task.y = 0
+                            repeat_need_stop_task.open()
+                        }
+                    }
+                    Connections {
+                        target: map_task_manager
+                        onUpdateStopTaskInfo: {
+                            busy.running = false
+                            repeat_need_stop_task.x = (parent.parent.parent.parent.width - width ) / 2
+                            repeat_need_stop_task.y =  (parent.parent.parent.parent.height - height ) / 2
+                            if (status === 0) {
+                                pause_stop_message.dia_title = qsTr("Error")
+                                pause_stop_message.dia_content = qsTr("faild to stop the task!")
+                                pause_stop_message.status = 0
+                                pause_stop_message.open()
+                            } /*else if (status === 1) {
+                                pause_stop_message.dia_title = qsTr("Success")
+                                pause_stop_message.dia_content = qsTr("success to stop the task!")
+                                pause_stop_message.status = 1
+                                pause_stop_message.x = 400
+                                pause_stop_message.open()
+                            }*/
                         }
                     }
                 }
@@ -210,143 +271,49 @@ Rectangle {
                                           "text_process_info": text_process[i], "data_unit_ifo": data_unit[i]})
         }
     }
-}
 
-//Rectangle {
-//    id: rec_left
-//    height: parent.height
-//    width: height / 5 * 2.4
-//    color: "transparent"
-//    Rectangle {
-//        id: rec_turn_view
-//        visible: false
-//        anchors.fill: parent
-//        color: "transparent"
-//        Rectangle {
-//            id: rec_pic_car
-//            width: parent.width
-//            height:  parent.height * 0.5
-//            anchors.top: rect_info_display.bottom
-//            anchors.left: parent.left
-//            color: "transparent"
-//            Rectangle {
-//                id: rec_power_control
-//                width: parent.width
-//                height: parent.height * 0.3
-//                color: "transparent"
-//                Row {
-//                    anchors.fill: parent
-//                    Rectangle {
-//                        width: parent.width / 3
-//                        height: parent.height
-//                        color: "transparent"
-//                        Image {
-//                            id: pic_back
-//                            width: 60 * rate * ratio
-//                            height: 60 * rate * ratio
-//                            source: "qrc:/res/pictures/back.png"
-//                            anchors.centerIn: parent
-//                            fillMode: Image.PreserveAspectFit
-//                            MouseArea {
-//                                anchors.fill: parent
-//                                onClicked: {
-//                                    dialog_machine_back.open()
-//                                }
-//                            }
-//                        }
-//                    }
-//                    Rectangle {
-//                        id: rec_machine_state
-//                        width: parent.width / 3
-//                        height: parent.height
-//                        color: "transparent"
-//                        Image {
-//                            id: pic_ok
-//                            visible: !has_error
-//                            width: 50 * rate * ratio
-//                            height: 50 * rate * ratio
-//                            source: "qrc:/res/pictures/finish.png"
-//                            anchors.centerIn: parent
-//                            fillMode: Image.PreserveAspectFit
-//                        }
-//                        Image {
-//                            id: pic_warn
-//                            visible: has_error
-//                            width: 50 * rate * ratio
-//                            height: 50 * rate * ratio
-//                            source: "qrc:/res/pictures/warn.png"
-//                            anchors.centerIn: parent
-//                            fillMode: Image.PreserveAspectFit
-//                            MouseArea {
-//                                anchors.fill: parent
-//                                onClicked: {
-//                                    dialog_machine_warn.open()
-//                                }
-//                            }
-//                        }
-//                    }
-//                    Rectangle {
-//                        id: rec_progress_state
-//                        width: parent.width / 3
-//                        height: parent.height
-//                        color: "transparent"
-//                        property bool is_processing: false
-//                        Image {
-//                            id: pic_task_stop
-//                            visible: !rec_progress_state.is_processing
-//                            width: 50 * rate * ratio
-//                            height: 50 * rate * ratio
-//                            source: "qrc:/res/pictures/progress_stop.png"
-//                            anchors.centerIn: parent
-//                            fillMode: Image.PreserveAspectFit
-//                            MouseArea {
-//                                anchors.fill: parent
-//                                onClicked: {
-//                                    if (rec_progress_state.is_processing) {
-//                                        rec_progress_state.is_processing = false
-//                                    } else {
-//                                        rec_progress_state.is_processing = true
-//                                    }
-//                                }
-//                            }
-//                        }
-//                        Image {
-//                            id: pic_task_start
-//                            visible: rec_progress_state.is_processing
-//                            width: 60 * rate * ratio
-//                            height: 60 * rate * ratio
-//                            source: "qrc:/res/pictures/progress_start.png"
-//                            anchors.centerIn: parent
-//                            fillMode: Image.PreserveAspectFit
-//                            MouseArea {
-//                                anchors.fill: parent
-//                                onClicked: {
-//                                    if (rec_progress_state.is_processing) {
-//                                        rec_progress_state.is_processing = false
-//                                    } else {
-//                                        rec_progress_state.is_processing = true
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//            Rectangle {
-//                id: rec_car_icon
-//                width: parent.width
-//                height: parent.height * 0.7
-//                anchors.top: rec_power_control.bottom
-//                color: "transparent"
-//                Image {
-//                    id: pic_car
-//                    source: "qrc:/res/pictures/logo.png"
-//                    width: 120 * rate * ratio
-//                    height: 120 * rate * ratio
-//                    anchors.centerIn:  parent
-//                    fillMode: Image.PreserveAspectFit
-//                }
-//            }
-//        }
-//    }
-//}
+    TLDialog {
+        id: pause_stop_message
+        cancel: true
+        x: (parent.parent.parent.parent.width - width ) / 2
+        y: (parent.parent.parent.parent.height - height ) / 2
+    }
+
+    TLDialog {
+        id: repeat_need_stop_task
+        cancel: true
+        ok: true
+        x: (parent.parent.parent.width - width ) / 2
+        y: (parent.parent.parent.height - height ) / 2
+        cancel_text: qsTr("cancel")
+        ok_text: qsTr("sure")
+        dia_title: qsTr("repeter")
+        status: 1
+        dia_content: qsTr("please comfirm if you need to stop task.")
+        onOkClicked: {
+            map_task_manager.sendStopTaskCommond()
+            busy.running = true
+            repeat_need_stop_task.close()
+        }
+
+    }
+
+    BusyIndicator{
+        id: busy
+        x: (parent.parent.width - width ) / 2
+        y: (parent.parent.height - height ) / 2
+        running: false
+        width: parent.height * 0.2
+        height: width
+        anchors.centerIn: parent
+        Timer{
+            running: busy.running
+            interval: 2000
+            onTriggered: {
+                busy.running = false
+                pause_stop_message.open()
+                pause_stop_message.dia_title = qsTr("Error")
+            }
+        }
+    }
+}

@@ -8,7 +8,13 @@ Item{
     property var user_level: 0
     property string test_text: "root"
     signal successToLogin()
+    property alias connect_fail_view: connect_fail_view
 
+    Rectangle {
+        id: connect_fail_view
+        color: "white"
+        visible: false
+    }
 
     FontLoader {
         id: font_hanzhen;
@@ -170,12 +176,12 @@ Item{
 
                 }
                 onClicked: {
-                    if (socket_manager.judgeIsConnected()) {
+//                    if (socket_manager.judgeIsConnected()) {
                         account_manager.accountLogin(username.text, password.text)
 //                        root.user_name = username.text
-                    } else {
+//                    } else {
 
-                    }
+//                    }
 
 
                 }
@@ -214,8 +220,9 @@ Item{
         dia_title: qsTr("connect error!")
         status: 0
         cancel_text: qsTr("OK")
-        onCancelChanged: {
-            message_login_faild.close()
+
+        onCencelClicked: {
+            Qt.quit()
         }
     }
 

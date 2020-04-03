@@ -27,8 +27,8 @@ Rectangle {
                 anchors.fill: parent
                 url: {
                     if (account_manager.isAndroid) {
-                        "qrc:/res/html/test.html"
-//                        "file:///android_asset/test.html"
+//                        "qrc:/res/html/test.html"
+                        "file:///android_asset/test.html"
                     } else {
                         "qrc:/res/html/test.html"
                     }

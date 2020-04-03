@@ -533,14 +533,12 @@ Rectangle {
         onEmitAddAccountCB: {
             switch (status) {
             case 0:
-                message_account.dia_title = qsTr("user name has exited !")
-                message_account.dia_title_color = "red"
-                message_account.dia_image_source = "qrc:/res/pictures/sad.png"
+                message_account.dia_content = qsTr("user name has exited !")
+                message_account.dia_title = qsTr("Error")
                 message_account.open()
                 break;
             case 1:
                 message_account.dia_title = qsTr("a new user was added")
-                message_account.dia_title_color = "#4F94CD"
                 message_account.dia_image_source = "qrc:/res/pictures/smile.png"
                 message_account.open()
                 break;

@@ -259,6 +259,16 @@ Rectangle {
 
                 }
             }
+            ListModel {
+                id: list_model_process
+            }
+        }
+    }
+    function addProcessdata()
+    {
+        for (var i = 0; i < text_process.length; ++i) {
+            list_model_process.append({"obj_name_process_info": obj_name_process[i],
+                                          "text_process_info": text_process[i], "data_unit_ifo": data_unit[i]})
         }
     }
 

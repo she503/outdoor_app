@@ -1,13 +1,25 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.3
 import "CustomControl"
 
 Rectangle {
     id: root
 
     color: "transparent"
+    property bool has_error: false
+    property bool turn_task_page: false
 
+    property var error_list: [Qt.formatDateTime(new Date(), "hh:mm:ss"), "error level", "error code", "error detail"]
+    property var error_message_info: [error_list]
+    property var error_level: 0//: ["debug", "warn", "error"]
+    property var error_text_color: "red"//: ["yellow", "orange", "red"]
+    onError_levelChanged: {
+        if (error_level % 2 == 0 ) {
+            error_text_color = "red"
+        } else {
+            error_text_color = "green"
+        }
+    }
 
     property Component user_manage_page: UserManagePage {}
 
@@ -95,6 +107,7 @@ Rectangle {
             }
         }
     }
+
 
     Rectangle {
         id: rec_left

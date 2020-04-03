@@ -221,7 +221,7 @@ Item{
         status: 0
         cancel_text: qsTr("OK")
 
-        onCencelClicked: {
+        onCancelClicked: {
             Qt.quit()
         }
     }

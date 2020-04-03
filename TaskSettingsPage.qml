@@ -480,13 +480,12 @@ Rectangle {
         ok: true
         cancel_text: qsTr("cancel")
         ok_text: qsTr("yes")
-        is_single_btn: false
         onOkClicked: {
             dialog_resure.close()
             monitor_page.sendInitPoint()
             busy.running = true
         }
-        onCencelClicked: {
+        onCancelClicked: {
             root.chooseMapPage()
             dialog_resure.close()
         }

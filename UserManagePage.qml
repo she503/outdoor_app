@@ -106,8 +106,8 @@ Rectangle {
         y: (root.height - height) / 2
         dia_title: qsTr("Warn!")
         dia_image_source: ""
-        is_single_btn: true
-        onOkClicked: {
+        ok: false
+        onCancelClicked: {
             message_account.close()
         }
     }

@@ -6,26 +6,10 @@ Rectangle {
     id: root
 
     color: "transparent"
-    property bool has_error: false
-    property bool turn_task_page: false
-
-    property var error_list: [Qt.formatDateTime(new Date(), "hh:mm:ss"), "error level", "error code", "error detail"]
-    property var error_message_info: [error_list]
-    property var error_level: 0//: ["debug", "warn", "error"]
-    property var error_text_color: "red"//: ["yellow", "orange", "red"]
-    onError_levelChanged: {
-        if (error_level % 2 == 0 ) {
-            error_text_color = "red"
-        } else {
-            error_text_color = "green"
-        }
-    }
 
     property Component user_manage_page: UserManagePage {}
-
     property Component help_document_page: HelpDocumentPage { }
     property Component about_machine_page: AboutMachinePage { }
-
     signal mainPageChanged(var current_index)
 
 

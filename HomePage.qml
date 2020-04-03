@@ -86,17 +86,4 @@ Rectangle {
             }
         }
     }
-    //    TLDialog {
-    //        id: dialog_machine_warn
-    //        width: root.width * 0.6
-    //        height: root.height * 0.3
-    //        x: (root.width - width) / 2
-    //        y: (root.height - height) / 2
-    //        dia_title: qsTr("Warn!")
-    //        dia_image_source: "qrc:/res/pictures/sad.png"
-    //        is_single_btn: true
-    //        onOkClicked: {
-    //            dialog_machine_warn.close()
-    //        }
-    //    }
 }

@@ -46,9 +46,11 @@ bool SocketManager::connectToHost(const QString &ip, const QString &port)
 
 bool SocketManager::disConnet()
 {
+    QString message = tr("app disconnect to server!");
+
     _socket->disconnectFromHost();
     _socket->close();
-    emit appDisconnected();
+    emit appDisconnected(message);
     return true;
 }
 

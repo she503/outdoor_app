@@ -64,5 +64,6 @@
         <file>res/pictures/logo_2.png</file>
         <file>res/pictures/success_background.png</file>
         <file>res/pictures/error_background.png</file>
+        <file>res/pictures/warning.png</file>
     </qresource>
 </RCC>

@@ -27,7 +27,6 @@ Rectangle {
                 root.mainPageChanged(0)
                 stack_menu.replace(list_view)
                 list_view.currentIndex = 0
-
             }
         }
     }
@@ -82,7 +81,7 @@ Rectangle {
 
         MessageViewPage {
             id: message_view
-            height: parent.height * 0.8
+            height: parent.height
             width: height
             anchors {
                 right: parent.right

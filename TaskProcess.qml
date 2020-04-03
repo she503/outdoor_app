@@ -275,8 +275,7 @@ Rectangle {
     TLDialog {
         id: pause_stop_message
         cancel: true
-        x: (parent.parent.parent.parent.width - width ) / 2
-        y: (parent.parent.parent.parent.height - height ) / 2
+
     }
 
     TLDialog {

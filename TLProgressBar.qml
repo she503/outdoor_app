@@ -9,6 +9,13 @@ ProgressBar {
 
     value: 0.5
 
+    Connections {
+        target: ros_message_manager
+        onUpdateTaskProcessInfo: {
+            root.value = progress
+        }
+    }
+
     background: Rectangle {
         implicitWidth: 200
         implicitHeight: 12

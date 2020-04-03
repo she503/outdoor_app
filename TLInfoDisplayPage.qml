@@ -46,7 +46,7 @@ Rectangle {
     //    }
 
     Connections {
-        target: map_task_manager
+        target: ros_message_manager
         onUpdateChassisInfo: {
             var v_speed = speed
             var n_speed = Number(v_speed)

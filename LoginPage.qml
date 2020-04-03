@@ -14,6 +14,12 @@ Item{
         id: connect_fail_view
         color: "white"
         visible: false
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                Qt.quit()
+            }
+        }
     }
 
     FontLoader {
@@ -176,14 +182,7 @@ Item{
 
                 }
                 onClicked: {
-//                    if (socket_manager.judgeIsConnected()) {
                         account_manager.accountLogin(username.text, password.text)
-//                        root.user_name = username.text
-//                    } else {
-
-//                    }
-
-
                 }
             }
         }
@@ -210,7 +209,17 @@ Item{
             message_login_faild.dia_content = message
             message_login_faild.open()
         }
+        onAppDisconnected: {
+            message_login_faild.dia_content = message
+            message_login_faild.open()
+            stack_view_main.replace(connect_fail_view)
+        }
     }
+
+//    Connections {
+//        target: socket_manager
+
+//    }
 
     TLDialog {
         id: message_login_faild
@@ -222,7 +231,7 @@ Item{
         status: 0
         cancel_text: qsTr("OK")
 
-        onCencelClicked: {
+        onCancelClicked: {
             Qt.quit()
         }
     }

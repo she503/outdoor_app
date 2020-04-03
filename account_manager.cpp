@@ -40,7 +40,6 @@ void AccountManager::accountUpdate(const QString &username, const QString &passw
 {
     if (need_old_pwd ) {
         QString real_old_pwd = _accounts_map.value(username).first;
-        qDebug() << real_old_pwd << old_pwd;
         if (real_old_pwd != old_pwd) {
             QJsonObject temp_obj;
             temp_obj.insert("status", 0);

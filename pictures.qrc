@@ -19,13 +19,9 @@
         <file>res/pictures/finish_2.png</file>
         <file>res/pictures/button.png</file>
         <file>res/pictures/gear-shift.png</file>
-        <file>res/pictures/power_off.png</file>
-        <file>res/pictures/power_on.png</file>
         <file>res/pictures/speed.png</file>
         <file>res/pictures/water.png</file>
         <file>res/pictures/eye.png</file>
-        <file>res/pictures/progress_start.png</file>
-        <file>res/pictures/progress_stop.png</file>
         <file>res/html/test.html</file>
         <file>res/pictures/back.png</file>
         <file>res/pictures/login_background.png</file>
@@ -64,5 +60,9 @@
         <file>res/pictures/logo_2.png</file>
         <file>res/pictures/success_background.png</file>
         <file>res/pictures/error_background.png</file>
+        <file>res/pictures/warning.png</file>
+        <file>res/pictures/task_stop.png</file>
+        <file>res/pictures/task_start.png</file>
+        <file>res/pictures/task_end.png</file>
     </qresource>
 </RCC>

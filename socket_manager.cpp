@@ -46,9 +46,11 @@ bool SocketManager::connectToHost(const QString &ip, const QString &port)
 
 bool SocketManager::disConnet()
 {
+    QString message = tr("app disconnect to server!");
+
     _socket->disconnectFromHost();
     _socket->close();
-    emit appDisconnected();
+    emit appDisconnected(message);
     return true;
 }
 
@@ -102,6 +104,7 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             QJsonObject obj = doc.object();
             MessageType message_type = MessageType(obj.value("message_type").toInt());
             switch (message_type) {
+
             case MessageType::MESSAGE_ALL_MAPS_INFO:
                 emit mapsInfo(obj);
                 break;
@@ -111,21 +114,30 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_CURRENT_MAP_AND_TASKS:
                 emit sendMapAndTasks(obj); //yi ge di tu he gai di tu de suo you can kao xian
                 break;
+            case MessageType::MESSAGE_TASKS_INFO:
+                emit tasksData(obj);
+                break;
             case MessageType::MESSAGE_CURRENT_MAP_AND_TASK:
                 emit sendMapAndTask(obj); // yi ge di tu he dui ying de yi jing xuan ze hao de can kao xian
                 break;
             case MESSAGE_SET_MAP_RST:
                 emit parseMapName(obj);
                 break;
-//            case MessageType::MESSAGE_SET_MAP_INIT_POSE_RST:
-//                emit setMapAndInitPosRST(obj);
-//                break;
-            case MessageType::MESSAGE_TASKS_INFO:
-                emit tasksData(obj);
-                break;
+
             case  MessageType::MESSAGE_LOGIN_RST:
                 emit checkoutLogin(obj);
                 break;
+            case MessageType::MESSAGE_SET_TASKS_RST:
+                emit setTasksRST(obj);
+                break;
+            case MessageType::MESSAGE_PAUSE_TASK_RST:
+                emit pauseTaskRST(obj.value("current_status").toBool(),obj.value("status").toInt());
+                break;
+            case MessageType::MESSAGE_STOP_TASK_RST:
+                emit pauseStopTaskRST(obj.value("status").toInt());
+                break;
+
+
             case MessageType::MESSAGE_ADD_ACCOUNT_RST:
                 emit addUser(obj);
                 break;
@@ -138,14 +150,13 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_ALL_ACCOUNTS_INFO:
                 emit allUser(obj);
                 break;
-//            case MessageType::MESSAGE_SET_INIT_LOCALIZATION_RST:
-//                emit localizationInitRST(obj);
-//                break;
-            case MessageType::MESSAGE_SET_TASKS_RST:
-                emit setTasksRST(obj);
-                break;
+
+
             case MessageType::MESSAGE_LOCALIZATION_INFO:
                 emit localizationInfo(obj);
+                break;
+            case MessageType::MESSAGE_TASK_INFO:
+                emit taskProcessInfo(obj);
                 break;
             case MessageType::MESSAGE_CHASSIS_INFO:
                 emit chassisInfo(obj);
@@ -159,16 +170,7 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_PLANNING_REF_LINE:
                 emit planningRefInfo(obj);
                 break;
-            case MessageType::MESSAGE_TASK_INFO:
-                emit taskProcessInfo(obj);
-                break;
-            case MessageType::MESSAGE_PAUSE_TASK_RST:
-                emit pauseTaskRST(obj.value("current_status").toBool(),obj.value("status").toInt());
-                qDebug() << obj;
-                break;
-            case MessageType::MESSAGE_STOP_TASK_RST:
-                emit pauseStopTaskRST(obj.value("status").toInt());
-                break;
+
             default:
                 qDebug() << "======>" <<obj;
                 break;

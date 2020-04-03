@@ -35,13 +35,7 @@ void MapTaskManager::setSocket(SocketManager *socket)
     connect(_socket, SIGNAL(pauseTaskRST(bool, int)), this, SLOT(parsePauseTask(bool, int)));
     connect(_socket, SIGNAL(pauseStopTaskRST(int)), this, SLOT(parseStopTask(int)));
 
-    connect(_socket, SIGNAL(localizationInfo(QJsonObject)), this, SLOT(parseLocalizationInfo(QJsonObject)));
-    connect(_socket, SIGNAL(chassisInfo(QJsonObject)), this, SLOT(parseChassisInfo(QJsonObject)));
-    connect(_socket, SIGNAL(obstaclesInfo(QJsonObject)), this, SLOT(parseObstacleInfo(QJsonObject)));
-    connect(_socket, SIGNAL(planningInfo(QJsonObject)), this, SLOT(parsePlanningInfo(QJsonObject)));
-    connect(_socket, SIGNAL(planningRefInfo(QJsonObject)), this, SLOT(parsePlanningRefInfo(QJsonObject)));
 
-    connect(_socket, SIGNAL(taskProcessInfo(QJsonObject)), this, SLOT(parseTaskProcessInfo(QJsonObject)));
 }
 
 //bool MapTaskManager::sendInitPosAndMapName(const QString& map_name, const QString &pos_x, const QString &pos_y)
@@ -174,7 +168,12 @@ void MapTaskManager::setMapName(const QString &map_name)
     _socket->sendSocketMessage(doc.toJson());
 }
 
-
+void MapTaskManager::setTaskCB(const QJsonObject &obj)
+{
+    int status = obj.value("status").toInt();
+    QString message = obj.value("message").toString();
+    emit setTaskInfo(status, message);
+}
 
 void MapTaskManager::parseTasksName(const QJsonObject &tasks_obj)
 {
@@ -207,65 +206,6 @@ void MapTaskManager::parseTasksName(const QJsonObject &tasks_obj)
 //    emit localizationInitInfo(status, message);
 //}
 
-void MapTaskManager::setTaskCB(const QJsonObject &obj)
-{
-    int status = obj.value("status").toInt();
-    QString message = obj.value("message").toString();
-    emit setTaskInfo(status, message);
-//    if (status == 1) {
-//        QJsonObject temp_obj = obj.value("ref_line").toObject();
-//        QVariantList pts = temp_obj.value("pts").toArray().toVariantList();
-//        emit updateRefLine(pts);
-//    }
-}
-
-void MapTaskManager::parseLocalizationInfo(const QJsonObject &obj)
-{
-    QString time = obj.value("time").toString();
-    QString x = obj.value("X").toString();
-    QString y = obj.value("Y").toString();
-    QString heading = obj.value("heading").toString();
-    QString state = obj.value("state").toString();
-
-    emit updateLocalizationInfo(time, x, y, heading, state);
-}
-
-void MapTaskManager::parseChassisInfo(const QJsonObject &obj)
-{
-    QString time = obj.value("time").toString();
-    QString speed = obj.value("speed").toString();
-    QString omega = obj.value("omega").toString();
-    int brake_state = obj.value("brak_state").toInt();
-    int drive_mode = obj.value("drive_mode").toInt();
-    emit updateChassisInfo(time, speed, omega, brake_state, drive_mode);
-}
-
-void MapTaskManager::parseObstacleInfo(const QJsonObject &obj)
-{
-    bool is_polygon = obj.value("is_polygon").toBool();
-    QVariantList obstacles = obj.value("obstacles").toArray().toVariantList();
-
-    emit updateObstacleInfo(is_polygon, obstacles);
-}
-
-void MapTaskManager::parsePlanningInfo(const QJsonObject &obj)
-{
-    QVariantList planning_path = obj.value("path").toArray().toVariantList();
-    emit updatePlanningInfo(planning_path);
-}
-
-void MapTaskManager::parsePlanningRefInfo(const QJsonObject &obj)
-{
-    QVariantList planning_path = obj.value("path").toArray().toVariantList();
-    emit updatePlanningRefInfo(planning_path);
-}
-
-void MapTaskManager::parseTaskProcessInfo(const QJsonObject &obj)
-{
-    int current_index = obj.value("current_index").toInt();
-    float progress = obj.value("progress").toDouble();
-    emit updateTaskProcessInfo(current_index, progress);
-}
 
 void MapTaskManager::parsePauseTask(const bool &is_pause, const int& status)
 {

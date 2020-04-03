@@ -11,7 +11,6 @@ Rectangle {
 
     property string map_name: ""
     property string work_time: ""
-    property string progress: ""
     property string title_color: "white"
     property string font_color: "lightgreen"
 
@@ -20,9 +19,9 @@ Rectangle {
     signal sigEndingBtnPress()
 
     Connections {
-        target: map_task_manager
+        target: ros_message_manager
         onUpdateTaskProcessInfo: {
-            root.progress = progress * 100;
+            text_progress.text = "" + progress * 100 + " %";
 
         }
     }
@@ -68,8 +67,8 @@ Rectangle {
                     id: btn_stop
                     width: (parent.width -  parent.btn_spacing)/ 3
                     height: parent.height
-                    source: _is_pause ? "qrc:/res/pictures/progress_stop.png" :
-                                        "qrc:/res/pictures/progress_start.png"
+                    source: _is_pause ? "qrc:/res/pictures/task_stop.png" :
+                                        "qrc:/res/pictures/task_start.png"
                     fillMode: Image.PreserveAspectFit
                     property bool _is_pause: false
                     MouseArea {
@@ -100,18 +99,18 @@ Rectangle {
                                     pause_stop_message.open()
                                 }
                             } else if (status === 1 ) {
-                                if (!btn_stop._is_pause) {
-                                    pause_stop_message.dia_title = qsTr("Success")
-                                    pause_stop_message.dia_content = qsTr("success to pause the task, if you want start the task, please click this btn again.")
-                                    pause_stop_message.status = 1
-                                    pause_stop_message.open()
+//                                if (!btn_stop._is_pause) {
+//                                    pause_stop_message.dia_title = qsTr("Success")
+//                                    pause_stop_message.dia_content = qsTr("success to pause the task, if you want start the task, please click this btn again.")
+//                                    pause_stop_message.status = 1
+//                                    pause_stop_message.open()
 
-                                } else if (btn_stop._is_pause) {
-                                    pause_stop_message.dia_title = qsTr("Success")
-                                    pause_stop_message.dia_content = qsTr("success to start the task")
-                                    pause_stop_message.status = 1
-                                    pause_stop_message.open()
-                                }
+//                                } else if (btn_stop._is_pause) {
+//                                    pause_stop_message.dia_title = qsTr("Success")
+//                                    pause_stop_message.dia_content = qsTr("success to start the task")
+//                                    pause_stop_message.status = 1
+//                                    pause_stop_message.open()
+//                                }
                                 btn_stop._is_pause = !is_pause
                             }
                         }
@@ -121,7 +120,7 @@ Rectangle {
                     id: btn_ending
                     width:  (parent.width -  parent.btn_spacing)/ 3
                     height: parent.height
-                    source: "qrc:/res/pictures/power_on.png"
+                    source: "qrc:/res/pictures/task_end.png"
                     fillMode: Image.PreserveAspectFit
                     MouseArea {
                         anchors.fill: parent
@@ -247,7 +246,7 @@ Rectangle {
                     }
                     Text {
                         id: text_progress
-                        text: root.progress + "%"
+                        text: "%"
                         width: parent.width * 0.3
                         height: parent.height
                         verticalAlignment: Text.AlignVCenter
@@ -275,8 +274,7 @@ Rectangle {
     TLDialog {
         id: pause_stop_message
         cancel: true
-        x: (parent.parent.parent.parent.width - width ) / 2
-        y: (parent.parent.parent.parent.height - height ) / 2
+
     }
 
     TLDialog {

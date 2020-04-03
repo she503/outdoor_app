@@ -10,6 +10,7 @@
 #include "socket_manager.h"
 #include "account_manager.h"
 #include "map_task_manager.h"
+#include "ros_message_manager.h"
 
 
 int main(int argc, char *argv[])
@@ -34,6 +35,10 @@ int main(int argc, char *argv[])
     MapTaskManager* map_task_manager = new MapTaskManager(&engine);
     engine.rootContext()->setContextProperty("map_task_manager", map_task_manager);
     map_task_manager->setSocket(socket_manager);
+
+    RosMessageManager* ros_message_manager = new RosMessageManager(&engine);
+    engine.rootContext()->setContextProperty("ros_message_manager", ros_message_manager);
+    ros_message_manager->setSocket(socket_manager);
 
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())

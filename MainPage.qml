@@ -6,26 +6,10 @@ Rectangle {
     id: root
 
     color: "transparent"
-    property bool has_error: false
-    property bool turn_task_page: false
-
-    property var error_list: [Qt.formatDateTime(new Date(), "hh:mm:ss"), "error level", "error code", "error detail"]
-    property var error_message_info: [error_list]
-    property var error_level: 0//: ["debug", "warn", "error"]
-    property var error_text_color: "red"//: ["yellow", "orange", "red"]
-    onError_levelChanged: {
-        if (error_level % 2 == 0 ) {
-            error_text_color = "red"
-        } else {
-            error_text_color = "green"
-        }
-    }
 
     property Component user_manage_page: UserManagePage {}
-
     property Component help_document_page: HelpDocumentPage { }
     property Component about_machine_page: AboutMachinePage { }
-
     signal mainPageChanged(var current_index)
 
 
@@ -45,7 +29,6 @@ Rectangle {
                 root.mainPageChanged(0)
                 stack_menu.replace(list_view)
                 list_view.currentIndex = 0
-
             }
         }
     }
@@ -73,10 +56,21 @@ Rectangle {
                 stack_menu.replace(list_view)
                 root.mainPageChanged(2)
             } else {
+                dialog_working_states.dia_title = qsTr("Error")
+                dialog_working_states.dia_content = qsTr("There is no task is working, you can click the \"setting\" btn to create one!")
                 dialog_working_states.open()
             }
-
-
+        }
+        onStartBtnPress: {
+            if (!map_task_manager.getIsWorking()) {
+                list_view.currentIndex = 2
+                stack_menu.replace(list_view)
+                root.mainPageChanged(2)
+            } else {
+                dialog_working_states.dia_title = qsTr("Faild")
+                dialog_working_states.dia_content = qsTr("Faild turn to task page, the jiqi is working!")
+                dialog_working_states.open()
+            }
         }
     }
     TaskSettingsPage {
@@ -100,7 +94,7 @@ Rectangle {
 
         MessageViewPage {
             id: message_view
-            height: parent.height * 0.8
+            height: parent.height
             width: height
             anchors {
                 right: parent.right
@@ -233,8 +227,7 @@ Rectangle {
 
     TLDialog {
         id: dialog_working_states
-        dia_title: qsTr("Error")
-        dia_content: qsTr("There is no task is working, you can click the \"setting\" btn to create one!")
+
     }
 
     //    TLDialog {

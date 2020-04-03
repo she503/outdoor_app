@@ -62,7 +62,7 @@ signals:
     void taskProcessInfo(const QJsonObject& obj);
 
     // app断开连接发出信号
-    void appDisconnected();
+    void appDisconnected(const QString& message);
     
     // 数据发送
     void sendDataToSocket(const QByteArray& data);

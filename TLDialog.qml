@@ -10,7 +10,6 @@ Dialog {
     y: (parent.height - height) / 2
     //test
     property string dia_image_source: "qrc:/res/pictures/sad.png"
-    property bool is_single_btn: true
     property string dia_title_color: "value"
 
     property int status: 0 // "success" : 1;     "faild" : 0
@@ -27,7 +26,7 @@ Dialog {
                                                "qrc:/res/pictures/success_background.png"
 
     signal okClicked()
-    signal cencelClicked()
+    signal cancelClicked()
     background: Rectangle {
         color: "transparent"
         Image {
@@ -101,7 +100,7 @@ Dialog {
                 btn_text: root.cancel_text
                 onClicked: {
                     root.close()
-                    cencelClicked()
+                    cancelClicked()
                 }
             }
             TLButton {

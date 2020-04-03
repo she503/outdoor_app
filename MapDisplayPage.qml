@@ -857,13 +857,8 @@ Page {
         }
     }
 
-    // | reference line | localization | obstacles | task Process | planning
     Connections {
-        target: map_task_manager
-        onUpdateRefLine: {
-            root.var_ref_line = ref_line
-            canvas_ref_line.requestPaint()
-        }
+        target: ros_message_manager
         onUpdateLocalizationInfo: {
             vehicle.visible = true
             var pixel_pos = geometryToPixel(x, y)
@@ -877,10 +872,6 @@ Page {
             obstacles_is_polygon = is_polygon
             canvas_planning.requestPaint()
         }
-        onUpdateTaskProcessInfo: {
-            ref_line_curren_index = current_index
-            canvas_red_ref_line.requestPaint()
-        }
         onUpdatePlanningInfo: {
             var_planning_path = planning_path
             canvas_red_ref_line.requestPaint()
@@ -888,6 +879,19 @@ Page {
         onUpdatePlanningRefInfo: {
             root.var_planning_ref_path = planning_path
             canvas_planning_ref_line.requestPaint()
+        }
+        onUpdateTaskProcessInfo: {
+            ref_line_curren_index = current_index
+            canvas_red_ref_line.requestPaint()
+        }
+    }
+
+    // | reference line | localization | obstacles | task Process | planning
+    Connections {
+        target: map_task_manager
+        onUpdateRefLine: {
+            root.var_ref_line = ref_line
+            canvas_ref_line.requestPaint()
         }
     }
 

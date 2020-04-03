@@ -7,17 +7,29 @@ MapTaskManager::MapTaskManager(QObject *parent) : QObject(parent)
     _is_working = false;
 }
 
+void MapTaskManager::sendInitPos(const QString &pos_x, const QString &pos_y)
+{
+    QJsonObject obj;
+    obj.insert("message_type", int(MESSAGE_SET_INIT_POSE));
+    obj.insert("x", pos_x);
+    obj.insert("y", pos_y);
+    QJsonDocument doc(obj);
+    _socket->sendSocketMessage(doc.toJson());
+}
+
 void MapTaskManager::setSocket(SocketManager *socket)
 {
     _socket = socket;
     connect(_socket, SIGNAL(mapsInfo(QJsonObject)), this, SLOT(parseRegionsInfo(QJsonObject)));
     connect(_socket, SIGNAL(sendMapAndTasks(QJsonObject)), this, SLOT(parseMapAndTasksInfo(QJsonObject)));
     connect(_socket, SIGNAL(sendMapAndTask(QJsonObject)), this, SLOT(parseMapAndTaskInfo(QJsonObject)));
-    connect(_socket, SIGNAL(setMapAndInitPosRST(QJsonObject)), this, SLOT(parseSetMapAndInitPosInfo(QJsonObject)));
+//    connect(_socket, SIGNAL(setMapAndInitPosRST(QJsonObject)), this, SLOT(parseSetMapAndInitPosInfo(QJsonObject)));
+    connect(_socket, SIGNAL(parseMapName(QJsonObject)), this, SLOT(parseMapName(QJsonObject)));
 
     connect(_socket, SIGNAL(tasksData(QJsonObject)), this, SLOT(parseMapTasksData(QJsonObject)));
 //    connect(_socket, SIGNAL(localizationInitRST(QJsonObject)), this, SLOT(localizationInitCB(QJsonObject)));
     connect(_socket, SIGNAL(setTasksRST(QJsonObject)), this, SLOT(setTaskCB(QJsonObject)));
+    connect(_socket, SIGNAL(setInitPosRST(QJsonObject)), this, SLOT(setInitPosCB(QJsonObject)));
 
 
     connect(_socket, SIGNAL(pauseTaskRST(bool, int)), this, SLOT(parsePauseTask(bool, int)));
@@ -32,16 +44,16 @@ void MapTaskManager::setSocket(SocketManager *socket)
     connect(_socket, SIGNAL(taskProcessInfo(QJsonObject)), this, SLOT(parseTaskProcessInfo(QJsonObject)));
 }
 
-bool MapTaskManager::sendInitPosAndMapName(const QString& map_name, const QString &pos_x, const QString &pos_y)
-{
-    QJsonObject object;
-    object.insert("message_type", int(MESSAGE_SET_MAP_INIT_POSE));
-    object.insert("map_name", map_name);
-    object.insert("x", pos_x);
-    object.insert("y", pos_y);
-    QJsonDocument doc(object);
-    _socket->sendSocketMessage(doc.toJson());
-}
+//bool MapTaskManager::sendInitPosAndMapName(const QString& map_name, const QString &pos_x, const QString &pos_y)
+//{
+//    QJsonObject object;
+//    object.insert("message_type", int(MESSAGE_SET_MAP_INIT_POSE));
+//    object.insert("map_name", map_name);
+//    object.insert("x", pos_x);
+//    object.insert("y", pos_y);
+//    QJsonDocument doc(object);
+//    _socket->sendSocketMessage(doc.toJson());
+//}
 
 
 void MapTaskManager::getTasksData(const QStringList &task_name)
@@ -151,6 +163,15 @@ void MapTaskManager::getFirstMap()
 bool MapTaskManager::getIsWorking()
 {
     return _is_working;
+}
+
+void MapTaskManager::setMapName(const QString &map_name)
+{
+    QJsonObject obj;
+    obj.insert("message_type", MESSAGE_SET_MAP);
+    obj.insert("map_name", map_name);
+    QJsonDocument doc(obj);
+    _socket->sendSocketMessage(doc.toJson());
 }
 
 
@@ -351,13 +372,28 @@ void MapTaskManager::parseMapAndTaskInfo(const QJsonObject &obj)
     }
 }
 
-void MapTaskManager::parseSetMapAndInitPosInfo(const QJsonObject &obj)
+void MapTaskManager::parseMapName(const QJsonObject &obj)
 {
-    QString message = obj.value("message").toString();
-    int status = obj.value("status").toInt();
-    qDebug() <<"[ MapTaskManager::parseSetMapAndInitPosInfo]:" << status;
-    emit updateSetMapAndInitPosInfo(message);
+    QString map_name = obj.value("map_name").toString();
+    int index = -1;
+
+    for (int i = 0; i < _map_name_list.size(); ++ i) {
+        if (_map_name_list.at(i) == map_name) {
+            index = i;
+            break;
+        }
+
+    }
+    emit updateMapName(map_name, index);
 }
+
+//void MapTaskManager::parseSetMapAndInitPosInfo(const QJsonObject &obj)
+//{
+//    QString message = obj.value("message").toString();
+//    int status = obj.value("status").toInt();
+//    qDebug() <<"[ MapTaskManager::parseSetMapAndInitPosInfo]:" << status;
+//    emit updateSetMapAndInitPosInfo(message);
+//}
 
 void MapTaskManager::parseMapTasksData(const QJsonObject &obj)
 {
@@ -665,6 +701,13 @@ QList<QVariantList> MapTaskManager::parseRoads(const QJsonObject &obj)
         }
     }
     return list;
+}
+
+void MapTaskManager::setInitPosCB(const QJsonObject &obj)
+{
+    int status = obj.value("status").toInt();
+    QString message = obj.value("message").toString();
+    emit updateInitPosInfo(status, message); //to do
 }
 
 

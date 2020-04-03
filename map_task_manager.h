@@ -15,7 +15,8 @@ public:
     /**
      * @brief 地图点击初始化
      */
-    Q_INVOKABLE bool sendInitPosAndMapName(const QString &map_name, const QString& pos_x, const QString& pos_y);
+//    Q_INVOKABLE bool sendInitPosAndMapName(const QString &map_name, const QString& pos_x, const QString& pos_y);
+    Q_INVOKABLE void sendInitPos(const QString& pos_x, const QString& pos_y);
 
     /**
       * @brief send map info by param map_name
@@ -57,6 +58,8 @@ public:
 
     Q_INVOKABLE bool getIsWorking();
 
+    Q_INVOKABLE void setMapName(const QString& map_name);
+
 public:
     void setSocket(SocketManager* socket);
 private:
@@ -79,6 +82,7 @@ private:
     QList<QVariantList> parseParkingSpaces(const QJsonObject &obj);
     QList<QVariantList> parseRoads(const QJsonObject &obj);
 signals:
+    void updateInitPosInfo(const int& status, const QString& message);
 
     void updateMapData(const QVariantList& trees, const QVariantList& signs,
                        const QVariantList& stop_signs, const QVariantList& speed_bumps,
@@ -120,12 +124,15 @@ signals:
 
     void updatePauseTaskInfo(const bool& is_pause, const int& status);
     void updateStopTaskInfo(const int& status);
+    void updateMapName(const QString& map_name, const int& index);
 private slots:
+    void setInitPosCB(const QJsonObject& obj);
 
     void parseRegionsInfo(const  QJsonObject& obj);
     void parseMapAndTasksInfo(const QJsonObject& obj);
     void parseMapAndTaskInfo(const QJsonObject& obj);
-    void parseSetMapAndInitPosInfo(const QJsonObject& obj);
+    void parseMapName(const QJsonObject& obj);
+//    void parseSetMapAndInitPosInfo(const QJsonObject& obj);
 
 
     void parseMapTasksData(const QJsonObject& obj);

@@ -135,6 +135,14 @@ Rectangle {
             root.choose_map_name = map_name
             root.startTaskPage()
         }
+        onUpdateInitPosInfo: {
+
+        }
+        onUpdateMapName: {
+            list_view_areas.currentIndex = index
+            map_task_manager.parseMapData(map_name)
+            map_task_manager.getFeature(map_name)
+        }
     }
     Rectangle {
         id: rec_glow_background
@@ -174,8 +182,9 @@ Rectangle {
                             root.choose_map_name = model.map_name
                             monitor_page.choose_map_name = model.map_name
 
-                            map_task_manager.parseMapData(model.map_name)
-                            map_task_manager.getFeature(model.map_name)
+                            map_task_manager.setMapName(model.map_name)
+//                            map_task_manager.parseMapData(model.map_name)
+//                            map_task_manager.getFeature(model.map_name)
                         }
 
                         Rectangle {

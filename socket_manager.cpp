@@ -12,8 +12,8 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
     _socket = new QTcpSocket(this);
     _socket->setReadBufferSize(10 * 1024 * 1024);
 
-    this->connectToHost("127.0.0.1", "32432");
-//    this->connectToHost("192.168.8.143", "32432");
+//    this->connectToHost("127.0.0.1", "32432");
+    this->connectToHost("192.168.8.165", "32432");
 
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));
     connect(_socket, SIGNAL(disconnected()), this, SLOT(disConnet()));
@@ -105,15 +105,21 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_ALL_MAPS_INFO:
                 emit mapsInfo(obj);
                 break;
+            case MessageType::MESSAGE_SET_INIT_POSE_RST:
+                emit setInitPosRST(obj);
+                break;
             case MessageType::MESSAGE_CURRENT_MAP_AND_TASKS:
                 emit sendMapAndTasks(obj); //yi ge di tu he gai di tu de suo you can kao xian
                 break;
             case MessageType::MESSAGE_CURRENT_MAP_AND_TASK:
                 emit sendMapAndTask(obj); // yi ge di tu he dui ying de yi jing xuan ze hao de can kao xian
                 break;
-            case MessageType::MESSAGE_SET_MAP_INIT_POSE_RST:
-                emit setMapAndInitPosRST(obj);
+            case MESSAGE_SET_MAP_RST:
+                emit parseMapName(obj);
                 break;
+//            case MessageType::MESSAGE_SET_MAP_INIT_POSE_RST:
+//                emit setMapAndInitPosRST(obj);
+//                break;
             case MessageType::MESSAGE_TASKS_INFO:
                 emit tasksData(obj);
                 break;

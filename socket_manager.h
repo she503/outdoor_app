@@ -46,6 +46,8 @@ signals:
 
 
     void tasksData(const QJsonObject& obj);
+    void setInitPosRST(const QJsonObject& obj);
+    void parseMapName(const QJsonObject& obj);
 
 
     void checkoutLogin(const QJsonObject& obj);

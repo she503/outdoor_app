@@ -187,7 +187,8 @@ Item{
         target: account_manager
         onEmitCheckOutLogin: {
             if (status === 0) {
-                message_login_faild.dia_title = message
+                message_login_faild.dia_title = qsTr("Error")
+                message_login_faild.dia_content = message
                 message_login_faild.open()
             } else if (status === 1) {
                 root.successToLogin()

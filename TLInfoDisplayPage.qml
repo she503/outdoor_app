@@ -277,6 +277,7 @@ Rectangle {
                         color: text_speed.color
                     }
                 }
+
             }
         }
     }

@@ -135,12 +135,13 @@ Rectangle {
                 width: parent.width * 0.2
                 height: parent.height * 0.5
                 contentItem: Text {
-                    anchors.fill: parent
+                    width: parent.width
+                    height: parent.height * 0.8
+                    anchors.top: parent.top
                     font.pixelSize: parent.height * 0.5
                     text: qsTr("delete")
                     color: "white"
                     horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
                 }
                 enabled: list_view_user.currentIndex === -1 ? false : true
 
@@ -187,12 +188,13 @@ Rectangle {
                 width: parent.width * 0.2
                 height: parent.height * 0.5
                 contentItem: Text {
-                    anchors.fill: parent
+                    width: parent.width
+                    height: parent.height * 0.8
                     font.pixelSize: parent.height * 0.5
                     text: qsTr("update")
                     color: "white"
                     horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
+                    anchors.top: parent.top
                 }
 
                 enabled: list_view_user.currentIndex === -1 ? false : true
@@ -331,7 +333,7 @@ Rectangle {
                     font.pixelSize: height * 0.5
                     anchors{
                         top: parent.top
-                        topMargin: parent.height * 0.2
+//                        topMargin: parent.height * 0.2
                         left: parent.left
                     }
                 }
@@ -459,13 +461,15 @@ Rectangle {
                 width: parent.width * 0.2
                 height: parent.height * 0.5
 
-                contentItem: Text {
-                    anchors.fill: parent
+                 Text {
+                    width: parent.width
+                    height: parent.height * 0.8
                     font.pixelSize: parent.height * 0.5
                     text: qsTr("update")
                     color: "white"
                     horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
+                    anchors.top: parent.top
+
                 }
 
                 background: Image {

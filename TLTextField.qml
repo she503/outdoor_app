@@ -14,10 +14,9 @@ TextField {
     placeholderText: qsTr("enter the context.")
     font.family: "Arial"
     font.pixelSize: height * 0.5
-    antialiasing: true
+//    verticalAlignment: Text.AlignBottom
+//    antialiasing: true
     leftPadding: font.pixelSize * 2
-
-
 
     background: Rectangle {
         radius: root.btn_radius
@@ -41,7 +40,7 @@ TextField {
             height: width
             anchors {
                 left: parent.left
-                leftMargin: 10
+                leftMargin: parent.width * 0.04
                 verticalCenter: parent.verticalCenter
             }
             source: root.pic_name
@@ -53,6 +52,7 @@ TextField {
         height: root.contentHeight
         color: root.checkedColor
         visible: root.focus
+        anchors.verticalCenter: parent.verticalCenter
 
         Timer {
             interval: 600
@@ -71,7 +71,6 @@ TextField {
         if (! _checkDoubleClickedEventTimer.running)
             _checkDoubleClickedEventTimer.restart()
     }
-
 
     Item {
         id: _private

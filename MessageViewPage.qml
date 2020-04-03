@@ -29,7 +29,7 @@ Item  {
             radius: width / 2
             Image {
                 anchors.fill: parent
-                source: "qrc:/res/pictures/warning.png"
+                source: "qrc:/res/pictures/warn.png"
                 fillMode: Image.PreserveAspectFit
             }
         }

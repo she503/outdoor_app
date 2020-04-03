@@ -81,7 +81,7 @@ Rectangle {
 
         MessageViewPage {
             id: message_view
-            height: parent.height
+            height: parent.height * 0.8
             width: height
             anchors {
                 right: parent.right

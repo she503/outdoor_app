@@ -8,9 +8,6 @@ Dialog {
 
     x: (parent.width - width) / 2
     y: (parent.height - height) / 2
-    //test
-    property string dia_image_source: "qrc:/res/pictures/sad.png"
-    property string dia_title_color: "value"
 
     property int status: 0 // "success" : 1;     "faild" : 0
 

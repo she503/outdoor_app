@@ -67,10 +67,9 @@ Rectangle {
                     text: qsTr("OK")
                     onClicked: {
                         if (field_new_pwd.text.trim() === "") {
-
-                            message_account.dia_title = qsTr("password cannot be empty!!!")
-                            message_account.dia_title_color = "red"
-                            message_account.dia_image_source = "qrc:/res/pictures/sad.png"
+                            message_account.dia_title = qsTr("Error")
+                            message_account.dia_content = qsTr("password cannot be empty!!!")
+                            message_account.status = 0
                             message_account.open()
                         } else {
                             if(root.v_user_level <= root.checked_user_level) {
@@ -104,14 +103,22 @@ Rectangle {
         height: root.height * 0.5
         x: (root.width - width) / 2
         y: (root.height - height) / 2
-        dia_title: qsTr("Warn!")
-        dia_image_source: ""
         ok: false
         onCancelClicked: {
             message_account.close()
         }
     }
 
+    TLDialog {
+        id: dialog_update_success
+        status: 1
+        dia_title: qsTr("update success")
+        dia_content: qsTr("update success")
+        onCancelClicked: {
+            dialog_update_success.close()
+            message_update_uer.close()
+        }
+    }
 
     Rectangle {
         id: bg
@@ -167,15 +174,15 @@ Rectangle {
 
                 onClicked: {
                     if (root.checked_user_level >= root.v_user_level){
-                        message_account.dia_title = qsTr("you dont have permission to delete this account!!!")
-                        message_account.dia_title_color = "red"
-                        message_account.dia_image_source = "qrc:/res/pictures/sad.png"
+                        message_account.dia_title = qsTr("delete faild")
+                        message_account.dia_content = qsTr("you dont have permission to delete this account!!!")
+                        message_account.status = 0
                         message_account.open()
 
                     } else if ( root.checked_user_level === 2 && root.admin_num === 1) {
-                        message_account.dia_title = qsTr("you cant delete last admin account!!!")
-                        message_account.dia_title_color = "red"
-                        message_account.dia_image_source = "qrc:/res/pictures/sad.png"
+                        message_account.dia_title = qsTr("delete faild")
+                        message_account.dia_content = qsTr("you cant delete last admin account!!!")
+                        message_account.status = 0
                         message_account.open()
                     } else {
                         account_manager.accountDelete(root.checked_user_name)
@@ -420,9 +427,9 @@ Rectangle {
                 onClicked: {
                     if (btn_add_pwd.text === "" || btn_add_username.text === "" ||
                             radio_btn.checked_num === -1) {
-                        message_account.dia_title = qsTr("some information is empty!!!")
-                        message_account.dia_title_color = "red"
-                        message_account.dia_image_source = "qrc:/res/pictures/sad.png"
+                        message_account.dia_title = qsTr("add error")
+                        message_account.dia_content = qsTr("some information is empty!!!")
+                        message_account.status = 0
                         message_account.open()
                         return
                     } else {
@@ -535,11 +542,13 @@ Rectangle {
             case 0:
                 message_account.dia_content = qsTr("user name has exited !")
                 message_account.dia_title = qsTr("Error")
+                message_account.status = 0
                 message_account.open()
                 break;
             case 1:
-                message_account.dia_title = qsTr("a new user was added")
-                message_account.dia_image_source = "qrc:/res/pictures/smile.png"
+                message_account.dia_title = qsTr("add success")
+                message_account.dia_content = qsTr("a new user was added")
+                message_account.status = 1
                 message_account.open()
                 break;
             }
@@ -567,17 +576,17 @@ Rectangle {
         onEmitDeleteAccountCB: {
             switch(status) {
             case 0:
-                message_account.dia_title_color = "red"
-                message_account.dia_title = message//qsTr("This one user is last admin,\n you are not allowed to delete it!")
-                message_account.dia_image_source = "qrc:/res/pictures/sad.png"
+                message_account.dia_title = qsTr("delete error")//qsTr("This one user is last admin,\n you are not allowed to delete it!")
+                message_account.dia_content = message
+                message_account.status = 0
                 message_account.open()
 
                 break;
             case 1:
                 list_view_user.currentIndex = -1
-                message_account.dia_title = qsTr("user ") + root.checked_user_name + qsTr(" was deleted !")
-                message_account.dia_title_color = "#4F94CD"
-                message_account.dia_image_source = "qrc:/res/pictures/smile.png"
+                message_account.dia_title = qsTr("delete success")
+                message_account.dia_content = qsTr("user ") + root.checked_user_name + qsTr(" was deleted !")
+                message_account.status = 1
                 message_account.open()
                 message_update_uer.close()
                 if (root.checked_user_level == 2) {
@@ -589,19 +598,20 @@ Rectangle {
         onEmitUpdateAccountCB: {
             switch(status) {
             case 0:
-                message_account.dia_title = message
-                message_account.dia_title_color = "red"
-                message_account.dia_image_source = "qrc:/res/pictures/sad.png"
+                message_account.dia_title = qsTr("update error")
+                message_account.dia_content = message
+                message_account.status = 0
                 message_account.open()
                 break;
             case 1:
-                message_account.dia_title = qsTr("password had be changed!!!")
-                message_account.dia_title_color = "#4F94CD"
-                message_account.dia_image_source = "qrc:/res/pictures/smile.png"
-                message_account.open()
+                dialog_update_success.dia_title = qsTr("update success")
+                dialog_update_success.dia_content = qsTr("password had be changed!!!")
+                dialog_update_success.status = 1
+                dialog_update_success.open()
+                field_old_pwd.clear()
+                field_new_pwd.clear()
                 break;
             }
         }
     }
-
 }

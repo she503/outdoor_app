@@ -104,7 +104,6 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             QJsonObject obj = doc.object();
             MessageType message_type = MessageType(obj.value("message_type").toInt());
             switch (message_type) {
-
             case MessageType::MESSAGE_ALL_MAPS_INFO:
                 emit mapsInfo(obj);
                 break;

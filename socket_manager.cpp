@@ -102,6 +102,7 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
         QJsonDocument doc = QJsonDocument::fromJson(_buffer, &error);
         if (error.error == QJsonParseError::NoError) {
             QJsonObject obj = doc.object();
+
             MessageType message_type = MessageType(obj.value("message_type").toInt());
             switch (message_type) {
             case MessageType::MESSAGE_ALL_MAPS_INFO:

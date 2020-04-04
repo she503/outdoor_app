@@ -12,7 +12,7 @@ ProgressBar {
     Connections {
         target: ros_message_manager
         onUpdateTaskProcessInfo: {
-            root.value = progress
+            root.value = progress / 100
         }
     }
 

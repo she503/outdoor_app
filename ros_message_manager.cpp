@@ -60,6 +60,6 @@ void RosMessageManager::parsePlanningRefInfo(const QJsonObject &obj)
 void RosMessageManager::parseTaskProcessInfo(const QJsonObject &obj)
 {
     int current_index = obj.value("current_index").toInt();
-    float progress = obj.value("progress").toDouble();
+    QString progress = obj.value("progress").toString();
     emit updateTaskProcessInfo(current_index, progress);
 }

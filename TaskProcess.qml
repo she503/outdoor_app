@@ -21,7 +21,7 @@ Rectangle {
     Connections {
         target: ros_message_manager
         onUpdateTaskProcessInfo: {
-            text_progress.text = "" + progress * 100 + " %";
+            text_progress.text = "" + progress + " %";
 
         }
     }

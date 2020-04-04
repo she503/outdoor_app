@@ -136,7 +136,10 @@ Rectangle {
             root.startTaskPage()
         }
         onUpdateInitPosInfo: {
-
+            busy.running = false
+            dialog_match_warn.dia_title = qsTr("Error ")
+            dialog_match_warn.dia_content = message
+            dialog_match_warn.open()
         }
         onUpdateErrorToLoadMapOrNoneTasksInfo: {
             busy.running = false

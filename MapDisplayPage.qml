@@ -60,6 +60,7 @@ Page {
     onSendInitPoint: {
         var pos = pixelToGeometry(choosePoint[0],choosePoint[1])
         map_task_manager.sendInitPos(pos[0],pos[1])
+        console.info("send_init_pos:" + pos)
     }
 
     function geometryToPixel(X, Y) {

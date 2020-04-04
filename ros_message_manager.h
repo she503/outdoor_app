@@ -19,7 +19,7 @@ signals:
     void updateObstacleInfo(const bool& is_polygon, const QVariantList& obstacles);
     void updatePlanningInfo(const QVariantList& planning_path);
     void updatePlanningRefInfo(const QVariantList& planning_path);
-    void updateTaskProcessInfo(const int& current_index, const float& progress);
+    void updateTaskProcessInfo(const int& current_index, const QString& progress);
 
 private slots:
     void parseLocalizationInfo(const QJsonObject& obj);

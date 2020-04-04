@@ -38,6 +38,7 @@ Rectangle {
         } else if (current_index === 1) {
             stack_view.replace(user_manage_page)
         } else if (current_index === 2) {
+            task_settings_page.visible = true
             stack_view.replace(task_settings_page)
             map_task_manager.judgeIsMapTasks()
             map_task_manager.getFirstMap()
@@ -75,6 +76,7 @@ Rectangle {
     }
     TaskSettingsPage {
         id: task_settings_page
+        visible: false
         width: rect_right.width
         height: rect_right.height
 
@@ -94,7 +96,7 @@ Rectangle {
 
         MessageViewPage {
             id: message_view
-            height: parent.height
+            height: parent.height * 0.8
             width: height
             anchors {
                 right: parent.right

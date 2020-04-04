@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     QtWebView::initialize();
     QTranslator trans;
-    if (!trans.load("../tergeo_app_zh_CN.qm")) {
+    if (!trans.load(":/res/translate/tergeo_app_zh_CN.qm")) {
         qDebug() << "faild to load translation qm !!!";
     }
     app.installTranslator(&trans);

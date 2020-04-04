@@ -75,14 +75,11 @@ Rectangle {
                         anchors.fill: parent
                         onClicked: {
                             map_task_manager.sendPauseTaskCommond(!btn_stop._is_pause)
-                            busy.running = true
                         }
                     }
                     Connections {
                         target: map_task_manager
                         onUpdatePauseTaskInfo: {
-                            busy.running = false
-
                             pause_stop_message.x = (parent.parent.parent.parent.width - width ) / 2
                             pause_stop_message.y =  (parent.parent.parent.parent.height - height ) / 2
                             y: (parent.parent.parent.parent.height - height ) / 2
@@ -133,7 +130,6 @@ Rectangle {
                     Connections {
                         target: map_task_manager
                         onUpdateStopTaskInfo: {
-                            busy.running = false
                             repeat_need_stop_task.x = (parent.parent.parent.parent.width - width ) / 2
                             repeat_need_stop_task.y =  (parent.parent.parent.parent.height - height ) / 2
                             if (status === 0) {
@@ -153,7 +149,6 @@ Rectangle {
                 }
             }
         }
-
         Rectangle {
             id: rect_logo
             width: parent.width
@@ -262,13 +257,7 @@ Rectangle {
                 id: list_model_process
             }
         }
-    }
-    function addProcessdata()
-    {
-        for (var i = 0; i < text_process.length; ++i) {
-            list_model_process.append({"obj_name_process_info": obj_name_process[i],
-                                          "text_process_info": text_process[i], "data_unit_ifo": data_unit[i]})
-        }
+
     }
 
     TLDialog {
@@ -290,28 +279,8 @@ Rectangle {
         dia_content: qsTr("please comfirm if you need to stop task.")
         onOkClicked: {
             map_task_manager.sendStopTaskCommond()
-            busy.running = true
             repeat_need_stop_task.close()
         }
 
-    }
-
-    BusyIndicator{
-        id: busy
-        x: (parent.parent.width - width ) / 2
-        y: (parent.parent.height - height ) / 2
-        running: false
-        width: parent.height * 0.2
-        height: width
-        anchors.centerIn: parent
-        Timer{
-            running: busy.running
-            interval: 2000
-            onTriggered: {
-                busy.running = false
-                pause_stop_message.open()
-                pause_stop_message.dia_title = qsTr("Error")
-            }
-        }
     }
 }

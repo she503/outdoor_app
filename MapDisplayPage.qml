@@ -715,6 +715,15 @@ Page {
                 var y = map.height / 2 - ( map.height / 2 - mouse.y + map.y) / map.scale
                 root.choosePoint = [x, y]
             }
+            onDoubleClicked: {
+                map.x = (map.width / 2 - vehicle.x) * (map.scale)
+                map.y = (map.height / 2 - vehicle.y) * (map.scale)
+                canvas_background.requestPaint()
+                canvas_others.requestPaint()
+                canvas_planning_ref_line.requestPaint()
+                canvas_red_ref_line.requestPaint()
+                canvas_planning.requestPaint()
+            }
         }
 
     }
@@ -864,6 +873,12 @@ Page {
             var pixel_pos = geometryToPixel(x, y)
             vehicle.x = pixel_pos[0] - vehicle.width / 2
             vehicle.y = pixel_pos[1] - vehicle.height / 2
+
+
+            if (map.scale > root.real_rate / 2) {
+                map.x = (map.width / 2 - vehicle.x - vehicle.width / 2) * (map.scale)
+                map.y = (map.height / 2 - vehicle.y - vehicle.height / 2) * (map.scale)
+            }
 
             vehicle.rotation = -heading
         }

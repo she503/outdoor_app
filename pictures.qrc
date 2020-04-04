@@ -64,5 +64,6 @@
         <file>res/pictures/task_stop.png</file>
         <file>res/pictures/task_start.png</file>
         <file>res/pictures/task_end.png</file>
+        <file>res/translate/tergeo_app_zh_CN.qm</file>
     </qresource>
 </RCC>

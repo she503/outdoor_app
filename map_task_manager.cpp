@@ -7,7 +7,7 @@ MapTaskManager::MapTaskManager(QObject *parent) : QObject(parent)
     _is_working = false;
 }
 
-void MapTaskManager::sendInitPos(const QString &pos_x, const QString &pos_y)
+void MapTaskManager::sendInitPos(const float &pos_x, const float &pos_y)
 {
     QJsonObject obj;
     obj.insert("message_type", int(MESSAGE_SET_INIT_POSE));

@@ -14,12 +14,53 @@ Item{
         id: connect_fail_view
         color: "white"
         visible: false
+        Rectangle {
+            width: 330
+            height: 220
+            anchors.centerIn: parent
+            Image {
+                anchors.fill: parent
+                source: "qrc:/res/pictures/error_background.png"
+                fillMode: Image.PreserveAspectFit
+                Text {
+                    width: parent.width * 0.5
+                    height: parent.height
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: qsTr("app cannot to connect server, please check your wifi and IP!")
+                    color: "black"
+                    horizontalAlignment: Text.AlignLeft
+                    verticalAlignment: Text.AlignVCenter
+                    font.pixelSize: height * 0.1
+                    wrapMode: Text.Wrap
+                }
+                TLButton {
+                    width: parent.width * 0.2
+                    height: parent.height * 0.1
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: parent.height * 0.08
+                    btn_text: qsTr("OK")
+                }
+            }
+        }
         MouseArea {
             anchors.fill: parent
             onClicked: {
                 Qt.quit()
             }
         }
+    }
+    Rectangle {
+        id: rec_disconnect
+        color: "white"
+        visible: false
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                Qt.quit()
+            }
+        }
+
     }
 
     FontLoader {
@@ -90,7 +131,7 @@ Item{
             Rectangle {
                 id: rect_username
                 width: parent.width * 0.95
-                height: parent.height * 0.2
+                height: parent.height * 0.25
                 color:"transparent"
                 anchors{
                     left: parent.left
@@ -128,11 +169,11 @@ Item{
             Rectangle {
                 id: rect_pwd
                 width: parent.width * 0.95
-                height: parent.height * 0.2
+                height: parent.height * 0.25
                 color:"transparent"
                 anchors{
                     top: rect_username.bottom
-                    topMargin: height * 0.01
+//                    topMargin: height * 0.01
                     left: parent.left
                     leftMargin: width * 0.05
                 }
@@ -175,7 +216,7 @@ Item{
                 btn_text: qsTr("登录")
                 anchors {
                     top: rect_pwd.bottom
-                    topMargin: parent.height * 0.08
+                    topMargin: parent.height * 0.04
 
                     horizontalCenter: parent.horizontalCenter
                     horizontalCenterOffset: parent.width * 0.03
@@ -205,14 +246,13 @@ Item{
     Connections {
         target: socket_manager
         onEmitFaildToLogin: {
-
-            message_login_faild.dia_content = message
-            message_login_faild.open()
+//            message_login_faild.dia_content = message
+//            message_login_faild.open()
         }
         onAppDisconnected: {
             message_login_faild.dia_content = message
             message_login_faild.open()
-            stack_view_main.replace(connect_fail_view)
+            stack_view_main.replace(rec_disconnect)
         }
     }
 

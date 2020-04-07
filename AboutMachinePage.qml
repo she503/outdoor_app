@@ -24,11 +24,11 @@ Rectangle {
             Rectangle {
                 id: rec_company_info
                 width: parent.width
-                height: parent.height * 0.6
+                height: parent.height * 0.3
                 color: "transparent"
                 Image {
-                    height: parent.height / 2
-                    width: parent.width / 2
+                    height: parent.height * 0.6
+                    width: parent.width * 0.6
                     anchors.centerIn: parent
                     source: "qrc:/res/pictures/logo_2.png"
                     fillMode: Image.PreserveAspectFit
@@ -37,16 +37,71 @@ Rectangle {
             Rectangle {
                 id: rec_car_info
                 width: parent.width
-                height: parent.height * 0.4
+                height: parent.height * 0.5
                 anchors {
                     top: rec_company_info.bottom
+                }
+                color: "transparent"
+                Column {
+                    width: parent.width
+                    height: parent.height
+                    Repeater {
+                        delegate: Rectangle {
+                            width: parent.width
+                            height: parent.height / 5
+                            color: "transparent"
+                            Text {
+                                id: model_name
+                                clip: true
+                                text: model.name
+                                objectName: model.name
+                                width: parent.width * 0.5
+                                height: parent.height * 0.6
+                                font.bold: false
+                                font.pixelSize: height * 0.9
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignRight
+                                color: "#8B8386"
+                            }
+                            Text {
+                                anchors {
+                                    left: model_name.right
+                                    leftMargin: parent.width * 0.03
+                                }
+                                width: parent.width * 0.35
+                                height: parent.height * 0.6
+                                font.bold: true
+                                font.pixelSize: height * 0.9
+                                text: content
+                            }
+                        }
+                        model: ListModel {
+                            id: list_model
+                            ListElement {
+                                name: qsTr("Software version number: ")//软件版本号
+                                content: qsTr("tergeo2.0")
+                            }
+                            ListElement {
+                                name: qsTr("Vehicle ID: ")//车辆ID
+                                content: qsTr("SC50-A")
+                            }
+                        }
+                    }
+                }
+            }
+            Rectangle {
+                id: rec_connect_us
+                width: parent.width
+                height: parent.height * 0.2
+                anchors {
+                    top: rec_car_info.bottom
                 }
                 color: "transparent"
                 Button {
                     id: btn_url
                     width: parent.width * 0.2
                     height: parent.height * 0.3
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.centerIn: parent
                     contentItem: Text {
                         text: qsTr("contact us")
                         color: "grey"
@@ -62,67 +117,6 @@ Rectangle {
                     }
                     onReleased: {
                         Qt.openUrlExternally(url_name)
-                    }
-                }
-
-                Column {
-                    visible: false
-                    width: parent.width
-                    height: parent.height
-                    Repeater {
-                        delegate: Rectangle {
-                            width: parent.width
-                            height: parent.height / (list_model.count )
-                            color: "transparent"
-                            Text {
-                                id: model_name
-                                clip: true
-                                text: model.name
-                                objectName: model.name
-                                width: parent.width * 0.4
-                                height: parent.height * 0.6
-                                font.bold: false
-                                font.pixelSize: height * 0.9
-                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignRight
-                                color: "#8B8386"
-                            }
-                            Text {
-                                anchors {
-                                    left: model_name.right
-                                    leftMargin: parent.width * 0.05
-                                }
-                                width: parent.width * 0.35
-                                height: parent.height * 0.6
-                                font.bold: true
-                                font.pixelSize: height * 0.9
-
-                                text: content
-                            }
-                        }
-                        model: ListModel {
-                            id: list_model
-                            ListElement {
-                                name: qsTr("Software version number: ")//软件版本号
-                                content: qsTr("1 ")
-                            }
-                            ListElement {
-                                name: qsTr("Vehicle ID: ")//车辆ID
-                                content: qsTr("2 ")
-                            }
-                            ListElement {
-                                name: qsTr("xxx: ")
-                                content: qsTr(" ")
-                            }
-                            ListElement {
-                                name: qsTr("xxx: ")
-                                content: qsTr(" ")
-                            }
-                            ListElement {
-                                name: qsTr("xxxxx: ")
-                                content: qsTr(" ")
-                            }
-                        }
                     }
                 }
 

@@ -276,7 +276,7 @@ Rectangle {
                             leftMargin: item_de.height * 0.2
                             verticalCenter: item_de.verticalCenter
                         }
-                        text: model.user_name + ", "
+                        text: model.user_name
                         font.pixelSize: item_de.height * 0.8
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
@@ -285,8 +285,7 @@ Rectangle {
                     Text {
                         id: text_level
                         anchors {
-                            left: text_username.right
-                            leftMargin: item_de.height * 0.2
+                            left: parent.horizontalCenter
                             verticalCenter: item_de.verticalCenter
                         }
                         text: model.level

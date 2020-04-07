@@ -16,7 +16,7 @@ public:
      * @brief 地图点击初始化
      */
 //    Q_INVOKABLE bool sendInitPosAndMapName(const QString &map_name, const QString& pos_x, const QString& pos_y);
-    Q_INVOKABLE void sendInitPos(const QString& pos_x, const QString& pos_y);
+    Q_INVOKABLE void sendInitPos(const float& pos_x, const float& pos_y);
 
     /**
       * @brief send map info by param map_name

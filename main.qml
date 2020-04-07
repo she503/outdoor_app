@@ -12,10 +12,10 @@ ApplicationWindow {
     property Component main_page: MainPage { }
     property Component welcome_page: WelcomePage {
         onTimeToClose: {
-            if (socket_manager.judgeIsConnected()) {
-                stack_view_main.replace(login_page)
-            } else {
+            if (!socket_manager.judgeIsConnected()) {
                 stack_view_main.replace(login_page.connect_fail_view)
+            } else {
+                stack_view_main.replace(login_page)
             }
         }
     }

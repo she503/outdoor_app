@@ -13,6 +13,7 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
     _socket->setReadBufferSize(10 * 1024 * 1024);
 
 //    this->connectToHost("127.0.0.1", "32432");
+//    this->connectToHost("192.168.0.125", "32432");
     this->connectToHost("192.168.8.163", "32432");
 
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));

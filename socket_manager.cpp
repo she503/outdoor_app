@@ -171,6 +171,9 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_PLANNING_REF_LINE:
                 emit planningRefInfo(obj);
                 break;
+            case MessageType::MESSAGE_BATTERY_SOC:
+                emit batteryInfo(obj);
+                break;
 
             default:
                 qDebug() << "======>" <<obj;

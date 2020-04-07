@@ -74,14 +74,15 @@ signals:
     void obstaclesInfo(const QJsonObject& obj);
     void planningInfo(const QJsonObject& obj);
     void planningRefInfo(const QJsonObject& obj);
+    void batteryInfo(const QJsonObject& obj);
 
-    /**
-     * @brief 发给ui显示的数据
-     */
-    void updateBatteryInfo(const QString& soc);
-    void updateVehicleSpeed(const QString& speed);
-    void updateWaterVolume(const QString& water_volume);
-    void updateOperateMethod(const QString& operate_method);
+//    /**
+//     * @brief 发给ui显示的数据
+//     */
+//    void updateBatteryInfo(const QString& soc);
+//    void updateVehicleSpeed(const QString& speed);
+//    void updateWaterVolume(const QString& water_volume);
+//    void updateOperateMethod(const QString& operate_method);
 
 
     //message

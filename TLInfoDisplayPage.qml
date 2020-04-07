@@ -65,6 +65,17 @@ Rectangle {
                 img_switch.source = "qrc:/res/pictures/switch_auto.png"
             }
         }
+        onUpdateBatteryInfo: {
+            var v_soc = soc;
+            if (v_soc <= 20) {
+                soc_color.color = "red"
+            } else if (v_soc > 20 && v_soc <= 50) {
+                soc_color.color = "orange"
+            } else if (n_soc > 50) {
+                soc_color.color = "#00ff24"
+            }
+            text_soc.text = v_soc
+        }
     }
 
     property real length: height / 2 > width / 3 ?  width / 3 : height / 2

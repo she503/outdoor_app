@@ -185,7 +185,7 @@ Rectangle {
                     anchors.fill: parent
                     orientation:ListView.Horizontal
                     spacing: width * 0.02
-                    currentIndex: -1
+                    currentIndex: 0
                     delegate: ItemDelegate {
                         width: list_view_areas.width / 4
                         height: list_view_areas.height

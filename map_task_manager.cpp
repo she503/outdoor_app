@@ -5,9 +5,10 @@ MapTaskManager::MapTaskManager(QObject *parent) : QObject(parent)
     _is_map_task = false;
     _is_map_tasks = false;
     _is_working = false;
+    _is_first_start = true;
 }
 
-void MapTaskManager::sendInitPos(const float &pos_x, const float &pos_y)
+void MapTaskManager::sendInitPos(const double &pos_x, const double &pos_y)
 {
     QJsonObject obj;
     obj.insert("message_type", int(MESSAGE_SET_INIT_POSE));
@@ -151,7 +152,9 @@ void MapTaskManager::getFirstMap()
     if (_maps.size() <= 0) {
         return ;
     }
-    this->parseMapData(_map_name_list.at(0));
+    if (_is_map_tasks || _is_map_task || _is_working) {
+        this->parseMapData(_map_name_list.at(0));
+    }
 }
 
 bool MapTaskManager::getIsWorking()
@@ -254,7 +257,11 @@ void MapTaskManager::parseRegionsInfo(const QJsonObject &obj)
         _feature_obj.insert(map_name, feature_temp_obj);
     }
     emit updateMapsName(_map_name_list);
-
+    if ((_is_first_start) &&
+            !(_is_map_task || _is_map_tasks || _is_working)) {
+        this->setMapName(_map_name_list.at(0));
+        _is_first_start = false;
+    }
 }
 
 void MapTaskManager::parseMapAndTasksInfo(const QJsonObject &obj)

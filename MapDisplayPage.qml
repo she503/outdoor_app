@@ -923,4 +923,12 @@ Page {
         }
     }
 
+    Connections {
+        target: map_task_manager
+        onUpdateInitPosInfo: {
+            vehicle.x = 0
+            vehicle.y = 0
+        }
+    }
+
 }

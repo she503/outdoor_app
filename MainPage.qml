@@ -171,7 +171,7 @@ Rectangle {
                 }
                 ListElement {
                     id_num: 2
-                    focus_source: "qrc:/res/pictures/setting.png"
+                    focus_source: "qrc:/res/pictures/task.png"
                 }
                 ListElement {
                     id_num: 3

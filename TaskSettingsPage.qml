@@ -92,6 +92,7 @@ Rectangle {
             error = error_message
         }
         onUpdateTasksName: {
+            busy.visible = false
             busy.running = false
             tasks_list = tasks
             task_list_model.clear()
@@ -136,12 +137,15 @@ Rectangle {
             root.startTaskPage()
         }
         onUpdateInitPosInfo: {
+            busy.visible = false
             busy.running = false
             dialog_match_warn.dia_title = qsTr("Error ")
             dialog_match_warn.dia_content = message
             dialog_match_warn.open()
+            rec_checked_location.visible = true
         }
         onUpdateErrorToLoadMapOrNoneTasksInfo: {
+            busy.visible = false
             busy.running = false
             dialog_match_warn.dia_title = qsTr("Error ")
             dialog_match_warn.dia_content = message
@@ -456,7 +460,7 @@ Rectangle {
 
         BusyIndicator{
             id:busy
-            z: 5
+            visible: running
             running: false
             width: parent.height * 0.2
             height: width
@@ -503,7 +507,9 @@ Rectangle {
         onOkClicked: {
             dialog_resure.close()
             monitor_page.sendInitPoint()
+            busy.visible = true
             busy.running = true
+            rec_checked_location.visible = false
         }
         onCancelClicked: {
             root.chooseMapPage()

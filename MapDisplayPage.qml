@@ -540,13 +540,14 @@ Page {
                     } else {
                         ctx.save()
                         ctx.strokeStyle = "#EE4000"
-                        ctx.fillStyle = "rgba(238,64,0,0.5)"
+//                        ctx.fillStyle = "rgba(238,64,0,0.5)"
+                        ctx.fillStyle = "#ffff00"
 
                         for (var i = 0; i < obstacles.length; ++i) {
                             for (var j = 0; j < obstacles[i].length; ++j) {
                                 var point = geometryToPixel(obstacles[i][j][0], obstacles[i][j][1])
                                 ctx.beginPath()
-                                ctx.arc(point[0],point[1],1.0,0,2*Math.PI)
+                                ctx.arc(point[0],point[1],0.7,0,2*Math.PI)
                                 ctx.fill()
                                 ctx.stroke()
                             }

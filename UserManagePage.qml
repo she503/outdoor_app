@@ -149,6 +149,7 @@ Rectangle {
                     text: qsTr("delete")
                     color: "white"
                     horizontalAlignment: Text.AlignHCenter
+                    anchors.topMargin: parent.height * 0.05
                 }
                 enabled: list_view_user.currentIndex === -1 ? false : true
 
@@ -202,6 +203,7 @@ Rectangle {
                     color: "white"
                     horizontalAlignment: Text.AlignHCenter
                     anchors.top: parent.top
+                    anchors.topMargin: parent.height * 0.05
                 }
 
                 enabled: list_view_user.currentIndex === -1 ? false : true

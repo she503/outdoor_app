@@ -150,6 +150,7 @@ private:
     bool _is_map_task;
     bool _is_working;
     bool _is_first_start;
+//    bool _is_
 
 
 };

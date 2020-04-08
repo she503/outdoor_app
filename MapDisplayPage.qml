@@ -57,6 +57,27 @@ Page {
 
     property bool can_drag: false
 
+    Connections {
+        target: map_task_manager
+        onUpdateStopTaskInfo: {
+            if (status === 1) {
+                var_obstacles = []
+                obstacles_is_polygon = []
+                var_ref_line = []
+                var_planning_path = []
+                ref_line_curren_index = 0
+                var_planning_ref_path = []
+
+                canvas_others.requestPaint()
+                canvas_obstacles.requestPaint()
+                canvas_ref_line.requestPaint()
+                canvas_red_ref_line.requestPaint()
+                canvas_planning_ref_line.requestPaint()
+                vehicle.x = -200
+                vehicle.y = -200
+            }
+        }
+    }
 
     signal sendInitPoint()
     onSendInitPoint: {
@@ -140,7 +161,6 @@ Page {
             }
         }
 
-
         Rectangle {
             id: map_background
             width: parent.width
@@ -157,6 +177,10 @@ Page {
                 }
 
                 function drawRoadEdge(ctx, var_road_edges) {
+                    if (var_road_edges.length <= 0) {
+                        return
+                    }
+
                     ctx.save()
                     ctx.beginPath()
                     for (var i = 0; i < var_road_edges.length;  ++i) {
@@ -173,6 +197,9 @@ Page {
                 }
 
                 function drawTrees(ctx, var_trees) {
+                    if (var_trees.length <= 0) {
+                        return
+                    }
                     ctx.save()
                     ctx.fillStyle = "green"
                     for (var i = 0; i < var_trees.length; ++i) {
@@ -185,6 +212,9 @@ Page {
                 }
 
                 function drawSigns(ctx, var_signals) {
+                    if (var_signals.length <= 0) {
+                        return
+                    }
                     ctx.save()
                     ctx.fillStyle = "green"
                     ctx.strokeStyle = "red"
@@ -200,6 +230,9 @@ Page {
                 }
 
                 function drawExcludeArea(ctx, exclude_area, color, line_width) {
+                    if (exclude_area.length <= 0) {
+                        return
+                    }
                     ctx.save()
                     ctx.beginPath()
                     ctx.lineWidth = line_width
@@ -243,6 +276,9 @@ Page {
                 }
 
                 function drawTowPointLine(ctx, var_line, line_widt, color) {
+                    if (var_line.length <= 0) {
+                        return
+                    }
                     ctx.save()
                     ctx.lineWidth = line_widt
                     ctx.strokeStyle = color
@@ -275,6 +311,9 @@ Page {
                 }
 
                 function drawLaneLine(ctx, var_lane_lines) {
+                    if (var_lane_lines.length <= 0) {
+                        return
+                    }
                     ctx.save()
                     ctx.beginPath()
                     ctx.lineCap="round"
@@ -293,6 +332,9 @@ Page {
                 }
 
                 function drawCrosswalk(ctx, var_crosswalks) {
+                    if (var_crosswalks.length <= 0) {
+                        return
+                    }
                     ctx.save()
                     ctx.beginPath()
                     var min_x, max_x, min_x_y, max_x_y
@@ -348,6 +390,9 @@ Page {
                 }
 
                 function drawJunction(ctx, var_junctions) {
+                    if (var_junctions.length <= 0) {
+                        return
+                    }
                     ctx.save()
                     ctx.beginPath()
                     var min_x, max_x, min_x_y, max_x_y
@@ -442,7 +487,7 @@ Page {
                 y: canvas_background.y
 
                 function drawPoint(ctx, points){
-                    if (points.length === 0) {
+                    if (points.length <= 0) {
                         return;
                     }
 
@@ -462,7 +507,7 @@ Page {
                 }
 
                 function drawRegion(ctx, points){
-                    if (points.length === 0) {
+                    if (points.length <= 0) {
                         return;
                     }
 
@@ -486,7 +531,7 @@ Page {
                 }
 
                 function drawLine(ctx, points){
-                    if (points.length === 0) {
+                    if (points.length <= 0) {
                         return
                     }
 
@@ -522,7 +567,7 @@ Page {
                 x: canvas_background.x
                 y: canvas_background.y
                 function drawObstacles(ctx, obstacles, is_polygon) {
-                    if (obstacles.length === 0) {
+                    if (obstacles.length <= 0) {
                         return
                     }
                     if (is_polygon) {
@@ -582,7 +627,7 @@ Page {
                 y: canvas_background.y
 
                 function drawRefLine(ctx, points) {
-                    if (points.length === 0) {
+                    if (points.length <= 0) {
                         return
                     }
 
@@ -615,7 +660,7 @@ Page {
                 y: canvas_background.y
 
                 function drawRefLine(ctx, points) {
-                    if (points.length === 0) {
+                    if (points.length <= 0) {
                         return
                     }
 
@@ -638,7 +683,7 @@ Page {
                 }
 
                 function drawPlanningLine(ctx, points) {
-                    if (points.length === 0) {
+                    if (points.length <= 0) {
                         return
                     }
                     ctx.save()
@@ -670,7 +715,7 @@ Page {
                 y: canvas_background.y
 
                 function drawPlanningLine(ctx, points) {
-                    if (points.length === 0) {
+                    if (points.length <= 0) {
                         return
                     }
                     ctx.save()
@@ -871,7 +916,6 @@ Page {
                     img_charge.visible = true
                 }
             }
-
         }
         onUpdateTaskData: {
             task_points = points    //task_points[0]
@@ -944,5 +988,4 @@ Page {
             vehicle.y = 0
         }
     }
-
 }

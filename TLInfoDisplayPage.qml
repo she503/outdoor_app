@@ -75,6 +75,7 @@ Rectangle {
                 soc_color.color = "#00ff24"
             }
             text_soc.text = v_soc
+            console.info(soc)
         }
     }
 

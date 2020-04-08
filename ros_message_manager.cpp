@@ -67,6 +67,6 @@ void RosMessageManager::parseTaskProcessInfo(const QJsonObject &obj)
 
 void RosMessageManager::parseBatteryInfo(const QJsonObject &obj)
 {
-    int soc = obj.value("soc").toInt();
+    double soc = obj.value("soc").toDouble();
     emit updateBatteryInfo(soc);
 }

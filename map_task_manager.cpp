@@ -256,6 +256,9 @@ void MapTaskManager::parseRegionsInfo(const QJsonObject &obj)
         feature_temp_obj.insert("charge_point", charge_point_obj);
         _feature_obj.insert(map_name, feature_temp_obj);
     }
+    if (_map_name_list.size() <= 0) {
+        return;
+    }
     emit updateMapsName(_map_name_list);
 
     if ((_is_first_start) &&

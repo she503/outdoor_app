@@ -508,7 +508,7 @@ Page {
                 }
             }
             Canvas {
-                id: canvas_planning
+                id: canvas_obstacles
                 width: map_width * map_rate  + paint_begin_point * 2
                 height: map_height * map_rate + paint_begin_point * 2
 
@@ -541,12 +541,16 @@ Page {
                         ctx.save()
                         ctx.strokeStyle = "#EE4000"
                         ctx.fillStyle = "rgba(238,64,0,0.5)"
-                        for (var i = 0; i < obstacles[0].length; ++i) {
-                            var point = geometryToPixel(obstacles[0][i][0], obstacles[0][i][1])
-                            ctx.beginPath()
-                            ctx.arc(point[0],point[1],1.0,0,2*Math.PI)
-                            ctx.fill()
-                            ctx.stroke()
+
+                        for (var i = 0; i < obstacles.length; ++i) {
+                            for (var j = 0; j < obstacles[i].length; ++j) {
+                                var point = geometryToPixel(obstacles[i][j][0], obstacles[i][j][1])
+                                ctx.beginPath()
+                                ctx.arc(point[0],point[1],1.0,0,2*Math.PI)
+                                ctx.fill()
+                                ctx.stroke()
+                            }
+
                         }
                         ctx.restore()
                     }
@@ -723,7 +727,7 @@ Page {
                 canvas_others.requestPaint()
                 canvas_planning_ref_line.requestPaint()
                 canvas_red_ref_line.requestPaint()
-                canvas_planning.requestPaint()
+                canvas_obstacles.requestPaint()
             }
         }
 
@@ -886,7 +890,7 @@ Page {
         onUpdateObstacleInfo: {
             var_obstacles = obstacles
             obstacles_is_polygon = is_polygon
-            canvas_planning.requestPaint()
+            canvas_obstacles.requestPaint()
         }
         onUpdatePlanningInfo: {
             var_planning_path = planning_path

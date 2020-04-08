@@ -257,8 +257,10 @@ void MapTaskManager::parseRegionsInfo(const QJsonObject &obj)
         _feature_obj.insert(map_name, feature_temp_obj);
     }
     emit updateMapsName(_map_name_list);
+
     if ((_is_first_start) &&
-            !(_is_map_task || _is_map_tasks || _is_working)) {
+            !(_is_map_task || _is_map_tasks || _is_working) &&
+            !_map_name_list.empty()) {
         this->setMapName(_map_name_list.at(0));
         _is_first_start = false;
     }

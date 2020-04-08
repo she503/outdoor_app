@@ -69,9 +69,9 @@ Rectangle {
             var v_soc = soc;
             if (v_soc <= 20) {
                 soc_color.color = "red"
-            } else if (v_soc > 20 && v_soc <= 50) {
+            } else if (v_soc > 20 && v_soc < 50) {
                 soc_color.color = "orange"
-            } else if (n_soc > 50) {
+            } else if (v_soc >= 50) {
                 soc_color.color = "#00ff24"
             }
             text_soc.text = v_soc

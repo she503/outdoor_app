@@ -6,15 +6,6 @@ import QtWebView 1.0
 Rectangle {
     id: root
     color: "transparent"
-//    Timer {
-//        running: true
-//        repeat: true
-//        interval: 100
-//        onTriggered: {
-//            console.log(webVie1.loadProgress)
-//            webVie1.visible = true
-//        }
-//    }
 
     Rectangle {
         id: rec_glow_background

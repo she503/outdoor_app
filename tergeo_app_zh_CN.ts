@@ -4,29 +4,83 @@
 <context>
     <name>AboutMachinePage</name>
     <message>
-        <location filename="AboutMachinePage.qml" line="82"/>
+        <location filename="AboutMachinePage.qml" line="128"/>
+        <source>car information</source>
+        <translation>车辆信息</translation>
+    </message>
+    <message>
+        <location filename="AboutMachinePage.qml" line="133"/>
+        <source>device information</source>
+        <translation>一体机信息</translation>
+    </message>
+    <message>
+        <location filename="AboutMachinePage.qml" line="193"/>
+        <source>Vehicle number:</source>
+        <translation>车辆编号：</translation>
+    </message>
+    <message>
+        <location filename="AboutMachinePage.qml" line="194"/>
+        <location filename="AboutMachinePage.qml" line="258"/>
         <source>tergeo2.0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="86"/>
+        <location filename="AboutMachinePage.qml" line="197"/>
+        <source>Car type:</source>
+        <translation>车型：</translation>
+    </message>
+    <message>
+        <location filename="AboutMachinePage.qml" line="198"/>
+        <location filename="AboutMachinePage.qml" line="202"/>
+        <location filename="AboutMachinePage.qml" line="206"/>
+        <location filename="AboutMachinePage.qml" line="210"/>
+        <location filename="AboutMachinePage.qml" line="262"/>
+        <location filename="AboutMachinePage.qml" line="266"/>
         <source>SC50-A</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="106"/>
+        <location filename="AboutMachinePage.qml" line="201"/>
+        <source>Production Date:</source>
+        <translation>生产日期：</translation>
+    </message>
+    <message>
+        <location filename="AboutMachinePage.qml" line="205"/>
+        <source>Intelligent driving system version number:</source>
+        <translation>智驾系统版本号：</translation>
+    </message>
+    <message>
+        <location filename="AboutMachinePage.qml" line="209"/>
+        <source>Intelligent driving system updated:</source>
+        <translation>智驾系统更新时间：</translation>
+    </message>
+    <message>
+        <location filename="AboutMachinePage.qml" line="257"/>
+        <source>operating system:</source>
+        <translation>操作系统：</translation>
+    </message>
+    <message>
+        <location filename="AboutMachinePage.qml" line="261"/>
+        <source>Software version number:</source>
+        <translation>软件版本号：</translation>
+    </message>
+    <message>
+        <location filename="AboutMachinePage.qml" line="265"/>
+        <source>Software update:</source>
+        <translation>软件更新时间：</translation>
+    </message>
+    <message>
+        <location filename="AboutMachinePage.qml" line="286"/>
         <source>contact us</source>
         <translation>联系我们</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="81"/>
         <source>Software version number: </source>
-        <translation>软件版本号：</translation>
+        <translation type="vanished">软件版本号：</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="85"/>
         <source>Vehicle ID: </source>
-        <translation>车辆编号：</translation>
+        <translation type="vanished">车辆编号：</translation>
     </message>
 </context>
 <context>

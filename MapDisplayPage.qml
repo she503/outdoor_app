@@ -55,6 +55,8 @@ Page {
 
     property var choose_map_name: "value"
 
+    property bool can_drag: false
+
 
     signal sendInitPoint()
     onSendInitPoint: {
@@ -92,6 +94,11 @@ Page {
         id: map
         width: parent.width * 0.78
         height: parent.height
+
+        onXChanged: {
+            root.can_drag = true
+        }
+
         Image {
             id: choose_marker
             z: 1
@@ -702,6 +709,7 @@ Page {
         pinch.dragAxis:Pinch.XAndYAxis
         pinch.target: map
 
+
         MouseArea {
             id: dragArea
             anchors.fill: parent
@@ -722,6 +730,7 @@ Page {
                 root.choosePoint = [x, y]
             }
             onDoubleClicked: {
+                root.can_drag = false
                 map.x = (map.width / 2 - vehicle.x) * (map.scale)
                 map.y = (map.height / 2 - vehicle.y) * (map.scale)
                 canvas_background.requestPaint()
@@ -881,7 +890,7 @@ Page {
             vehicle.y = pixel_pos[1] - vehicle.height / 2
 
 
-            if (map.scale > root.real_rate / 2) {
+            if (map.scale > root.real_rate / 2 && !root.can_drag) {
                 map.x = (map.width / 2 - vehicle.x - vehicle.width / 2) * (map.scale)
                 map.y = (map.height / 2 - vehicle.y - vehicle.height / 2) * (map.scale)
             }

@@ -27,7 +27,7 @@ Rectangle {
         id: dropShadow
         transparentBorder: true
         color: root.checkedColor
-        samples: 20
+        samples: parent.width * 0.01
     }
     Image {
         id: pic_login
@@ -37,11 +37,12 @@ Rectangle {
         height: parent.height * 0.6
         anchors {
             left: parent.left
-            leftMargin: parent.width * 0.03
+            leftMargin: parent.width * 0.04
             verticalCenter: parent.verticalCenter
         }
         source: root.pic_name
         fillMode: Image.PreserveAspectFit
+        horizontalAlignment: Image.AlignHCenter
     }
     TextField {
         id: text_field

@@ -213,7 +213,7 @@ Item{
                 id: btn_ok
                 width: rect_login.width * 0.3
                 height: rect_login.height * 0.1
-                btn_text: qsTr("登录")
+                btn_text: qsTr("login")//登录
                 anchors {
                     top: rect_pwd.bottom
                     topMargin: parent.height * 0.04

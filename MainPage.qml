@@ -42,7 +42,7 @@ Rectangle {
             stack_view.replace(task_settings_page)
             map_task_manager.judgeIsMapTasks()
             map_task_manager.getFirstMap()
-//            stack_menu.replace(task_process_page) // delet
+            stack_menu.replace(task_process_page) // delet
         } else if (current_index === 3) {
             stack_view.replace(help_document_page)
         } else if (current_index === 4) {

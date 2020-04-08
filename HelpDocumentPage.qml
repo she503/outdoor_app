@@ -6,6 +6,16 @@ import QtWebView 1.0
 Rectangle {
     id: root
     color: "transparent"
+//    Timer {
+//        running: true
+//        repeat: true
+//        interval: 100
+//        onTriggered: {
+//            console.log(webVie1.loadProgress)
+//            webVie1.visible = true
+//        }
+//    }
+
     Rectangle {
         id: rec_glow_background
         height: parent.width > parent.height ? parent.height * 0.9 : parent.width * 0.9 * 0.787
@@ -28,7 +38,10 @@ Rectangle {
 //                url: "qrc:/res/html/test.html"
                 url: "file:///android_asset/test.html"
                 onLoadProgressChanged: {
-                    if (loadProgress < 100) {
+                    if (loadProgress == 100) {
+                        busy.running = false
+                        webVie1.visible = true
+                    } else {
                         busy.running = true
                     }
                 }

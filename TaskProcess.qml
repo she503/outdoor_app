@@ -11,7 +11,7 @@ Rectangle {
 
     property string map_name: ""
     property string work_time: ""
-    property string title_color: "white"
+    property string title_color: "black"
     property string font_color: "lightgreen"
 
     signal sigBackBtnPress()
@@ -150,114 +150,140 @@ Rectangle {
             }
         }
         Rectangle {
-            id: rect_logo
+            id: rect_logo_process
             width: parent.width
-            height: parent.height * 0.1
+            height: parent.height * 0.5
             color: "transparent"
             Image {
                 anchors.fill: parent
-                source: "qrc:/res/pictures/logo_2.png"
-                fillMode: Image.PreserveAspectFit
+                source: "qrc:/res/pictures/background_glow1.png"
             }
+            Rectangle {
+                width: parent.width * 0.9
+                height: parent.height * 0.88
+                anchors.centerIn: parent
+                color: "white"
+//                color: Qt.rgba(255, 255, 255, 0.5)
+                Column {
+                    anchors.fill: parent
+                    Rectangle {
+                        id: rect_logo
+                        width: parent.width
+                        height: parent.height * 0.4
+                        color: "transparent"
+                        Image {
+                            width: parent.width * 0.75
+                            height: parent.height * 0.75
+                            anchors.centerIn: parent
+                            source: "qrc:/res/pictures/logo_2.png"
+                            fillMode: Image.PreserveAspectFit
+                        }
+                    }
+                    Rectangle {
+                        id: rect_task_progress
+                        width: parent.width
+                        height: parent.height * 0.6
+                        color: "transparent"
+                        Column {
+                            anchors.fill: parent
+                            anchors.leftMargin: parent.height * 0.05
+                            Rectangle {
+                                id: rect_map_name
+                                width: parent.width
+                                height: parent.height * 0.3
+                                color: "transparent"
+                                Text {
+                                    id: text_1
+                                    text: qsTr("Current map name: ")
+                                    width: parent.width * 0.7
+                                    height: parent.height
+                                    verticalAlignment: Text.AlignVCenter
+                                    horizontalAlignment: Text.AlignLeft
+                                    font.pixelSize: width / 10
+                                    color: root.title_color
+                                }
+                                Text {
+                                    id: text_map_name
+                                    text: root.map_name
+                                    width: parent.width * 0.3
+                                    height: parent.height
+                                    verticalAlignment: Text.AlignVCenter
+                                    horizontalAlignment: Text.AlignHCenter
+                                    font.pixelSize: width / 10
+                                    anchors.left: text_1.right
+                                    color: root.font_color
+                                }
+                            }
+
+                            Rectangle {
+                                id: rect_work_time
+                                width: parent.width
+                                height: parent.height * 0.3
+                                color: "transparent"
+                                Text {
+                                    id: text_2
+                                    text: qsTr("Work time: ")
+                                    width: parent.width * 0.7
+                                    height: parent.height
+                                    verticalAlignment: Text.AlignVCenter
+                                    horizontalAlignment: Text.AlignLeft
+                                    font.pixelSize: width / 10
+                                    color: root.title_color
+                                }
+                                Text {
+                                    id: text_work_time
+                                    text: root.work_time
+                                    width: parent.width * 0.3
+                                    height: parent.height
+                                    verticalAlignment: Text.AlignVCenter
+                                    horizontalAlignment: Text.AlignHCenter
+                                    font.pixelSize: width / 6
+                                    anchors.left: text_2.right
+                                    color: root.font_color
+                                }
+
+                            }
+
+                            Rectangle {
+                                id: rect_progress
+                                width: parent.width
+                                height: parent.height * 0.3
+                                color: "transparent"
+                                Text {
+                                    id: text_3
+                                    text: qsTr("task persent: ")
+                                    width: parent.width * 0.7
+                                    height: parent.height
+                                    verticalAlignment: Text.AlignVCenter
+                                    horizontalAlignment: Text.AlignLeft
+                                    font.pixelSize: width / 10
+                                    color: root.title_color
+                                }
+                                Text {
+                                    id: text_progress
+                                    text: "%"
+                                    width: parent.width * 0.3
+                                    height: parent.height
+                                    verticalAlignment: Text.AlignVCenter
+                                    horizontalAlignment: Text.AlignHCenter
+                                    font.pixelSize: width / 6
+                                    font.bold: true
+                                    anchors.left: text_3.right
+                                    color: root.font_color
+                                }
+
+                            }
+                        }
+                        ListModel {
+                            id: list_model_process
+                        }
+                    }
+                }
+            }
+
+
+
         }
-        Rectangle {
-            id: rect_task_progress
-            width: parent.width
-            height: parent.height * 0.4
-            color: "transparent"
-            Column {
-                anchors.fill: parent
-                Rectangle {
-                    id: rect_map_name
-                    width: parent.width
-                    height: parent.height * 0.3
-                    color: "transparent"
-                    Text {
-                        id: text_1
-                        text: qsTr("Current map name: ")
-                        width: parent.width * 0.7
-                        height: parent.height
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignLeft
-                        font.pixelSize: width / 10
-                        color: root.title_color
-                    }
-                    Text {
-                        id: text_map_name
-                        text: root.map_name
-                        width: parent.width * 0.3
-                        height: parent.height
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignHCenter
-                        font.pixelSize: width / 10
-                        anchors.left: text_1.right
-                        color: root.font_color
-                    }
-                }
-
-                Rectangle {
-                    id: rect_work_time
-                    width: parent.width
-                    height: parent.height * 0.3
-                    color: "transparent"
-                    Text {
-                        id: text_2
-                        text: qsTr("Work time: ")
-                        width: parent.width * 0.7
-                        height: parent.height
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignLeft
-                        font.pixelSize: width / 10
-                        color: root.title_color
-                    }
-                    Text {
-                        id: text_work_time
-                        text: root.work_time
-                        width: parent.width * 0.3
-                        height: parent.height
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignHCenter
-                        font.pixelSize: width / 6
-                        anchors.left: text_2.right
-                        color: root.font_color
-                    }
-
-                }
-
-                Rectangle {
-                    id: rect_progress
-                    width: parent.width
-                    height: parent.height * 0.3
-                    color: "transparent"
-                    Text {
-                        id: text_3
-                        text: qsTr("task persent: ")
-                        width: parent.width * 0.7
-                        height: parent.height
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignLeft
-                        font.pixelSize: width / 10
-                        color: root.title_color
-                    }
-                    Text {
-                        id: text_progress
-                        text: "%"
-                        width: parent.width * 0.3
-                        height: parent.height
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignHCenter
-                        font.pixelSize: width / 6
-                        anchors.left: text_3.right
-                        color: root.font_color
-                    }
-
-                }
-            }
-            ListModel {
-                id: list_model_process
-            }
-        }
-
     }
 
     TLDialog {

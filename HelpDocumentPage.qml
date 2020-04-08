@@ -25,14 +25,8 @@ Rectangle {
                 id: webVie1
                 visible: false
                 anchors.fill: parent
-                url: {
-                    if (account_manager.isAndroid) {
-//                        "qrc:/res/html/test.html"
-                        "file:///android_asset/test.html"
-                    } else {
-                        "qrc:/res/html/test.html"
-                    }
-                }
+//                url: "qrc:/res/html/test.html"
+                url: "file:///android_asset/test.html"
                 onLoadProgressChanged: {
                     if (loadProgress < 100) {
                         busy.running = true

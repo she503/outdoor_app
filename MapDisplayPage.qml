@@ -774,6 +774,7 @@ Page {
             VehicleItem {
                 id: vehicle
                 visible: false
+                opacity: 0.5
             }
         }
     }

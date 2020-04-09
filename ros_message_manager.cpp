@@ -15,6 +15,7 @@ void RosMessageManager::setSocket(SocketManager *socket)
     connect(_socket, SIGNAL(planningRefInfo(QJsonObject)), this, SLOT(parsePlanningRefInfo(QJsonObject)));
     connect(_socket, SIGNAL(taskProcessInfo(QJsonObject)), this, SLOT(parseTaskProcessInfo(QJsonObject)));
     connect(_socket, SIGNAL(batteryInfo(QJsonObject)), this, SLOT(parseBatteryInfo(QJsonObject)));
+    connect(_socket, SIGNAL(trajectoryInfo(QJsonObject)), this, SLOT(parseTrajectoryInfo(QJsonObject)));
 }
 
 void RosMessageManager::parseLocalizationInfo(const QJsonObject &obj)
@@ -69,4 +70,10 @@ void RosMessageManager::parseBatteryInfo(const QJsonObject &obj)
 {
     double soc = obj.value("soc").toDouble();
     emit updateBatteryInfo(soc);
+}
+
+void RosMessageManager::parseTrajectoryInfo(const QJsonObject &obj)
+{
+    QVariantList trajectory = obj.value("trajectory").toArray().toVariantList();
+    emit updateTrajectoryInfo(trajectory);
 }

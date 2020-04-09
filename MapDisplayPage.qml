@@ -32,6 +32,7 @@ Page {
     property real ref_line_curren_index: 0
     property var var_planning_path: []
     property var var_planning_ref_path: []
+    property var var_trajectory: []
 
 
     property real map_width: 0
@@ -738,6 +739,38 @@ Page {
                 }
             }
 
+            Canvas {
+                id: canvas_trajectory
+                width: map_width * map_rate  + paint_begin_point * 2
+                height: map_height * map_rate + paint_begin_point * 2
+
+                x: canvas_background.x
+                y: canvas_background.y
+
+                function drawtrajectory(ctx, points) {
+                    if (points.length <= 0) {
+                        return
+                    }
+                    ctx.save()
+                    ctx.lineWidth = vehicle.height
+                    ctx.strokeStyle = "rgba(0, 255, 0, 0.5)"
+                    ctx.beginPath()
+                    var first_pointt = geometryToPixel(points[0][0], points[0][1])
+                    ctx.moveTo(first_pointt[0], first_pointt[1])
+                    for (var i = 0; i < points.length; ++i) {
+                        var point = geometryToPixel(points[i][0], points[i][1])
+                        ctx.lineTo(point[0], point[1])
+                    }
+                    ctx.stroke()
+                    ctx.restore()
+                }
+                onPaint: {
+                    var ctx = getContext("2d")
+                    ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
+                    drawtrajectory(ctx, root.var_trajectory);
+                }
+            }
+
             VehicleItem {
                 id: vehicle
                 visible: false
@@ -957,6 +990,10 @@ Page {
         onUpdateTaskProcessInfo: {
             ref_line_curren_index = current_index
             canvas_red_ref_line.requestPaint()
+        }
+        onUpdateTrajectoryInfo: {
+            var_trajectory = trajectory
+            canvas_trajectory.requestPaint()
         }
     }
 

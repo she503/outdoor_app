@@ -75,6 +75,7 @@ signals:
     void planningInfo(const QJsonObject& obj);
     void planningRefInfo(const QJsonObject& obj);
     void batteryInfo(const QJsonObject& obj);
+    void trajectoryInfo(const QJsonObject& obj);
 
 //    /**
 //     * @brief 发给ui显示的数据

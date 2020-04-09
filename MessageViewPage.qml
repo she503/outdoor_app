@@ -3,9 +3,11 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
 
-Item  {
+Item {
     id: root
-    property bool has_error: false
+
+    signal lockScreen()
+    property bool is_locked: false
     property var error_list: [Qt.formatDateTime(new Date(), "hh:mm:ss"), "error level", "error code", "error detail"]
     property var error_message_info: [error_list]
     property var error_level: 0//: ["debug", "warn", "error"]
@@ -19,9 +21,38 @@ Item  {
     }
 
     Button {
+        id: btn_lock
+        visible: !is_locked
+        height: parent.height
+        width: height
+        anchors.right: parent.right
+        background: Rectangle {
+            implicitWidth: 83
+            implicitHeight: 37
+            color: "transparent"
+            border.width: 1
+            border.color: "black"
+            radius: width / 2
+            Image {
+                height: parent.height * 0.6
+                width: height
+                anchors.centerIn: parent
+                source: "qrc:/res/pictures/password.png"
+                fillMode: Image.PreserveAspectFit
+            }
+        }
+        onClicked: {
+            root.lockScreen()
+        }
+    }
+
+    Button {
         id: btn_error
         visible: has_error
-        anchors.fill: parent
+        height: parent.height
+        width: height
+        anchors.right: btn_lock.left
+        anchors.rightMargin: height * 0.2
         background: Rectangle {
             implicitWidth: 83
             implicitHeight: 37
@@ -43,6 +74,8 @@ Item  {
             }
         }
     }
+
+
     Drawer {
         id: draw_error
         visible: false

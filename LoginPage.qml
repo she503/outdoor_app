@@ -5,6 +5,7 @@ Item{
     id: root
 
 //    property real rate: Math.min(width, height) / 400
+    property var current_login_password: password.text
     property var user_level: 0
     property string test_text: "root"
     signal successToLogin()

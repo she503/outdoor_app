@@ -295,6 +295,14 @@ Rectangle {
                         color: "black" //: "white"
                         property int user_level: model.user_level
                     }
+                    Rectangle {
+                        width: parent.width
+                        height: 0.5
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        anchors.leftMargin: parent.width * 0.068
+                        color: Qt.rgba(0, 0, 0, 0.1)
+                    }
                     onClicked: {
 
                         list_view_user.currentIndex = index

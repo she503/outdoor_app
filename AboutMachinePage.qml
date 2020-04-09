@@ -13,7 +13,6 @@ Rectangle {
         } else if (current_index === 1) {
             stack_attr.replace(col_device_info)
         }
-        btn_back.visible = true
     }
 
     Rectangle {
@@ -45,232 +44,243 @@ Rectangle {
                 }
             }
             Rectangle {
-                id: rec_car_info
-                width: parent.width * 0.6
+                id: rect_car_info_display
+                width: parent.width
                 height: parent.height * 0.5
-                anchors {
-                    top: rec_company_info.bottom
-//                    horizontalCenter: parent.horizontalCenter
-                    left: parent.left
-                    leftMargin: height * 0.5
-                }
+                anchors.top: rec_company_info.bottom
                 color: "transparent"
                 Rectangle {
-                    id: btn_back
-                    visible: false
-                    anchors.right: rec_car_info.left
-                    height: parent.height * 0.15
-                    width: height
+                    id: rect_attr_list
+                    width: parent.width * 0.4
+                    height: parent.height
                     color: "transparent"
-                    Image {
-                        source: "qrc:/res/pictures/back.png"
+                    anchors.left: parent.left
+                    anchors.leftMargin: height * 0.1
+                    ListView {
+                        id: list_view_attr
                         anchors.fill: parent
-                        fillMode: Image.PreserveAspectFit
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                btn_back.visible = false
-                                stack_attr.replace(stack_attr.initialItem)
-                            }
-                        }
-                    }
-                }
-
-                ListView {
-                    id: list_view_attr
-                    spacing: height * 0.002
-                    currentIndex: 0
-                    highlight: Rectangle {color: "transparent"}
-                    clip: true
-                    highlightFollowsCurrentItem: false
-                    delegate: ItemDelegate {
-                        id: item
-                        height: list_view_attr.height / 2
-                        width: height * 2.5
-                        property real id_num: model.id_num
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        Rectangle {
-                            anchors.fill: parent
-                            color: "transparent"
-                            opacity: list_view_attr.currentIndex == item.id_num ? 1 : 0.3
-                            Text {
-                                id: attr_car
-                                clip: true
-                                anchors.centerIn: parent
-                                text: model.btn_text
-                                width: parent.width * 0.5
-                                height: parent.height * 0.6
-                                font.bold: false
-                                font.pixelSize: height * 0.4
-                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignLeft
-                            }
-                            Image {
-                                height: parent.height * 0.3
-                                width: height
-                                source: "qrc:/res/pictures/arrow-right.png"
-                                anchors.left: attr_car.right
-                                anchors.leftMargin: parent.height * 0.1
-                                anchors.verticalCenter: parent.verticalCenter
-                                verticalAlignment: Image.AlignVCenter
-                                fillMode: Image.PreserveAspectFit
-                            }
-                        }
-                        onClicked: {
-                            list_view_attr.currentIndex = index
-                            attrChanged(list_view_attr.currentIndex)
-                        }
-                    }
-                    model: ListModel {
-                        id: list_model_attr
-                        ListElement {
-                            id_num: 0
-                            btn_text: qsTr("car information")
-                            focus_source: "qrc:/res/pictures/home.png"
-                        }
-                        ListElement {
-                            id_num: 1
-                            btn_text: qsTr("device information")
-                            focus_source: "qrc:/res/pictures/user.png"
-                        }
-                    }
-                }
-
-                StackView {
-                    id: stack_attr
-                    anchors.fill: parent
-                    initialItem: list_view_attr
-
-                    replaceEnter: Transition {
-
-                    }
-                    replaceExit: Transition {
-
-                    }
-                }
-
-                // car information
-                Column {
-                    id: col_car_info
-                    visible: false
-                    width: parent.width
-                    height: parent.height
-                    anchors.left: parent.left
-                    anchors.leftMargin: height * 0.15
-                    Repeater {
-                        id: repeater_car
+                        spacing: height * 0.002
+                        currentIndex: 0
+                        highlight: Rectangle {color: "transparent"}
                         clip: true
-                        delegate: Rectangle {
-                            width: parent.width
-                            height: parent.height / repeater_car.count
-                            color: "transparent"
-                            Text {
-                                id: text_car
-                                clip: true
-                                text: model.name
-                                width: parent.width * 0.5
-                                height: parent.height * 0.6
-                                font.bold: false
-                                font.pixelSize: height * 0.6
-                                anchors.verticalCenter: parent.verticalCenter
-                                //                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignLeft
-                                color: "#8B8386"
-                            }
-                            Text {
-                                anchors {
-                                    left: text_car.right
-                                    leftMargin: parent.width * 0.1
-                                    verticalCenter: parent.verticalCenter
+                        highlightFollowsCurrentItem: false
+                        delegate: ItemDelegate {
+                            id: item
+                            height: list_view_attr.height * 0.25
+                            width: height * 3.5
+                            property real id_num: model.id_num
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            Rectangle {
+                                anchors.fill: parent
+                                anchors.centerIn: parent
+                                color: list_view_attr.currentIndex === parent.id_num ?
+                                                  Qt.rgba(0, 255, 0, 0.1) : "transparent"
+                                opacity: list_view_attr.currentIndex == item.id_num ? 1 : 0.3
+                                radius: width / 2
+                                Text {
+                                    id: attr_car
+                                    clip: true
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: parent.height * 0.3
+                                    text: model.btn_text
+                                    width: parent.width * 0.8
+                                    height: parent.height * 0.6
+                                    font.bold: false
+                                    font.pixelSize: list_view_attr.currentIndex === item.id_num ?
+                                                      height * 0.8 :height * 0.6
+                                    verticalAlignment: Text.AlignVCenter
+                                    horizontalAlignment: Text.AlignLeft
                                 }
-                                width: parent.width * 0.5
-                                height: parent.height * 0.6
-                                font.bold: true
-                                font.pixelSize: height * 0.6
-                                text: content
+                                Image {
+                                    height: parent.height * 0.4
+                                    width: height
+                                    source: "qrc:/res/pictures/arrow-right.png"
+                                    anchors.right: parent.right
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    verticalAlignment: Image.AlignVCenter
+                                    fillMode: Image.PreserveAspectFit
+                                }
+                                Rectangle {
+                                    width: parent.width * 0.75
+                                    height: 0.5
+                                    anchors.bottom: parent.bottom
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    color: Qt.rgba(0, 0, 0, 0.1)
+                                }
+                            }
+                            onClicked: {
+                                list_view_attr.currentIndex = index
+                                attrChanged(list_view_attr.currentIndex)
                             }
                         }
                         model: ListModel {
+                            id: list_model_attr
                             ListElement {
-                                name: qsTr("Vehicle number:")
-                                content: qsTr("zz01a")
+                                id_num: 0
+                                btn_text: qsTr("car information")
+                                focus_source: "qrc:/res/pictures/home.png"
                             }
                             ListElement {
-                                name: qsTr("Car type:")
-                                content: qsTr("SC50-A")
-                            }
-                            ListElement {
-                                name: qsTr("Production Date:")
-                                content: qsTr("2020.04.08")
-                            }
-                            ListElement {
-                                name: qsTr("Intelligent driving system version number:")
-                                content: qsTr("tergeo 2.0")
-                            }
-                            ListElement {
-                                name: qsTr("Intelligent driving system updated:")
-                                content: qsTr("2020.04.08")
+                                id_num: 1
+                                btn_text: qsTr("device information")
+                                focus_source: "qrc:/res/pictures/user.png"
                             }
                         }
                     }
                 }
-
-                // device information
-                Column {
-                    id: col_device_info
-                    visible: false
-                    width: parent.width
+                Rectangle {
+                    id: rec_car_info
+                    width: parent.width * 0.6
                     height: parent.height
-                    anchors.left: parent.left
-                    anchors.leftMargin: height * 0.15
-                    Repeater {
-                        id:repeater_device
-                        clip:true
-                        delegate: Rectangle {
-                            width: parent.width
-                            height: parent.height / repeater_device.count
-                            color: "transparent"
-                            Text {
-                                id: text_device
-                                clip: true
-                                text: model.name
-                                width: parent.width * 0.5
-                                height: parent.height * 0.6
-                                font.bold: false
-                                font.pixelSize: height * 0.6
-                                anchors.verticalCenter: parent.verticalCenter
-                                horizontalAlignment: Text.AlignLeft
-                                color: "#8B8386"
-                            }
-                            Text {
-                                anchors {
-                                    left: text_device.right
-                                    leftMargin: parent.width * 0.1
-                                    verticalCenter: parent.verticalCenter
+                    anchors {
+                        left: rect_attr_list.right
+                    }
+                    color: "transparent"
+                    StackView {
+                        id: stack_attr
+                        anchors.fill: parent
+                        initialItem: col_car_info
+
+                        replaceEnter: Transition {
+
+                        }
+                        replaceExit: Transition {
+
+                        }
+                    }
+
+                    // car information
+                    Column {
+                        id: col_car_info
+                        visible: false
+                        width: parent.width
+                        height: parent.height
+                        Repeater {
+                            id: repeater_car
+                            clip: true
+                            delegate: Rectangle {
+                                width: parent.width
+                                height: parent.height / repeater_car.count
+                                color: "transparent"
+                                Text {
+                                    id: text_car
+                                    clip: true
+                                    text: model.name
+                                    width: parent.width * 0.5
+                                    height: parent.height * 0.6
+                                    font.bold: true
+                                    font.pixelSize: height * 0.6
+//                                    anchors.verticalCenter: parent.verticalCenter
+                                    //                                verticalAlignment: Text.AlignVCenter
+                                    anchors.bottom: parent.bottom
+                                    horizontalAlignment: Text.AlignLeft
                                 }
-                                width: parent.width * 0.5
-                                height: parent.height * 0.6
-                                font.bold: true
-                                font.pixelSize: height * 0.6
-                                text: content
+                                Text {
+                                    anchors {
+                                        left: text_car.right
+//                                        verticalCenter: parent.verticalCenter
+                                        bottom: parent.bottom
+                                    }
+                                    width: parent.width * 0.5
+                                    height: parent.height * 0.6
+                                    font.bold: false
+                                    font.pixelSize: height * 0.6
+                                    text: content
+                                }
+                                Rectangle {
+                                    width: parent.width * 0.8
+                                    height: 0.5
+                                    anchors.bottom: parent.bottom
+                                    color: Qt.rgba(0, 0, 0, 0.1)
+                                }
+                            }
+                            model: ListModel {
+                                ListElement {
+                                    name: qsTr("Vehicle number:")
+                                    content: qsTr("zz01a")
+                                }
+                                ListElement {
+                                    name: qsTr("Car type:")
+                                    content: qsTr("SC50-A")
+                                }
+                                ListElement {
+                                    name: qsTr("Production Date:")
+                                    content: qsTr("2020.04.08")
+                                }
+                                ListElement {
+                                    name: qsTr("Intelligent driving system version number:")
+                                    content: qsTr("tergeo 2.0")
+                                }
+                                ListElement {
+                                    name: qsTr("Intelligent driving system updated:")
+                                    content: qsTr("2020.04.08")
+                                }
                             }
                         }
-                        model: ListModel {
-                            ListElement {
-                                name: qsTr("Device name:")
-                                content: qsTr("RK-3288")
+                    }
+
+                    // device information
+                    Column {
+                        id: col_device_info
+                        visible: false
+                        width: parent.width
+                        height: parent.height
+                        Repeater {
+                            id:repeater_device
+                            clip:true
+                            delegate: Rectangle {
+                                width: parent.width
+                                height: parent.height / repeater_device.count
+                                color: "transparent"
+                                Text {
+                                    id: text_device
+                                    clip: true
+                                    text: model.name
+                                    width: parent.width * 0.5
+                                    height: parent.height * 0.6
+                                    font.bold: true
+                                    font.pixelSize: height * 0.6
+//                                    anchors.verticalCenter: parent.verticalCenter
+                                    anchors.bottom: parent.bottom
+                                    horizontalAlignment: Text.AlignLeft
+                                }
+                                Text {
+                                    anchors {
+                                        left: text_device.right
+//                                        verticalCenter: parent.verticalCenter
+                                        bottom: parent.bottom
+                                    }
+                                    width: parent.width * 0.5
+                                    height: parent.height * 0.6
+                                    font.bold: false
+                                    font.pixelSize: height * 0.6
+                                    text: content
+                                }
+                                Rectangle {
+                                    width: parent.width * 0.8
+                                    height: 0.5
+                                    anchors.bottom: parent.bottom
+                                    color: Qt.rgba(0, 0, 0, 0.1)
+                                }
                             }
-                            ListElement {
-                                name: qsTr("operating system:")
-                                content: qsTr("Android")
-                            }
-                            ListElement {
-                                name: qsTr("Software version number:")
-                                content: qsTr("Android 9.1.1")
-                            }
-                            ListElement {
-                                name: qsTr("Software update:")
-                                content: qsTr("2020.04.08")
+                            model: ListModel {
+                                ListElement {
+                                    name: qsTr("Device name:")
+                                    content: qsTr("RK-3288")
+                                }
+                                ListElement {
+                                    name: qsTr("operating system:")
+                                    content: qsTr("Android")
+                                }
+                                ListElement {
+                                    name: qsTr("Software version number:")
+                                    content: qsTr("Android 9.1.1")
+                                }
+                                ListElement {
+                                    name: qsTr("Software update:")
+                                    content: qsTr("2020.04.08")
+                                }
                             }
                         }
                     }
@@ -281,7 +291,7 @@ Rectangle {
                 width: parent.width
                 height: parent.height * 0.2
                 anchors {
-                    top: rec_car_info.bottom
+                    top: rect_car_info_display.bottom
                 }
                 color: "transparent"
                 Button {

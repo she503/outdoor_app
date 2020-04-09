@@ -213,6 +213,12 @@ Rectangle {
                                     anchors.left: text_1.right
                                     color: root.font_color
                                 }
+                                Rectangle {
+                                    width: parent.width * 0.97
+                                    height: 0.5
+                                    anchors.bottom: parent.bottom
+                                    color: Qt.rgba(0, 0, 0, 0.1)
+                                }
                             }
 
                             Rectangle {
@@ -241,7 +247,12 @@ Rectangle {
                                     anchors.left: text_2.right
                                     color: root.font_color
                                 }
-
+                                Rectangle {
+                                    width: parent.width * 0.97
+                                    height: 0.5
+                                    anchors.bottom: parent.bottom
+                                    color: Qt.rgba(0, 0, 0, 0.1)
+                                }
                             }
 
                             Rectangle {
@@ -271,7 +282,12 @@ Rectangle {
                                     anchors.left: text_3.right
                                     color: root.font_color
                                 }
-
+                                Rectangle {
+                                    width: parent.width * 0.97
+                                    height: 0.5
+                                    anchors.bottom: parent.bottom
+                                    color: Qt.rgba(0, 0, 0, 0.1)
+                                }
                             }
                         }
                         ListModel {

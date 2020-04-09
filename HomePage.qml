@@ -7,9 +7,9 @@ import "./CustomControl"
 Rectangle {
     id: root
     color: "transparent"
-    signal viewTask()
     signal sigEyeBtnPress()
     signal startBtnPress()
+    signal proBarPress()
     TLInfoDisplayPage {
         id: rect_info_display
         width: parent.width
@@ -26,29 +26,30 @@ Rectangle {
         anchors {
             top: rect_info_display.bottom
         }
-        Rectangle {
-            id: rect_look
-            width: parent.width * 0.3
-            height: parent.height
-            color: "transparent"
-            Image {
-                id: btn_eye
-                width: parent.width * 0.3
-                height: width * 0.628
-                source: "qrc:/res/pictures/eye.png"
-                anchors{
-                    right: parent.right
-                    bottom: parent.bottom
-                    bottomMargin: parent.height * 0.1
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        root.sigEyeBtnPress()
-                    }
-                }
-            }
-        }
+//        Rectangle {
+//            id: rect_look
+
+//            width: parent.width * 0.3
+//            height: parent.height
+//            color: "transparent"
+//            Image {
+//                id: btn_eye
+//                width: parent.width * 0.3
+//                height: width * 0.628
+//                source: "qrc:/res/pictures/eye.png"
+//                anchors{
+//                    right: parent.right
+//                    bottom: parent.bottom
+//                    bottomMargin: parent.height * 0.1
+//                }
+//                MouseArea {
+//                    anchors.fill: parent
+//                    onClicked: {
+//                        root.sigEyeBtnPress()
+//                    }
+//                }
+//            }
+//        }
 
         Image {
             id: btn_start_stop
@@ -59,7 +60,11 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    root.startBtnPress()
+                    if (!has_error) {
+                        root.startBtnPress()
+                    } else {
+
+                    }
                 }
             }
         }
@@ -89,6 +94,12 @@ Rectangle {
                         horizontalCenter: parent.horizontalCenter
                         top: parent.top
                         topMargin: parent.height * 0.7
+                    }
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        root.proBarPress()
                     }
                 }
             }

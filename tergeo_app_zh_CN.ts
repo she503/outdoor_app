@@ -4,73 +4,99 @@
 <context>
     <name>AboutMachinePage</name>
     <message>
-        <location filename="AboutMachinePage.qml" line="128"/>
+        <location filename="AboutMachinePage.qml" line="121"/>
         <source>car information</source>
         <translation>车辆信息</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="133"/>
+        <location filename="AboutMachinePage.qml" line="126"/>
         <source>device information</source>
         <translation>一体机信息</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="193"/>
+        <location filename="AboutMachinePage.qml" line="198"/>
         <source>Vehicle number:</source>
         <translation>车辆编号：</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="194"/>
-        <location filename="AboutMachinePage.qml" line="258"/>
-        <source>tergeo2.0</source>
-        <translation></translation>
+        <location filename="AboutMachinePage.qml" line="199"/>
+        <source>zz01a</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="197"/>
+        <location filename="AboutMachinePage.qml" line="202"/>
         <source>Car type:</source>
         <translation>车型：</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="198"/>
-        <location filename="AboutMachinePage.qml" line="202"/>
-        <location filename="AboutMachinePage.qml" line="206"/>
-        <location filename="AboutMachinePage.qml" line="210"/>
-        <location filename="AboutMachinePage.qml" line="262"/>
-        <location filename="AboutMachinePage.qml" line="266"/>
+        <location filename="AboutMachinePage.qml" line="203"/>
         <source>SC50-A</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="201"/>
+        <location filename="AboutMachinePage.qml" line="206"/>
         <source>Production Date:</source>
         <translation>生产日期：</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="205"/>
+        <location filename="AboutMachinePage.qml" line="207"/>
+        <location filename="AboutMachinePage.qml" line="215"/>
+        <location filename="AboutMachinePage.qml" line="278"/>
+        <source>2020.04.08</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="AboutMachinePage.qml" line="210"/>
         <source>Intelligent driving system version number:</source>
         <translation>智驾系统版本号：</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="209"/>
+        <location filename="AboutMachinePage.qml" line="211"/>
+        <source>tergeo 2.0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="AboutMachinePage.qml" line="214"/>
         <source>Intelligent driving system updated:</source>
         <translation>智驾系统更新时间：</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="257"/>
+        <location filename="AboutMachinePage.qml" line="265"/>
+        <source>Device name:</source>
+        <translation>设备名称：</translation>
+    </message>
+    <message>
+        <location filename="AboutMachinePage.qml" line="266"/>
+        <source>RK-3288</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="AboutMachinePage.qml" line="269"/>
         <source>operating system:</source>
         <translation>操作系统：</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="261"/>
+        <location filename="AboutMachinePage.qml" line="270"/>
+        <source>Android</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="AboutMachinePage.qml" line="273"/>
         <source>Software version number:</source>
         <translation>软件版本号：</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="265"/>
+        <location filename="AboutMachinePage.qml" line="274"/>
+        <source>Android 9.1.1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="AboutMachinePage.qml" line="277"/>
         <source>Software update:</source>
         <translation>软件更新时间：</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="286"/>
+        <location filename="AboutMachinePage.qml" line="299"/>
         <source>contact us</source>
         <translation>联系我们</translation>
     </message>
@@ -457,7 +483,7 @@
     </message>
     <message>
         <location filename="UserManagePage.qml" line="67"/>
-        <location filename="UserManagePage.qml" line="425"/>
+        <location filename="UserManagePage.qml" line="433"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
@@ -471,7 +497,7 @@
         <translation type="vanished">用户不存在!!!</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="607"/>
+        <location filename="UserManagePage.qml" line="615"/>
         <source>password had be changed!!!</source>
         <translation>密码修改成功!!!</translation>
     </message>
@@ -500,31 +526,31 @@
         <translation type="vanished">用户已删除！</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="587"/>
+        <location filename="UserManagePage.qml" line="595"/>
         <source>user </source>
         <translation>用户 </translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="587"/>
+        <location filename="UserManagePage.qml" line="595"/>
         <source> was deleted !</source>
         <translation> 已删除！</translation>
     </message>
     <message>
         <location filename="UserManagePage.qml" line="201"/>
-        <location filename="UserManagePage.qml" line="474"/>
+        <location filename="UserManagePage.qml" line="482"/>
         <source>update</source>
         <translation>更新</translation>
     </message>
     <message>
         <location filename="UserManagePage.qml" line="70"/>
-        <location filename="UserManagePage.qml" line="543"/>
+        <location filename="UserManagePage.qml" line="551"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
         <location filename="UserManagePage.qml" line="115"/>
         <location filename="UserManagePage.qml" line="116"/>
-        <location filename="UserManagePage.qml" line="606"/>
+        <location filename="UserManagePage.qml" line="614"/>
         <source>update success</source>
         <translation>更新成功</translation>
     </message>
@@ -545,57 +571,57 @@
         <translation>您无法删除上一个管理员帐户！！！</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="333"/>
+        <location filename="UserManagePage.qml" line="341"/>
         <source>username:</source>
         <translation>用户名：</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="358"/>
+        <location filename="UserManagePage.qml" line="366"/>
         <source>enter new user name.</source>
         <translation>请输入用户名</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="373"/>
+        <location filename="UserManagePage.qml" line="381"/>
         <source>password:</source>
         <translation>密    码：</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="397"/>
+        <location filename="UserManagePage.qml" line="405"/>
         <source>enter new password.</source>
         <translation>请输入密码</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="429"/>
+        <location filename="UserManagePage.qml" line="437"/>
         <source>add error</source>
         <translation>添加失败</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="430"/>
+        <location filename="UserManagePage.qml" line="438"/>
         <source>some information is empty!!!</source>
         <translation>信息为空！</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="542"/>
+        <location filename="UserManagePage.qml" line="550"/>
         <source>user name has exited !</source>
         <translation>用户已存在！</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="548"/>
+        <location filename="UserManagePage.qml" line="556"/>
         <source>add success</source>
         <translation>添加成功</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="578"/>
+        <location filename="UserManagePage.qml" line="586"/>
         <source>delete error</source>
         <translation>删除失败</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="586"/>
+        <location filename="UserManagePage.qml" line="594"/>
         <source>delete success</source>
         <translation>删除成功</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="600"/>
+        <location filename="UserManagePage.qml" line="608"/>
         <source>update error</source>
         <translation>更新失败</translation>
     </message>
@@ -608,17 +634,17 @@
         <translation type="vanished">超级用户</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="549"/>
+        <location filename="UserManagePage.qml" line="557"/>
         <source>a new user was added</source>
         <translation>新用户添加成功</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="560"/>
+        <location filename="UserManagePage.qml" line="568"/>
         <source>nomal_level</source>
         <translation>普通权限</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="561"/>
+        <location filename="UserManagePage.qml" line="569"/>
         <source>admin_level</source>
         <translation>高级权限</translation>
     </message>

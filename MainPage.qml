@@ -73,6 +73,19 @@ Rectangle {
                 dialog_working_states.open()
             }
         }
+
+        onCenterBtnPress: {
+            if (status <= 2) {
+                home_page.text_visible = false
+                list_view.currentIndex = 2
+                stack_menu.replace(list_view)
+                root.mainPageChanged(2)
+            } else if (status === 4) {
+                home_page.text_visible = true
+                stack_menu.replace(task_process_page)
+                root.mainPageChanged(2)
+            }
+        }
     }
     TaskSettingsPage {
         id: task_settings_page
@@ -191,14 +204,6 @@ Rectangle {
                 list_view.currentIndex = 0
                 stack_menu.replace(list_view)
                 stack_view.replace(home_page)
-            }
-
-            onSigStopBtnPress: {
-
-            }
-
-            onSigEndingBtnPress: {
-
             }
         }
     }

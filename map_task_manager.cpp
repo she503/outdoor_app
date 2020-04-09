@@ -111,7 +111,6 @@ void MapTaskManager::sentMapTasksName(const QStringList &task_list)
 
 bool MapTaskManager::judgeIsMapTasks()
 {
-    qDebug() << _work_status;
     if (_work_status == WORK_STATUS_MAP_SELECTED_LOCATING) {
         this->parseMapData(_map_name_list.at(0));
         this->parseTasksName(_task_data_obj);
@@ -157,7 +156,6 @@ void MapTaskManager::getFirstMap()
 
 bool MapTaskManager::getIsWorking()
 {
-    qDebug() << _work_status;
     if (_work_status == WORK_STATUS_WORKING) {
         return true;
     } else {
@@ -172,6 +170,11 @@ void MapTaskManager::setMapName(const QString &map_name)
     obj.insert("map_name", map_name);
     QJsonDocument doc(obj);
     _socket->sendSocketMessage(doc.toJson());
+}
+
+int MapTaskManager::getWorkStatus()
+{
+    return _work_status;
 }
 
 void MapTaskManager::setTaskCB(const QJsonObject &obj)

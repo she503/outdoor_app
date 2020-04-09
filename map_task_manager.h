@@ -60,6 +60,8 @@ public:
 
     Q_INVOKABLE void setMapName(const QString& map_name);
 
+    Q_INVOKABLE int getWorkStatus();
+
 public:
     void setSocket(SocketManager* socket);
 private:

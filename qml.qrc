@@ -13,6 +13,7 @@
         <file>TaskProcess.qml</file>
         <file>MessageViewPage.qml</file>
         <file>WelcomePage.qml</file>
+        <file>VerifyPasswordPage.qml</file>
     </qresource>
     <qresource prefix="/CustomControl">
         <file>TLTextField.qml</file>

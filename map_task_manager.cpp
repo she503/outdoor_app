@@ -2,10 +2,7 @@
 
 MapTaskManager::MapTaskManager(QObject *parent) : QObject(parent)
 {
-    _is_map_task = false;
-    _is_map_tasks = false;
-    _is_working = false;
-    _is_first_start = true;
+    _work_status = WORK_STATUS_NONE_WORK;
 }
 
 void MapTaskManager::sendInitPos(const double &pos_x, const double &pos_y)
@@ -24,11 +21,9 @@ void MapTaskManager::setSocket(SocketManager *socket)
     connect(_socket, SIGNAL(mapsInfo(QJsonObject)), this, SLOT(parseRegionsInfo(QJsonObject)));
     connect(_socket, SIGNAL(sendMapAndTasks(QJsonObject)), this, SLOT(parseMapAndTasksInfo(QJsonObject)));
     connect(_socket, SIGNAL(sendMapAndTask(QJsonObject)), this, SLOT(parseMapAndTaskInfo(QJsonObject)));
-//    connect(_socket, SIGNAL(setMapAndInitPosRST(QJsonObject)), this, SLOT(parseSetMapAndInitPosInfo(QJsonObject)));
     connect(_socket, SIGNAL(parseMapName(QJsonObject)), this, SLOT(parseMapName(QJsonObject)));
 
     connect(_socket, SIGNAL(tasksData(QJsonObject)), this, SLOT(parseMapTasksData(QJsonObject)));
-//    connect(_socket, SIGNAL(localizationInitRST(QJsonObject)), this, SLOT(localizationInitCB(QJsonObject)));
     connect(_socket, SIGNAL(setTasksRST(QJsonObject)), this, SLOT(setTaskCB(QJsonObject)));
     connect(_socket, SIGNAL(setInitPosRST(QJsonObject)), this, SLOT(setInitPosCB(QJsonObject)));
 
@@ -111,22 +106,25 @@ void MapTaskManager::sentMapTasksName(const QStringList &task_list)
     obj.insert("tasks_name",QJsonArray::fromStringList(task_list));
     QJsonDocument doc(obj);
     _socket->sendSocketMessage(doc.toJson());
+    _work_status = WORK_STATUS_WORKING;
 }
 
 bool MapTaskManager::judgeIsMapTasks()
 {
-    if (_is_map_tasks && !_is_map_task) {
+    qDebug() << _work_status;
+    if (_work_status == WORK_STATUS_MAP_SELECTED_LOCATING) {
         this->parseMapData(_map_name_list.at(0));
         this->parseTasksName(_task_data_obj);
         emit updateMapAndTasksInfo(_map_name_list.at(0));
         return true;
     }
-    if (_is_map_task) {
+    if (_work_status == WORK_STATUS_TASK_SELECTED) {
         this->parseMapData(_map_name_list.at(0));
         emit updateRefLine(_pts);
         emit updateMapAndTaskInfo(_map_name_list.at(0));
         return true;
     }
+    return false;
 }
 
 void MapTaskManager::sendPauseTaskCommond(const bool &is_pause)
@@ -152,14 +150,19 @@ void MapTaskManager::getFirstMap()
     if (_maps.size() <= 0) {
         return ;
     }
-    if (_is_map_tasks || _is_map_task || _is_working) {
+    if (_work_status >= WORK_STATUS_MAP_SELECTED_LOCATING) {
         this->parseMapData(_map_name_list.at(0));
     }
 }
 
 bool MapTaskManager::getIsWorking()
 {
-    return _is_working;
+    qDebug() << _work_status;
+    if (_work_status == WORK_STATUS_WORKING) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void MapTaskManager::setMapName(const QString &map_name)
@@ -175,6 +178,7 @@ void MapTaskManager::setTaskCB(const QJsonObject &obj)
 {
     int status = obj.value("status").toInt();
     QString message = obj.value("message").toString();
+    _work_status = WORK_STATUS_MAP_SELECTED_LOCATING;
     emit setTaskInfo(status, message);
 }
 
@@ -220,9 +224,7 @@ void MapTaskManager::parseStopTask(const int &status)
 {
     emit updateStopTaskInfo(status);
     if (status == 1) {
-        _is_map_tasks = false;
-        _is_map_task = false;
-        _is_working = false;
+        _work_status = WORK_STATUS_NONE_WORK;
     }
 }
 void MapTaskManager::parseRegionsInfo(const QJsonObject &obj)
@@ -261,11 +263,8 @@ void MapTaskManager::parseRegionsInfo(const QJsonObject &obj)
     }
     emit updateMapsName(_map_name_list);
 
-    if ((_is_first_start) &&
-            !(_is_map_task || _is_map_tasks || _is_working) &&
-            !_map_name_list.empty()) {
+    if (_work_status <= WORK_STATUS_MAP_SELECTED_NOT_LOCATING && !_map_name_list.empty()) {
         this->setMapName(_map_name_list.at(0));
-        _is_first_start = false;
     }
 }
 
@@ -280,7 +279,7 @@ void MapTaskManager::parseMapAndTasksInfo(const QJsonObject &obj)
         QString map_name = area_obj.value("name").toString();
         _maps.insert(map_name, area_obj);
 
-        _is_map_tasks = true;
+        _work_status = WORK_STATUS_MAP_SELECTED_LOCATING;
         _map_name_list.push_back(map_name);
 
 
@@ -301,7 +300,7 @@ void MapTaskManager::parseMapAndTaskInfo(const QJsonObject &obj)
     if (status == 1) {
         _maps.clear();
         _map_name_list.clear();
-        _is_map_task = true;
+        _work_status = WORK_STATUS_TASK_SELECTED;
         QJsonObject area_obj = obj.value("area").toObject();
         QString map_name = area_obj.value("name").toString();
         _maps.insert(map_name, area_obj);
@@ -319,7 +318,7 @@ void MapTaskManager::parseMapAndTaskInfo(const QJsonObject &obj)
 
         emit updateRefLine(_pts);
         emit updateMapAndTaskInfo(_map_name_list.at(0));
-        _is_working = true;
+
     } else {
         qDebug() << "[MapTaskManager::parseMapAndTaskInfo]: " << message;
     }
@@ -361,9 +360,6 @@ void MapTaskManager::parseMapTasksData(const QJsonObject &obj)
         this->parseTasksName(task_data_obj);
     }
 }
-
-
-
 
 void MapTaskManager::parseMapData(const QString &map_name)
 {
@@ -660,7 +656,8 @@ void MapTaskManager::setInitPosCB(const QJsonObject &obj)
 {
     int status = obj.value("status").toInt();
     QString message = obj.value("message").toString();
-    emit updateInitPosInfo(status, message); //to do
+    emit updateInitPosInfo(status, message);
+    _work_status = WORK_STATUS_MAP_SELECTED_NOT_LOCATING;
 }
 
 

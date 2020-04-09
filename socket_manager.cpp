@@ -123,10 +123,6 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MESSAGE_SET_MAP_RST:
                 emit parseMapName(obj);
                 break;
-
-            case  MessageType::MESSAGE_LOGIN_RST:
-                emit checkoutLogin(obj);
-                break;
             case MessageType::MESSAGE_SET_TASKS_RST:
                 emit setTasksRST(obj);
                 break;
@@ -137,7 +133,9 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
                 emit pauseStopTaskRST(obj.value("status").toInt());
                 break;
 
-
+            case  MessageType::MESSAGE_LOGIN_RST:
+                emit checkoutLogin(obj);
+                break;
             case MessageType::MESSAGE_ADD_ACCOUNT_RST:
                 emit addUser(obj);
                 break;

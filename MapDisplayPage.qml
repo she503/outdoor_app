@@ -896,8 +896,8 @@ Page {
             canvas_others.requestPaint()
 
             if (min_x < 50) {
-                vehicle.width = 2.1 * map_rate
-                vehicle.height = 0.7 * map_rate
+                vehicle.width =  1.95 * map_rate // 1.3
+                vehicle.height = 0.74 * map_rate // 0.74
             } else {
                 vehicle.width = 6.6 * map_rate
                 vehicle.height = 2.2 * map_rate

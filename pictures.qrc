@@ -68,5 +68,12 @@
         <file>res/pictures/task.png</file>
         <file>res/pictures/logo_3.png</file>
         <file>res/pictures/exit.png</file>
+        <file>res/pictures/BUTTON-HOME.png</file>
+        <file>res/pictures/BUTTON-LOCK.png</file>
+        <file>res/pictures/BUTTON-PAUSE.png</file>
+        <file>res/pictures/BUTTON-START.png</file>
+        <file>res/pictures/BUTTON-STOP.png</file>
+        <file>res/pictures/BUTTON-WARNING1.png</file>
+        <file>res/pictures/TASKSETTING-button.png</file>
     </qresource>
 </RCC>

@@ -27,74 +27,213 @@ Rectangle {
 
     Dialog {
         id: message_update_uer
-        width: root.width * 0.7
-        height: root.height * 0.5
+        width: 300
+        height: 200
         x:(root.width - width) / 2
         y: (root.height - height) / 2
-
-        title: qsTr("update user pwd")
-
-        Column {
-            width: parent.width
-            height: parent.height
-            anchors.centerIn: message_update_uer.Center
-            spacing: height * 0.05
-            TextField {
-                id: field_old_pwd
-                visible: root.v_user_level > root.checked_user_level ? false : true
-                width: parent.width * 0.9
-                height: parent.height * 0.3
-                placeholderText: qsTr("Please enter old pwd")
-                font.pixelSize: height * 0.2
-                validator: RegExpValidator{regExp:/^.[A-Za-z0-9_]{0,11}$/}
-            }
-            TextField {
-                id: field_new_pwd
-                width: parent.width * 0.9
-                height: parent.height * 0.3
-                placeholderText: qsTr("Please enter new pwd")
-                font.pixelSize: height * 0.2
-                validator: RegExpValidator{regExp:/^.[A-Za-z0-9]{0,6}$/}
-            }
+        background: Rectangle {
+            anchors.fill: parent
+            color: "transparent"
+        }
+        contentItem: Item {
+            anchors.fill: parent
             Rectangle {
-                id: rect_update_btns
-                width: parent.width * 0.9
-                height: parent.height * 0.2
-                Button {
-                    id: btn_update_pwd
-                    width: parent.width * 0.45
-                    height: parent.height
-                    text: qsTr("OK")
-                    onClicked: {
-                        if (field_new_pwd.text.trim() === "") {
-                            message_account.dia_title = qsTr("Error")
-                            message_account.dia_content = qsTr("password cannot be empty!!!")
-                            message_account.status = 0
-                            message_account.open()
-                        } else {
-                            if(root.v_user_level <= root.checked_user_level) {
-                                account_manager.accountUpdate(root.checked_user_name, field_new_pwd.text, root.checked_user_level, field_old_pwd.text, true)
-                            } else {
-                                account_manager.accountUpdate(root.checked_user_name, field_new_pwd.text, root.checked_user_level)
+                id: rect_update_user_input
+                width: parent.width
+                height: parent.height
+                anchors.centerIn: parent
+                color: "transparent"
+                Image {
+                    anchors.fill: parent
+                    source: "qrc:/res/pictures/background_glow2.png"
+                }
+                Rectangle {
+                    color: Qt.rgba(255, 255, 255, 1)
+                    anchors.centerIn: parent
+                    width: parent.width * 0.8
+                    height: parent.height * 0.75
+                    Rectangle {
+                        id: rect_update_title
+                        width: parent.width
+                        height: parent.height * 0.3
+                        color: "transparent"
+                        Text {
+                            color: "#4876FF"
+                            text: qsTr("update user pwd")
+                            font.pixelSize: parent.height * 0.3
+                            font.bold: true
+                            anchors.centerIn: parent
+                        }
+                        Image {
+                            height: parent.height * 0.4
+                            width: height
+                            anchors {
+                                right: parent.right
+                                top:parent.top
+                                rightMargin: parent.height * 0.1
+                                topMargin: parent.height * 0.1
+                            }
+                            source: "qrc:/res/pictures/exit.png"
+                            fillMode: Image.PreserveAspectFit
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    message_update_uer.close()
+                                }
                             }
                         }
                     }
-                }
-                Button {
-                    id: btn_update_cancel
-                    anchors.left: btn_update_pwd.right
-                    anchors.leftMargin: parent.width * 0.1
-                    width: parent.width * 0.45
-                    height: parent.height
-                    text: qsTr("cancel")
-                    onClicked: {
-                        field_old_pwd.text = ""
-                        field_new_pwd.text = ""
-                        message_update_uer.close()
+                    Rectangle {
+                        id: rect_update_user
+                        width: parent.width
+                        height: parent.height * 0.8
+                        color: "transparent"
+                        anchors {
+                            top: rect_update_title.bottom
+                        }
+                        Column {
+                            width: parent.width * 0.6
+                            height: parent.height
+                            anchors {
+                                horizontalCenter: parent.horizontalCenter
+                                top: parent.top
+                                topMargin: height * 0.1
+                            }
+                            spacing: height * 0.05
+                            TLTextField {
+                                id: field_old_pwd
+                                visible: root.v_user_level > root.checked_user_level ? false : true
+                                width: parent.width
+                                height: parent.height * 0.2
+                                btn_radius:  height * 0.2
+                                placeholderText: qsTr("Please enter old pwd")
+                                pic_name: "qrc:/res/pictures/password.png"
+                            }
+                            TLTextField {
+                                id: field_new_pwd
+                                width: parent.width
+                                height: parent.height * 0.2
+                                btn_radius:  height * 0.2
+                                placeholderText: qsTr("Please enter new pwd")
+                                font_size: height * 0.4
+                                pic_name: "qrc:/res/pictures/password.png"
+                            }
+                            Rectangle {
+                                id: rect_update_btns
+                                width: parent.width
+                                height: parent.height * 0.2
+                                color: "transparent"
+                                TLButton {
+                                    id: btn_update_pwd
+                                    width: parent.width * 0.4
+                                    height: parent.height * 0.7
+                                    anchors {
+                                        verticalCenter: parent.verticalCenter
+                                        right: parent.horizontalCenter
+                                        rightMargin: height * 0.4
+                                    }
+
+                                    btn_text: qsTr("OK")
+                                    onClicked: {
+                                        if (field_new_pwd.text.trim() === "") {
+                                            message_account.dia_title = qsTr("Error")
+                                            message_account.dia_content = qsTr("password cannot be empty!!!")
+                                            message_account.status = 0
+                                            message_account.open()
+                                        } else {
+                                            if(root.v_user_level <= root.checked_user_level) {
+                                                account_manager.accountUpdate(root.checked_user_name, field_new_pwd.text, root.checked_user_level, field_old_pwd.text, true)
+                                            } else {
+                                                account_manager.accountUpdate(root.checked_user_name, field_new_pwd.text, root.checked_user_level)
+                                            }
+                                        }
+                                    }
+                                }
+                                TLButton {
+                                    id: btn_update_cancel
+                                    width: parent.width * 0.4
+                                    height: parent.height * 0.7
+                                    anchors {
+                                        verticalCenter: parent.verticalCenter
+                                        left: parent.horizontalCenter
+                                        leftMargin: height * 0.4
+                                    }
+                                    btn_text: qsTr("cancel")
+                                    onClicked: {
+                                        field_old_pwd.text = ""
+                                        field_new_pwd.text = ""
+                                        message_update_uer.close()
+                                    }
+                                }
+                            }
+                        }
                     }
+
                 }
             }
         }
+
+//        Column {
+//            width: parent.width
+//            height: parent.height
+//            anchors.centerIn: message_update_uer.Center
+//            spacing: height * 0.05
+//            TextField {
+//                id: field_old_pwd
+//                visible: root.v_user_level > root.checked_user_level ? false : true
+//                width: parent.width * 0.9
+//                height: parent.height * 0.3
+//                placeholderText: qsTr("Please enter old pwd")
+//                font.pixelSize: height * 0.2
+//                validator: RegExpValidator{regExp:/^.[A-Za-z0-9_]{0,11}$/}
+//            }
+//            TextField {
+//                id: field_new_pwd
+//                width: parent.width * 0.9
+//                height: parent.height * 0.3
+//                placeholderText: qsTr("Please enter new pwd")
+//                font.pixelSize: height * 0.2
+//                validator: RegExpValidator{regExp:/^.[A-Za-z0-9]{0,6}$/}
+//            }
+//            Rectangle {
+//                id: rect_update_btns
+//                width: parent.width * 0.9
+//                height: parent.height * 0.2
+//                Button {
+//                    id: btn_update_pwd
+//                    width: parent.width * 0.45
+//                    height: parent.height
+//                    text: qsTr("OK")
+//                    onClicked: {
+//                        if (field_new_pwd.text.trim() === "") {
+//                            message_account.dia_title = qsTr("Error")
+//                            message_account.dia_content = qsTr("password cannot be empty!!!")
+//                            message_account.status = 0
+//                            message_account.open()
+//                        } else {
+//                            if(root.v_user_level <= root.checked_user_level) {
+//                                account_manager.accountUpdate(root.checked_user_name, field_new_pwd.text, root.checked_user_level, field_old_pwd.text, true)
+//                            } else {
+//                                account_manager.accountUpdate(root.checked_user_name, field_new_pwd.text, root.checked_user_level)
+//                            }
+//                        }
+//                    }
+//                }
+//                Button {
+//                    id: btn_update_cancel
+//                    anchors.left: btn_update_pwd.right
+//                    anchors.leftMargin: parent.width * 0.1
+//                    width: parent.width * 0.45
+//                    height: parent.height
+//                    text: qsTr("cancel")
+//                    onClicked: {
+//                        field_old_pwd.text = ""
+//                        field_new_pwd.text = ""
+//                        message_update_uer.close()
+//                    }
+//                }
+//            }
+//        }
     }
 
     TLDialog {
@@ -121,8 +260,8 @@ Rectangle {
     }
     Dialog {
         id: dialog_add_user
-        width: root.width * 0.6
-        height: root.height * 0.5
+        width: 300
+        height: 200
         x:(root.width - width) / 2
         y: (root.height - height) / 2
         background: Rectangle {
@@ -318,224 +457,255 @@ Rectangle {
         width: parent.width > parent.height ? parent.height * 0.9 * 1.27 : parent.width * 0.9
         anchors.centerIn: parent
         color: "transparent"
-        visible: root.user_level === 1 ? false : true
+        visible: !rect_nomal.visible
         Image {
             id: im
             anchors.fill: parent
-            source: "qrc:/res/pictures/user_background.png"
+            source: "qrc:/res/pictures/background_glow1.png"
         }
         Rectangle {
-            id: rect_top
-            width: parent.width
-            height: parent.height * 0.16
-            color: "transparent"
-            Button {
-                id: btn_delete
-                width: parent.width * 0.2
-                height: parent.height * 0.5
-                contentItem: Text {
-                    width: parent.width
-                    height: parent.height * 0.8
-                    anchors.top: parent.top
-                    font.pixelSize: parent.height * 0.5
-                    text: qsTr("delete")
-                    color: "white"
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.topMargin: parent.height * 0.05
-                }
-                enabled: list_view_user.currentIndex === -1 ? false : true
-
-                background: Image {
-                    id: img_delete
-                    anchors.fill: parent
-                    source: !enabled ? "qrc:/res/pictures/btn_2.png" : "qrc:/res/pictures/btn_1.png"
-                }
-
-                anchors {
-                    bottom: parent.bottom
-                    right: parent.right
-                    rightMargin: width * 0.25
-                }
-
-                Component.onCompleted: {
-                    if (root.user_level === 1) {
-                        btn_delete.visible = false
-                    } else if (root.user_level === 2) {
-                        btn_delete.visible = true
-                    }
-                }
-
-                onClicked: {
-                    if (root.checked_user_level >= root.v_user_level){
-                        message_account.dia_title = qsTr("delete faild")
-                        message_account.dia_content = qsTr("you dont have permission to delete this account!!!")
-                        message_account.status = 0
-                        message_account.open()
-
-                    } else if ( root.checked_user_level === 2 && root.admin_num === 1) {
-                        message_account.dia_title = qsTr("delete faild")
-                        message_account.dia_content = qsTr("you cant delete last admin account!!!")
-                        message_account.status = 0
-                        message_account.open()
-                    } else {
-                        account_manager.accountDelete(root.checked_user_name)
-                    }
-
-                }
-            }
-            Button {
-                id: btn_update
-                width: parent.width * 0.2
-                height: parent.height * 0.5
-                contentItem: Text {
-                    width: parent.width
-                    height: parent.height * 0.8
-                    font.pixelSize: parent.height * 0.5
-                    text: qsTr("update")
-                    color: "white"
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.top: parent.top
-                    anchors.topMargin: parent.height * 0.05
-                }
-
-                enabled: list_view_user.currentIndex === -1 ? false : true
-
-                background: Image {
-                    id: img_update
-                    anchors.fill: parent
-                    source: !enabled ? "qrc:/res/pictures/btn_2.png" : "qrc:/res/pictures/btn_1.png"
-                }
-
-                anchors {
-                    bottom: parent.bottom
-                    right: btn_delete.visible ? btn_delete.left : parent.right
-                    rightMargin: width * 0.1
-                }
-                onClicked: message_update_uer.open()
-            }
-            Button {
-                id: btn_add
-                width: parent.width * 0.2
-                height: parent.height * 0.5
-                contentItem: Text {
-                    width: parent.width
-                    height: parent.height * 0.8
-                    font.pixelSize: parent.height * 0.5
-                    text: qsTr("add")
-                    color: "white"
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.top: parent.top
-                }
-
-                //                enabled: list_view_user.currentIndex === -1 ? false : true
-
-                background: Image {
-                    id: img_add
-                    anchors.fill: parent
-                    source: "qrc:/res/pictures/btn_1.png"
-                }
-
-                anchors {
-                    bottom: parent.bottom
-                    right: btn_update.left
-                    rightMargin: width * 0.1
-                }
-                onClicked: dialog_add_user.open()
-            }
-        }
-
-        Rectangle {
-            id: rect_list
-            width: parent.width * 0.8
-            height: parent.height * 0.45
-            clip: true
-            color: "transparent"
-            anchors {
-                top: rect_top.bottom
-                horizontalCenter: parent.horizontalCenter
-            }
-            ListView {
-                id: list_view_user
+            width: parent.width * 0.88
+            height: parent.height * 0.85
+            anchors.centerIn: parent
+            color: Qt.rgba(255, 255, 255, 0.6)
+            Rectangle {
+                id: rect_top
                 width: parent.width
-                height: parent.height
-                currentIndex: -1
-                spacing: 12 * rate
-
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    topMargin: parent.height * 0.02
-                    leftMargin: parent.height * 0.015
+                height: parent.height * 0.16
+                color: "transparent"
+                Rectangle {
+                    width: parent.width * 0.3
+                    height: parent.height
+                    color: "transparent"
+                    anchors.left: parent.left
+                    Text {
+                        text: qsTr("user lists:")
+                        font.pixelSize: parent.height * 0.4
+                        color: "white"
+                        font.bold: true
+                        anchors {
+                            bottom: parent.bottom
+                            left: parent.left
+                            leftMargin: parent.height * 0.2
+                        }
+                    }
                 }
 
-                delegate: ItemDelegate {
-                    id: item_de
-                    width: list_view_user.width
-                    height: list_view_user.height * 0.14
-                    //                    highlighted: ListView.isCurrentItem
-
-                    Rectangle {
-                        id: rect_circle
-                        width: 19 * rate
-                        height: width
-                        radius: height / 2
-                        border.width: 1
-                        border.color: "#87CEFA"
-                        anchors.verticalCenter: parent.verticalCenter
-                        Rectangle {
-                            id: rect_center
-                            anchors.centerIn: rect_circle
-                            width: parent.width * 0.5
-                            height: width
-                            radius: width / 2
-                            color: "#00BFFF"
-                            visible: item_de.focus
-                        }
-                    }
-                    Text {
-                        id: text_username
-                        anchors {
-                            left: rect_circle.right
-                            leftMargin: item_de.height * 0.2
-                            verticalCenter: item_de.verticalCenter
-                        }
-                        text: model.user_name
-                        font.pixelSize: item_de.height * 0.8
-                        horizontalAlignment: Text.AlignLeft
-                        verticalAlignment: Text.AlignVCenter
-                        color: "black"
-                    }
-                    Text {
-                        id: text_level
-                        anchors {
-                            left: parent.horizontalCenter
-                            verticalCenter: item_de.verticalCenter
-                        }
-                        text: model.level
-                        font.pixelSize: item_de.height * 0.8
-                        horizontalAlignment: Text.AlignLeft
-                        verticalAlignment: Text.AlignVCenter
-                        color: "black" //: "white"
-                        property int user_level: model.user_level
-                    }
-                    Rectangle {
+                Button {
+                    id: btn_delete
+                    width: parent.width * 0.2
+                    height: parent.height * 0.5
+                    contentItem: Text {
                         width: parent.width
-                        height: 0.5
-                        anchors.bottom: parent.bottom
-                        anchors.left: parent.left
-                        anchors.leftMargin: parent.width * 0.068
-                        color: Qt.rgba(0, 0, 0, 0.1)
+                        height: parent.height * 0.8
+                        anchors.top: parent.top
+                        font.pixelSize: parent.height * 0.5
+                        text: qsTr("delete")
+                        color: "white"
+                        horizontalAlignment: Text.AlignHCenter
+                        anchors.topMargin: parent.height * 0.05
                     }
-                    onClicked: {
+                    enabled: list_view_user.currentIndex === -1 ? false : true
 
-                        list_view_user.currentIndex = index
-                        root.checked_user_name = model.user_name
-                        root.checked_user_level = text_level.user_level
+                    background: Image {
+                        id: img_delete
+                        anchors.fill: parent
+                        source: !enabled ? "qrc:/res/pictures/btn_2.png" : "qrc:/res/pictures/btn_1.png"
+                    }
+
+                    anchors {
+                        bottom: parent.bottom
+                        right: parent.right
+                        rightMargin: width * 0.25
+                    }
+
+                    Component.onCompleted: {
+                        if (root.user_level === 1) {
+                            btn_delete.visible = false
+                        } else if (root.user_level === 2) {
+                            btn_delete.visible = true
+                        }
+                    }
+
+                    onClicked: {
+                        if (root.checked_user_level >= root.v_user_level){
+                            message_account.dia_title = qsTr("delete faild")
+                            message_account.dia_content = qsTr("you dont have permission to delete this account!!!")
+                            message_account.status = 0
+                            message_account.open()
+
+                        } else if ( root.checked_user_level === 2 && root.admin_num === 1) {
+                            message_account.dia_title = qsTr("delete faild")
+                            message_account.dia_content = qsTr("you cant delete last admin account!!!")
+                            message_account.status = 0
+                            message_account.open()
+                        } else {
+                            account_manager.accountDelete(root.checked_user_name)
+                        }
 
                     }
                 }
-                model: ListModel {
-                    id: user_list_model
+                Button {
+                    id: btn_update
+                    width: parent.width * 0.2
+                    height: parent.height * 0.5
+                    contentItem: Text {
+                        width: parent.width
+                        height: parent.height * 0.8
+                        font.pixelSize: parent.height * 0.5
+                        text: qsTr("update")
+                        color: "white"
+                        horizontalAlignment: Text.AlignHCenter
+                        anchors.top: parent.top
+                        anchors.topMargin: parent.height * 0.05
+                    }
+
+                    enabled: list_view_user.currentIndex === -1 ? false : true
+
+                    background: Image {
+                        id: img_update
+                        anchors.fill: parent
+                        source: !enabled ? "qrc:/res/pictures/btn_2.png" : "qrc:/res/pictures/btn_1.png"
+                    }
+
+                    anchors {
+                        bottom: parent.bottom
+                        right: btn_delete.visible ? btn_delete.left : parent.right
+                        rightMargin: width * 0.1
+                    }
+                    onClicked: message_update_uer.open()
+                }
+                Button {
+                    id: btn_add
+                    width: parent.width * 0.2
+                    height: parent.height * 0.5
+                    contentItem: Text {
+                        width: parent.width
+                        height: parent.height * 0.8
+                        font.pixelSize: parent.height * 0.5
+                        text: qsTr("add")
+                        color: "white"
+                        horizontalAlignment: Text.AlignHCenter
+                        anchors.top: parent.top
+                    }
+
+                    //                enabled: list_view_user.currentIndex === -1 ? false : true
+
+                    background: Image {
+                        id: img_add
+                        anchors.fill: parent
+                        source: "qrc:/res/pictures/btn_1.png"
+                    }
+
+                    anchors {
+                        bottom: parent.bottom
+                        right: btn_update.left
+                        rightMargin: width * 0.1
+                    }
+                    onClicked: dialog_add_user.open()
+                }
+                Rectangle {
+                    width: parent.width * 0.93
+                    height: 0.5
+                    anchors.bottom: parent.bottom
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: Qt.rgba(255, 255, 255, 0.5)
+                }
+            }
+
+            Rectangle {
+                id: rect_list
+                width: parent.width * 0.8
+                height: parent.height * 0.45
+                clip: true
+                color: "transparent"
+                anchors {
+                    top: rect_top.bottom
+                    horizontalCenter: parent.horizontalCenter
+                }
+                ListView {
+                    id: list_view_user
+                    width: parent.width
+                    height: parent.height
+                    currentIndex: -1
+                    spacing: 12 * rate
+
+                    anchors {
+                        top: parent.top
+                        left: parent.left
+                        topMargin: parent.height * 0.02
+                        leftMargin: parent.height * 0.015
+                    }
+
+                    delegate: ItemDelegate {
+                        id: item_de
+                        width: list_view_user.width
+                        height: list_view_user.height * 0.14
+                        //                    highlighted: ListView.isCurrentItem
+
+                        Rectangle {
+                            id: rect_circle
+                            width: 19 * rate
+                            height: width
+                            radius: height / 2
+                            border.width: 1
+                            border.color: "#87CEFA"
+                            anchors.verticalCenter: parent.verticalCenter
+                            Rectangle {
+                                id: rect_center
+                                anchors.centerIn: rect_circle
+                                width: parent.width * 0.5
+                                height: width
+                                radius: width / 2
+                                color: "#00BFFF"
+                                visible: item_de.focus
+                            }
+                        }
+                        Text {
+                            id: text_username
+                            anchors {
+                                left: rect_circle.right
+                                leftMargin: item_de.height * 0.2
+                                verticalCenter: item_de.verticalCenter
+                            }
+                            text: model.user_name
+                            font.pixelSize: item_de.height * 0.8
+                            horizontalAlignment: Text.AlignLeft
+                            verticalAlignment: Text.AlignVCenter
+                            color: "black"
+                        }
+                        Text {
+                            id: text_level
+                            anchors {
+                                left: parent.horizontalCenter
+                                verticalCenter: item_de.verticalCenter
+                            }
+                            text: model.level
+                            font.pixelSize: item_de.height * 0.8
+                            horizontalAlignment: Text.AlignLeft
+                            verticalAlignment: Text.AlignVCenter
+                            color: "black" //: "white"
+                            property int user_level: model.user_level
+                        }
+                        Rectangle {
+                            width: parent.width
+                            height: 0.5
+                            anchors.bottom: parent.bottom
+                            anchors.left: parent.left
+                            anchors.leftMargin: parent.width * 0.068
+                            color: Qt.rgba(0, 0, 0, 0.1)
+                        }
+                        onClicked: {
+
+                            list_view_user.currentIndex = index
+                            root.checked_user_name = model.user_name
+                            root.checked_user_level = text_level.user_level
+
+                        }
+                    }
+                    model: ListModel {
+                        id: user_list_model
+                    }
                 }
             }
         }
@@ -682,80 +852,115 @@ Rectangle {
         Image {
             id: img
             anchors.fill: parent
-            source: "qrc:/res/pictures/user_nomal_background.png"
+            source: "qrc:/res/pictures/background_glow1.png"
         }
         Rectangle {
-            id: rect_noaml_update
-            width: parent.width
-            height: parent.height * 0.15
-            anchors{
-                top: parent.top
-                topMargin: parent.height * 0.07
-            }
-            color: "transparent"
-            Button {
-                id: btn_update_nomal
-                width: parent.width * 0.2
-                height: parent.height * 0.5
-
-                Text {
-                    width: parent.width
-                    height: parent.height * 0.8
-                    font.pixelSize: parent.height * 0.5
-                    text: qsTr("update")
-                    color: "white"
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.top: parent.top
-
-                }
-
-                background: Image {
-                    id: img_update_nomal
-                    anchors.fill: parent
-                    source: !enabled ? "qrc:/res/pictures/btn_2.png" : "qrc:/res/pictures/btn_1.png"
-                }
-
-                anchors {
+            width: parent.width * 0.88
+            height: parent.height * 0.85
+            anchors.centerIn: parent
+            color: Qt.rgba(255, 255, 255, 0.6)
+            Rectangle {
+                id: rect_noaml_update
+                width: parent.width
+                height: parent.height * 0.15
+                anchors{
                     top: parent.top
-                    topMargin: parent.height * 0.1
-                    right: parent.right
-                    rightMargin: width * 0.4
+                    topMargin: parent.height * 0.07
                 }
-                onClicked: {
-                    root.checked_user_name = root.v_user_name
-                    root.checked_user_level = 1
-                    message_update_uer.open()
+                color: "transparent"
+                Rectangle {
+                    width: parent.width * 0.3
+                    height: parent.height
+                    color: "transparent"
+                    anchors.left: parent.left
+                    Text {
+                        text: qsTr("Welcome:")
+                        font.pixelSize: parent.height * 0.4
+                        color: "white"
+                        font.bold: true
+                        anchors {
+                            bottom: parent.bottom
+                            left: parent.left
+                            leftMargin: parent.height * 0.2
+                        }
+                    }
                 }
-            }
-        }
+                Button {
+                    id: btn_update_nomal
+                    width: parent.width * 0.2
+                    height: parent.height * 0.5
 
-        Rectangle {
-            id: rect_nomal_user_name_text
-            width: parent.width * 0.8
-            height: parent.height * 0.6
-            anchors{
-                top: rect_noaml_update.bottom
-                horizontalCenter: parent.horizontalCenter
-            }
-            color: "transparent"
-            Component.onCompleted: {
-                for (var key in root.v_accounts_info) {
-                    if (key === root.user_name)
-                    {
-                        root.user_level = root.v_accounts_info[key]
+                    Text {
+                        width: parent.width
+                        height: parent.height * 0.8
+                        font.pixelSize: parent.height * 0.5
+                        text: qsTr("update")
+                        color: "white"
+                        horizontalAlignment: Text.AlignHCenter
+                        anchors.top: parent.top
+
                     }
 
+                    background: Image {
+                        id: img_update_nomal
+                        anchors.fill: parent
+                        source: !enabled ? "qrc:/res/pictures/btn_2.png" : "qrc:/res/pictures/btn_1.png"
+                    }
+
+                    anchors {
+                        bottom: parent.bottom
+                        right: parent.right
+                        rightMargin: width * 0.4
+                    }
+//                    anchors {
+//                        top: parent.top
+//                        topMargin: parent.height * 0.1
+//                        right: parent.right
+//                        rightMargin: width * 0.4
+//                    }
+                    onClicked: {
+                        root.checked_user_name = root.v_user_name
+                        root.checked_user_level = 1
+                        message_update_uer.open()
+                    }
+                }
+                Rectangle {
+                    width: parent.width * 0.93
+                    height: 0.5
+                    anchors.bottom: parent.bottom
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: Qt.rgba(255, 255, 255, 0.5)
                 }
             }
 
-            Text {
-                id: nomal_user_name_text
-                anchors.fill: parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                font.pixelSize: parent.height * 0.1
-                text: ""
-                color: "white"
+            Rectangle {
+                id: rect_nomal_user_name_text
+                width: parent.width * 0.8
+                height: parent.height * 0.6
+                anchors{
+                    top: rect_noaml_update.bottom
+                    horizontalCenter: parent.horizontalCenter
+                }
+                color: "transparent"
+                Component.onCompleted: {
+                    for (var key in root.v_accounts_info) {
+                        if (key === root.user_name)
+                        {
+                            root.user_level = root.v_accounts_info[key]
+                        }
+
+                    }
+                }
+
+                Text {
+                    id: nomal_user_name_text
+                    anchors.fill: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    font.pixelSize: parent.height * 0.1
+                    text: ""
+                    color: "white"
+                }
             }
         }
     }
@@ -838,8 +1043,8 @@ Rectangle {
                 dialog_update_success.dia_content = qsTr("password had be changed!!!")
                 dialog_update_success.status = 1
                 dialog_update_success.open()
-                field_old_pwd.clear()
-                field_new_pwd.clear()
+                field_old_pwd.text = ""
+                field_new_pwd.text = ""
                 break;
             }
         }

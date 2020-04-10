@@ -13,7 +13,7 @@ ApplicationWindow {
     property Component welcome_page: WelcomePage {
         onTimeToClose: {
             if (!socket_manager.judgeIsConnected()) {
-                stack_view_main.replace(login_page.connect_fail_view)
+                stack_view_main.replace(login_page.connect_fail_item)
             } else {
                 stack_view_main.replace(login_page)
             }

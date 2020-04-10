@@ -9,51 +9,11 @@ Item{
     property var user_level: 0
     property string test_text: "root"
     signal successToLogin()
-    property alias connect_fail_view: connect_fail_view
+    property alias connect_fail_item: connect_fail_item
 
     Rectangle {
-        id: connect_fail_view
-        color: "white"
-        visible: false
-        Rectangle {
-            width: 330
-            height: 220
-            anchors.centerIn: parent
-            Image {
-                anchors.fill: parent
-                source: "qrc:/res/pictures/error_background.png"
-                fillMode: Image.PreserveAspectFit
-                Text {
-                    width: parent.width * 0.5
-                    height: parent.height
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTr("app cannot to connect server, please check your wifi and IP!")
-                    color: "black"
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
-                    font.pixelSize: height * 0.1
-                    wrapMode: Text.Wrap
-                }
-                TLButton {
-                    width: parent.width * 0.2
-                    height: parent.height * 0.1
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: parent.height * 0.08
-                    btn_text: qsTr("OK")
-                }
-            }
-        }
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                Qt.quit()
-            }
-        }
-    }
-    Rectangle {
-        id: rec_disconnect
-        color: "white"
+        id: connect_fail_item
+        color: Qt.rgba(255, 255, 255, 0.5)
         visible: false
         MouseArea {
             anchors.fill: parent
@@ -61,7 +21,6 @@ Item{
                 Qt.quit()
             }
         }
-
     }
 
     FontLoader {
@@ -172,6 +131,7 @@ Item{
                 width: parent.width * 0.95
                 height: parent.height * 0.2
                 color:"transparent"
+                property real login_count: 0
                 anchors{
                     top: rect_username.bottom
 //                    topMargin: height * 0.01
@@ -224,7 +184,15 @@ Item{
 
                 }
                 onClicked: {
+                    if (rect_pwd.login_count < 3 ) {
                         account_manager.accountLogin(username.text, password.text)
+                        rect_pwd.login_count++
+                    } else {
+                        message_connect_faild.dia_content = qsTr("Multiple login failures,please contact the administrator!")
+                        message_connect_faild.open()
+                    }
+
+
                 }
             }
         }
@@ -247,21 +215,30 @@ Item{
     Connections {
         target: socket_manager
         onEmitFaildToLogin: {
-//            message_login_faild.dia_content = message
-//            message_login_faild.open()
+            message_connect_faild.dia_content = message
+            message_connect_faild.open()
         }
         onAppDisconnected: {
-            message_login_faild.dia_content = message
-            message_login_faild.open()
-            stack_view_main.replace(rec_disconnect)
+            message_connect_faild.dia_content = message
+            message_connect_faild.open()
+            stack_view_main.replace(connect_fail_item)
         }
     }
 
-//    Connections {
-//        target: socket_manager
+    TLDialog {
+        id: message_connect_faild
+        width: 300
+        height: 200
+        x: (root.width - width) / 2
+        y: (root.height - height) / 2
+        dia_title: qsTr("connect error!")
+        status: 0
+        cancel_text: qsTr("OK")
 
-//    }
-
+        onCancelClicked: {
+            Qt.quit()
+        }
+    }
     TLDialog {
         id: message_login_faild
         width: 300
@@ -273,7 +250,7 @@ Item{
         cancel_text: qsTr("OK")
 
         onCancelClicked: {
-            Qt.quit()
+            message_login_faild.close()
         }
     }
 

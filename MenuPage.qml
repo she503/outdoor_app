@@ -46,7 +46,7 @@ ListView {
         }
         ListElement {
             id_num: 2
-            focus_source: "qrc:/res/pictures/task.png"
+            focus_source: "qrc:/res/pictures/TASKSETTING-button.png"
         }
         ListElement {
             id_num: 3

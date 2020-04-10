@@ -33,6 +33,7 @@ Item {
                 error_list[3] = key[2]
                 message_list_model.append({})
             }
+            draw_error.open()
         }
     }
 
@@ -43,17 +44,16 @@ Item {
         width: height
         anchors.right: parent.right
         background: Rectangle {
-            implicitWidth: 83
-            implicitHeight: 37
+            height: parent.height * 2.27
+            width: height
             color: "transparent"
-            border.width: 1
-            border.color: "black"
+            anchors.centerIn: parent
             radius: width / 2
             Image {
                 height: parent.height * 0.6
                 width: height
                 anchors.centerIn: parent
-                source: "qrc:/res/pictures/password.png"
+                source: "qrc:/res/pictures/BUTTON-LOCK.png"
                 fillMode: Image.PreserveAspectFit
             }
         }
@@ -70,13 +70,14 @@ Item {
         anchors.right: btn_lock.left
         anchors.rightMargin: height * 0.2
         background: Rectangle {
-            implicitWidth: 83
-            implicitHeight: 37
+            height: parent.height * 1.36
+            width: height
             color: "transparent"
+            anchors.centerIn: parent
             radius: width / 2
             Image {
                 anchors.fill: parent
-                source: "qrc:/res/pictures/warn.png"
+                source: "qrc:/res/pictures/BUTTON-WARNING1.png"
                 fillMode: Image.PreserveAspectFit
             }
         }
@@ -142,10 +143,28 @@ Item {
                     border.width: 1
                     border.color: Qt.rgba(100, 100, 200, 0.6)
                     Image {
+                        id: img_exit
+                        height: parent.height * 0.7
+                        width: height
+                        anchors {
+                            right: parent.right
+                            rightMargin: parent.height * 0.2
+                            verticalCenter: parent.verticalCenter
+                        }
+                        source: "qrc:/res/pictures/exit.png"
+                        fillMode: Image.PreserveAspectFit
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                draw_error.close()
+                            }
+                        }
+                    }
+                    Image {
                         id: pic_error_icon
                         height: parent.height * 0.6
                         width: parent.height
-                        source: "qrc:/res/pictures/warn.png"
+                        source: "qrc:/res/pictures/BUTTON-WARNING1.png"
                         fillMode: Image.PreserveAspectFit
                         anchors.verticalCenter: parent.verticalCenter
                     }
@@ -231,4 +250,19 @@ Item {
             btn_error.opacity = btn_error.opacity === 0 ? 1 : 0
         }
     }
+//    Timer {
+//        id:test_timer
+//        running: true
+//        repeat: true
+//        interval: 4000
+//        onTriggered: {
+//            /*btn_error.opacity =*/ btn_error.opacity === 0 ? 1 : 0
+//            if (has_error) {
+//                has_error = false
+//            } else {
+//                has_error = true
+//            }
+//            draw_error.open()
+//        }
+//    }
 }

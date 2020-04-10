@@ -119,10 +119,15 @@ Rectangle {
                 } else if (current_index === 1) {
                     stack_view.replace(user_manage_page)
                 } else if (current_index === 2) {
-                    task_settings_page.visible = true
-                    stack_view.replace(task_settings_page)
-                    map_task_manager.judgeIsMapTasks()
-                    map_task_manager.getFirstMap()
+//                    if (message_view.has_error == true) {
+//                        return
+//                    } else{
+                        task_settings_page.visible = true
+                        stack_view.replace(task_settings_page)
+                        map_task_manager.judgeIsMapTasks()
+                        map_task_manager.getFirstMap()
+//                    }
+//                    stack_menu.replace(task_process_page) // delet
                 } else if (current_index === 3) {
                     stack_view.replace(help_document_page)
                 } else if (current_index === 4) {
@@ -169,5 +174,22 @@ Rectangle {
 
     TLDialog {
         id: dialog_working_states
+    }
+    TLDialog {
+        id: repeat_need_stop_task
+        cancel: true
+        ok: true
+        x: (root.width - width ) / 2
+        y: (root.height - height ) / 2
+        cancel_text: qsTr("cancel")
+        ok_text: qsTr("sure")
+        dia_title: qsTr("repeter")
+        status: 1
+        dia_content: qsTr("please comfirm if you need to stop task.")
+        onOkClicked: {
+            map_task_manager.sendStopTaskCommond()
+            repeat_need_stop_task.close()
+        }
+
     }
 }

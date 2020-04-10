@@ -6,7 +6,7 @@ import QtGraphicalEffects 1.0
 Item  {
     id: root
     property bool has_error: false
-    property var error_list: [Qt.formatDateTime(new Date(), "hh:mm:ss"), "error level", "error code", "error detail"]
+    property var error_list: [Qt.formatDateTime(new Date(), "hh:mm:ss"), "error l333333333evel", "error co3333de", "e333333333333333333rror detail"]
     property var error_message_info: [error_list]
     property var error_level: 0//: ["debug", "warn", "error"]
     property var error_text_color: "red"//: ["yellow", "orange", "red"]
@@ -138,7 +138,7 @@ Item  {
                                 Repeater {
                                     model: error_list
                                     Rectangle {
-                                        width: rec_message_info.width / error_list.length
+                                        width: index === 3 ? item_message.width * 0.4 : item_message.width * 0.2
                                         height: parent.height
                                         color: "transparent"
                                         Text {
@@ -153,18 +153,11 @@ Item  {
                                             color: error_text_color
                                             horizontalAlignment: Text.AlignLeft
                                             verticalAlignment: Text.AlignVCenter
+                                            wrapMode: Text.Wrap
                                         }
                                     }
                                 }
                             }
-                            //                            onPressed: {
-                            //                                list_error_message.currentIndex = index
-                            //                                item_message.is_active = !item_message.is_active
-                            //                            }
-                            //                            onReleased:  {
-                            //                                list_error_message.currentIndex = index
-                            //                                item_message.is_active = !item_message.is_active
-                            //                            }
                         }
                         model: ListModel {
                             id: message_list_model

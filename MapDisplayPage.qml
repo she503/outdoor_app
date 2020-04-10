@@ -754,6 +754,7 @@ Page {
                     ctx.save()
                     ctx.lineWidth = vehicle.height
                     ctx.strokeStyle = "rgba(0,251,0, 0.3)"
+                    ctx.lineJoin="round";
                     ctx.beginPath()
                     var first_pointt = geometryToPixel(points[0][0], points[0][1])
                     ctx.moveTo(first_pointt[0], first_pointt[1])

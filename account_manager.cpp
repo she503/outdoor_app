@@ -90,6 +90,11 @@ void AccountManager::getCurrentUserLevel()
     emit emitNameAndLevel(_username, _level);
 }
 
+int AccountManager::getCurrentLevel()
+{
+    return _level;
+}
+
 void AccountManager::checkoutLogin(const QJsonObject &obj)
 {
     int status = obj.value("status").toInt();
@@ -98,6 +103,7 @@ void AccountManager::checkoutLogin(const QJsonObject &obj)
     emit emitCheckOutLogin(status, message);
     if (status == 1) {
         _level = level;
+        emitLevel(_level);
     } else if (status == 0) {
         _username = "";
         _password = "";

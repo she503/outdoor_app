@@ -39,13 +39,13 @@ Rectangle {
         onCenterBtnPress: {
             if (status <= 2) {
                 home_page.text_visible = false
-                list_view.currentIndex = 2
+                list_view.currentIndex = 1
                 stack_menu.replace(list_view)
-                list_view.mainPageChanged(2)
+                list_view.mainPageChanged(1)
             } else if (status === 4) {
                 home_page.text_visible = true
                 stack_menu.replace(task_process_page)
-                list_view.mainPageChanged(2)
+                list_view.mainPageChanged(1)
             }
         }
     }
@@ -116,16 +116,16 @@ Rectangle {
             onMainPageChanged: {
                 if (current_index === 0) {
                     stack_view.replace(home_page)
-                } else if (current_index === 1) {
+                } else if (current_index === 4) {
                     stack_view.replace(user_manage_page)
-                } else if (current_index === 2) {
+                } else if (current_index === 1) {
                     task_settings_page.visible = true
                     stack_view.replace(task_settings_page)
                     map_task_manager.judgeIsMapTasks()
                     map_task_manager.getFirstMap()
-                } else if (current_index === 3) {
+                } else if (current_index === 2) {
                     stack_view.replace(help_document_page)
-                } else if (current_index === 4) {
+                } else if (current_index === 3) {
                     stack_view.replace(about_machine_page)
                 }
                 task_settings_page.checked_tasks_name = []

@@ -247,12 +247,13 @@ Item{
     Connections {
         target: socket_manager
         onEmitFaildToLogin: {
+            console.info("1231")
 //            message_login_faild.dia_content = message
 //            message_login_faild.open()
         }
         onAppDisconnected: {
-            message_login_faild.dia_content = message
-            message_login_faild.open()
+            message_connect_faild.dia_content = message
+            message_connect_faild.open()
             stack_view_main.replace(rec_disconnect)
         }
     }
@@ -264,6 +265,17 @@ Item{
 
     TLDialog {
         id: message_login_faild
+        width: 300
+        height: 200
+        x: (root.width - width) / 2
+        y: (root.height - height) / 2
+        dia_title: qsTr("connect error!")
+        status: 0
+        cancel_text: qsTr("OK")
+    }
+
+    TLDialog {
+        id: message_connect_faild
         width: 300
         height: 200
         x: (root.width - width) / 2

@@ -13,7 +13,6 @@ Rectangle {
 
     Component.onCompleted: {
         var status = map_task_manager.getWorkStatus()
-        status = 4
         if (status <= 2) {
             root.text_visible = false
         } else if (status === 4) {
@@ -91,8 +90,6 @@ Rectangle {
                     top: parent.top
                     topMargin: parent.height * 0.092
                 }
-
-
 
                 onPaint: {
                     var ctx = getContext("2d")

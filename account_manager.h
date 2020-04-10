@@ -49,6 +49,8 @@ public:
 
     Q_INVOKABLE void getCurrentUserLevel();
 
+    Q_INVOKABLE int getCurrentLevel();
+
 signals:
     void emitCheckOutLogin(const int& status, const QString& message);
     void emitAllAccountInfo(const QJsonObject& accounts_info);
@@ -56,6 +58,7 @@ signals:
     void emitDeleteAccountCB(const int& status, const QString& message);
     void emitUpdateAccountCB(const int& status, const QString& message);
     void emitNameAndLevel(const QString& user_name, const int& level);
+    void emitLevel(const int& level);
 
 
 private slots:

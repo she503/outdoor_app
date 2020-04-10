@@ -2,10 +2,29 @@ import QtQuick 2.0
 import QtQuick.Controls 2.2
 
 ListView {
+    id: list_view
     signal mainPageChanged(var current_index)
 
+    property int level: -1
+    Connections {
+        target: account_manager
+        onEmitLevel: {
+            list_view.level = level
+            if (level <= 1) {
+                user_lit_model.append({"id_num": 0, "focus_source": "qrc:/res/pictures/home.png"})
+                user_lit_model.append({"id_num": 1, "focus_source": "qrc:/res/pictures/task.png"})
+                user_lit_model.append({"id_num": 2, "focus_source": "qrc:/res/pictures/help.png"})
+                user_lit_model.append({"id_num": 3, "focus_source": "qrc:/res/pictures/about.png"})
+            } else {
+                user_lit_model.append({"id_num": 0, "focus_source": "qrc:/res/pictures/home.png"})
+                user_lit_model.append({"id_num": 1, "focus_source": "qrc:/res/pictures/task.png"})
+                user_lit_model.append({"id_num": 2, "focus_source": "qrc:/res/pictures/help.png"})
+                user_lit_model.append({"id_num": 3, "focus_source": "qrc:/res/pictures/about.png"})
+                user_lit_model.append({"id_num": 4, "focus_source": "qrc:/res/pictures/user.png"})
+            }
+        }
+    }
 
-    id: list_view
     //            anchors.fill: parent
     spacing: height * 0.002
     currentIndex: 0
@@ -14,8 +33,8 @@ ListView {
     highlightFollowsCurrentItem: false
     delegate: ItemDelegate {
         id: item
-        height: list_view.height / 5
-        width: height * 2.5
+        height: list_view.level <= 1 ? list_view.height / 4 : list_view.height / 5
+        width: parent.width
         property real id_num: model.id_num
         Rectangle {
             anchors.fill: parent
@@ -32,29 +51,10 @@ ListView {
 
         onClicked: {
             list_view.currentIndex = index
-            list_view.mainPageChanged(list_view.currentIndex)
+            list_view.mainPageChanged(model.id_num)
         }
     }
     model: ListModel {
-        ListElement {
-            id_num: 0
-            focus_source: "qrc:/res/pictures/home.png"
-        }
-        ListElement {
-            id_num: 1
-            focus_source: "qrc:/res/pictures/user.png"
-        }
-        ListElement {
-            id_num: 2
-            focus_source: "qrc:/res/pictures/task.png"
-        }
-        ListElement {
-            id_num: 3
-            focus_source: "qrc:/res/pictures/help.png"
-        }
-        ListElement {
-            id_num: 4
-            focus_source: "qrc:/res/pictures/about.png"
-        }
+        id: user_lit_model
     }
 }

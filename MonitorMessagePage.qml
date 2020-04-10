@@ -8,6 +8,7 @@ Item {
 
     signal lockScreen()
     property bool is_locked: false
+    property bool has_error: false
     property var error_list: [Qt.formatDateTime(new Date(), "hh:mm:ss"), "error level", "error code", "error detail"]
     property var error_message_info: [error_list]
     property var error_level: 0//: ["debug", "warn", "error"]
@@ -17,6 +18,21 @@ Item {
             error_text_color = "red"
         } else {
             error_text_color = "green"
+        }
+    }
+
+    Connections {
+        target: ros_message_manager
+        onUpdateMonitorMessageInfo: {
+            root.has_error = true
+            test_timer.running = true
+            for(var key in monitor_message) {
+                error_list[0] = Qt.formatDateTime(new Date(), "hh:mm:ss")
+                error_list[1] = key[0]
+                error_list[2] = key[1]
+                error_list[3] = key[2]
+                message_list_model.append({})
+            }
         }
     }
 
@@ -171,7 +187,7 @@ Item {
                                 Repeater {
                                     model: error_list
                                     Rectangle {
-                                        width: rec_message_info.width / error_list.length
+                                        width: index === 3 ? item_message.width * 0.4 : item_message.width * 0.2
                                         height: parent.height
                                         color: "transparent"
                                         Text {
@@ -186,18 +202,11 @@ Item {
                                             color: error_text_color
                                             horizontalAlignment: Text.AlignLeft
                                             verticalAlignment: Text.AlignVCenter
+                                            wrapMode: Text.Wrap
                                         }
                                     }
                                 }
                             }
-                            //                            onPressed: {
-                            //                                list_error_message.currentIndex = index
-                            //                                item_message.is_active = !item_message.is_active
-                            //                            }
-                            //                            onReleased:  {
-                            //                                list_error_message.currentIndex = index
-                            //                                item_message.is_active = !item_message.is_active
-                            //                            }
                         }
                         model: ListModel {
                             id: message_list_model
@@ -215,18 +224,11 @@ Item {
     }
     Timer {
         id:test_timer
-        running: true
+        running: false
         repeat: true
         interval: 1000
         onTriggered: {
-            error_level+= 1
-            error_list[0] = Qt.formatDateTime(new Date(), "hh:mm:ss")
-            addMessageListData()
-            if (has_error) {
-                has_error = false
-            } else {
-                has_error = true
-            }
+            btn_error.opacity = btn_error.opacity === 0 ? 1 : 0
         }
     }
 }

@@ -132,7 +132,7 @@ Item{
             Rectangle {
                 id: rect_username
                 width: parent.width * 0.95
-                height: parent.height * 0.25
+                height: parent.height * 0.2
                 color:"transparent"
                 anchors{
                     left: parent.left
@@ -170,7 +170,7 @@ Item{
             Rectangle {
                 id: rect_pwd
                 width: parent.width * 0.95
-                height: parent.height * 0.25
+                height: parent.height * 0.2
                 color:"transparent"
                 anchors{
                     top: rect_username.bottom
@@ -217,10 +217,10 @@ Item{
                 btn_text: qsTr("login")//登录
                 anchors {
                     top: rect_pwd.bottom
-                    topMargin: parent.height * 0.04
+                    topMargin: parent.height * 0.08
 
                     horizontalCenter: parent.horizontalCenter
-                    horizontalCenterOffset: parent.width * 0.03
+                    horizontalCenterOffset: parent.width * 0.05
 
                 }
                 onClicked: {

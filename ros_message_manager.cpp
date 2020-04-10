@@ -15,6 +15,8 @@ void RosMessageManager::setSocket(SocketManager *socket)
     connect(_socket, SIGNAL(planningRefInfo(QJsonObject)), this, SLOT(parsePlanningRefInfo(QJsonObject)));
     connect(_socket, SIGNAL(taskProcessInfo(QJsonObject)), this, SLOT(parseTaskProcessInfo(QJsonObject)));
     connect(_socket, SIGNAL(batteryInfo(QJsonObject)), this, SLOT(parseBatteryInfo(QJsonObject)));
+    connect(_socket, SIGNAL(trajectoryInfo(QJsonObject)), this, SLOT(parseTrajectoryInfo(QJsonObject)));
+    connect(_socket, SIGNAL(monitorMessageInfo(QJsonObject)), this, SLOT(parseMonitorMessageInfo(QJsonObject)));
 }
 
 void RosMessageManager::parseLocalizationInfo(const QJsonObject &obj)
@@ -67,6 +69,29 @@ void RosMessageManager::parseTaskProcessInfo(const QJsonObject &obj)
 
 void RosMessageManager::parseBatteryInfo(const QJsonObject &obj)
 {
-    int soc = obj.value("soc").toInt();
+    double soc = obj.value("soc").toDouble();
     emit updateBatteryInfo(soc);
+}
+
+void RosMessageManager::parseTrajectoryInfo(const QJsonObject &obj)
+{
+    QVariantList trajectory = obj.value("trajectory").toArray().toVariantList();
+    emit updateTrajectoryInfo(trajectory);
+}
+
+void RosMessageManager::parseMonitorMessageInfo(const QJsonObject &obj)
+{
+    QJsonObject::const_iterator it = obj.begin();
+
+    QVariantList error_list;
+    while (it != obj.end()) {
+        QJsonObject temp_obj = it.value().toObject();
+        QString error_message = temp_obj.value("error_message").toString();
+        QString error_code = temp_obj.value("error_code").toString();
+        QString error_level = temp_obj.value("error_level").toString();
+        QVariantList temp_list = { error_level, error_code, error_message};
+        error_list.push_back(temp_list);
+        ++it;
+    }
+    emit updateMonitorMessageInfo(error_list);
 }

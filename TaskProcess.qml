@@ -15,8 +15,6 @@ Rectangle {
     property string font_color: "lightgreen"
 
     signal sigBackBtnPress()
-    signal sigStopBtnPress()
-    signal sigEndingBtnPress()
 
     Connections {
         target: ros_message_manager

@@ -11,9 +11,10 @@
         <file>VehicleItem.qml</file>
         <file>MapDisplayPage.qml</file>
         <file>TaskProcess.qml</file>
-        <file>MessageViewPage.qml</file>
+        <file>MonitorMessagePage.qml</file>
         <file>WelcomePage.qml</file>
         <file>VerifyPasswordPage.qml</file>
+        <file>MenuPage.qml</file>
     </qresource>
     <qresource prefix="/CustomControl">
         <file>TLTextField.qml</file>

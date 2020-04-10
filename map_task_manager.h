@@ -60,14 +60,13 @@ public:
 
     Q_INVOKABLE void setMapName(const QString& map_name);
 
+    Q_INVOKABLE int getWorkStatus();
+
 public:
     void setSocket(SocketManager* socket);
 private:
 
     void parseTasksName(const QJsonObject& tasks_obj);
-
-
-
 
 
     QVariantList parseSignals(const QJsonObject &obj);
@@ -146,10 +145,9 @@ private:
     QJsonObject _task_data_obj;
     QVariantList _pts;
 
-    bool _is_map_tasks;
-    bool _is_map_task;
-    bool _is_working;
-    bool _is_first_start;
+    WorkStatus _work_status;
+
+//    bool _is_
 
 
 };

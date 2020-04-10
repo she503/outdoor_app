@@ -21,6 +21,8 @@ signals:
     void updatePlanningRefInfo(const QVariantList& planning_path);
     void updateTaskProcessInfo(const int& current_index, const QString& progress);
     void updateBatteryInfo(const int& soc);
+    void updateTrajectoryInfo(const QVariantList& trajectory);
+    void updateMonitorMessageInfo(const QVariantList& monitor_message);
 
 private slots:
     void parseLocalizationInfo(const QJsonObject& obj);
@@ -30,6 +32,8 @@ private slots:
     void parsePlanningRefInfo(const QJsonObject& obj);
     void parseTaskProcessInfo(const QJsonObject& obj);
     void parseBatteryInfo(const QJsonObject& obj);
+    void parseTrajectoryInfo(const QJsonObject& obj);
+    void parseMonitorMessageInfo(const QJsonObject& obj);
 private:
     SocketManager* _socket;
 };

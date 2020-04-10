@@ -91,8 +91,6 @@ Rectangle {
                     topMargin: parent.height * 0.092
                 }
 
-
-
                 onPaint: {
                     var ctx = getContext("2d")
                     ctx.clearRect(0,0,width,height)

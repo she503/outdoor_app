@@ -39,13 +39,13 @@ Rectangle {
         onCenterBtnPress: {
             if (status <= 2) {
                 home_page.text_visible = false
-                list_view.currentIndex = 2
+                list_view.currentIndex = 1
                 stack_menu.replace(list_view)
-                list_view.mainPageChanged(2)
+                list_view.mainPageChanged(1)
             } else if (status === 4) {
                 home_page.text_visible = true
                 stack_menu.replace(task_process_page)
-                list_view.mainPageChanged(2)
+                list_view.mainPageChanged(1)
             }
         }
     }
@@ -118,6 +118,7 @@ Rectangle {
                     stack_view.replace(home_page)
                 } else if (current_index === 1) {
                     stack_view.replace(user_manage_page)
+
                 } else if (current_index === 2) {
 //                    if (message_view.has_error == true) {
 //                        return

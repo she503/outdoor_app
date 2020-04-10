@@ -12,7 +12,7 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
     _socket = new QTcpSocket(this);
     _socket->setReadBufferSize(10 * 1024 * 1024);
 
-    this->connectToHost("127.0.0.1", "32432");
+//    this->connectToHost("127.0.0.1", "32432");
 //    this->connectToHost("192.168.0.125", "32432");
 //    this->connectToHost("192.168.8.163", "32432");
     this->connectToHost("192.168.8.143", "32432");
@@ -77,7 +77,7 @@ bool SocketManager::judgeIsConnected()
     QString message = tr("app cannot to connect server, please check your wifi and IP!");
 
     if(!_is_connected) {
-        emit emitFaildToLogin(message);
+//        emit emitFaildToLogin(message);
     }
     return _is_connected;
 }

@@ -39,14 +39,13 @@ Rectangle {
         onCenterBtnPress: {
             if (status <= 2) {
                 home_page.text_visible = false
-                list_view.currentIndex = 1
                 stack_menu.replace(list_view)
-                list_view.mainPageChanged(1)
             } else if (status === 4) {
                 home_page.text_visible = true
                 stack_menu.replace(task_process_page)
-                list_view.mainPageChanged(1)
             }
+            list_view.currentIndex = list_view.level > 1 ? 2 : 1
+            list_view.mainPageChanged(list_view.currentIndex)
         }
     }
     TaskSettingsPage {
@@ -82,6 +81,12 @@ Rectangle {
                 message_view.is_locked = true
                 verify_password_page.pop_lock.open()
             }
+            onCannotOperatorTask: {
+                list_view.currentIndex = 0
+                list_view.last_index = list_view.currentIndex
+                stack_menu.replace(list_view)
+                stack_view.replace(home_page)
+            }
         }
     }
     VerifyPasswordPage {
@@ -116,23 +121,17 @@ Rectangle {
             onMainPageChanged: {
                 if (current_index === 0) {
                     stack_view.replace(home_page)
+                    last_index = current_index
                 } else if (current_index === 1) {
-                    stack_view.replace(user_manage_page)
-
+                    list_view.setTaskPageIndex(current_index)
                 } else if (current_index === 2) {
-//                    if (message_view.has_error == true) {
-//                        return
-//                    } else{
-                        task_settings_page.visible = true
-                        stack_view.replace(task_settings_page)
-                        map_task_manager.judgeIsMapTasks()
-                        map_task_manager.getFirstMap()
-//                    }
-//                    stack_menu.replace(task_process_page) // delet
+                    list_view.setTaskPageIndex(current_index)
                 } else if (current_index === 3) {
-                    stack_view.replace(help_document_page)
+                    stack_view.replace(level > 1 ? help_document_page : about_machine_page)
+                    last_index = current_index
                 } else if (current_index === 4) {
                     stack_view.replace(about_machine_page)
+                    last_index = current_index
                 }
                 task_settings_page.checked_tasks_name = []
             }

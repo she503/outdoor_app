@@ -272,22 +272,22 @@
         <translation type="vanished">未能转到任务页面，机器正在运行！</translation>
     </message>
     <message>
-        <location filename="MainPage.qml" line="180"/>
+        <location filename="MainPage.qml" line="184"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="MainPage.qml" line="181"/>
+        <location filename="MainPage.qml" line="185"/>
         <source>sure</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="MainPage.qml" line="182"/>
+        <location filename="MainPage.qml" line="186"/>
         <source>repeter</source>
         <translation>重复</translation>
     </message>
     <message>
-        <location filename="MainPage.qml" line="184"/>
+        <location filename="MainPage.qml" line="188"/>
         <source>please comfirm if you need to stop task.</source>
         <translation>请确认是否需要停止任务</translation>
     </message>
@@ -302,7 +302,7 @@
 <context>
     <name>MonitorMessagePage</name>
     <message>
-        <location filename="MonitorMessagePage.qml" line="153"/>
+        <location filename="MonitorMessagePage.qml" line="174"/>
         <source>error message:</source>
         <translation>错误信息：</translation>
     </message>
@@ -386,17 +386,17 @@
         <translation>停止任务失败！</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="195"/>
+        <location filename="TaskProcess.qml" line="194"/>
         <source>Current map name: </source>
         <translation>当前工作地图：</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="229"/>
+        <location filename="TaskProcess.qml" line="228"/>
         <source>Work time: </source>
         <translation>已工作时间：</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="263"/>
+        <location filename="TaskProcess.qml" line="262"/>
         <source>task persent: </source>
         <translation>已完成：</translation>
     </message>
@@ -527,7 +527,7 @@
         <translation type="vanished">用户不存在!!!</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="1041"/>
+        <location filename="UserManagePage.qml" line="1043"/>
         <source>password had be changed!!!</source>
         <translation>密码修改成功!!!</translation>
     </message>
@@ -541,7 +541,7 @@
         <translation type="vanished">警告！</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="501"/>
+        <location filename="UserManagePage.qml" line="503"/>
         <source>delete</source>
         <translation>删除</translation>
     </message>
@@ -556,47 +556,47 @@
         <translation type="vanished">用户已删除！</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="1021"/>
+        <location filename="UserManagePage.qml" line="1023"/>
         <source>user </source>
         <translation>用户 </translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="1021"/>
+        <location filename="UserManagePage.qml" line="1023"/>
         <source> was deleted !</source>
         <translation> 已删除！</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="554"/>
-        <location filename="UserManagePage.qml" line="895"/>
+        <location filename="UserManagePage.qml" line="556"/>
+        <location filename="UserManagePage.qml" line="897"/>
         <source>update</source>
         <translation>更新</translation>
     </message>
     <message>
         <location filename="UserManagePage.qml" line="139"/>
-        <location filename="UserManagePage.qml" line="977"/>
+        <location filename="UserManagePage.qml" line="979"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
         <location filename="UserManagePage.qml" line="254"/>
         <location filename="UserManagePage.qml" line="255"/>
-        <location filename="UserManagePage.qml" line="1040"/>
+        <location filename="UserManagePage.qml" line="1042"/>
         <source>update success</source>
         <translation>更新成功</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="530"/>
-        <location filename="UserManagePage.qml" line="536"/>
+        <location filename="UserManagePage.qml" line="532"/>
+        <location filename="UserManagePage.qml" line="538"/>
         <source>delete faild</source>
         <translation>删除失败</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="531"/>
+        <location filename="UserManagePage.qml" line="533"/>
         <source>you dont have permission to delete this account!!!</source>
         <translation>您无权删除此帐户！！！</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="537"/>
+        <location filename="UserManagePage.qml" line="539"/>
         <source>you cant delete last admin account!!!</source>
         <translation>您无法删除上一个管理员帐户！！！</translation>
     </message>
@@ -641,37 +641,37 @@
         <translation>用户列表</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="584"/>
+        <location filename="UserManagePage.qml" line="586"/>
         <source>add</source>
         <translation>添加</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="875"/>
+        <location filename="UserManagePage.qml" line="877"/>
         <source>Welcome:</source>
         <translation>欢迎您：</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="976"/>
+        <location filename="UserManagePage.qml" line="978"/>
         <source>user name has exited !</source>
         <translation>用户已存在！</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="982"/>
+        <location filename="UserManagePage.qml" line="984"/>
         <source>add success</source>
         <translation>添加成功</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="1012"/>
+        <location filename="UserManagePage.qml" line="1014"/>
         <source>delete error</source>
         <translation>删除失败</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="1020"/>
+        <location filename="UserManagePage.qml" line="1022"/>
         <source>delete success</source>
         <translation>删除成功</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="1034"/>
+        <location filename="UserManagePage.qml" line="1036"/>
         <source>update error</source>
         <translation>更新失败</translation>
     </message>
@@ -684,17 +684,17 @@
         <translation type="vanished">超级用户</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="983"/>
+        <location filename="UserManagePage.qml" line="985"/>
         <source>a new user was added</source>
         <translation>新用户添加成功</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="994"/>
+        <location filename="UserManagePage.qml" line="996"/>
         <source>nomal_level</source>
         <translation>普通权限</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="995"/>
+        <location filename="UserManagePage.qml" line="997"/>
         <source>admin_level</source>
         <translation>高级权限</translation>
     </message>
@@ -707,7 +707,7 @@
         <translation>输入密码解锁</translation>
     </message>
     <message>
-        <location filename="VerifyPasswordPage.qml" line="127"/>
+        <location filename="VerifyPasswordPage.qml" line="128"/>
         <source>PWD</source>
         <translation>密    码</translation>
     </message>
@@ -717,27 +717,27 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="VerifyPasswordPage.qml" line="148"/>
+        <location filename="VerifyPasswordPage.qml" line="149"/>
         <source>enter your password.</source>
         <translation>请输入密码</translation>
     </message>
     <message>
-        <location filename="VerifyPasswordPage.qml" line="159"/>
+        <location filename="VerifyPasswordPage.qml" line="160"/>
         <source>unclock</source>
         <translation>解锁</translation>
     </message>
     <message>
-        <location filename="VerifyPasswordPage.qml" line="190"/>
+        <location filename="VerifyPasswordPage.qml" line="218"/>
         <source>error!</source>
         <translation>错误！</translation>
     </message>
     <message>
-        <location filename="VerifyPasswordPage.qml" line="192"/>
+        <location filename="VerifyPasswordPage.qml" line="247"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="VerifyPasswordPage.qml" line="193"/>
+        <location filename="VerifyPasswordPage.qml" line="235"/>
         <source>Password input error, please re-enter!</source>
         <translation>密码输入错误，请重新输入！</translation>
     </message>

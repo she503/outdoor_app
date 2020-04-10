@@ -7,6 +7,7 @@ Item {
     id: root
 
     signal lockScreen()
+    signal cannotOperatorTask()
     property bool is_locked: false
     property bool has_error: false
     property var error_list: [Qt.formatDateTime(new Date(), "hh:mm:ss"), "error level", "error code", "error detail"]
@@ -25,7 +26,8 @@ Item {
         target: ros_message_manager
         onUpdateMonitorMessageInfo: {
             root.has_error = true
-            test_timer.running = true
+            timer_btn_errror_flashes.start()
+            root.cannotOperatorTask()
             for(var key in monitor_message) {
                 error_list[0] = Qt.formatDateTime(new Date(), "hh:mm:ss")
                 error_list[1] = key[0]
@@ -242,27 +244,30 @@ Item {
         }
     }
     Timer {
-        id:test_timer
-        running: false
+        id: test_timer
+        running: true
         repeat: true
-        interval: 1000
+        interval: 10000
         onTriggered: {
             btn_error.opacity = btn_error.opacity === 0 ? 1 : 0
+            has_error = has_error === true ? false : true
+            draw_error.open()
+            root.cannotOperatorTask()
+            timer_btn_errror_flashes.start()
         }
     }
-//    Timer {
-//        id:test_timer
-//        running: true
-//        repeat: true
-//        interval: 4000
-//        onTriggered: {
-//            /*btn_error.opacity =*/ btn_error.opacity === 0 ? 1 : 0
-//            if (has_error) {
-//                has_error = false
-//            } else {
-//                has_error = true
-//            }
-//            draw_error.open()
-//        }
-//    }
+    Timer {
+        id: timer_btn_errror_flashes
+        running: false
+        repeat: true
+        interval: 800
+        onTriggered: {
+            if (has_error) {
+                btn_error.opacity = btn_error.opacity === 0 ? 1 : 0
+            } else {
+                timer_btn_errror_flashes.stop()
+                btn_error.visible = false
+            }
+        }
+    }
 }

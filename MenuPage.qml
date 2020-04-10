@@ -5,22 +5,54 @@ ListView {
     id: list_view
     signal mainPageChanged(var current_index)
 
+    property real last_index: 0
     property int level: -1
+
+    function setTaskPageIndex(current_index)
+    {
+        if (level > 1) {
+            if (current_index === 1) {
+                stack_view.replace(user_manage_page)
+                list_view.last_index = current_index
+            } else if (current_index === 2) {
+                setCannotOperatorTask()
+            }
+        } else {
+            if (current_index === 1) {
+                setCannotOperatorTask()
+            } else if (current_index === 2) {
+                stack_view.replace(help_document_page)
+            }
+        }
+    }
+    function setCannotOperatorTask()
+    {
+        if (message_view.has_error == true) {
+            list_view.currentIndex = list_view.last_index
+            stack_menu.replace(list_view)
+        } else {
+            stack_view.replace(task_settings_page)
+            map_task_manager.judgeIsMapTasks()
+            map_task_manager.getFirstMap()
+        }
+//        stack_menu.replace(task_process_page) // delet
+    }
+
     Connections {
         target: account_manager
         onEmitLevel: {
             list_view.level = level
             if (level <= 1) {
                 user_lit_model.append({"id_num": 0, "focus_source": "qrc:/res/pictures/home.png"})
-                user_lit_model.append({"id_num": 1, "focus_source": "qrc:/res/pictures/task.png"})
+                user_lit_model.append({"id_num": 1, "focus_source": "qrc:/res/pictures/TASKSETTING-button.png"})
                 user_lit_model.append({"id_num": 2, "focus_source": "qrc:/res/pictures/help.png"})
                 user_lit_model.append({"id_num": 3, "focus_source": "qrc:/res/pictures/about.png"})
             } else {
                 user_lit_model.append({"id_num": 0, "focus_source": "qrc:/res/pictures/home.png"})
-                user_lit_model.append({"id_num": 1, "focus_source": "qrc:/res/pictures/task.png"})
-                user_lit_model.append({"id_num": 2, "focus_source": "qrc:/res/pictures/help.png"})
-                user_lit_model.append({"id_num": 3, "focus_source": "qrc:/res/pictures/about.png"})
-                user_lit_model.append({"id_num": 4, "focus_source": "qrc:/res/pictures/user.png"})
+                user_lit_model.append({"id_num": 1, "focus_source": "qrc:/res/pictures/user.png"})
+                user_lit_model.append({"id_num": 2, "focus_source": "qrc:/res/pictures/TASKSETTING-button.png"})
+                user_lit_model.append({"id_num": 3, "focus_source": "qrc:/res/pictures/help.png"})
+                user_lit_model.append({"id_num": 4, "focus_source": "qrc:/res/pictures/about.png"})
             }
         }
     }

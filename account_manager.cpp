@@ -137,9 +137,9 @@ void AccountManager::parseAllAccountsInfo(const QJsonObject &obj)
         int permission_level = temp.value("permission_level").toInt();
         QString password = temp.value("password").toString();
         account_username_level.insert(username, permission_level);
-        ++it;
         QPair<QString, PermissionLevel> level_pwd(password, (PermissionLevel)permission_level);
         _accounts_map.insert(username, level_pwd);
+        ++it;
     }
     _all_accounts_obj = account_username_level;
     emit emitAllAccountInfo(account_username_level);

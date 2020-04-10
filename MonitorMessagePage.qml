@@ -18,6 +18,21 @@ Item  {
         }
     }
 
+    Connections {
+        target: ros_message_manager
+        onUpdateMonitorMessageInfo: {
+            root.has_error = true
+            test_timer.running = true
+            for(var key in monitor_message) {
+                error_list[0] = Qt.formatDateTime(new Date(), "hh:mm:ss")
+                error_list[1] = key[0]
+                error_list[2] = key[1]
+                error_list[3] = key[2]
+                message_list_model.append({})
+            }
+        }
+    }
+
     Button {
         id: btn_error
         visible: has_error
@@ -175,18 +190,11 @@ Item  {
     }
     Timer {
         id:test_timer
-        running: true
+        running: false
         repeat: true
         interval: 1000
         onTriggered: {
-            error_level+= 1
-            error_list[0] = Qt.formatDateTime(new Date(), "hh:mm:ss")
-            addMessageListData()
-            if (has_error) {
-                has_error = false
-            } else {
-                has_error = true
-            }
+            btn_error.opacity = btn_error.opacity === 0 ? 1 : 0
         }
     }
 }

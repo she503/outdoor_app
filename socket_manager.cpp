@@ -174,6 +174,9 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MESSAGE_TRAJECTORY:
                 emit trajectoryInfo(obj);
                 break;
+            case MESSAGE_MONITOR_MESSAGE:
+                emit monitorMessageInfo(obj);
+                break;
 
             default:
                 qDebug() << "======>" <<obj;

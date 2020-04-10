@@ -9,9 +9,9 @@ Rectangle {
 
     id: root
     color: "transparent"
-    signal viewTask()
-    signal sigEyeBtnPress()
-    signal startBtnPress()
+//    signal viewTask()
+//    signal sigEyeBtnPress()
+//    signal startBtnPress()
 
     signal centerBtnPress(var status)
 

@@ -6,6 +6,10 @@ import "./CustomControl"
 
 Rectangle {
     property bool text_visible: false
+    onText_visibleChanged: {
+        rect_progress.visible = text_visible
+        pic_start.visible = !text_visible
+    }
 
     id: root
     color: "transparent"
@@ -131,6 +135,12 @@ Rectangle {
                 z: 1
                 anchors.fill: parent
                 source: "qrc:/res/pictures/start_5.png"
+            }
+            Image {
+                z: 1
+                id: pic_start
+                anchors.fill: parent
+                source: "qrc:/res/pictures/start_3.png"
             }
 
             MouseArea {

@@ -6,6 +6,7 @@ import "CustomControl"
 Rectangle {
     id: root
 
+
     color: "transparent"
     property Component user_manage_page: UserManagePage {}
     property Component help_document_page: HelpDocumentPage { }
@@ -18,6 +19,7 @@ Rectangle {
         onUpdateMapAndTaskInfo: {
             stack_menu.replace(task_process_page)
             stack_view.replace(task_settings_page)
+            home_page.text_visible = true
 
         }
     }
@@ -28,6 +30,7 @@ Rectangle {
                 list_view.mainPageChanged(0)
                 stack_menu.replace(list_view)
                 list_view.currentIndex = 0
+                home_page.text_visible = false
             }
         }
     }
@@ -85,6 +88,11 @@ Rectangle {
             onLockScreen: {
                 message_view.is_locked = true
                 verify_password_page.pop_lock.open()
+            }
+            onCannotOperatorTask: {
+                list_view.cant_clicked_task = true
+                list_view.mainPageChanged(0)
+                list_view.currentIndex = 0
             }
         }
     }

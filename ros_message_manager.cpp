@@ -83,17 +83,21 @@ void RosMessageManager::parseTrajectoryInfo(const QJsonObject &obj)
 
 void RosMessageManager::parseMonitorMessageInfo(const QJsonObject &obj)
 {
-    QJsonObject::const_iterator it = obj.begin();
+    QJsonObject monitor_messages_obj = obj.value("monitor_messages").toObject();
 
+    QJsonObject::const_iterator it = monitor_messages_obj.begin();
     QVariantList error_list;
-    while (it != obj.end()) {
+
+    while (it != monitor_messages_obj.end()) {
+
         QJsonObject temp_obj = it.value().toObject();
-        QString error_message = temp_obj.value("error_message").toString();
         QString error_code = temp_obj.value("error_code").toString();
-        QString error_level = temp_obj.value("error_level").toString();
+        QString error_message = temp_obj.value("error_message").toString();
+        QString error_level = QString::number(temp_obj.value("error_level").toInt());
         QVariantList temp_list = { error_level, error_code, error_message};
         error_list.push_back(temp_list);
         ++it;
     }
+
     emit updateMonitorMessageInfo(error_list);
 }

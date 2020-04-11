@@ -14,6 +14,7 @@ Item {
     property var error_message_info: [error_list]
     property var error_level: 0//: ["debug", "warn", "error"]
     property var error_text_color: "red"//: ["yellow", "orange", "red"]
+    property bool is_first_get_error: false
     onError_levelChanged: {
         if (error_level % 2 == 0 ) {
             error_text_color = "red"
@@ -25,17 +26,22 @@ Item {
     Connections {
         target: ros_message_manager
         onUpdateMonitorMessageInfo: {
+            message_list_model.clear()
             root.has_error = true
-            timer_btn_errror_flashes.start()
+            if (!is_first_get_error) {
+                is_first_get_error = true
+                timer_btn_errror_flashes.start()
+                timer_btn_errror_open.start()
+                draw_error.open()
+            }
             root.cannotOperatorTask()
-            for(var key in monitor_message) {
+            for(var i = 0; i < monitor_message.length; ++i) {
                 error_list[0] = Qt.formatDateTime(new Date(), "hh:mm:ss")
-                error_list[1] = key[0]
-                error_list[2] = key[1]
-                error_list[3] = key[2]
+                error_list[1] = monitor_message[i][0]
+                error_list[2] = monitor_message[i][1]
+                error_list[3] = monitor_message[i][2]
                 message_list_model.append({})
             }
-            draw_error.open()
         }
     }
 
@@ -243,18 +249,6 @@ Item {
             message_list_model.append({"error_message_text": error_message_info[i]})
         }
     }
-//    Timer {
-//        id: test_timer
-//        running: true
-//        repeat: false
-//        interval: 10000
-//        onTriggered: {
-//            has_error = true
-//            draw_error.open()
-//            root.cannotOperatorTask()
-//            timer_btn_errror_flashes.start()
-//        }
-//    }
     Timer {
         id: timer_btn_errror_flashes
         running: false
@@ -265,6 +259,20 @@ Item {
                 btn_error.opacity = btn_error.opacity === 0 ? 1 : 0
             } else {
                 timer_btn_errror_flashes.stop()
+                btn_error.visible = false
+            }
+        }
+    }
+    Timer {
+        id: timer_btn_errror_open
+        running: false
+        repeat: true
+        interval: 5000
+        onTriggered: {
+            if (has_error) {
+                draw_error.open()
+            } else {
+                timer_btn_errror_open.stop()
                 btn_error.visible = false
             }
         }

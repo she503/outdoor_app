@@ -20,7 +20,6 @@ Rectangle {
     Connections {
         target: account_manager
         onEmitNameAndLevel: {
-            nomal_user_name_text.text = user_name
             v_user_level = level
         }
     }
@@ -244,6 +243,7 @@ Rectangle {
         y: (root.height - height) / 2
         ok: false
         onCancelClicked: {
+            dialog_add_user.close()
             message_account.close()
         }
     }
@@ -457,7 +457,7 @@ Rectangle {
         width: parent.width > parent.height ? parent.height * 0.9 * 1.27 : parent.width * 0.9
         anchors.centerIn: parent
         color: "transparent"
-        visible: !rect_nomal.visible
+        visible: true
         Image {
             id: im
             anchors.fill: parent
@@ -479,9 +479,9 @@ Rectangle {
                     color: "transparent"
                     anchors.left: parent.left
                     Text {
-                        text: qsTr("user lists:")
+                        text: qsTr("user lists:") + ":"
                         font.pixelSize: parent.height * 0.4
-                        color: "white"
+                        color: "blue"
                         font.bold: true
                         anchors {
                             bottom: parent.bottom
@@ -609,7 +609,7 @@ Rectangle {
                     height: 0.5
                     anchors.bottom: parent.bottom
                     anchors.horizontalCenter: parent.horizontalCenter
-                    color: Qt.rgba(255, 255, 255, 0.5)
+                    color: Qt.rgba(0, 0, 0, 0.5)
                 }
             }
 
@@ -709,262 +709,7 @@ Rectangle {
                 }
             }
         }
-
-        //        Rectangle {
-        //            id: rect_add_user
-        //            width: parent.width * 0.4
-        //            height: parent.height * 0.3
-        //            anchors{
-        //                top: rect_list.bottom
-        //                topMargin: parent.height * 0.04
-        //                right: parent.right
-        //                rightMargin: parent.width * 0.08
-        //            }
-        //            color: "transparent"
-
-        //            Rectangle {
-        //                id: user_rect
-        //                width: parent.width
-        //                height: parent.height * 0.2
-        //                anchors {
-        //                    top: parent.top
-        //                }
-        //                Text {
-        //                    id: text_use
-        //                    text: qsTr("username:")
-        //                    width: parent.width * 0.3
-        //                    height: parent.height
-        //                    verticalAlignment: Text.AlignVCenter
-        //                    horizontalAlignment: Text.AlignRight
-        //                    color: "#1a7ec0"
-        //                    font.pixelSize: height * 0.5
-        //                    anchors{
-        //                        top: parent.top
-        ////                        topMargin: parent.height * 0.2
-        //                        left: parent.left
-        //                    }
-        //                }
-
-        //                TLTextField {
-        //                    id: btn_add_username
-        //                    width: parent.width * 0.6
-        //                    height: parent.height
-        //                    anchors {
-        //                        top: parent.top
-        //                        topMargin: parent.height * 0.1
-        //                        left: text_use.right
-        //                        leftMargin: parent.width * 0.05
-        //                    }
-        //                    btn_radius:  height * 0.2
-        //                    placeholderText: qsTr("enter new user name.")
-        //                    pic_name: "qrc:/res/pictures/username.png"
-        //                }
-        //            }
-
-        //            Rectangle {
-        //                id: pwd_rect
-        //                width: parent.width
-        //                height: parent.height * 0.2
-        //                anchors {
-        //                    top: user_rect.bottom
-        //                    topMargin: parent.height * 0.1
-        //                }
-        //                Text {
-        //                    id: text_pwd
-        //                    text: qsTr("password:")
-        //                    width: parent.width * 0.3
-        //                    height: parent.height
-        //                    verticalAlignment: Text.AlignVCenter
-        //                    horizontalAlignment: Text.AlignRight
-        //                    color: "#1a7ec0"
-        //                    font.pixelSize: height * 0.5
-        //                    anchors{
-        //                        top: parent.top
-        //                        left: parent.left
-        //                    }
-        //                }
-        //                TLTextField {
-        //                    id: btn_add_pwd
-        //                    width: parent.width * 0.6
-        //                    height: parent.height
-        //                    anchors {
-        //                        top: parent.top
-        //                        topMargin: parent.height * 0.1
-        //                        left: text_pwd.right
-        //                        leftMargin: parent.width * 0.05
-
-        //                    }
-        //                    btn_radius:  height * 0.2
-        //                    placeholderText: qsTr("enter new password.")
-        //                    pic_name: "qrc:/res/pictures/password.png"
-        //                }
-
-        //            }
-
-        //            TLRadioButton {
-        //                id: radio_btn
-        //                width: parent.width * 0.8
-        //                height: parent.height * 0.1
-        //                anchors{
-        //                    top: pwd_rect.bottom
-        //                    topMargin: parent.height * 0.08
-        //                    right: parent.right
-        //                    horizontalCenter: parent.horizontalCenter
-        //                }
-        //            }
-
-        //            TLButton {
-        //                id: btn_registered
-        //                width: parent.width * 0.4
-        //                height: parent.height * 0.15
-        //                anchors{
-        //                    top: radio_btn.bottom
-        //                    topMargin: parent.height * 0.08
-        //                    horizontalCenter: parent.horizontalCenter
-        //                    horizontalCenterOffset: parent.width * 0.1
-        //                }
-        //                btn_text: qsTr("OK")
-        //                onClicked: {
-        //                    if (btn_add_pwd.text === "" || btn_add_username.text === "" ||
-        //                            radio_btn.checked_num === -1) {
-        //                        message_account.dia_title = qsTr("add error")
-        //                        message_account.dia_content = qsTr("some information is empty!!!")
-        //                        message_account.status = 0
-        //                        message_account.open()
-        //                        return
-        //                    } else {
-        //                        var level = radio_btn.checked_num
-        //                        account_manager.accountAdd(btn_add_username.text, btn_add_pwd.text, level)
-        //                    }
-        //                }
-        //            }
-        //        }
-
     }
-
-    Rectangle {
-        id: rect_nomal
-        height: parent.width > parent.height ? parent.height * 0.9 : parent.width * 0.9 * 0.787
-        width: parent.width > parent.height ? parent.height * 0.9 * 1.27 : parent.width * 0.9
-        anchors.centerIn: parent
-        color: "transparent"
-        visible: root.v_user_level === 1 ? true : false
-        Image {
-            id: img
-            anchors.fill: parent
-            source: "qrc:/res/pictures/background_glow1.png"
-        }
-        Rectangle {
-            width: parent.width * 0.88
-            height: parent.height * 0.85
-            anchors.centerIn: parent
-            color: Qt.rgba(255, 255, 255, 0.6)
-            Rectangle {
-                id: rect_noaml_update
-                width: parent.width
-                height: parent.height * 0.15
-                anchors{
-                    top: parent.top
-                    topMargin: parent.height * 0.07
-                }
-                color: "transparent"
-                Rectangle {
-                    width: parent.width * 0.3
-                    height: parent.height
-                    color: "transparent"
-                    anchors.left: parent.left
-                    Text {
-                        text: qsTr("Welcome:")
-                        font.pixelSize: parent.height * 0.4
-                        color: "white"
-                        font.bold: true
-                        anchors {
-                            bottom: parent.bottom
-                            left: parent.left
-                            leftMargin: parent.height * 0.2
-                        }
-                    }
-                }
-                Button {
-                    id: btn_update_nomal
-                    width: parent.width * 0.2
-                    height: parent.height * 0.5
-
-                    Text {
-                        width: parent.width
-                        height: parent.height * 0.8
-                        font.pixelSize: parent.height * 0.5
-                        text: qsTr("update")
-                        color: "white"
-                        horizontalAlignment: Text.AlignHCenter
-                        anchors.top: parent.top
-
-                    }
-
-                    background: Image {
-                        id: img_update_nomal
-                        anchors.fill: parent
-                        source: !enabled ? "qrc:/res/pictures/btn_2.png" : "qrc:/res/pictures/btn_1.png"
-                    }
-
-                    anchors {
-                        bottom: parent.bottom
-                        right: parent.right
-                        rightMargin: width * 0.4
-                    }
-//                    anchors {
-//                        top: parent.top
-//                        topMargin: parent.height * 0.1
-//                        right: parent.right
-//                        rightMargin: width * 0.4
-//                    }
-                    onClicked: {
-                        root.checked_user_name = root.v_user_name
-                        root.checked_user_level = 1
-                        message_update_uer.open()
-                    }
-                }
-                Rectangle {
-                    width: parent.width * 0.93
-                    height: 0.5
-                    anchors.bottom: parent.bottom
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    color: Qt.rgba(255, 255, 255, 0.5)
-                }
-            }
-
-            Rectangle {
-                id: rect_nomal_user_name_text
-                width: parent.width * 0.8
-                height: parent.height * 0.6
-                anchors{
-                    top: rect_noaml_update.bottom
-                    horizontalCenter: parent.horizontalCenter
-                }
-                color: "transparent"
-                Component.onCompleted: {
-                    for (var key in root.v_accounts_info) {
-                        if (key === root.user_name)
-                        {
-                            root.user_level = root.v_accounts_info[key]
-                        }
-
-                    }
-                }
-
-                Text {
-                    id: nomal_user_name_text
-                    anchors.fill: parent
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    font.pixelSize: parent.height * 0.1
-                    text: ""
-                    color: "white"
-                }
-            }
-        }
-    }
-
     Component.onCompleted: {
         account_manager.getAllAccounts()
         account_manager.getCurrentUserLevel()
@@ -1050,3 +795,126 @@ Rectangle {
         }
     }
 }
+
+//Rectangle {
+//    id: rect_nomal
+//    height: parent.width > parent.height ? parent.height * 0.9 : parent.width * 0.9 * 0.787
+//    width: parent.width > parent.height ? parent.height * 0.9 * 1.27 : parent.width * 0.9
+//    anchors.centerIn: parent
+//    color: "transparent"
+//    visible: root.v_user_level === 1 ? true : false
+//    Image {
+//        id: img
+//        anchors.fill: parent
+//        source: "qrc:/res/pictures/background_glow1.png"
+//    }
+//    Rectangle {
+//        width: parent.width * 0.88
+//        height: parent.height * 0.85
+//        anchors.centerIn: parent
+//        color: Qt.rgba(255, 255, 255, 0.6)
+//        Rectangle {
+//            id: rect_noaml_update
+//            width: parent.width
+//            height: parent.height * 0.15
+//            anchors{
+//                top: parent.top
+//                topMargin: parent.height * 0.07
+//            }
+//            color: "transparent"
+//            Rectangle {
+//                width: parent.width * 0.3
+//                height: parent.height
+//                color: "transparent"
+//                anchors.left: parent.left
+//                Text {
+//                    text: qsTr("Welcome:")
+//                    font.pixelSize: parent.height * 0.4
+//                    color: "white"
+//                    font.bold: true
+//                    anchors {
+//                        bottom: parent.bottom
+//                        left: parent.left
+//                        leftMargin: parent.height * 0.2
+//                    }
+//                }
+//            }
+//            Button {
+//                id: btn_update_nomal
+//                width: parent.width * 0.2
+//                height: parent.height * 0.5
+
+//                Text {
+//                    width: parent.width
+//                    height: parent.height * 0.8
+//                    font.pixelSize: parent.height * 0.5
+//                    text: qsTr("update")
+//                    color: "white"
+//                    horizontalAlignment: Text.AlignHCenter
+//                    anchors.top: parent.top
+
+//                }
+
+//                background: Image {
+//                    id: img_update_nomal
+//                    anchors.fill: parent
+//                    source: !enabled ? "qrc:/res/pictures/btn_2.png" : "qrc:/res/pictures/btn_1.png"
+//                }
+
+//                anchors {
+//                    bottom: parent.bottom
+//                    right: parent.right
+//                    rightMargin: width * 0.4
+//                }
+////                    anchors {
+////                        top: parent.top
+////                        topMargin: parent.height * 0.1
+////                        right: parent.right
+////                        rightMargin: width * 0.4
+////                    }
+//                onClicked: {
+//                    root.checked_user_name = root.v_user_name
+//                    root.checked_user_level = 1
+//                    message_update_uer.open()
+//                }
+//            }
+//            Rectangle {
+//                width: parent.width * 0.93
+//                height: 0.5
+//                anchors.bottom: parent.bottom
+//                anchors.horizontalCenter: parent.horizontalCenter
+//                color: Qt.rgba(255, 255, 255, 0.5)
+//            }
+//        }
+
+//        Rectangle {
+//            id: rect_nomal_user_name_text
+//            width: parent.width * 0.8
+//            height: parent.height * 0.6
+//            anchors{
+//                top: rect_noaml_update.bottom
+//                horizontalCenter: parent.horizontalCenter
+//            }
+//            color: "transparent"
+//            Component.onCompleted: {
+//                for (var key in root.v_accounts_info) {
+//                    if (key === root.user_name)
+//                    {
+//                        root.user_level = root.v_accounts_info[key]
+//                    }
+
+//                }
+//            }
+
+//            Text {
+//                id: nomal_user_name_text
+//                anchors.fill: parent
+//                horizontalAlignment: Text.AlignHCenter
+//                verticalAlignment: Text.AlignVCenter
+//                font.pixelSize: parent.height * 0.1
+//                text: ""
+//                color: "white"
+//            }
+//        }
+//    }
+//}

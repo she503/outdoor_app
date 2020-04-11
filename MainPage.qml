@@ -39,7 +39,11 @@ Rectangle {
         onCenterBtnPress: {
             if (status <= 2) {
                 home_page.text_visible = false
-                list_view.currentIndex = 1
+                if (account_manager.getCurrentLevel() <= 1) {
+                    list_view.currentIndex = 1
+                } else {
+                    list_view.currentIndex = 2
+                }
                 stack_menu.replace(list_view)
                 list_view.mainPageChanged(1)
             } else if (status >= 3) {

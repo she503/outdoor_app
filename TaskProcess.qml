@@ -1,4 +1,4 @@
-import QtQuick 2.0
+﻿import QtQuick 2.0
 import QtQuick.Controls 2.2
 import "CustomControl"
 
@@ -12,7 +12,7 @@ Rectangle {
     property string map_name: ""
     property string work_time: ""
     property string title_color: "black"
-    property string font_color: "lightgreen"
+    property string font_color: "blue"
 
     signal sigBackBtnPress()
 
@@ -49,7 +49,7 @@ Rectangle {
                 anchors.horizontalCenter: parent.horizontalCenter
                 Image {
                     id: btn_back
-                    source: "qrc:/res/pictures/back.png"
+                    source: "qrc:/res/pictures/BUTTON-HOME.png"
                     width: (parent.width -  parent.btn_spacing)/ 3
                     height: parent.height
                     fillMode: Image.PreserveAspectFit
@@ -65,8 +65,8 @@ Rectangle {
                     id: btn_stop
                     width: (parent.width -  parent.btn_spacing)/ 3
                     height: parent.height
-                    source: _is_pause ? "qrc:/res/pictures/task_stop.png" :
-                                        "qrc:/res/pictures/task_start.png"
+                    source: _is_pause ? "qrc:/res/pictures/BUTTON-PAUSE.png" :
+                                        "qrc:/res/pictures/BUTTON-START.png"
                     fillMode: Image.PreserveAspectFit
                     property bool _is_pause: false
                     MouseArea {
@@ -115,21 +115,21 @@ Rectangle {
                     id: btn_ending
                     width:  (parent.width -  parent.btn_spacing)/ 3
                     height: parent.height
-                    source: "qrc:/res/pictures/task_end.png"
+                    source: "qrc:/res/pictures/BUTTON-STOP.png"
                     fillMode: Image.PreserveAspectFit
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            repeat_need_stop_task.x = (parent.parent.width - width ) / 2
-                            repeat_need_stop_task.y = 0
+//                            repeat_need_stop_task.x = (parent.parent.width - width ) / 2
+//                            repeat_need_stop_task.y = 0
                             repeat_need_stop_task.open()
                         }
                     }
                     Connections {
                         target: map_task_manager
                         onUpdateStopTaskInfo: {
-                            repeat_need_stop_task.x = (parent.parent.parent.parent.width - width ) / 2
-                            repeat_need_stop_task.y =  (parent.parent.parent.parent.height - height ) / 2
+//                            repeat_need_stop_task.x = (parent.parent.parent.parent.width - width ) / 2
+//                            repeat_need_stop_task.y =  (parent.parent.parent.parent.height - height ) / 2
                             if (status === 0) {
                                 pause_stop_message.dia_title = qsTr("Error")
                                 pause_stop_message.dia_content = qsTr("faild to stop the task!")
@@ -160,8 +160,7 @@ Rectangle {
                 width: parent.width * 0.9
                 height: parent.height * 0.88
                 anchors.centerIn: parent
-                color: "white"
-//                color: Qt.rgba(255, 255, 255, 0.5)
+                color: Qt.rgba(255, 255, 255, 0.5)
                 Column {
                     anchors.fill: parent
                     Rectangle {

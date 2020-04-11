@@ -134,6 +134,7 @@ Rectangle {
             }
 
             MouseArea {
+                z: 10
                 width: parent.width * 0.8
                 height: parent.height * 0.8
                 anchors.centerIn: parent

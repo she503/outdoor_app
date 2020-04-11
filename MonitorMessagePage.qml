@@ -7,6 +7,7 @@ Item {
     id: root
 
     signal lockScreen()
+    signal cannotOperatorTask()
     property bool is_locked: false
     property bool has_error: false
     property var error_list: [Qt.formatDateTime(new Date(), "hh:mm:ss"), "error level", "error code", "error detail"]
@@ -25,7 +26,8 @@ Item {
         target: ros_message_manager
         onUpdateMonitorMessageInfo: {
             root.has_error = true
-            test_timer.running = true
+            timer_btn_errror_flashes.start()
+            root.cannotOperatorTask()
             for(var key in monitor_message) {
                 error_list[0] = Qt.formatDateTime(new Date(), "hh:mm:ss")
                 error_list[1] = key[0]
@@ -33,6 +35,7 @@ Item {
                 error_list[3] = key[2]
                 message_list_model.append({})
             }
+            draw_error.open()
         }
     }
 
@@ -43,17 +46,16 @@ Item {
         width: height
         anchors.right: parent.right
         background: Rectangle {
-            implicitWidth: 83
-            implicitHeight: 37
+            height: parent.height * 2.27
+            width: height
             color: "transparent"
-            border.width: 1
-            border.color: "black"
+            anchors.centerIn: parent
             radius: width / 2
             Image {
                 height: parent.height * 0.6
                 width: height
                 anchors.centerIn: parent
-                source: "qrc:/res/pictures/password.png"
+                source: "qrc:/res/pictures/BUTTON-LOCK.png"
                 fillMode: Image.PreserveAspectFit
             }
         }
@@ -70,13 +72,14 @@ Item {
         anchors.right: btn_lock.left
         anchors.rightMargin: height * 0.2
         background: Rectangle {
-            implicitWidth: 83
-            implicitHeight: 37
+            height: parent.height * 1.36
+            width: height
             color: "transparent"
+            anchors.centerIn: parent
             radius: width / 2
             Image {
                 anchors.fill: parent
-                source: "qrc:/res/pictures/warn.png"
+                source: "qrc:/res/pictures/BUTTON-WARNING1.png"
                 fillMode: Image.PreserveAspectFit
             }
         }
@@ -142,10 +145,28 @@ Item {
                     border.width: 1
                     border.color: Qt.rgba(100, 100, 200, 0.6)
                     Image {
+                        id: img_exit
+                        height: parent.height * 0.7
+                        width: height
+                        anchors {
+                            right: parent.right
+                            rightMargin: parent.height * 0.2
+                            verticalCenter: parent.verticalCenter
+                        }
+                        source: "qrc:/res/pictures/exit.png"
+                        fillMode: Image.PreserveAspectFit
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                draw_error.close()
+                            }
+                        }
+                    }
+                    Image {
                         id: pic_error_icon
                         height: parent.height * 0.6
                         width: parent.height
-                        source: "qrc:/res/pictures/warn.png"
+                        source: "qrc:/res/pictures/BUTTON-WARNING1.png"
                         fillMode: Image.PreserveAspectFit
                         anchors.verticalCenter: parent.verticalCenter
                     }
@@ -222,13 +243,30 @@ Item {
             message_list_model.append({"error_message_text": error_message_info[i]})
         }
     }
+//    Timer {
+//        id: test_timer
+//        running: true
+//        repeat: false
+//        interval: 10000
+//        onTriggered: {
+//            has_error = true
+//            draw_error.open()
+//            root.cannotOperatorTask()
+//            timer_btn_errror_flashes.start()
+//        }
+//    }
     Timer {
-        id:test_timer
+        id: timer_btn_errror_flashes
         running: false
         repeat: true
-        interval: 1000
+        interval: 800
         onTriggered: {
-            btn_error.opacity = btn_error.opacity === 0 ? 1 : 0
+            if (has_error) {
+                btn_error.opacity = btn_error.opacity === 0 ? 1 : 0
+            } else {
+                timer_btn_errror_flashes.stop()
+                btn_error.visible = false
+            }
         }
     }
 }

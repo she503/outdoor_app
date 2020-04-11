@@ -98,7 +98,5 @@ void RosMessageManager::parseMonitorMessageInfo(const QJsonObject &obj)
         error_list.push_back(temp_list);
         ++it;
     }
-    return;
-
     emit updateMonitorMessageInfo(error_list);
 }

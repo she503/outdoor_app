@@ -31,10 +31,10 @@ Item {
             if (!is_first_get_error) {
                 is_first_get_error = true
                 timer_btn_errror_flashes.start()
-                timer_btn_errror_open.start()
+//                timer_btn_errror_open.start()   debug
                 draw_error.open()
+//                root.cannotOperatorTask()
             }
-            root.cannotOperatorTask()
             for(var i = 0; i < monitor_message.length; ++i) {
                 error_list[0] = Qt.formatDateTime(new Date(), "hh:mm:ss")
                 error_list[1] = monitor_message[i][0]

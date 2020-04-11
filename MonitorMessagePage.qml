@@ -243,19 +243,18 @@ Item {
             message_list_model.append({"error_message_text": error_message_info[i]})
         }
     }
-    Timer {
-        id: test_timer
-        running: true
-        repeat: true
-        interval: 10000
-        onTriggered: {
-            btn_error.opacity = btn_error.opacity === 0 ? 1 : 0
-            has_error = has_error === true ? false : true
-            draw_error.open()
-            root.cannotOperatorTask()
-            timer_btn_errror_flashes.start()
-        }
-    }
+//    Timer {
+//        id: test_timer
+//        running: true
+//        repeat: false
+//        interval: 10000
+//        onTriggered: {
+//            has_error = true
+//            draw_error.open()
+//            root.cannotOperatorTask()
+//            timer_btn_errror_flashes.start()
+//        }
+//    }
     Timer {
         id: timer_btn_errror_flashes
         running: false

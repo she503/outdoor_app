@@ -15,11 +15,73 @@ Item{
         id: connect_fail_item
         color: Qt.rgba(255, 255, 255, 0.5)
         visible: false
+        Rectangle {
+            width: 330
+            height: 220
+            anchors.centerIn: parent
+            color: "transparent"
+            Image {
+                anchors.fill: parent
+                source: "qrc:/res/pictures/error_background.png"
+                fillMode: Image.PreserveAspectFit
+                Text {
+                    id: title_connect_fail
+                    text: qsTr("error!")
+                    width: parent.width * 0.7
+                    height: parent.height * 0.2
+                    color: "red"
+                    font.pixelSize: height * 0.4
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
+                Rectangle {
+                    id: rect_split
+                    width: parent.width * 0.8
+                    height: parent.height * 0.01
+                    anchors.top: title_connect_fail.bottom
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color:"#B0E0E6"
+                    opacity: 0.5
+                }
+                Text {
+                    width: parent.width * 0.5
+                    height: parent.height
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: rect_split.bottom
+                    anchors.topMargin: height * 0.1
+                    text: qsTr("app cannot to connect server, please check your wifi and IP!")
+                    color: "black"
+                    horizontalAlignment: Text.AlignLeft
+                    font.pixelSize: height * 0.1
+                    wrapMode: Text.Wrap
+                }
+                TLButton {
+                    width: parent.width * 0.2
+                    height: parent.height * 0.1
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: parent.height * 0.08
+                    btn_text: qsTr("OK")
+                }
+            }
+        }
         MouseArea {
             anchors.fill: parent
             onClicked: {
                 Qt.quit()
             }
+        }
+        Rectangle {
+            id: rec_disconnect
+            color: Qt.rgba(255, 255, 255, 0.5)
+            visible: false
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    Qt.quit()
+                }
+            }
+
         }
     }
 
@@ -188,6 +250,7 @@ Item{
                         account_manager.accountLogin(username.text, password.text)
                         rect_pwd.login_count++
                     } else {
+                        message_connect_faild.dia_title = qsTr("login failed!")
                         message_connect_faild.dia_content = qsTr("Multiple login failures,please contact the administrator!")
                         message_connect_faild.open()
                     }
@@ -203,7 +266,8 @@ Item{
         onEmitCheckOutLogin: {
             if (status === 0) {
                 message_login_faild.dia_title = qsTr("Error")
-                message_login_faild.dia_content = message
+//                message_login_faild.dia_content = message
+                message_login_faild.dia_content = qsTr("Account or password is wrong!")
                 message_login_faild.open()
             } else if (status === 1) {
                 root.successToLogin()
@@ -217,11 +281,12 @@ Item{
         onEmitFaildToLogin: {
             message_connect_faild.dia_content = message
             message_connect_faild.open()
+            stack_view_main.replace(rec_disconnect)
         }
         onAppDisconnected: {
             message_connect_faild.dia_content = message
             message_connect_faild.open()
-            stack_view_main.replace(connect_fail_item)
+            stack_view_main.replace(rec_disconnect)
         }
     }
 
@@ -245,7 +310,7 @@ Item{
         height: 200
         x: (root.width - width) / 2
         y: (root.height - height) / 2
-        dia_title: qsTr("connect error!")
+        dia_title: qsTr("login error!")
         status: 0
         cancel_text: qsTr("OK")
 

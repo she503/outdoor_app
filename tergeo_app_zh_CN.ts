@@ -132,7 +132,7 @@
         <translation type="vanished">密码</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="177"/>
+        <location filename="LoginPage.qml" line="239"/>
         <source>login</source>
         <translation>登录</translation>
     </message>
@@ -141,58 +141,74 @@
         <translation type="vanished">中振同辂</translation>
     </message>
     <message>
+        <location filename="LoginPage.qml" line="52"/>
         <source>app cannot to connect server, please check your wifi and IP!</source>
-        <translation type="vanished">设备无法连接服务器，请检查您的wifi和IP！</translation>
+        <translation>设备无法连接服务器，请检查您的wifi和IP！</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="66"/>
+        <location filename="LoginPage.qml" line="128"/>
         <source>tonglu</source>
         <translation>中振同辂</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="104"/>
+        <location filename="LoginPage.qml" line="166"/>
         <source>username</source>
         <translation>用户名</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="123"/>
+        <location filename="LoginPage.qml" line="185"/>
         <source>enter your username.</source>
         <translation>请输入用户名</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="145"/>
+        <location filename="LoginPage.qml" line="207"/>
         <source>PWD</source>
         <translation>密    码</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="166"/>
+        <location filename="LoginPage.qml" line="228"/>
         <source>enter your password.</source>
         <translation>请输入密码</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="191"/>
+        <location filename="LoginPage.qml" line="253"/>
+        <source>login failed!</source>
+        <translation>登录失败！</translation>
+    </message>
+    <message>
+        <location filename="LoginPage.qml" line="254"/>
         <source>Multiple login failures,please contact the administrator!</source>
         <oldsource>Multiple login failures,please contact the administrator</oldsource>
         <translation>多次登录失败，请联系管理员!</translation>
+    </message>
+    <message>
+        <location filename="LoginPage.qml" line="313"/>
+        <source>login error!</source>
+        <translation>登陆错误！</translation>
     </message>
     <message>
         <source>登录</source>
         <translation type="vanished">登录</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="205"/>
+        <location filename="LoginPage.qml" line="268"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="234"/>
-        <location filename="LoginPage.qml" line="248"/>
+        <location filename="LoginPage.qml" line="270"/>
+        <source>Account or password is wrong!</source>
+        <translation>账号或者密码错误！</translation>
+    </message>
+    <message>
+        <location filename="LoginPage.qml" line="299"/>
         <source>connect error!</source>
         <translation>连接失败！</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="236"/>
-        <location filename="LoginPage.qml" line="250"/>
+        <location filename="LoginPage.qml" line="64"/>
+        <location filename="LoginPage.qml" line="301"/>
+        <location filename="LoginPage.qml" line="315"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
@@ -205,8 +221,9 @@
         <translation type="vanished">密码错误</translation>
     </message>
     <message>
+        <location filename="LoginPage.qml" line="29"/>
         <source>error!</source>
-        <translation type="vanished">错误！</translation>
+        <translation>错误！</translation>
     </message>
 </context>
 <context>

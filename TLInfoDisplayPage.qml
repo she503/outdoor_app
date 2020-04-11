@@ -50,19 +50,34 @@ Rectangle {
         onUpdateChassisInfo: {
             var v_speed = speed
             var n_speed = Number(v_speed)
-            if (n_speed <= 10) {
-                text_speed.color = "green"
-            } else if (n_speed > 10 && n_speed <= 15) {
-                text_speed.color = "orange"
-            } else if (n_speed > 15) {
-                text_speed.color = "red"
-            }
+            text_speed.color = "lightgreen"
             text_speed.text = n_speed
 
             if (drive_mode === 0) {
                 img_switch.source = "qrc:/res/pictures/switch_operate.png"
             } else if (drive_mode === 1) {
                 img_switch.source = "qrc:/res/pictures/switch_auto.png"
+            }
+
+            if (cleaning_agency_state == 0) {
+                shuazi.source = "qrc:/res/pictures/states_no.png"
+            } else if (cleaning_agency_state == 1) {
+                shuazi.source = "qrc:/res/pictures/states_success.png"
+            }
+
+            if(water_tank_signal) {
+
+            } else {
+
+            }
+
+            if(Math.abs(n_speed) <= 0.05) {
+                gear.source = "qrc:/res/pictures/gear_n.png"
+            }
+            if(n_speed > 0.05) {
+                gear.source = "qrc:/res/pictures/gear_d.png"
+            } else if (n_speed < -0.05) {
+                 gear.source = "qrc:/res/pictures/gear_r.png"
             }
         }
         onUpdateBatteryInfo: {
@@ -226,6 +241,7 @@ Rectangle {
             left: parent.left
         }
         Image {
+            id: gear
             width: length
             height: length
             source: "qrc:/res/pictures/controls.png"
@@ -305,6 +321,7 @@ Rectangle {
             left: bac_speed.right
         }
         Image {
+            id: shuazi
             width: length
             height: length
             source: "qrc:/res/pictures/states_no.png"

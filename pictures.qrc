@@ -68,5 +68,14 @@
         <file>res/pictures/task.png</file>
         <file>res/pictures/logo_3.png</file>
         <file>res/pictures/exit.png</file>
+        <file>res/pictures/car.png</file>
+        <file>res/pictures/start_3.png</file>
+        <file>res/pictures/start_2.png</file>
+        <file>res/pictures/start_1.png</file>
+        <file>res/pictures/start_5.png</file>
+        <file>res/pictures/start_4.png</file>
+        <file>res/pictures/gear_r.png</file>
+        <file>res/pictures/gear_n.png</file>
+        <file>res/pictures/gear_d.png</file>
     </qresource>
 </RCC>

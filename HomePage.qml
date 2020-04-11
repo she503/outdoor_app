@@ -15,7 +15,7 @@ Rectangle {
         var status = map_task_manager.getWorkStatus()
         if (status <= 2) {
             root.text_visible = false
-        } else if (status === 4) {
+        } else if (status >= 3) {
             root.text_visible = true
         }
     }
@@ -55,11 +55,12 @@ Rectangle {
                     id: text_progress
                     width: parent.width
                     height: parent.height * 0.58
-                    font.pointSize: parent.height > 0 ?  parent.height * 0.25 : 1
+                    font.pointSize: parent.height > 0 ?  parent.height * 0.3 : 1
                     font.bold: true
-                    text: parent.progress * 100 + "%"
+                    text: canvas._progress + "%"
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
+                    color: "green"
                 }
                 Text{
                     id: text_describe
@@ -73,36 +74,45 @@ Rectangle {
                 }
             }
             Canvas {
-                property string arcColor: "rgba(0,255,127, 0.5)"
+                Connections {
+                    target: ros_message_manager
+                    onUpdateTaskProcessInfo: {
+                        canvas._progress = progress;
+                        canvas.requestPaint()
+                    }
+                }
+                property string arcColor: "rgba(0,255,127, 0.8)"
                 property color arcBackgroundColor: "#ffffff"
                 property int arcWidth: parent.width * 0.07
-                property real progress: 50
-                property real radius: parent.width / 2 * 0.7
+                property real _progress: 0
+                property real radius: parent.width / 2 * 0.8
                 property bool anticlockwise: false
 
                 id: canvas
-                z: 2
+                z: 3
                 width: 2*radius + arcWidth + 1
                 height: 2*radius + arcWidth + 1
                 anchors{
                     left: parent.left
-                    leftMargin: parent.width * 0.11
+                    leftMargin: parent.width * 0.076
                     top: parent.top
-                    topMargin: parent.height * 0.092
+                    topMargin: parent.height * 0.02
                 }
 
                 onPaint: {
                     var ctx = getContext("2d")
                     ctx.clearRect(0,0,width,height)
-                    ctx.beginPath()
-                    ctx.strokeStyle = arcBackgroundColor
-                    ctx.lineWidth = arcWidth
-                    ctx.arc(width/2,height/2,radius,0,Math.PI*2,anticlockwise)
-                    ctx.stroke()
+//                    ctx.beginPath()
+//                    ctx.strokeStyle = arcBackgroundColor
+//                    ctx.lineCap = "round"
+//                    ctx.lineWidth = arcWidth
+//                    ctx.arc(width/2,height/2,radius,0,Math.PI*2,anticlockwise)
+//                    ctx.stroke()
 
-                    var r = progress* 2 * Math.PI/100
+                    var r = _progress* 2 * Math.PI/100
                     ctx.beginPath()
                     ctx.strokeStyle = arcColor
+                    ctx.lineCap = "round"
                     ctx.lineWidth = arcWidth
 
                     ctx.arc(width/2,height/2,radius,Math.PI / 2 - r / 2,Math.PI / 2 + r / 2,anticlockwise)
@@ -120,7 +130,7 @@ Rectangle {
             Image {
                 z: 1
                 anchors.fill: parent
-                source: "qrc:/res/pictures/start.png"
+                source: "qrc:/res/pictures/start_5.png"
             }
 
             MouseArea {

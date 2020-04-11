@@ -17,10 +17,10 @@ ListView {
                 user_lit_model.append({"id_num": 3, "focus_source": "qrc:/res/pictures/about.png"})
             } else {
                 user_lit_model.append({"id_num": 0, "focus_source": "qrc:/res/pictures/home.png"})
+                user_lit_model.append({"id_num": 4, "focus_source": "qrc:/res/pictures/user.png"})
                 user_lit_model.append({"id_num": 1, "focus_source": "qrc:/res/pictures/task.png"})
                 user_lit_model.append({"id_num": 2, "focus_source": "qrc:/res/pictures/help.png"})
                 user_lit_model.append({"id_num": 3, "focus_source": "qrc:/res/pictures/about.png"})
-                user_lit_model.append({"id_num": 4, "focus_source": "qrc:/res/pictures/user.png"})
             }
         }
     }
@@ -42,8 +42,8 @@ ListView {
             Image {
                 id: img_background
                 source: model.focus_source
-                opacity: list_view.currentIndex == item.id_num ? 1 : 0.3
                 anchors.fill: parent
+                opacity: item.focus ? 1: 0.3
                 fillMode: Image.PreserveAspectFit
                 horizontalAlignment: Image.AlignHCenter
             }

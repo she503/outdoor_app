@@ -25,7 +25,7 @@ Rectangle {
         target: map_task_manager
         onUpdateStopTaskInfo: {
             if (status === 1) {
-                root.mainPageChanged(0)
+                list_view.mainPageChanged(0)
                 stack_menu.replace(list_view)
                 list_view.currentIndex = 0
             }
@@ -42,7 +42,7 @@ Rectangle {
                 list_view.currentIndex = 1
                 stack_menu.replace(list_view)
                 list_view.mainPageChanged(1)
-            } else if (status === 4) {
+            } else if (status >= 3) {
                 home_page.text_visible = true
                 stack_menu.replace(task_process_page)
                 list_view.mainPageChanged(1)

@@ -37,7 +37,9 @@ void RosMessageManager::parseChassisInfo(const QJsonObject &obj)
     QString omega = obj.value("omega").toString();
     int brake_state = obj.value("brak_state").toInt();
     int drive_mode = obj.value("drive_mode").toInt();
-    emit updateChassisInfo(time, speed, omega, brake_state, drive_mode);
+    int cleaning_agency_state = obj.value("cleaning_agency_state").toInt();
+    bool water_tank_signal = obj.value("water_tank_signal").toBool();
+    emit updateChassisInfo(time, speed, omega, brake_state, drive_mode, cleaning_agency_state,water_tank_signal);
 }
 
 void RosMessageManager::parseObstacleInfo(const QJsonObject &obj)

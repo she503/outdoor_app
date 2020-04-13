@@ -121,9 +121,11 @@ private slots:
 
     void parseRegionsInfo(const  QJsonObject& obj);
     void parseMapAndTasksInfo(const QJsonObject& obj);
-    void parseMapAndTaskInfo(const QJsonObject& obj);
+//    void parseMapAndTaskInfo(const QJsonObject& obj);
     void parseMapName(const QJsonObject& obj);
+    void parseWorkFullRefLineInfo(const QJsonObject& obj);
 //    void parseSetMapAndInitPosInfo(const QJsonObject& obj);
+    void parseCurrentWorkMapData(const QJsonObject& obj);
 
 
     void parseMapTasksData(const QJsonObject& obj);

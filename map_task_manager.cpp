@@ -3,6 +3,7 @@
 MapTaskManager::MapTaskManager(QObject *parent) : QObject(parent)
 {
     _work_status = WORK_STATUS_NONE_WORK;
+    _pts = {};
 }
 
 void MapTaskManager::sendInitPos(const double &pos_x, const double &pos_y)
@@ -20,8 +21,10 @@ void MapTaskManager::setSocket(SocketManager *socket)
     _socket = socket;
     connect(_socket, SIGNAL(mapsInfo(QJsonObject)), this, SLOT(parseRegionsInfo(QJsonObject)));
     connect(_socket, SIGNAL(sendMapAndTasks(QJsonObject)), this, SLOT(parseMapAndTasksInfo(QJsonObject)));
-    connect(_socket, SIGNAL(sendMapAndTask(QJsonObject)), this, SLOT(parseMapAndTaskInfo(QJsonObject)));
+//    connect(_socket, SIGNAL(sendMapAndTask(QJsonObject)), this, SLOT(parseMapAndTaskInfo(QJsonObject)));
+    connect(_socket, SIGNAL(currentWorkMapData(QJsonObject)), this, SLOT(parseCurrentWorkMapData(QJsonObject)));
     connect(_socket, SIGNAL(parseMapName(QJsonObject)), this, SLOT(parseMapName(QJsonObject)));
+    connect(_socket, SIGNAL(parseWorkFullRefLineInfo(QJsonObject)), this, SLOT(parseWorkFullRefLineInfo(QJsonObject)));
 
     connect(_socket, SIGNAL(tasksData(QJsonObject)), this, SLOT(parseMapTasksData(QJsonObject)));
     connect(_socket, SIGNAL(setTasksRST(QJsonObject)), this, SLOT(setTaskCB(QJsonObject)));
@@ -296,36 +299,36 @@ void MapTaskManager::parseMapAndTasksInfo(const QJsonObject &obj)
     }
 }
 
-void MapTaskManager::parseMapAndTaskInfo(const QJsonObject &obj)
-{
-    int status = obj.value("status").toInt();
-    QString message = obj.value("message").toString();
-    if (status == 1) {
-        _maps.clear();
-        _map_name_list.clear();
-        _work_status = WORK_STATUS_TASK_SELECTED;
-        QJsonObject area_obj = obj.value("area").toObject();
-        QString map_name = area_obj.value("name").toString();
-        _maps.insert(map_name, area_obj);
-        _map_name_list.push_back(map_name);
+//void MapTaskManager::parseMapAndTaskInfo(const QJsonObject &obj)
+//{
+//    int status = obj.value("status").toInt();
+//    QString message = obj.value("message").toString();
+//    if (status == 1) {
+//        _maps.clear();
+//        _map_name_list.clear();
+//        _work_status = WORK_STATUS_TASK_SELECTED;
+//        QJsonObject area_obj = obj.value("area").toObject();
+//        QString map_name = area_obj.value("name").toString();
+//        _maps.insert(map_name, area_obj);
+//        _map_name_list.push_back(map_name);
 
 
-        QJsonObject ref_line_obj = obj.value("ref_line").toObject();
-        QVariantList pts = ref_line_obj.value("pts").toArray().toVariantList();
-        _pts = pts;
+//        QJsonObject ref_line_obj = obj.value("ref_line").toObject();
+//        QVariantList pts = ref_line_obj.value("pts").toArray().toVariantList();
+//        _pts = pts;
 
-        QJsonObject cb_obj;
-        cb_obj.insert("message_type", int(MESSAGE_CURRENT_MAP_AND_TASK_RST));
-        QJsonDocument doc(cb_obj);
-        _socket->sendSocketMessage(doc.toJson());
+//        QJsonObject cb_obj;
+//        cb_obj.insert("message_type", int(MESSAGE_CURRENT_MAP_AND_TASK_RST));
+//        QJsonDocument doc(cb_obj);
+//        _socket->sendSocketMessage(doc.toJson());
 
-        emit updateRefLine(_pts);
-        emit updateMapAndTaskInfo(_map_name_list.at(0));
+//        emit updateRefLine(_pts);
+//        emit updateMapAndTaskInfo(_map_name_list.at(0));
 
-    } else {
-        qDebug() << "[MapTaskManager::parseMapAndTaskInfo]: " << message;
-    }
-}
+//    } else {
+//        qDebug() << "[MapTaskManager::parseMapAndTaskInfo]: " << message;
+//    }
+//}
 
 void MapTaskManager::parseMapName(const QJsonObject &obj)
 {
@@ -340,6 +343,39 @@ void MapTaskManager::parseMapName(const QJsonObject &obj)
 
     }
     emit updateMapName(map_name, index);
+}
+
+void MapTaskManager::parseWorkFullRefLineInfo(const QJsonObject &obj)
+{
+    QJsonObject ref_line_obj = obj.value("ref_line").toObject();
+    QVariantList pts = ref_line_obj.value("pts").toArray().toVariantList();
+    _pts = pts;
+    emit updateRefLine(_pts);
+}
+
+void MapTaskManager::parseCurrentWorkMapData(const QJsonObject &obj)
+{
+    int status = obj.value("status").toInt();
+    QString message = obj.value("message").toString();
+    if (status == 1) {
+        _maps.clear();
+        _map_name_list.clear();
+        _work_status = WORK_STATUS_TASK_SELECTED;
+        QJsonObject area_obj = obj.value("area").toObject();
+        QString map_name = area_obj.value("name").toString();
+        _maps.insert(map_name, area_obj);
+        _map_name_list.push_back(map_name);
+
+        QJsonObject cb_obj;
+        cb_obj.insert("message_type", int(MessageType::MESSAGE_CURRENT_WORK_MAP_DATA_RST));
+        QJsonDocument doc(cb_obj);
+        _socket->sendSocketMessage(doc.toJson());
+        emit updateMapAndTaskInfo(_map_name_list.at(0));
+
+    } else {
+        qDebug() << "[MapTaskManager::parseCurrentWorkMapData]: " << message;
+    }
+
 }
 
 //void MapTaskManager::parseSetMapAndInitPosInfo(const QJsonObject &obj)

@@ -26,6 +26,7 @@ signals:
     void updateMonitorMessageInfo(const QVariantList& monitor_message);
 
 private slots:
+//    void parseWorkFullRefLineInfo(const QJsonObject& obj);
     void parseLocalizationInfo(const QJsonObject& obj);
     void parseChassisInfo(const QJsonObject& obj);
     void parseObstacleInfo(const QJsonObject& obj);

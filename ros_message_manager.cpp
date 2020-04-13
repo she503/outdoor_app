@@ -8,6 +8,7 @@ RosMessageManager::RosMessageManager(QObject *parent) : QObject(parent)
 void RosMessageManager::setSocket(SocketManager *socket)
 {
     _socket = socket;
+//    connect(_socket, SIGNAL(parseWorkFullRefLineInfo(QJsonObject)), this, SLOT(parseWorkFullRefLineInfo(QJsonObject)));
     connect(_socket, SIGNAL(localizationInfo(QJsonObject)), this, SLOT(parseLocalizationInfo(QJsonObject)));
     connect(_socket, SIGNAL(chassisInfo(QJsonObject)), this, SLOT(parseChassisInfo(QJsonObject)));
     connect(_socket, SIGNAL(obstaclesInfo(QJsonObject)), this, SLOT(parseObstacleInfo(QJsonObject)));
@@ -18,6 +19,13 @@ void RosMessageManager::setSocket(SocketManager *socket)
     connect(_socket, SIGNAL(trajectoryInfo(QJsonObject)), this, SLOT(parseTrajectoryInfo(QJsonObject)));
     connect(_socket, SIGNAL(monitorMessageInfo(QJsonObject)), this, SLOT(parseMonitorMessageInfo(QJsonObject)));
 }
+
+//void RosMessageManager::parseWorkFullRefLineInfo(const QJsonObject &obj)
+//{
+//    QJsonObject ref_line_obj = obj.value("ref_line").toObject();
+//    QVariantList pts = ref_line_obj.value("pts").toArray().toVariantList();
+////    emit updateRefLine(pts);
+//}
 
 void RosMessageManager::parseLocalizationInfo(const QJsonObject &obj)
 {

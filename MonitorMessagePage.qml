@@ -33,7 +33,7 @@ Item {
                 timer_btn_errror_flashes.start()
 //                timer_btn_errror_open.start()   debug
                 draw_error.open()
-//                root.cannotOperatorTask()
+//                root.cannotOperatorTask()      debug
             }
             for(var i = 0; i < monitor_message.length; ++i) {
                 error_list[0] = Qt.formatDateTime(new Date(), "hh:mm:ss")

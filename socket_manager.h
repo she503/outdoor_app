@@ -32,11 +32,6 @@ public:
      */
     Q_INVOKABLE bool disConnet();
 
-//    /**
-//     * @brief 数据写入socket
-//     */
-//    Q_INVOKABLE bool sendData(const QByteArray& data);
-
     Q_INVOKABLE bool judgeIsConnected();
 signals:
     void mapsInfo(const QJsonObject& obj);
@@ -79,15 +74,6 @@ signals:
     void batteryInfo(const QJsonObject& obj);
     void trajectoryInfo(const QJsonObject& obj);
     void monitorMessageInfo(const QJsonObject& obj);
-
-//    /**
-//     * @brief 发给ui显示的数据
-//     */
-//    void updateBatteryInfo(const QString& soc);
-//    void updateVehicleSpeed(const QString& speed);
-//    void updateWaterVolume(const QString& water_volume);
-//    void updateOperateMethod(const QString& operate_method);
-
 
     //message
     void emitFaildToLogin(const QString& message);

@@ -62,8 +62,11 @@ public:
 
     Q_INVOKABLE int getWorkStatus();
 
+    Q_INVOKABLE void sendFirstMapName();
+
 public:
     void setSocket(SocketManager* socket);
+    void sendInfoTest();
 private:
 
     void parseTasksName(const QJsonObject& tasks_obj);

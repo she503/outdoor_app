@@ -37,6 +37,11 @@ void MapTaskManager::setSocket(SocketManager *socket)
 
 }
 
+void MapTaskManager::sendInfoTest()
+{
+    emit
+}
+
 //bool MapTaskManager::sendInitPosAndMapName(const QString& map_name, const QString &pos_x, const QString &pos_y)
 //{
 //    QJsonObject object;
@@ -94,7 +99,6 @@ void MapTaskManager::getFeature(const QString &map_name)
 
 void MapTaskManager::getMapsName()
 {
-
     if (_map_name_list.size() != 0 ) {
         emit updateMapsName(_map_name_list);
     } else {
@@ -178,6 +182,17 @@ void MapTaskManager::setMapName(const QString &map_name)
 int MapTaskManager::getWorkStatus()
 {
     return _work_status;
+}
+
+void MapTaskManager::sendFirstMapName()
+{
+    if(_map_name_list.empty() ) {
+        qDebug() << "[MapTaskManager::sendFirstMapName]: map name list empty!";
+        return;
+    }
+    if (_work_status == WORK_STATUS_NONE_WORK) {
+        this->setMapName(_map_name_list.at(0));
+    }
 }
 
 void MapTaskManager::setTaskCB(const QJsonObject &obj)
@@ -269,9 +284,9 @@ void MapTaskManager::parseRegionsInfo(const QJsonObject &obj)
     }
     emit updateMapsName(_map_name_list);
 
-    if (_work_status <= WORK_STATUS_MAP_SELECTED_NOT_LOCATING && !_map_name_list.empty()) {
-        this->setMapName(_map_name_list.at(0));
-    }
+//    if (_work_status <= WORK_STATUS_MAP_SELECTED_NOT_LOCATING && !_map_name_list.empty()) {
+//        this->setMapName(_map_name_list.at(0));
+//    }
 }
 
 void MapTaskManager::parseMapAndTasksInfo(const QJsonObject &obj)

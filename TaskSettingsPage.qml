@@ -72,8 +72,8 @@ Rectangle {
 
 
     Component.onCompleted: {
-
        map_task_manager.getMapsName()
+
     }
 
     Connections {

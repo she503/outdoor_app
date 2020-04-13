@@ -140,6 +140,7 @@ Rectangle {
                     stack_view.replace(task_settings_page)
                     map_task_manager.judgeIsMapTasks()
                     map_task_manager.getFirstMap()
+                    map_task_manager.sendFirstMapName()
                 } else if (current_index === 2) {
                     stack_view.replace(help_document_page)
                 } else if (current_index === 3) {

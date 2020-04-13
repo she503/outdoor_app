@@ -54,23 +54,6 @@ bool SocketManager::disConnet()
     return true;
 }
 
-//bool SocketManager::sendData(const QByteArray &data)
-//{
-//    QByteArray transformate_data = data;
-//    transformate_data.replace(" ","").replace("\n","");
-//    //在字段结束加上关键字
-//    transformate_data += "$";
-
-//    qint64 write_result = _socket->write(transformate_data);
-//    bool is_flush = _socket->flush();
-//    if (write_result != -1 && is_flush) {
-//        if (write_result != 0) {
-//            return true;
-//        }
-//    }
-//    return false;
-//}
-
 bool SocketManager::judgeIsConnected()
 {
     QString message = tr("app cannot to connect server, please check your wifi and IP!");
@@ -120,9 +103,6 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_CURRENT_WORK_MAP_DATA:
                 emit currentWorkMapData(obj);
                 break;
-//            case MessageType::MESSAGE_CURRENT_MAP_AND_TASK:
-//                emit sendMapAndTask(obj); // yi ge di tu he dui ying de yi jing xuan ze hao de can kao xian
-//                break;
             case MESSAGE_SET_MAP_RST:
                 emit parseMapName(obj);
                 break;

@@ -68,12 +68,14 @@ Page {
                 var_planning_path = []
                 ref_line_curren_index = 0
                 var_planning_ref_path = []
+                var_trajectory = []
 
                 canvas_others.requestPaint()
                 canvas_obstacles.requestPaint()
                 canvas_ref_line.requestPaint()
                 canvas_red_ref_line.requestPaint()
                 canvas_planning_ref_line.requestPaint()
+                canvas_trajectory.requestPaint()
                 vehicle.x = -200
                 vehicle.y = -200
             }
@@ -818,6 +820,7 @@ Page {
                 canvas_planning_ref_line.requestPaint()
                 canvas_red_ref_line.requestPaint()
                 canvas_obstacles.requestPaint()
+                canvas_trajectory.requestPaint()
             }
         }
 

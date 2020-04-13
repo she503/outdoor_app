@@ -59,7 +59,8 @@ Dialog {
             opacity: 0.5
         }
 
-        Text {
+
+        TextEdit {
             id: content
             text: "   " + root.dia_content//root.dia_content
             color: "black"

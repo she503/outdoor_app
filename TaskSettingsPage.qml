@@ -249,18 +249,17 @@ Rectangle {
                     visible: false
                     z: 1
                     width: parent.width * 0.2
-                    height: parent.height
-                    color: "transparent"
-                    LinearGradient {
-                        anchors.fill: parent
-                        start: Qt.point(0, 0)
-                        end: Qt.point(parent.width, 0)
-                        gradient: Gradient {
-                            GradientStop { position: 0.0; color: Qt.rgba(0,191,255, 0.5)}
-                            GradientStop { position: 1.0; color: Qt.rgba(225,255,255, 0.5)}
-                        }
-                    }
-
+                    height: parent.height * 0.834
+                    color: Qt.rgba(0,191,255, 0.5)
+//                    LinearGradient {
+//                        anchors.fill: parent
+//                        start: Qt.point(0, 0)
+//                        end: Qt.point(parent.width, 0)
+//                        gradient: Gradient {
+//                            GradientStop { position: 0.0; color: Qt.rgba(0,191,255, 0.5)}
+//                            GradientStop { position: 1.0; color: Qt.rgba(225,255,255, 0.5)}
+//                        }
+//                    }
                     ListView {
                         id: list_view
                         clip: true
@@ -345,6 +344,24 @@ Rectangle {
                                 radius: width / 2
                                 color: vbar.pressed ? "#ffffaa" : "#c2f4c6"
                             }
+                        }
+                    }
+                    Rectangle {
+                        id: rect_back
+                        width: parent.width
+                        height: parent.height * 0.2
+                        anchors.top: rec_ref_lines.bottom
+                        color: Qt.rgba(0, 255, 0, 0.5)
+                        Image {
+                            id: img_back
+                            anchors.fill: parent
+                            source: "qrc:/res/pictures/arrow-right.png"
+                            rotation: 180
+                            fillMode: Image.PreserveAspectFit
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+
                         }
                     }
                 }

@@ -32,10 +32,10 @@ public:
      */
     Q_INVOKABLE bool disConnet();
 
-    /**
-     * @brief 数据写入socket
-     */
-    Q_INVOKABLE bool sendData(const QByteArray& data);
+//    /**
+//     * @brief 数据写入socket
+//     */
+//    Q_INVOKABLE bool sendData(const QByteArray& data);
 
     Q_INVOKABLE bool judgeIsConnected();
 signals:
@@ -48,6 +48,7 @@ signals:
     void tasksData(const QJsonObject& obj);
     void setInitPosRST(const QJsonObject& obj);
     void parseMapName(const QJsonObject& obj);
+    void currentWorkMapData(const QJsonObject& obj);
 
 
     void checkoutLogin(const QJsonObject& obj);
@@ -69,6 +70,7 @@ signals:
 
 
     //
+    void parseWorkFullRefLineInfo(const QJsonObject& obj);
     void localizationInfo(const QJsonObject& obj);
     void chassisInfo(const QJsonObject& obj);
     void obstaclesInfo(const QJsonObject& obj);

@@ -14,7 +14,7 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
 
 //    this->connectToHost("127.0.0.1", "32432");
 //    this->connectToHost("192.168.0.125", "32432");
-    this->connectToHost("192.168.8.163", "32432");
+    this->connectToHost("192.168.8.165", "32432");
 
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));
     connect(_socket, SIGNAL(disconnected()), this, SLOT(disConnet()));
@@ -54,22 +54,22 @@ bool SocketManager::disConnet()
     return true;
 }
 
-bool SocketManager::sendData(const QByteArray &data)
-{
-    QByteArray transformate_data = data;
-    transformate_data.replace(" ","").replace("\n","");
-    //在字段结束加上关键字
-    transformate_data += "$";
+//bool SocketManager::sendData(const QByteArray &data)
+//{
+//    QByteArray transformate_data = data;
+//    transformate_data.replace(" ","").replace("\n","");
+//    //在字段结束加上关键字
+//    transformate_data += "$";
 
-    qint64 write_result = _socket->write(transformate_data);
-    bool is_flush = _socket->flush();
-    if (write_result != -1 && is_flush) {
-        if (write_result != 0) {
-            return true;
-        }
-    }
-    return false;
-}
+//    qint64 write_result = _socket->write(transformate_data);
+//    bool is_flush = _socket->flush();
+//    if (write_result != -1 && is_flush) {
+//        if (write_result != 0) {
+//            return true;
+//        }
+//    }
+//    return false;
+//}
 
 bool SocketManager::judgeIsConnected()
 {
@@ -117,9 +117,12 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_TASKS_INFO:
                 emit tasksData(obj);
                 break;
-            case MessageType::MESSAGE_CURRENT_MAP_AND_TASK:
-                emit sendMapAndTask(obj); // yi ge di tu he dui ying de yi jing xuan ze hao de can kao xian
+            case MessageType::MESSAGE_CURRENT_WORK_MAP_DATA:
+                emit currentWorkMapData(obj);
                 break;
+//            case MessageType::MESSAGE_CURRENT_MAP_AND_TASK:
+//                emit sendMapAndTask(obj); // yi ge di tu he dui ying de yi jing xuan ze hao de can kao xian
+//                break;
             case MESSAGE_SET_MAP_RST:
                 emit parseMapName(obj);
                 break;
@@ -132,6 +135,7 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_STOP_TASK_RST:
                 emit pauseStopTaskRST(obj.value("status").toInt());
                 break;
+
 
             case  MessageType::MESSAGE_LOGIN_RST:
                 emit checkoutLogin(obj);
@@ -150,6 +154,9 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
                 break;
 
 
+            case MESSAGE_CURRENT_WORK_FULL_REF_LINE:
+                emit parseWorkFullRefLineInfo(obj);
+                break;
             case MessageType::MESSAGE_LOCALIZATION_INFO:
                 emit localizationInfo(obj);
                 break;

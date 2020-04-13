@@ -65,8 +65,8 @@ Rectangle {
                     id: btn_stop
                     width: (parent.width -  parent.btn_spacing)/ 3
                     height: parent.height
-                    source: _is_pause ? "qrc:/res/pictures/BUTTON-PAUSE.png" :
-                                        "qrc:/res/pictures/BUTTON-START.png"
+                    source: _is_pause ? "qrc:/res/pictures/BUTTON-START.png" :
+                                        "qrc:/res/pictures/BUTTON-PAUSE.png"
                     fillMode: Image.PreserveAspectFit
                     property bool _is_pause: false
                     MouseArea {
@@ -309,8 +309,8 @@ Rectangle {
         id: repeat_need_stop_task
         cancel: true
         ok: true
-        x: (parent.parent.parent.width - width ) / 2
-        y: (parent.parent.parent.height - height ) / 2
+        x: (root_main.width - width ) / 2
+        y: (root_main.height - height ) / 2
         cancel_text: qsTr("cancel")
         ok_text: qsTr("sure")
         dia_title: qsTr("repeter")

@@ -140,7 +140,7 @@ Rectangle {
             busy.visible = false
             busy.running = false
             dialog_match_warn.dia_title = qsTr("Error ")
-            dialog_match_warn.dia_content = message
+            dialog_match_warn.dia_content = qsTr("message")
             dialog_match_warn.open()
             rec_checked_location.visible = true
         }

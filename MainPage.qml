@@ -7,6 +7,7 @@ Rectangle {
     id: root
 
 
+    property alias root_main: root
     color: "transparent"
     property Component user_manage_page: UserManagePage {}
     property Component help_document_page: HelpDocumentPage { }
@@ -40,19 +41,23 @@ Rectangle {
         id: home_page
 
         onCenterBtnPress: {
-            if (status <= 2) {
-                home_page.text_visible = false
-                if (account_manager.getCurrentLevel() <= 1) {
-                    list_view.currentIndex = 1
-                } else {
-                    list_view.currentIndex = 2
+            if (list_view.cant_clicked_task) {
+
+            } else {
+                if (status <= 2) {
+                    home_page.text_visible = false
+                    if (account_manager.getCurrentLevel() <= 1) {
+                        list_view.currentIndex = 1
+                    } else {
+                        list_view.currentIndex = 2
+                    }
+                    stack_menu.replace(list_view)
+                    list_view.mainPageChanged(1)
+                } else if (status >= 3) {
+                    home_page.text_visible = true
+                    stack_menu.replace(task_process_page)
+                    list_view.mainPageChanged(1)
                 }
-                stack_menu.replace(list_view)
-                list_view.mainPageChanged(1)
-            } else if (status >= 3) {
-                home_page.text_visible = true
-                stack_menu.replace(task_process_page)
-                list_view.mainPageChanged(1)
             }
         }
     }

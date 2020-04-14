@@ -12,9 +12,12 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
     _socket = new QTcpSocket(this);
     _socket->setReadBufferSize(10 * 1024 * 1024);
 
+    _vehicle_width = 0;
+    _vehicle_height = 0;
+
 //    this->connectToHost("127.0.0.1", "32432");
 //    this->connectToHost("192.168.0.125", "32432");
-     this->connectToHost("192.168.8.165", "32432");
+     this->connectToHost("192.168.8.163", "32432");
 
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));
     connect(_socket, SIGNAL(disconnected()), this, SLOT(disConnet()));
@@ -62,6 +65,16 @@ bool SocketManager::judgeIsConnected()
 //        emit emitFaildToLogin(message);
     }
     return _is_connected;
+}
+
+float SocketManager::getVehicleWidth()
+{
+    return _vehicle_width;
+}
+
+float SocketManager::getVehicleHeight()
+{
+    return _vehicle_height;
 }
 
 void SocketManager::readSocketData(/*const QByteArray& buffer*/)
@@ -115,6 +128,9 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_STOP_TASK_RST:
                 emit pauseStopTaskRST(obj.value("status").toInt());
                 break;
+            case MessageType::MESSAGE_WORK_DOWN:
+                emit workDown(obj);
+                break;
 
 
             case  MessageType::MESSAGE_LOGIN_RST:
@@ -132,6 +148,7 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_ALL_ACCOUNTS_INFO:
                 emit allUser(obj);
                 break;
+
 
 
             case MESSAGE_CURRENT_WORK_FULL_REF_LINE:
@@ -164,6 +181,10 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MESSAGE_MONITOR_MESSAGE:
                 emit monitorMessageInfo(obj);
                 break;
+            case MESSAGE_VEHICLE_WIDTH_HEIGHT:
+                this->getVehicleWidthHeight(obj);
+                break;
+
 
             default:
                 qDebug() << "======>" <<obj;
@@ -175,6 +196,12 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
         }
     }
     _buffer = buffer_list.at(complete_buffer_num);
+}
+
+void SocketManager::getVehicleWidthHeight(const QJsonObject &obj)
+{
+    _vehicle_height = obj.value("height").toDouble();
+    _vehicle_width = obj.value("width").toDouble();
 }
 
 bool SocketManager::sendSocketMessage(const QByteArray &message)

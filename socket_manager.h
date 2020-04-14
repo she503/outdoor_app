@@ -33,6 +33,10 @@ public:
     Q_INVOKABLE bool disConnet();
 
     Q_INVOKABLE bool judgeIsConnected();
+
+    Q_INVOKABLE float getVehicleWidth();
+
+    Q_INVOKABLE float getVehicleHeight();
 signals:
     void mapsInfo(const QJsonObject& obj);
     void sendMapAndTasks(const QJsonObject& obj);
@@ -54,6 +58,7 @@ signals:
 
 //    void localizationInitRST(const QJsonObject& obj);
     void setTasksRST(const QJsonObject& obj);
+    void workDown(const QJsonObject& obj);
 
     void taskProcessInfo(const QJsonObject& obj);
 
@@ -81,6 +86,9 @@ signals:
     void pauseTaskRST(const bool& is_pause, const int& status);
     void pauseStopTaskRST(const int& status);
 
+private:
+    void getVehicleWidthHeight(const QJsonObject& obj);
+
 private slots:
     void readSocketData(/*const QByteArray& buffer*/);
 
@@ -88,6 +96,8 @@ private:
     QTcpSocket* _socket;
     QByteArray _buffer;
     bool _is_connected;
+    float _vehicle_width;
+    float _vehicle_height;
 };
 
 #endif // SOCKET_MANAGER_H

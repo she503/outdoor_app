@@ -153,6 +153,10 @@ Rectangle {
 
         }
 
+        onSendWorkDown: {
+
+        }
+
         onUpdateMapName: {
             list_view_areas.currentIndex = index
             map_task_manager.parseMapData(map_name)
@@ -250,16 +254,16 @@ Rectangle {
                     z: 1
                     width: parent.width * 0.2
                     height: parent.height * 0.834
-                    color: Qt.rgba(0,191,255, 0.5)
-//                    LinearGradient {
-//                        anchors.fill: parent
-//                        start: Qt.point(0, 0)
-//                        end: Qt.point(parent.width, 0)
-//                        gradient: Gradient {
-//                            GradientStop { position: 0.0; color: Qt.rgba(0,191,255, 0.5)}
-//                            GradientStop { position: 1.0; color: Qt.rgba(225,255,255, 0.5)}
-//                        }
-//                    }
+//                    color: Qt.rgba(0,191,255, 0.5)
+                    LinearGradient {
+                        anchors.fill: parent
+                        start: Qt.point(0, 0)
+                        end: Qt.point(parent.width, 0)
+                        gradient: Gradient {
+                            GradientStop { position: 0.0; color: Qt.rgba(0,191,255, 0.5)}
+                            GradientStop { position: 1.0; color: Qt.rgba(225,255,255, 0.5)}
+                        }
+                    }
                     ListView {
                         id: list_view
                         clip: true
@@ -361,7 +365,9 @@ Rectangle {
                         }
                         MouseArea {
                             anchors.fill: parent
-
+                            onClicked: {
+                                map_task_manager.returnMapSelete()
+                            }
                         }
                     }
                 }
@@ -534,5 +540,29 @@ Rectangle {
         }
     }
 
+    TLDialog {
+        id: dialog_work_down
+        width: root.width * 0.4
+        height: root.height * 0.3
+        x: (root.width - width) / 2
+        y: (root.height - height) / 2
+        dia_title: qsTr("Repeat")
+        dia_content: qsTr("Are you sure?")
+        status: 1
+        ok: true
+        cancel_text: qsTr("cancel")
+        ok_text: qsTr("yes")
+        onOkClicked: {
+            dialog_resure.close()
+            monitor_page.sendInitPoint()
+            busy.visible = true
+            busy.running = true
+            rec_checked_location.visible = false
+        }
+        onCancelClicked: {
+            root.chooseMapPage()
+            dialog_resure.close()
+        }
+    }
 
 }

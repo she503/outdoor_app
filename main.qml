@@ -28,6 +28,7 @@ ApplicationWindow {
         onSuccessToLogin: {
             stack_view_main.replace(main_page)
         }
+
     }
     StackView {
         id: stack_view_main

@@ -35,11 +35,12 @@ Item {
                 draw_error.open()
 //                root.cannotOperatorTask()      debug
             }
+            console.info(monitor_message)
             for(var i = 0; i < monitor_message.length; ++i) {
-                error_list[0] = Qt.formatDateTime(new Date(), "hh:mm:ss")
-                error_list[1] = monitor_message[i][0]
-                error_list[2] = monitor_message[i][1]
-                error_list[3] = monitor_message[i][2]
+                error_list[0] = monitor_message[i][0]
+                error_list[1] = monitor_message[i][1]
+                error_list[2] = monitor_message[i][2]
+                error_list[3] = monitor_message[i][3]
                 message_list_model.append({})
             }
         }

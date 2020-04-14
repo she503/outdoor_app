@@ -30,9 +30,9 @@ void MapTaskManager::setSocket(SocketManager *socket)
     connect(_socket, SIGNAL(setTasksRST(QJsonObject)), this, SLOT(setTaskCB(QJsonObject)));
     connect(_socket, SIGNAL(setInitPosRST(QJsonObject)), this, SLOT(setInitPosCB(QJsonObject)));
 
-
     connect(_socket, SIGNAL(pauseTaskRST(bool, int)), this, SLOT(parsePauseTask(bool, int)));
     connect(_socket, SIGNAL(pauseStopTaskRST(int)), this, SLOT(parseStopTask(int)));
+    connect(_socket, SIGNAL(workDown(QJsonObject)), this, SLOT(parseWorkDown()));
 
 
 }
@@ -195,6 +195,15 @@ void MapTaskManager::sendFirstMapName()
     }
 }
 
+void MapTaskManager::returnMapSelete()
+{
+    QJsonObject obj;
+    obj.insert("message_type", MESSAGE_RETURN_TO_SLECT_MAP);
+    obj.insert("flag", true);
+    QJsonDocument doc(obj);
+    _socket->sendSocketMessage(doc.toJson());
+}
+
 void MapTaskManager::setTaskCB(const QJsonObject &obj)
 {
     int status = obj.value("status").toInt();
@@ -248,6 +257,12 @@ void MapTaskManager::parseStopTask(const int &status)
         _work_status = WORK_STATUS_NONE_WORK;
     }
 }
+
+void MapTaskManager::parseWorkDown()
+{
+     _work_status = WORK_STATUS_NONE_WORK;
+     emit sendWorkDown();
+}
 void MapTaskManager::parseRegionsInfo(const QJsonObject &obj)
 {
     qint8 status = obj.value("status").toInt();
@@ -282,11 +297,8 @@ void MapTaskManager::parseRegionsInfo(const QJsonObject &obj)
     if (_map_name_list.size() <= 0) {
         return;
     }
+    _work_status = WORK_STATUS_NONE_WORK;
     emit updateMapsName(_map_name_list);
-
-//    if (_work_status <= WORK_STATUS_MAP_SELECTED_NOT_LOCATING && !_map_name_list.empty()) {
-//        this->setMapName(_map_name_list.at(0));
-//    }
 }
 
 void MapTaskManager::parseMapAndTasksInfo(const QJsonObject &obj)
@@ -355,7 +367,6 @@ void MapTaskManager::parseMapName(const QJsonObject &obj)
             index = i;
             break;
         }
-
     }
     emit updateMapName(map_name, index);
 }

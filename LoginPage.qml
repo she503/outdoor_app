@@ -9,15 +9,17 @@ Item{
     property var user_level: 0
     property string test_text: "root"
     signal successToLogin()
+    signal connectFail()
     property alias connect_fail_item: connect_fail_item
+    property alias rec_disconnect: rec_disconnect
 
     Rectangle {
         id: connect_fail_item
         color: Qt.rgba(255, 255, 255, 0.5)
         visible: false
         Rectangle {
-            width: 330
-            height: 220
+            width: 360
+            height: 240
             anchors.centerIn: parent
             color: "transparent"
             Image {
@@ -281,19 +283,20 @@ Item{
         onEmitFaildToLogin: {
             message_connect_faild.dia_content = message
             message_connect_faild.open()
-            stack_view_main.replace(rec_disconnect)
+            root.connectFail()
+
         }
         onAppDisconnected: {
             message_connect_faild.dia_content = message
             message_connect_faild.open()
-            stack_view_main.replace(rec_disconnect)
+            root.connectFail()
         }
     }
 
     TLDialog {
         id: message_connect_faild
-        width: 300
-        height: 200
+        height: parent.height * 0.5
+        width: height * 1.5
         x: (root.width - width) / 2
         y: (root.height - height) / 2
         dia_title: qsTr("connect error!")
@@ -306,8 +309,8 @@ Item{
     }
     TLDialog {
         id: message_login_faild
-        width: 300
-        height: 200
+        height: parent.height * 0.5
+        width: height * 1.5
         x: (root.width - width) / 2
         y: (root.height - height) / 2
         dia_title: qsTr("login error!")

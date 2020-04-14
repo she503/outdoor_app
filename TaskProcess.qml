@@ -15,6 +15,7 @@ Rectangle {
     property string font_color: "blue"
 
     signal sigBackBtnPress()
+    signal stopTaskCommond()
 
     Connections {
         target: ros_message_manager
@@ -192,23 +193,24 @@ Rectangle {
                                 Text {
                                     id: text_1
                                     text: qsTr("Current map name: ")
-                                    width: parent.width * 0.7
+                                    width: parent.width * 0.5
                                     height: parent.height
                                     verticalAlignment: Text.AlignVCenter
                                     horizontalAlignment: Text.AlignLeft
-                                    font.pixelSize: width / 10
+                                    font.pixelSize: width / 7.5
                                     color: root.title_color
                                 }
                                 Text {
                                     id: text_map_name
                                     text: root.map_name
-                                    width: parent.width * 0.3
+                                    width: parent.width * 0.5
                                     height: parent.height
                                     verticalAlignment: Text.AlignVCenter
                                     horizontalAlignment: Text.AlignHCenter
-                                    font.pixelSize: width / 10
+                                    font.pixelSize: width / 8
                                     anchors.left: text_1.right
                                     color: root.font_color
+                                    font.bold: true
                                 }
                                 Rectangle {
                                     width: parent.width * 0.97
@@ -226,23 +228,24 @@ Rectangle {
                                 Text {
                                     id: text_2
                                     text: qsTr("Work time: ")
-                                    width: parent.width * 0.7
+                                    width: parent.width * 0.5
                                     height: parent.height
                                     verticalAlignment: Text.AlignVCenter
                                     horizontalAlignment: Text.AlignLeft
-                                    font.pixelSize: width / 10
+                                    font.pixelSize: width / 7.5
                                     color: root.title_color
                                 }
                                 Text {
                                     id: text_work_time
                                     text: root.work_time
-                                    width: parent.width * 0.3
+                                    width: parent.width * 0.5
                                     height: parent.height
                                     verticalAlignment: Text.AlignVCenter
                                     horizontalAlignment: Text.AlignHCenter
-                                    font.pixelSize: width / 6
+                                    font.pixelSize: width / 8
                                     anchors.left: text_2.right
                                     color: root.font_color
+                                    font.bold: true
                                 }
                                 Rectangle {
                                     width: parent.width * 0.97
@@ -301,6 +304,8 @@ Rectangle {
 
     TLDialog {
         id: pause_stop_message
+        height: parent.height * 0.5
+        width: height * 1.5
         cancel: true
 
     }
@@ -309,6 +314,8 @@ Rectangle {
         id: repeat_need_stop_task
         cancel: true
         ok: true
+        height: parent.height * 0.5
+        width: height * 1.5
         x: (root_main.width - width ) / 2
         y: (root_main.height - height ) / 2
         cancel_text: qsTr("cancel")
@@ -319,6 +326,7 @@ Rectangle {
         onOkClicked: {
             map_task_manager.sendStopTaskCommond()
             repeat_need_stop_task.close()
+            stopTaskCommond()
         }
 
     }

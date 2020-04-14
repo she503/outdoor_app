@@ -446,15 +446,26 @@
         <translation>错误</translation>
     </message>
     <message>
+        <location filename="TaskSettingsPage.qml" line="143"/>
+        <source>message</source>
+        <oldsource>message set task</oldsource>
+        <translation>初始定位失败</translation>
+    </message>
+    <message>
         <location filename="TaskSettingsPage.qml" line="142"/>
         <location filename="TaskSettingsPage.qml" line="150"/>
         <source>Error </source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="143"/>
-        <source>message</source>
-        <translation>初始定位失败</translation>
+        <location filename="TaskSettingsPage.qml" line="123"/>
+        <source>message set task</source>
+        <translation>配置任务失败</translation>
+    </message>
+    <message>
+        <location filename="TaskSettingsPage.qml" line="151"/>
+        <source>message map &amp;&amp; task</source>
+        <translation>加载地图失败或者无任务信息</translation>
     </message>
     <message>
         <location filename="TaskSettingsPage.qml" line="379"/>

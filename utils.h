@@ -1,6 +1,11 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+enum TLSocketType {
+    NULL_TYPE = 0,
+    TERGEO_GUI = 1,
+    TERGEO_APP = 2
+};
 
 enum MessageType {
     MESSAGE_UNKNOWN = 0,

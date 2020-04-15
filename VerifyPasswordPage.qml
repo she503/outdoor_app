@@ -53,8 +53,8 @@ Item {
     }
     Dialog {
         id: dialog_unlock
-        width: 300
-        height: 200
+        height: parent.height * 0.5
+        width: height * 1.5
         x:(root.width - width) / 2
         y: (root.height - height) / 2
         background: Rectangle {
@@ -184,8 +184,8 @@ Item {
     }
     Dialog {
         id: message_unclock_faild
-        width: 300
-        height: 200
+        height: parent.height * 0.5
+        width: height * 1.5
         x:(root.width - width) / 2
         y: (root.height - height) / 2
         background: Rectangle {

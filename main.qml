@@ -13,9 +13,9 @@ ApplicationWindow {
     property Component welcome_page: WelcomePage {
         onTimeToClose: {
             if (!socket_manager.judgeIsConnected()) {
-                stack_view_main.replace(login_page.connect_fail_item)
+                stack_view.replace(login_page.connect_fail_item)
             } else {
-                stack_view_main.replace(login_page)
+                stack_view.replace(login_page)
             }
         }
     }
@@ -26,12 +26,15 @@ ApplicationWindow {
         width: root.width
         height: root.height
         onSuccessToLogin: {
-            stack_view_main.replace(main_page)
+            stack_view.replace(main_page)
+        }
+        onConnectFail: {
+            stack_view.replace(login_page.rec_disconnect)
         }
 
     }
     StackView {
-        id: stack_view_main
+        id: stack_view
         anchors.fill: parent
         initialItem: welcome_page
 

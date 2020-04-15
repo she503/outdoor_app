@@ -26,8 +26,8 @@ Rectangle {
 
     Dialog {
         id: message_update_uer
-        width: 300
-        height: 200
+        height: parent.height * 0.5
+        width: height * 1.5
         x:(root.width - width) / 2
         y: (root.height - height) / 2
         background: Rectangle {
@@ -237,8 +237,8 @@ Rectangle {
 
     TLDialog {
         id: message_account
-        width: root.width * 0.7
-        height: root.height * 0.5
+        height: parent.height * 0.5
+        width: height * 1.5
         x: (root.width - width) / 2
         y: (root.height - height) / 2
         ok: false
@@ -250,6 +250,8 @@ Rectangle {
 
     TLDialog {
         id: dialog_update_success
+        height: parent.height * 0.5
+        width: height * 1.5
         status: 1
         dia_title: qsTr("update success")
         dia_content: qsTr("update success")
@@ -260,8 +262,8 @@ Rectangle {
     }
     Dialog {
         id: dialog_add_user
-        width: 300
-        height: 200
+        height: parent.height * 0.5
+        width: height * 1.5
         x:(root.width - width) / 2
         y: (root.height - height) / 2
         background: Rectangle {
@@ -499,7 +501,7 @@ Rectangle {
                         width: parent.width
                         height: parent.height * 0.8
                         anchors.top: parent.top
-                        font.pixelSize: parent.height * 0.5
+                        font.pixelSize: parent.height * 0.53
                         text: qsTr("delete")
                         color: "white"
                         horizontalAlignment: Text.AlignHCenter
@@ -552,7 +554,7 @@ Rectangle {
                     contentItem: Text {
                         width: parent.width
                         height: parent.height * 0.8
-                        font.pixelSize: parent.height * 0.5
+                        font.pixelSize: parent.height * 0.53
                         text: qsTr("update")
                         color: "white"
                         horizontalAlignment: Text.AlignHCenter
@@ -582,7 +584,7 @@ Rectangle {
                     contentItem: Text {
                         width: parent.width
                         height: parent.height * 0.8
-                        font.pixelSize: parent.height * 0.5
+                        font.pixelSize: parent.height * 0.53
                         text: qsTr("add")
                         color: "white"
                         horizontalAlignment: Text.AlignHCenter

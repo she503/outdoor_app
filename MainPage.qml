@@ -66,7 +66,12 @@ Rectangle {
         visible: false
         width: rect_right.width
         height: rect_right.height
-
+        onChoose_map_nameChanged: {
+            task_process_page.map_name = task_settings_page.choose_map_name
+        }
+        onWork_timeChanged: {
+            task_process_page.work_time = task_settings_page.work_time
+        }
     }
 
     Image {
@@ -157,6 +162,9 @@ Rectangle {
                 list_view.currentIndex = 0
                 stack_menu.replace(list_view)
                 stack_view.replace(home_page)
+            }
+            onStopTaskCommond: {
+                task_settings_page.timer_task_timing.stop()
             }
         }
     }

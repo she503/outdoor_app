@@ -40,6 +40,7 @@ bool SocketManager::connectToHost(const QString &ip, const QString &port)
     } else {
         QJsonObject object;
         object.insert("message_type", int(MESSAGE_NEW_DEIVCE_CONNECT));
+        object.insert("sender", TLSocketType::TERGEO_APP);
         QJsonDocument doc(object);
         _is_connected = true;
         this->sendSocketMessage(doc.toJson());

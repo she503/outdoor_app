@@ -10,8 +10,8 @@ Item {
     signal cannotOperatorTask()
     property bool is_locked: false
     property bool has_error: false
-    property var error_list: [Qt.formatDateTime(new Date(), "hh:mm:ss"), "error level", "error code", "error detail"]
-    property var error_message_info: [error_list]
+    //    property var error_list: [Qt.formatDateTime(new Date(), "hh:mm:ss"), "error level", "error code", "error detail"]
+    //    property var error_message_info: [error_list]
     property var error_level: 0//: ["debug", "warn", "error"]
     property var error_text_color: "red"//: ["yellow", "orange", "red"]
     property bool is_first_get_error: false
@@ -31,17 +31,15 @@ Item {
             if (!is_first_get_error) {
                 is_first_get_error = true
                 timer_btn_errror_flashes.start()
-//                timer_btn_errror_open.start()   debug
+                //                timer_btn_errror_open.start()   debug
                 draw_error.open()
-//                root.cannotOperatorTask()      debug
+                //                root.cannotOperatorTask()      debug
             }
-            console.info(monitor_message)
             for(var i = 0; i < monitor_message.length; ++i) {
-                error_list[0] = monitor_message[i][0]
-                error_list[1] = monitor_message[i][1]
-                error_list[2] = monitor_message[i][2]
-                error_list[3] = monitor_message[i][3]
-                message_list_model.append({})
+                message_list_model.append({"error_time" : monitor_message[i][0],
+                                              "error_level" : monitor_message[i][1],
+                                              "error_code" : monitor_message[i][2],
+                                              "error_message" : monitor_message[i][3]})
             }
         }
     }
@@ -92,7 +90,7 @@ Item {
         }
         onClicked: {
             message_list_model.clear()
-            addMessageListData()
+//            addMessageListData()
             if(draw_error.visible){
                 draw_error.close()
             }else{
@@ -212,26 +210,80 @@ Item {
                             }
                             Row {
                                 anchors.fill: parent
-                                Repeater {
-                                    model: error_list
-                                    Rectangle {
-                                        width: index === 3 ? item_message.width * 0.4 : item_message.width * 0.2
-                                        height: parent.height
-                                        color: "transparent"
-                                        Text {
-                                            id: error_text
-                                            clip: true
-                                            anchors.fill: parent
-                                            anchors.left: parent.left
-                                            anchors.leftMargin: parent.width * 0.05
-                                            text: modelData
-                                            font.pixelSize: height * 0.3
-                                            font.bold: true
-                                            color: error_text_color
-                                            horizontalAlignment: Text.AlignLeft
-                                            verticalAlignment: Text.AlignVCenter
-                                            wrapMode: Text.Wrap
-                                        }
+                                Rectangle {
+                                    width: item_message.width * 0.2
+                                    height: parent.height
+                                    color: "transparent"
+                                    Text {
+                                        id: text_error_time
+                                        clip: true
+                                        anchors.fill: parent
+                                        anchors.left: parent.left
+                                        anchors.leftMargin: parent.width * 0.05
+                                        text: model.error_time
+                                        font.pixelSize: height * 0.3
+                                        font.bold: true
+                                        color: error_text_color
+                                        horizontalAlignment: Text.AlignLeft
+                                        verticalAlignment: Text.AlignVCenter
+                                        wrapMode: Text.Wrap
+                                    }
+                                }
+                                Rectangle {
+                                    width: item_message.width * 0.2
+                                    height: parent.height
+                                    color: "transparent"
+                                    Text {
+                                        id: text_error_code
+                                        clip: true
+                                        anchors.fill: parent
+                                        anchors.left: parent.left
+                                        anchors.leftMargin: parent.width * 0.05
+                                        text: model.error_code
+                                        font.pixelSize: height * 0.3
+                                        font.bold: true
+                                        color: error_text_color
+                                        horizontalAlignment: Text.AlignLeft
+                                        verticalAlignment: Text.AlignVCenter
+                                        wrapMode: Text.Wrap
+                                    }
+                                }
+                                Rectangle {
+                                    width: item_message.width * 0.2
+                                    height: parent.height
+                                    color: "transparent"
+                                    Text {
+                                        id: text_error_level
+                                        clip: true
+                                        anchors.fill: parent
+                                        anchors.left: parent.left
+                                        anchors.leftMargin: parent.width * 0.05
+                                        text: model.error_level
+                                        font.pixelSize: height * 0.3
+                                        font.bold: true
+                                        color: error_text_color
+                                        horizontalAlignment: Text.AlignLeft
+                                        verticalAlignment: Text.AlignVCenter
+                                        wrapMode: Text.Wrap
+                                    }
+                                }
+                                Rectangle {
+                                    width: item_message.width * 0.4
+                                    height: parent.height
+                                    color: "transparent"
+                                    Text {
+                                        id: text_error_message
+                                        clip: true
+                                        anchors.fill: parent
+                                        anchors.left: parent.left
+                                        anchors.leftMargin: parent.width * 0.05
+                                        text: model.error_message
+                                        font.pixelSize: height * 0.3
+                                        font.bold: true
+                                        color: error_text_color
+                                        horizontalAlignment: Text.AlignLeft
+                                        verticalAlignment: Text.AlignVCenter
+                                        wrapMode: Text.Wrap
                                     }
                                 }
                             }
@@ -244,12 +296,12 @@ Item {
             }
         }
     }
-    function addMessageListData()
-    {
-        for (var i = 0; i < error_message_info.length; ++i) {
-            message_list_model.append({"error_message_text": error_message_info[i]})
-        }
-    }
+//    function addMessageListData()
+//    {
+//        for (var i = 0; i < 4; ++i) {
+//            message_list_model.append({"error_message_text": error_message_info[i]})
+//        }
+//    }
     Timer {
         id: timer_btn_errror_flashes
         running: false

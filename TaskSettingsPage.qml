@@ -9,7 +9,6 @@ Rectangle {
     id: root
     color: "transparent"
     property var map_areas: []
-
     /*
       @ map_status  ===> -1: init param; 0: load map faildX; 1: load map success;
       @ error       ===> if map load faild, it is map error information
@@ -17,9 +16,13 @@ Rectangle {
     property var map_status: -1
     property string error: ""
 
+    property real timeout: 0
+    property int init_time: 0
     property string choose_map_name: ""
+    property string work_time: ""
     property var tasks_list: []
     property var checked_tasks_name: []
+    property alias timer_task_timing: timer_task_timing
 
     function chooseMapPage() {
         rec_header_bar.visible = true
@@ -64,6 +67,45 @@ Rectangle {
         rec_ref_lines.visible = false
     }
 
+    function toTime(s){
+        var working_time = []
+        if(s > -1){
+            var hour = Math.floor(s / 3600)
+            var min = Math.floor((s / 60) % 60)
+            var sec = init_time % 60
+
+            if(hour < 10){
+                working_time = hour + " 时 "
+            }
+            if(min < 10){
+                working_time += "0"
+            }
+            working_time += min + " 分 "
+            if(sec < 10){
+                working_time += "0"
+            }
+            working_time += sec.toFixed(0) + " 秒"
+        }
+        return working_time
+    }
+    Timer{
+        id: timer_task_timing
+        interval: 1000
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: {
+            init_time++
+            work_time = toTime(init_time)
+        }
+        onRunningChanged: {
+            if (!running) {
+                init_time = 0
+            } else {
+
+            }
+        }
+    }
+
     FontLoader {
         id: font_hanzhen;
         source: "qrc:/res/font/hanzhen.ttf"
@@ -94,6 +136,7 @@ Rectangle {
         onUpdateTasksName: {
             busy.visible = false
             busy.running = false
+            pop_lock_loading_task.close()
             tasks_list = tasks
             task_list_model.clear()
             if (tasks_list.length <= 4 ) {
@@ -119,8 +162,8 @@ Rectangle {
 //        }
         onSetTaskInfo: {
             root.chooseTaskPage()
-            dialog_match_warn.dia_title = qsTr("Error")//message
-            dialog_match_warn.dia_content = message
+            dialog_match_warn.dia_title = qsTr("Error")
+            dialog_match_warn.dia_content = qsTr("message set task")//message
             dialog_match_warn.open()
         }
 //        onUpdateSetMapAndInitPosInfo: {
@@ -139,16 +182,18 @@ Rectangle {
         onUpdateInitPosInfo: {
             busy.visible = false
             busy.running = false
+            pop_lock_loading_task.close()
             dialog_match_warn.dia_title = qsTr("Error ")
-            dialog_match_warn.dia_content = qsTr("message")
+            dialog_match_warn.dia_content = qsTr("message")//message
             dialog_match_warn.open()
             rec_checked_location.visible = true
         }
         onUpdateErrorToLoadMapOrNoneTasksInfo: {
             busy.visible = false
             busy.running = false
+            pop_lock_loading_task.close()
             dialog_match_warn.dia_title = qsTr("Error ")
-            dialog_match_warn.dia_content = message
+            dialog_match_warn.dia_content = qsTr("message map && task")//message
             dialog_match_warn.open()
 
         }
@@ -412,6 +457,7 @@ Rectangle {
                         anchors.fill: parent
                         onClicked: {
                             map_task_manager.sentMapTasksName(root.checked_tasks_name)
+                            timer_task_timing.start()
                         }
                     }
                 }
@@ -510,6 +556,8 @@ Rectangle {
 
     TLDialog {
         id: dialog_match_warn
+        height: parent.height * 0.5
+        width: height * 1.5
         x: (root.width - width) / 2
         y: (root.height - height) / 2
         dia_title: "error"
@@ -517,8 +565,8 @@ Rectangle {
 
     TLDialog {
         id: dialog_resure
-        width: root.width * 0.4
-        height: root.height * 0.3
+        height: parent.height * 0.5
+        width: height * 1.5
         x: (root.width - width) / 2
         y: (root.height - height) / 2
         dia_title: qsTr("Repeat")
@@ -533,6 +581,9 @@ Rectangle {
             busy.visible = true
             busy.running = true
             rec_checked_location.visible = false
+            pop_lock_loading_task.open()
+            timer_cant_control_pop.start()
+            timer_busy_wait_time.start()
         }
         onCancelClicked: {
             root.chooseMapPage()
@@ -547,22 +598,59 @@ Rectangle {
         x: (root.width - width) / 2
         y: (root.height - height) / 2
         dia_title: qsTr("Repeat")
-        dia_content: qsTr("Are you sure?")
+        dia_content: qsTr("dialog_work_down")
         status: 1
         ok: true
         cancel_text: qsTr("cancel")
         ok_text: qsTr("yes")
         onOkClicked: {
-            dialog_resure.close()
-            monitor_page.sendInitPoint()
-            busy.visible = true
-            busy.running = true
-            rec_checked_location.visible = false
+
         }
         onCancelClicked: {
-            root.chooseMapPage()
-            dialog_resure.close()
+
+        }
+    }
+    Timer {
+        id: timer_cant_control_pop
+        running: false
+        repeat: true
+        interval: 10
+        onTriggered: {
+            if (busy.running == true) {
+                pop_lock_loading_task.open()
+            } else {
+                pop_lock_loading_task.close()
+            }
+        }
+    }
+    Timer {
+        id: timer_busy_wait_time
+        running: busy.running
+        repeat: true
+        interval: 1000
+        onTriggered: {
+            timeout++
+            if (timeout > 4) {
+                busy.running = false
+                timer_busy_wait_time.stop()
+                timeout = 0
+            } else {
+
+            }
         }
     }
 
+    Popup {
+        id: pop_lock_loading_task
+        width: parent.width
+        height: parent.height
+        modal: true
+        focus: true
+        dim: false
+        closePolicy: Popup.CloseOnPressOutsideParent
+        background: Rectangle {
+            anchors.fill: parent
+            color: "transparent"
+        }
+    }
 }

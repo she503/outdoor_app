@@ -105,10 +105,8 @@ void RosMessageManager::parseMonitorMessageInfo(const QJsonObject &obj)
         QString error_message = temp_obj.value("error_message").toString();
         int error_level = temp_obj.value("error_level").toInt();
         QVariantList temp_list = { error_time ,error_level, error_code, error_message};
-        qDebug() << temp_list;
         error_list.push_back(temp_list);
         ++it;
     }
-    qDebug() << error_list;
     emit updateMonitorMessageInfo(error_list);
 }

@@ -314,8 +314,8 @@ Rectangle {
         id: repeat_need_stop_task
         cancel: true
         ok: true
-        height: parent.height * 0.5
-        width: height * 1.5
+        height: 280
+        width: 420
         x: (root_main.width - width ) / 2
         y: (root_main.height - height ) / 2
         cancel_text: qsTr("cancel")
@@ -327,6 +327,7 @@ Rectangle {
             map_task_manager.sendStopTaskCommond()
             repeat_need_stop_task.close()
             stopTaskCommond()
+            btn_stop._is_pause = false
         }
 
     }

@@ -26,8 +26,8 @@ Rectangle {
                 id: webVie1
                 visible: false
                 anchors.fill: parent
-//                url: "qrc:/res/html/test.html"
-                url: "file:///android_asset/test.html"
+//                url: "qrc:/res/html/helpdocument.html"
+                url: "file:///android_asset/helpdocument.html"
                 onLoadProgressChanged: {
                     if (loadProgress == 100) {
                         busy.running = false

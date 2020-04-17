@@ -20,6 +20,7 @@ Item{
         Rectangle {
             width: 360
             height: 240
+            visible: !dialog_connect_apply.visible
             anchors.centerIn: parent
             color: "transparent"
             Image {
@@ -64,15 +65,191 @@ Item{
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: parent.height * 0.08
                     btn_text: qsTr("OK")
+                    onClicked: {
+                        Qt.quit()
+                    }
                 }
             }
         }
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                Qt.quit()
+        Rectangle {
+            id: rec_connect_apply
+            height: parent.height * 0.1
+            width: height
+            color: Qt.rgba(255, 0, 0, 0.15)
+            radius: width / 2
+            anchors {
+                left: parent.left
+                leftMargin: height * 0.1
+                bottomMargin: height * 0.1
+                bottom: parent.bottom
+            }
+            Image {
+                source: "qrc:/res/pictures/connect_apply.png"
+                height: parent.height * 0.8
+                width: parent.height
+                anchors.centerIn: parent
+                fillMode: Image.PreserveAspectFit
+                MouseArea {
+                    anchors.fill: parent
+                    onPressed: {
+                        dialog_connect_apply.open()
+                    }
+                }
             }
         }
+        Dialog {
+            id: dialog_connect_apply
+            height: parent.height * 0.5
+            width: height * 1.5
+            x:(root.width - width) / 2
+            y: (root.height - height) / 2
+            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+            background: Rectangle {
+                anchors.fill: parent
+                color: "transparent"
+            }
+            contentItem: Item {
+                anchors.fill: parent
+                Rectangle {
+                    id: rect_update_ip_input
+                    width: parent.width
+                    height: parent.height
+                    anchors.centerIn: parent
+                    color: "transparent"
+                    Image {
+                        anchors.fill: parent
+                        source: "qrc:/res/pictures/background_glow2.png"
+                    }
+                    Rectangle {
+                        color: Qt.rgba(255, 255, 255, 1)
+                        anchors.centerIn: parent
+                        width: parent.width * 0.8
+                        height: parent.height * 0.75
+                        Rectangle {
+                            id: rect_update_title
+                            width: parent.width
+                            height: parent.height * 0.3
+                            color: "transparent"
+                            Text {
+                                color: "#4876FF"
+                                text: qsTr("Request to reconnect")
+                                font.pixelSize: parent.height * 0.3
+                                font.bold: true
+                                anchors.centerIn: parent
+                            }
+                            Image {
+                                height: parent.height * 0.4
+                                width: height
+                                anchors {
+                                    right: parent.right
+                                    top:parent.top
+                                    rightMargin: parent.height * 0.1
+                                    topMargin: parent.height * 0.1
+                                }
+                                source: "qrc:/res/pictures/exit.png"
+                                fillMode: Image.PreserveAspectFit
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        dialog_connect_apply.close()
+                                    }
+                                }
+                            }
+                        }
+                        Rectangle {
+                            id: rect_update_ip
+                            width: parent.width
+                            height: parent.height * 0.8
+                            color: "transparent"
+                            anchors {
+                                top: rect_update_title.bottom
+                            }
+                            Column {
+                                width: parent.width * 0.6
+                                height: parent.height
+                                anchors {
+                                    horizontalCenter: parent.horizontalCenter
+                                    top: parent.top
+                                    topMargin: height * 0.1
+                                }
+                                spacing: height * 0.05
+                                TLTextField {
+                                    id: field_new_ip
+                                    width: parent.width
+                                    height: parent.height * 0.2
+                                    btn_radius:  height * 0.2
+                                    placeholderText: qsTr("Please enter new IP")
+                                    font_size: height * 0.4
+                                    pic_name: "qrc:/res/pictures/connect_apply.png"
+                                }
+                                Rectangle {
+                                    id: rect_update_btns
+                                    width: parent.width
+                                    height: parent.height * 0.2
+                                    color: "transparent"
+                                    TLButton {
+                                        id: btn_update_ip
+                                        width: parent.width * 0.4
+                                        height: parent.height * 0.7
+                                        anchors {
+                                            verticalCenter: parent.verticalCenter
+                                            right: parent.horizontalCenter
+                                            rightMargin: height * 0.4
+                                        }
+
+                                        btn_text: qsTr("OK")
+                                        onClicked: {
+                                            if (field_new_ip.text.trim() === "") {
+                                                message_account.dia_title = qsTr("Error")
+                                                message_account.dia_content = qsTr("ip cannot be empty!!!")
+                                                message_account.status = 0
+                                                message_account.open()
+                                                connect_fail_item.visible = false
+                                                dialog_connect_apply.close()
+                                            } else {
+                                                socket_manager.connectToHost(field_new_ip.text, "32432")
+                                                dialog_connect_apply.close()
+                                            }
+                                        }
+                                    }
+                                    TLButton {
+                                        id: btn_update_cancel
+                                        width: parent.width * 0.4
+                                        height: parent.height * 0.7
+                                        anchors {
+                                            verticalCenter: parent.verticalCenter
+                                            left: parent.horizontalCenter
+                                            leftMargin: height * 0.4
+                                        }
+                                        btn_text: qsTr("cancel")
+                                        onClicked: {
+                                            field_new_ip.text = ""
+                                            dialog_connect_apply.close()
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+        TLDialog {
+            id: message_account
+            height: parent.height * 0.5
+            width: height * 1.5
+            x: (root.width - width) / 2
+            y: (root.height - height) / 2
+            ok: false
+            onCancelClicked: {
+                dialog_connect_apply.open()
+                message_account.close()
+                connect_fail_item.visible = true
+            }
+        }
+
         Rectangle {
             id: rec_disconnect
             color: Qt.rgba(255, 255, 255, 0.5)

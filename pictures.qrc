@@ -84,5 +84,6 @@
         <file>res/pictures/BUTTON-STOP.png</file>
         <file>res/pictures/BUTTON-WARNING1.png</file>
         <file>res/pictures/TASKSETTING-button.png</file>
+        <file>res/pictures/connect_apply.png</file>
     </qresource>
 </RCC>

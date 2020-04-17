@@ -73,6 +73,7 @@ Item{
         }
         Rectangle {
             id: rec_connect_apply
+            visible: false
             height: parent.height * 0.1
             width: height
             color: Qt.rgba(255, 0, 0, 0.15)

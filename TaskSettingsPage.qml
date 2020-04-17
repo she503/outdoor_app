@@ -1,4 +1,4 @@
-import QtQuick 2.9
+﻿import QtQuick 2.9
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
@@ -23,6 +23,8 @@ Rectangle {
     property var tasks_list: []
     property var checked_tasks_name: []
     property alias timer_task_timing: timer_task_timing
+
+    signal startTaskLock()
 
     function chooseMapPage() {
         rec_header_bar.visible = true
@@ -60,11 +62,11 @@ Rectangle {
     }
 
     function startTaskPage() {
-
         chooseTaskPage()
         btn_start_task.visible = false
         rec_task_control.visible = false
         rec_ref_lines.visible = false
+        root.startTaskLock()
     }
 
     function toTime(s){
@@ -188,7 +190,7 @@ Rectangle {
             dialog_match_warn.open()
             rec_checked_location.visible = true
         }
-        onUpdateErrorToLoadMapOrNoneTasksInfo: {
+        onUpdateErrorToLoadMapOrNoneTasksInfo: {S
             busy.visible = false
             busy.running = false
             pop_lock_loading_task.close()

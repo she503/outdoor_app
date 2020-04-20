@@ -68,12 +68,14 @@ Page {
                 var_planning_path = []
                 ref_line_curren_index = 0
                 var_planning_ref_path = []
+                var_trajectory = []
 
                 canvas_others.requestPaint()
                 canvas_obstacles.requestPaint()
                 canvas_ref_line.requestPaint()
                 canvas_red_ref_line.requestPaint()
                 canvas_planning_ref_line.requestPaint()
+                canvas_trajectory.requestPaint()
                 vehicle.x = -200
                 vehicle.y = -200
             }
@@ -818,6 +820,7 @@ Page {
                 canvas_planning_ref_line.requestPaint()
                 canvas_red_ref_line.requestPaint()
                 canvas_obstacles.requestPaint()
+                canvas_trajectory.requestPaint()
             }
         }
 
@@ -897,14 +900,13 @@ Page {
             task_lines = []
             canvas_others.requestPaint()
 
-            if (min_x < 50) {
-                vehicle.width =  1.95 * map_rate // 1.3
-                vehicle.height = 0.74 * map_rate // 0.74
-            } else {
-                vehicle.width = 6.6 * map_rate
-                vehicle.height = 2.2 * map_rate
-            }
+            var vehicle_width = socket_manager.getVehicleWidth()
+            var vehicle_height = socket_manager.getVehicleHeight()
 
+//            vehicle.width =  vehicle_width * 3/2 * map_rate // 1.3
+//            vehicle.height = vehicle_height * map_rate // 0.74
+            vehicle.height = 0.74 * map_rate
+            vehicle.width = 1.3 * 1.5 * map_rate
         }
     }
 

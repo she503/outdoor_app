@@ -32,12 +32,11 @@ public:
      */
     Q_INVOKABLE bool disConnet();
 
-    /**
-     * @brief 数据写入socket
-     */
-    Q_INVOKABLE bool sendData(const QByteArray& data);
-
     Q_INVOKABLE bool judgeIsConnected();
+
+    Q_INVOKABLE float getVehicleWidth();
+
+    Q_INVOKABLE float getVehicleHeight();
 signals:
     void mapsInfo(const QJsonObject& obj);
     void sendMapAndTasks(const QJsonObject& obj);
@@ -48,6 +47,7 @@ signals:
     void tasksData(const QJsonObject& obj);
     void setInitPosRST(const QJsonObject& obj);
     void parseMapName(const QJsonObject& obj);
+    void currentWorkMapData(const QJsonObject& obj);
 
 
     void checkoutLogin(const QJsonObject& obj);
@@ -58,6 +58,7 @@ signals:
 
 //    void localizationInitRST(const QJsonObject& obj);
     void setTasksRST(const QJsonObject& obj);
+    void workDown(const QJsonObject& obj);
 
     void taskProcessInfo(const QJsonObject& obj);
 
@@ -69,6 +70,7 @@ signals:
 
 
     //
+    void parseWorkFullRefLineInfo(const QJsonObject& obj);
     void localizationInfo(const QJsonObject& obj);
     void chassisInfo(const QJsonObject& obj);
     void obstaclesInfo(const QJsonObject& obj);
@@ -78,20 +80,14 @@ signals:
     void trajectoryInfo(const QJsonObject& obj);
     void monitorMessageInfo(const QJsonObject& obj);
 
-//    /**
-//     * @brief 发给ui显示的数据
-//     */
-//    void updateBatteryInfo(const QString& soc);
-//    void updateVehicleSpeed(const QString& speed);
-//    void updateWaterVolume(const QString& water_volume);
-//    void updateOperateMethod(const QString& operate_method);
-
-
     //message
     void emitFaildToLogin(const QString& message);
 
     void pauseTaskRST(const bool& is_pause, const int& status);
     void pauseStopTaskRST(const int& status);
+
+private:
+    void getVehicleWidthHeight(const QJsonObject& obj);
 
 private slots:
     void readSocketData(/*const QByteArray& buffer*/);
@@ -100,6 +96,8 @@ private:
     QTcpSocket* _socket;
     QByteArray _buffer;
     bool _is_connected;
+    float _vehicle_width;
+    float _vehicle_height;
 };
 
 #endif // SOCKET_MANAGER_H

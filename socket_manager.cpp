@@ -12,10 +12,12 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
     _socket = new QTcpSocket(this);
     _socket->setReadBufferSize(10 * 1024 * 1024);
 
+    _vehicle_width = 0;
+    _vehicle_height = 0;
+
 //    this->connectToHost("127.0.0.1", "32432");
 //    this->connectToHost("192.168.0.125", "32432");
-//    this->connectToHost("192.168.8.165", "32432");
-    this->connectToHost("192.168.8.143", "32432");
+     this->connectToHost("192.168.8.163", "32432");
 
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));
     connect(_socket, SIGNAL(disconnected()), this, SLOT(disConnet()));
@@ -38,6 +40,7 @@ bool SocketManager::connectToHost(const QString &ip, const QString &port)
     } else {
         QJsonObject object;
         object.insert("message_type", int(MESSAGE_NEW_DEIVCE_CONNECT));
+        object.insert("sender", TLSocketType::TERGEO_APP);
         QJsonDocument doc(object);
         _is_connected = true;
         this->sendSocketMessage(doc.toJson());
@@ -55,23 +58,6 @@ bool SocketManager::disConnet()
     return true;
 }
 
-bool SocketManager::sendData(const QByteArray &data)
-{
-    QByteArray transformate_data = data;
-    transformate_data.replace(" ","").replace("\n","");
-    //在字段结束加上关键字
-    transformate_data += "$";
-
-    qint64 write_result = _socket->write(transformate_data);
-    bool is_flush = _socket->flush();
-    if (write_result != -1 && is_flush) {
-        if (write_result != 0) {
-            return true;
-        }
-    }
-    return false;
-}
-
 bool SocketManager::judgeIsConnected()
 {
     QString message = tr("app cannot to connect server, please check your wifi and IP!");
@@ -80,6 +66,16 @@ bool SocketManager::judgeIsConnected()
 //        emit emitFaildToLogin(message);
     }
     return _is_connected;
+}
+
+float SocketManager::getVehicleWidth()
+{
+    return _vehicle_width;
+}
+
+float SocketManager::getVehicleHeight()
+{
+    return _vehicle_height;
 }
 
 void SocketManager::readSocketData(/*const QByteArray& buffer*/)
@@ -118,8 +114,8 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_TASKS_INFO:
                 emit tasksData(obj);
                 break;
-            case MessageType::MESSAGE_CURRENT_MAP_AND_TASK:
-                emit sendMapAndTask(obj); // yi ge di tu he dui ying de yi jing xuan ze hao de can kao xian
+            case MessageType::MESSAGE_CURRENT_WORK_MAP_DATA:
+                emit currentWorkMapData(obj);
                 break;
             case MESSAGE_SET_MAP_RST:
                 emit parseMapName(obj);
@@ -133,6 +129,10 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_STOP_TASK_RST:
                 emit pauseStopTaskRST(obj.value("status").toInt());
                 break;
+            case MessageType::MESSAGE_WORK_DOWN:
+                emit workDown(obj);
+                break;
+
 
             case  MessageType::MESSAGE_LOGIN_RST:
                 emit checkoutLogin(obj);
@@ -151,6 +151,10 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
                 break;
 
 
+
+            case MESSAGE_CURRENT_WORK_FULL_REF_LINE:
+                emit parseWorkFullRefLineInfo(obj);
+                break;
             case MessageType::MESSAGE_LOCALIZATION_INFO:
                 emit localizationInfo(obj);
                 break;
@@ -178,6 +182,10 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MESSAGE_MONITOR_MESSAGE:
                 emit monitorMessageInfo(obj);
                 break;
+            case MESSAGE_VEHICLE_WIDTH_HEIGHT:
+                this->getVehicleWidthHeight(obj);
+                break;
+
 
             default:
                 qDebug() << "======>" <<obj;
@@ -189,6 +197,12 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
         }
     }
     _buffer = buffer_list.at(complete_buffer_num);
+}
+
+void SocketManager::getVehicleWidthHeight(const QJsonObject &obj)
+{
+    _vehicle_height = obj.value("height").toDouble();
+    _vehicle_width = obj.value("width").toDouble();
 }
 
 bool SocketManager::sendSocketMessage(const QByteArray &message)

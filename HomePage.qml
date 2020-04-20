@@ -75,6 +75,7 @@ Rectangle {
                     text: qsTr("Task Progress")
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignTop
+                    color: "blue"
                 }
             }
             Canvas {

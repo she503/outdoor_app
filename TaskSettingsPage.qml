@@ -116,8 +116,8 @@ Rectangle {
 
 
     Component.onCompleted: {
-
        map_task_manager.getMapsName()
+
     }
 
     Connections {
@@ -197,6 +197,10 @@ Rectangle {
             dialog_match_warn.dia_title = qsTr("Error ")
             dialog_match_warn.dia_content = qsTr("message map && task")//message
             dialog_match_warn.open()
+
+        }
+
+        onSendWorkDown: {
 
         }
 
@@ -296,8 +300,8 @@ Rectangle {
                     visible: false
                     z: 1
                     width: parent.width * 0.2
-                    height: parent.height
-                    color: "transparent"
+                    height: parent.height * 0.834
+//                    color: Qt.rgba(0,191,255, 0.5)
                     LinearGradient {
                         anchors.fill: parent
                         start: Qt.point(0, 0)
@@ -307,7 +311,6 @@ Rectangle {
                             GradientStop { position: 1.0; color: Qt.rgba(225,255,255, 0.5)}
                         }
                     }
-
                     ListView {
                         id: list_view
                         clip: true
@@ -391,6 +394,26 @@ Rectangle {
                                 implicitHeight: 1
                                 radius: width / 2
                                 color: vbar.pressed ? "#ffffaa" : "#c2f4c6"
+                            }
+                        }
+                    }
+                    Rectangle {
+                        id: rect_back
+                        width: parent.width
+                        height: parent.height * 0.2
+                        anchors.top: rec_ref_lines.bottom
+                        color: Qt.rgba(0, 255, 0, 0.5)
+                        Image {
+                            id: img_back
+                            anchors.fill: parent
+                            source: "qrc:/res/pictures/arrow-right.png"
+                            rotation: 180
+                            fillMode: Image.PreserveAspectFit
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                map_task_manager.returnMapSelete()
                             }
                         }
                     }
@@ -570,6 +593,25 @@ Rectangle {
         }
     }
 
+    TLDialog {
+        id: dialog_work_down
+        width: root.width * 0.4
+        height: root.height * 0.3
+        x: (root.width - width) / 2
+        y: (root.height - height) / 2
+        dia_title: qsTr("Repeat")
+        dia_content: qsTr("dialog_work_down")
+        status: 1
+        ok: true
+        cancel_text: qsTr("cancel")
+        ok_text: qsTr("yes")
+        onOkClicked: {
+
+        }
+        onCancelClicked: {
+
+        }
+    }
     Timer {
         id: timer_cant_control_pop
         running: false

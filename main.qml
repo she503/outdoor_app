@@ -31,6 +31,7 @@ ApplicationWindow {
         onConnectFail: {
             stack_view.replace(login_page.rec_disconnect)
         }
+
     }
     StackView {
         id: stack_view

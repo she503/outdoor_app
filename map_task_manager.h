@@ -62,8 +62,13 @@ public:
 
     Q_INVOKABLE int getWorkStatus();
 
+    Q_INVOKABLE void sendFirstMapName();
+
+    Q_INVOKABLE void returnMapSelete();
+
 public:
     void setSocket(SocketManager* socket);
+    void sendInfoTest();
 private:
 
     void parseTasksName(const QJsonObject& tasks_obj);
@@ -116,14 +121,18 @@ signals:
     void updatePauseTaskInfo(const bool& is_pause, const int& status);
     void updateStopTaskInfo(const int& status);
     void updateMapName(const QString& map_name, const int& index);
+
+    void sendWorkDown();
 private slots:
     void setInitPosCB(const QJsonObject& obj);
 
     void parseRegionsInfo(const  QJsonObject& obj);
     void parseMapAndTasksInfo(const QJsonObject& obj);
-    void parseMapAndTaskInfo(const QJsonObject& obj);
+//    void parseMapAndTaskInfo(const QJsonObject& obj);
     void parseMapName(const QJsonObject& obj);
+    void parseWorkFullRefLineInfo(const QJsonObject& obj);
 //    void parseSetMapAndInitPosInfo(const QJsonObject& obj);
+    void parseCurrentWorkMapData(const QJsonObject& obj);
 
 
     void parseMapTasksData(const QJsonObject& obj);
@@ -134,6 +143,7 @@ private slots:
 
     void parsePauseTask(const bool& is_pause, const int &status);
     void parseStopTask(const int& status);
+    void parseWorkDown();
 
 private:
     SocketManager* _socket;

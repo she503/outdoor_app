@@ -20,7 +20,7 @@ Dialog {
     property string dia_title: ""
     property string dia_content: ""
     property string dia_background: status === 0 ? "qrc:/res/pictures/error_background.png" :
-                                               "qrc:/res/pictures/success_background.png"
+                                                   "qrc:/res/pictures/success_background.png"
 
     signal okClicked()
     signal cancelClicked()
@@ -60,56 +60,52 @@ Dialog {
         }
 
 
-        Flickable {
+        ScrollView {
             id: flick
             width: parent.width * 0.8
             height: parent.height * 0.7
-            contentWidth: width
-            contentHeight: content.paintedHeight
             clip: true
+
             anchors{
                 top: rect_split.bottom
                 topMargin: parent.height * 0.02
                 horizontalCenter: parent.horizontalCenter
             }
-            TextEdit {
+            TextArea {
                 id: content
-                anchors.fill: parent
                 text: "   " + root.dia_content//root.dia_content
                 color: "black"
-                width: flick.width
-                height: flick.height
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
                 font.pixelSize: width * 0.1
                 wrapMode: TextEdit.Wrap
-                activeFocusOnPress: false
                 focus: false
+                readOnly: true
             }
         }
 
-//        TextEdit {
-//            id: content
-//            text: "   " + root.dia_content//root.dia_content
-//            color: "black"
-//            width: parent.width * 0.8
-//            height: parent.height * 0.5
-//            horizontalAlignment: Text.AlignLeft
-//            verticalAlignment: Text.AlignVCenter
-//            font.pixelSize: width * 0.1
-//            anchors{
-//                top: rect_split.bottom
-//                topMargin: parent.height * 0.02
-//                horizontalCenter: parent.horizontalCenter
-//            }
-//            wrapMode: Text.Wrap
-//        }
+        //        TextEdit {
+        //            id: content
+        //            text: "   " + root.dia_content//root.dia_content
+        //            color: "black"
+        //            width: parent.width * 0.8
+        //            height: parent.height * 0.5
+        //            horizontalAlignment: Text.AlignLeft
+        //            verticalAlignment: Text.AlignVCenter
+        //            font.pixelSize: width * 0.1
+        //            anchors{
+        //                top: rect_split.bottom
+        //                topMargin: parent.height * 0.02
+        //                horizontalCenter: parent.horizontalCenter
+        //            }
+        //            wrapMode: Text.Wrap
+        //        }
         Rectangle {
             id: rect_btn
             width: parent.width * 0.8
             height: parent.height * 0.3
             anchors.bottom: parent.bottom
-//            anchors.bottomMargin: -parent.height * 0.01
+            //            anchors.bottomMargin: -parent.height * 0.01
             anchors.horizontalCenter: parent.horizontalCenter
             color: "transparent"
 

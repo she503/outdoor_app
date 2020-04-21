@@ -24,6 +24,7 @@ Rectangle {
         anchors.left: rect.right
         color: "transparent"
         Image {
+            smooth: true
             anchors.fill: parent
             source: "qrc:/res/pictures/car.png"
         }

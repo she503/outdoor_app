@@ -72,6 +72,9 @@ Rectangle {
         onWork_timeChanged: {
             task_process_page.work_time = task_settings_page.work_time
         }
+        onStartTaskLock: {
+            verify_password_page.pop_lock.open()
+        }
     }
 
     Image {

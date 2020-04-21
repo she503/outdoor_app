@@ -52,7 +52,7 @@ public:
 
     Q_INVOKABLE void sendPauseTaskCommond(const bool& is_pause);
 
-    Q_INVOKABLE void sendStopTaskCommond();
+//    Q_INVOKABLE void sendStopTaskCommond();
 
     Q_INVOKABLE void getFirstMap();
 
@@ -64,7 +64,9 @@ public:
 
     Q_INVOKABLE void sendFirstMapName();
 
-    Q_INVOKABLE void returnMapSelete();
+    Q_INVOKABLE void turnToMapSelect();
+
+    Q_INVOKABLE void turnToTaskSelect();
 
 public:
     void setSocket(SocketManager* socket);

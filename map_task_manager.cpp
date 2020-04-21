@@ -142,14 +142,14 @@ void MapTaskManager::sendPauseTaskCommond(const bool &is_pause)
     _socket->sendSocketMessage(doc.toJson());
 }
 
-void MapTaskManager::sendStopTaskCommond()
-{
-    QJsonObject obj;
-    obj.insert("message_type", int(MESSAGE_STOP_TASK));
-    obj.insert("flag", true);
-    QJsonDocument doc(obj);
-    _socket->sendSocketMessage(doc.toJson());
-}
+//void MapTaskManager::sendStopTaskCommond()
+//{
+//    QJsonObject obj;
+//    obj.insert("message_type", int(MESSAGE_STOP_TASK));
+//    obj.insert("flag", true);
+//    QJsonDocument doc(obj);
+//    _socket->sendSocketMessage(doc.toJson());
+//}
 
 void MapTaskManager::getFirstMap()
 {
@@ -195,10 +195,19 @@ void MapTaskManager::sendFirstMapName()
     }
 }
 
-void MapTaskManager::returnMapSelete()
+void MapTaskManager::turnToMapSelect()
 {
     QJsonObject obj;
     obj.insert("message_type", MESSAGE_RETURN_TO_SELECT_MAP);
+    obj.insert("flag", true);
+    QJsonDocument doc(obj);
+    _socket->sendSocketMessage(doc.toJson());
+}
+
+void MapTaskManager::turnToTaskSelect()
+{
+    QJsonObject obj;
+    obj.insert("message_type", MESSAGE_RETURN_TO_SELECT_TASK);
     obj.insert("flag", true);
     QJsonDocument doc(obj);
     _socket->sendSocketMessage(doc.toJson());

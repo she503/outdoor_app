@@ -9,94 +9,94 @@
         <translation>车辆信息</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="126"/>
+        <location filename="AboutMachinePage.qml" line="125"/>
         <source>device information</source>
         <translation>一体机信息</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="200"/>
+        <location filename="AboutMachinePage.qml" line="198"/>
         <source>Vehicle number:</source>
         <translation>车辆编号：</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="201"/>
+        <location filename="AboutMachinePage.qml" line="199"/>
         <source>zz01a</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="204"/>
+        <location filename="AboutMachinePage.qml" line="202"/>
         <source>Car type:</source>
         <translation>车型：</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="205"/>
+        <location filename="AboutMachinePage.qml" line="203"/>
         <source>SC50-A</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="208"/>
+        <location filename="AboutMachinePage.qml" line="206"/>
         <source>Production Date:</source>
         <translation>生产日期：</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="209"/>
-        <location filename="AboutMachinePage.qml" line="217"/>
-        <location filename="AboutMachinePage.qml" line="282"/>
+        <location filename="AboutMachinePage.qml" line="207"/>
+        <location filename="AboutMachinePage.qml" line="215"/>
+        <location filename="AboutMachinePage.qml" line="280"/>
         <source>2020.04.08</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="212"/>
+        <location filename="AboutMachinePage.qml" line="210"/>
         <source>Intelligent driving system version number:</source>
         <translation>智驾系统版本号：</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="213"/>
+        <location filename="AboutMachinePage.qml" line="211"/>
         <source>tergeo 2.0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="216"/>
+        <location filename="AboutMachinePage.qml" line="214"/>
         <source>Intelligent driving system updated:</source>
         <translation>智驾系统更新时间：</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="269"/>
+        <location filename="AboutMachinePage.qml" line="267"/>
         <source>Device name:</source>
         <translation>设备名称：</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="270"/>
+        <location filename="AboutMachinePage.qml" line="268"/>
         <source>RK-3288</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="273"/>
+        <location filename="AboutMachinePage.qml" line="271"/>
         <source>operating system:</source>
         <translation>操作系统：</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="274"/>
+        <location filename="AboutMachinePage.qml" line="272"/>
         <source>Android</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="277"/>
+        <location filename="AboutMachinePage.qml" line="275"/>
         <source>Software version number:</source>
         <translation>软件版本号：</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="278"/>
+        <location filename="AboutMachinePage.qml" line="276"/>
         <source>Android 9.1.1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="281"/>
+        <location filename="AboutMachinePage.qml" line="279"/>
         <source>Software update:</source>
         <translation>软件更新时间：</translation>
     </message>
     <message>
-        <location filename="AboutMachinePage.qml" line="303"/>
+        <location filename="AboutMachinePage.qml" line="301"/>
         <source>contact us</source>
         <translation>联系我们</translation>
     </message>
@@ -132,7 +132,7 @@
         <translation type="vanished">密码</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="239"/>
+        <location filename="LoginPage.qml" line="419"/>
         <source>login</source>
         <translation>登录</translation>
     </message>
@@ -141,48 +141,68 @@
         <translation type="vanished">中振同辂</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="52"/>
+        <location filename="LoginPage.qml" line="55"/>
         <source>app cannot to connect server, please check your wifi and IP!</source>
         <translation>设备无法连接服务器，请检查您的wifi和IP！</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="128"/>
+        <location filename="LoginPage.qml" line="136"/>
+        <source>Request to reconnect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="LoginPage.qml" line="182"/>
+        <source>Please enter new IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="LoginPage.qml" line="205"/>
+        <source>ip cannot be empty!!!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="LoginPage.qml" line="225"/>
+        <source>cancel</source>
+        <translation type="unfinished">取消</translation>
+    </message>
+    <message>
+        <location filename="LoginPage.qml" line="308"/>
         <source>tonglu</source>
         <translation>中振同辂</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="166"/>
+        <location filename="LoginPage.qml" line="346"/>
         <source>username</source>
         <translation>用户名</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="185"/>
+        <location filename="LoginPage.qml" line="365"/>
         <source>enter your username.</source>
         <translation>请输入用户名</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="207"/>
+        <location filename="LoginPage.qml" line="387"/>
         <source>PWD</source>
         <translation>密    码</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="228"/>
+        <location filename="LoginPage.qml" line="408"/>
         <source>enter your password.</source>
         <translation>请输入密码</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="253"/>
+        <location filename="LoginPage.qml" line="433"/>
         <source>login failed!</source>
         <translation>登录失败！</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="254"/>
+        <location filename="LoginPage.qml" line="434"/>
         <source>Multiple login failures,please contact the administrator!</source>
         <oldsource>Multiple login failures,please contact the administrator</oldsource>
         <translation>多次登录失败，请联系管理员!</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="313"/>
+        <location filename="LoginPage.qml" line="494"/>
         <source>login error!</source>
         <translation>登陆错误！</translation>
     </message>
@@ -191,24 +211,26 @@
         <translation type="vanished">登录</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="268"/>
+        <location filename="LoginPage.qml" line="204"/>
+        <location filename="LoginPage.qml" line="448"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="270"/>
+        <location filename="LoginPage.qml" line="450"/>
         <source>Account or password is wrong!</source>
         <translation>账号或者密码错误！</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="299"/>
+        <location filename="LoginPage.qml" line="480"/>
         <source>connect error!</source>
         <translation>连接失败！</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="64"/>
-        <location filename="LoginPage.qml" line="301"/>
-        <location filename="LoginPage.qml" line="315"/>
+        <location filename="LoginPage.qml" line="67"/>
+        <location filename="LoginPage.qml" line="201"/>
+        <location filename="LoginPage.qml" line="482"/>
+        <location filename="LoginPage.qml" line="496"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
@@ -221,7 +243,7 @@
         <translation type="vanished">密码错误</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="29"/>
+        <location filename="LoginPage.qml" line="32"/>
         <source>error!</source>
         <translation>错误！</translation>
     </message>
@@ -323,12 +345,12 @@
 <context>
     <name>SocketManager</name>
     <message>
-        <location filename="socket_manager.cpp" line="50"/>
+        <location filename="socket_manager.cpp" line="53"/>
         <source>app disconnect to server!</source>
         <translation>设备断开服务器连接！</translation>
     </message>
     <message>
-        <location filename="socket_manager.cpp" line="77"/>
+        <location filename="socket_manager.cpp" line="63"/>
         <source>app cannot to connect server, please check your wifi and IP!</source>
         <translation>设备无法连接服务器，请检查您的wifi和IP！</translation>
     </message>
@@ -337,15 +359,18 @@
     <name>TLInfoDisplayPage</name>
     <message>
         <location filename="TLInfoDisplayPage.qml" line="122"/>
-        <location filename="TLInfoDisplayPage.qml" line="188"/>
         <location filename="TLInfoDisplayPage.qml" line="282"/>
         <source>1</source>
         <translation></translation>
     </message>
     <message>
         <location filename="TLInfoDisplayPage.qml" line="139"/>
-        <location filename="TLInfoDisplayPage.qml" line="204"/>
         <source>%</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="TLInfoDisplayPage.qml" line="188"/>
+        <source></source>
         <translation></translation>
     </message>
     <message>
@@ -377,61 +402,94 @@
 <context>
     <name>TaskProcess</name>
     <message>
-        <location filename="TaskProcess.qml" line="86"/>
-        <location filename="TaskProcess.qml" line="91"/>
-        <location filename="TaskProcess.qml" line="134"/>
+        <location filename="TaskProcess.qml" line="99"/>
+        <location filename="TaskProcess.qml" line="104"/>
+        <location filename="TaskProcess.qml" line="147"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="87"/>
+        <location filename="TaskProcess.qml" line="100"/>
         <source>faild to start the task</source>
         <translation>启动任务失败</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="92"/>
+        <location filename="TaskProcess.qml" line="105"/>
         <source>faild to stop the task</source>
         <translation>停止任务失败</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="135"/>
+        <location filename="TaskProcess.qml" line="148"/>
         <source>faild to stop the task!</source>
         <translation>停止任务失败！</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="194"/>
+        <location filename="TaskProcess.qml" line="207"/>
         <source>Current map name: </source>
         <translation>当前工作地图：</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="228"/>
+        <location filename="TaskProcess.qml" line="242"/>
         <source>Work time: </source>
         <translation>已工作时间：</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="262"/>
+        <location filename="TaskProcess.qml" line="277"/>
         <source>task persent: </source>
         <translation>已完成：</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="314"/>
+        <location filename="TaskProcess.qml" line="333"/>
+        <location filename="TaskProcess.qml" line="527"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="315"/>
+        <location filename="TaskProcess.qml" line="334"/>
         <source>sure</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="316"/>
+        <location filename="TaskProcess.qml" line="335"/>
         <source>repeter</source>
         <translation>重复</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="318"/>
+        <location filename="TaskProcess.qml" line="337"/>
         <source>please comfirm if you need to stop task.</source>
         <translation>请确认是否需要停止任务</translation>
+    </message>
+    <message>
+        <location filename="TaskProcess.qml" line="380"/>
+        <source>Task achieved</source>
+        <translation>任务完成</translation>
+    </message>
+    <message>
+        <location filename="TaskProcess.qml" line="480"/>
+        <source>Continue to perform tasks on this map</source>
+        <translation>继续在本地图执行任务</translation>
+    </message>
+    <message>
+        <location filename="TaskProcess.qml" line="484"/>
+        <source>Switch map</source>
+        <translation>切换地图</translation>
+    </message>
+    <message>
+        <source>warn</source>
+        <translation type="obsolete">错误</translation>
+    </message>
+    <message>
+        <source>Not selected!</source>
+        <translation type="obsolete">未选择！</translation>
+    </message>
+    <message>
+        <source>exit</source>
+        <translation type="vanished">退出</translation>
+    </message>
+    <message>
+        <location filename="TaskProcess.qml" line="506"/>
+        <source>OK</source>
+        <translation>确定</translation>
     </message>
 </context>
 <context>
@@ -441,63 +499,79 @@
         <translation type="vanished">请在顶部选择一张地图</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="122"/>
+        <location filename="TaskSettingsPage.qml" line="167"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="143"/>
+        <location filename="TaskSettingsPage.qml" line="189"/>
         <source>message</source>
         <oldsource>message set task</oldsource>
         <translation>初始定位失败</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="142"/>
-        <location filename="TaskSettingsPage.qml" line="150"/>
+        <location filename="TaskSettingsPage.qml" line="188"/>
+        <location filename="TaskSettingsPage.qml" line="197"/>
         <source>Error </source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="123"/>
+        <location filename="TaskSettingsPage.qml" line="168"/>
         <source>message set task</source>
         <translation>配置任务失败</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="151"/>
+        <location filename="TaskSettingsPage.qml" line="198"/>
         <source>message map &amp;&amp; task</source>
         <translation>加载地图失败或者无任务信息</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="379"/>
+        <location filename="TaskSettingsPage.qml" line="461"/>
         <source>Start</source>
         <translation>开始</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="501"/>
+        <location filename="TaskSettingsPage.qml" line="586"/>
+        <location filename="TaskSettingsPage.qml" line="614"/>
+        <location filename="TaskSettingsPage.qml" line="676"/>
         <source>Repeat</source>
         <translation>重复</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="502"/>
+        <location filename="TaskSettingsPage.qml" line="587"/>
         <source>Are you sure?</source>
         <translation>你确定吗？</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="505"/>
+        <location filename="TaskSettingsPage.qml" line="590"/>
+        <location filename="TaskSettingsPage.qml" line="618"/>
+        <location filename="TaskSettingsPage.qml" line="680"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="506"/>
+        <location filename="TaskSettingsPage.qml" line="591"/>
+        <location filename="TaskSettingsPage.qml" line="619"/>
+        <location filename="TaskSettingsPage.qml" line="681"/>
         <source>yes</source>
         <translation>是的</translation>
+    </message>
+    <message>
+        <location filename="TaskSettingsPage.qml" line="615"/>
+        <source>dialog_work_down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="TaskSettingsPage.qml" line="677"/>
+        <source>Whether to reselect the map?</source>
+        <translation>是否重新选择地图？</translation>
     </message>
     <message>
         <source>Cancle</source>
         <translation type="vanished">取消</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="442"/>
+        <location filename="TaskSettingsPage.qml" line="525"/>
         <source>SURE</source>
         <translation>确定</translation>
     </message>
@@ -514,7 +588,7 @@
         <translation type="vanished">匹配</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="421"/>
+        <location filename="TaskSettingsPage.qml" line="504"/>
         <source>move and choose point!</source>
         <translation>移动选点！</translation>
     </message>
@@ -546,7 +620,7 @@
     </message>
     <message>
         <location filename="UserManagePage.qml" line="135"/>
-        <location filename="UserManagePage.qml" line="431"/>
+        <location filename="UserManagePage.qml" line="433"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
@@ -560,7 +634,7 @@
         <translation type="vanished">用户不存在!!!</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="788"/>
+        <location filename="UserManagePage.qml" line="791"/>
         <source>password had be changed!!!</source>
         <translation>密码修改成功!!!</translation>
     </message>
@@ -574,7 +648,7 @@
         <translation type="vanished">警告！</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="503"/>
+        <location filename="UserManagePage.qml" line="505"/>
         <source>delete</source>
         <translation>删除</translation>
     </message>
@@ -589,91 +663,91 @@
         <translation type="vanished">用户已删除！</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="768"/>
+        <location filename="UserManagePage.qml" line="771"/>
         <source>user </source>
         <translation>用户 </translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="768"/>
+        <location filename="UserManagePage.qml" line="771"/>
         <source> was deleted !</source>
         <translation> 已删除！</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="556"/>
+        <location filename="UserManagePage.qml" line="558"/>
         <source>update</source>
         <translation>更新密码</translation>
     </message>
     <message>
         <location filename="UserManagePage.qml" line="138"/>
-        <location filename="UserManagePage.qml" line="724"/>
+        <location filename="UserManagePage.qml" line="727"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="254"/>
-        <location filename="UserManagePage.qml" line="255"/>
-        <location filename="UserManagePage.qml" line="787"/>
+        <location filename="UserManagePage.qml" line="256"/>
+        <location filename="UserManagePage.qml" line="257"/>
+        <location filename="UserManagePage.qml" line="790"/>
         <source>update success</source>
         <translation>更新成功</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="532"/>
-        <location filename="UserManagePage.qml" line="538"/>
+        <location filename="UserManagePage.qml" line="534"/>
+        <location filename="UserManagePage.qml" line="540"/>
         <source>delete faild</source>
         <translation>删除失败</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="533"/>
+        <location filename="UserManagePage.qml" line="535"/>
         <source>you dont have permission to delete this account!!!</source>
         <translation>您无权删除此帐户！！！</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="539"/>
+        <location filename="UserManagePage.qml" line="541"/>
         <source>you cant delete last admin account!!!</source>
         <translation>您无法删除最后一位账户！！！</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="340"/>
+        <location filename="UserManagePage.qml" line="342"/>
         <source>username:</source>
         <translation>用户名：</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="295"/>
+        <location filename="UserManagePage.qml" line="297"/>
         <source>add user</source>
         <translation>添加用户</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="365"/>
+        <location filename="UserManagePage.qml" line="367"/>
         <source>enter new user name.</source>
         <translation>请输入用户名</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="381"/>
+        <location filename="UserManagePage.qml" line="383"/>
         <source>password:</source>
         <translation>密    码：</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="405"/>
+        <location filename="UserManagePage.qml" line="407"/>
         <source>enter new password.</source>
         <translation>请输入密码</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="435"/>
+        <location filename="UserManagePage.qml" line="437"/>
         <source>add error</source>
         <translation>添加失败</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="436"/>
+        <location filename="UserManagePage.qml" line="438"/>
         <source>some information is empty!!!</source>
         <translation>信息为空！</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="482"/>
+        <location filename="UserManagePage.qml" line="484"/>
         <source>user lists:</source>
         <translation>用户列表</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="586"/>
+        <location filename="UserManagePage.qml" line="588"/>
         <source>add</source>
         <translation>添加新用户</translation>
     </message>
@@ -682,27 +756,27 @@
         <translation type="vanished">欢迎您：</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="723"/>
+        <location filename="UserManagePage.qml" line="726"/>
         <source>user name has exited !</source>
         <translation>用户已存在！</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="729"/>
+        <location filename="UserManagePage.qml" line="732"/>
         <source>add success</source>
         <translation>添加成功</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="759"/>
+        <location filename="UserManagePage.qml" line="762"/>
         <source>delete error</source>
         <translation>删除失败</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="767"/>
+        <location filename="UserManagePage.qml" line="770"/>
         <source>delete success</source>
         <translation>删除成功</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="781"/>
+        <location filename="UserManagePage.qml" line="784"/>
         <source>update error</source>
         <translation>更新失败</translation>
     </message>
@@ -715,17 +789,17 @@
         <translation type="vanished">超级用户</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="730"/>
+        <location filename="UserManagePage.qml" line="733"/>
         <source>a new user was added</source>
         <translation>新用户添加成功</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="741"/>
+        <location filename="UserManagePage.qml" line="744"/>
         <source>nomal_level</source>
         <translation>普通权限</translation>
     </message>
     <message>
-        <location filename="UserManagePage.qml" line="742"/>
+        <location filename="UserManagePage.qml" line="745"/>
         <source>admin_level</source>
         <translation>高级权限</translation>
     </message>

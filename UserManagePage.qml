@@ -584,11 +584,12 @@ Rectangle {
                     contentItem: Text {
                         width: parent.width
                         height: parent.height * 0.8
-                        font.pixelSize: parent.height * 0.53
+                        font.pixelSize: parent.height * 0.52
                         text: qsTr("add")
                         color: "white"
                         horizontalAlignment: Text.AlignHCenter
                         anchors.top: parent.top
+                        anchors.topMargin: parent.height * 0.05
                     }
 
                     //                enabled: list_view_user.currentIndex === -1 ? false : true

@@ -86,5 +86,10 @@
         <file>res/pictures/TASKSETTING-button.png</file>
         <file>res/pictures/clean_on.png</file>
         <file>res/pictures/clean_off.png</file>
+        <file>res/pictures/connect_apply.png</file>
+        <file>res/pictures/acar.png</file>
+        <file>res/pictures/back_style2.png</file>
+        <file>res/pictures/begin_point.png</file>
+        <file>res/pictures/charge_point.png</file>
     </qresource>
 </RCC>

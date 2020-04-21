@@ -16,8 +16,8 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
     _vehicle_height = 0;
 
 //    this->connectToHost("127.0.0.1", "32432");
-    this->connectToHost("192.168.0.125", "32432");
-//     this->connectToHost("192.168.8.165", "32432");
+    // this->connectToHost("192.168.0.125", "32432");
+    this->connectToHost("192.168.8.165", "32432");
 
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));
     connect(_socket, SIGNAL(disconnected()), this, SLOT(disConnet()));
@@ -126,9 +126,9 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_PAUSE_TASK_RST:
                 emit pauseTaskRST(obj.value("current_status").toBool(),obj.value("status").toInt());
                 break;
-            case MessageType::MESSAGE_STOP_TASK_RST:
-                emit pauseStopTaskRST(obj.value("status").toInt());
-                break;
+//            case MessageType::MESSAGE_STOP_TASK_RST:
+//                emit pauseStopTaskRST(obj.value("status").toInt());
+//                break;
             case MessageType::MESSAGE_WORK_DOWN:
                 emit workDown(obj);
                 break;

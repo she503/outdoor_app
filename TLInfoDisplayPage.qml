@@ -185,7 +185,7 @@ Rectangle {
                 }
                 Text {
                     id: text_water
-                    text: qsTr("1")
+                    text: qsTr("")
                     width: parent.width * 0.5
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
@@ -201,7 +201,7 @@ Rectangle {
                         bottom: parent.bottom
                         bottomMargin: height * 0.1
                     }
-                    text: qsTr("%")
+                    text: qsTr("")
                     width: parent.width * 0.3
                     height: parent.height * 0.8
                     verticalAlignment: Text.AlignVCenter

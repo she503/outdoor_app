@@ -18,7 +18,7 @@ Item {
         closePolicy: Popup.CloseOnPressOutsideParent
         background: Rectangle {
             anchors.fill: parent
-            opacity: 0.5
+            opacity: 0.3
             RadialGradient {
                 anchors.fill: parent
                 gradient: Gradient

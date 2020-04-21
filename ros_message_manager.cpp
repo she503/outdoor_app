@@ -18,6 +18,7 @@ void RosMessageManager::setSocket(SocketManager *socket)
     connect(_socket, SIGNAL(batteryInfo(QJsonObject)), this, SLOT(parseBatteryInfo(QJsonObject)));
     connect(_socket, SIGNAL(trajectoryInfo(QJsonObject)), this, SLOT(parseTrajectoryInfo(QJsonObject)));
     connect(_socket, SIGNAL(monitorMessageInfo(QJsonObject)), this, SLOT(parseMonitorMessageInfo(QJsonObject)));
+    connect(_socket, SIGNAL(enableCleanWork(bool)), this, SIGNAL(updateEnableCleanWork(bool)));
 }
 
 void RosMessageManager::setSort(int sort_by, int sort_type)
@@ -26,6 +27,15 @@ void RosMessageManager::setSort(int sort_by, int sort_type)
     obj.insert("message_type", MESSAGE_SORT_MESSAGE);
     obj.insert("sort_by", sort_by);
     obj.insert("sort_type", sort_type);
+    QJsonDocument doc(obj);
+    _socket->sendSocketMessage(doc.toJson());
+}
+
+void RosMessageManager::setCleanDeviceStates(bool flag)
+{
+    QJsonObject obj;
+    obj.insert("message_type", MESSAGE_ENABLE_CLEAN_WORK);
+    obj.insert("flag", flag);
     QJsonDocument doc(obj);
     _socket->sendSocketMessage(doc.toJson());
 }

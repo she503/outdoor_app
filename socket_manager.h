@@ -87,6 +87,8 @@ signals:
     void pauseTaskRST(const bool& is_pause, const int& status);
     void pauseStopTaskRST(const int& status);
 
+    void enableCleanWork(const bool& flag);
+
 private:
     void getVehicleWidthHeight(const QJsonObject& obj);
 

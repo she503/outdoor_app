@@ -44,14 +44,14 @@ Rectangle {
             color: "transparent"
             Row {
                 property real btn_spacing: parent.width * 0.03
-                spacing: btn_spacing / 3
+                spacing: btn_spacing / 6
                 height: parent.height
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
                 Image {
                     id: btn_back
                     source: "qrc:/res/pictures/BUTTON-HOME.png"
-                    width: (parent.width -  parent.btn_spacing)/ 3
+                    width: (parent.width -  parent.btn_spacing)/ 4
                     height: parent.height
                     fillMode: Image.PreserveAspectFit
                     MouseArea {
@@ -64,7 +64,7 @@ Rectangle {
                 }
                 Image {
                     id: btn_stop
-                    width: (parent.width -  parent.btn_spacing)/ 3
+                    width: (parent.width -  parent.btn_spacing)/ 4
                     height: parent.height
                     source: _is_pause ? "qrc:/res/pictures/BUTTON-START.png" :
                                         "qrc:/res/pictures/BUTTON-PAUSE.png"
@@ -95,18 +95,18 @@ Rectangle {
                                     pause_stop_message.open()
                                 }
                             } else if (status === 1 ) {
-//                                if (!btn_stop._is_pause) {
-//                                    pause_stop_message.dia_title = qsTr("Success")
-//                                    pause_stop_message.dia_content = qsTr("success to pause the task, if you want start the task, please click this btn again.")
-//                                    pause_stop_message.status = 1
-//                                    pause_stop_message.open()
+                                //                                if (!btn_stop._is_pause) {
+                                //                                    pause_stop_message.dia_title = qsTr("Success")
+                                //                                    pause_stop_message.dia_content = qsTr("success to pause the task, if you want start the task, please click this btn again.")
+                                //                                    pause_stop_message.status = 1
+                                //                                    pause_stop_message.open()
 
-//                                } else if (btn_stop._is_pause) {
-//                                    pause_stop_message.dia_title = qsTr("Success")
-//                                    pause_stop_message.dia_content = qsTr("success to start the task")
-//                                    pause_stop_message.status = 1
-//                                    pause_stop_message.open()
-//                                }
+                                //                                } else if (btn_stop._is_pause) {
+                                //                                    pause_stop_message.dia_title = qsTr("Success")
+                                //                                    pause_stop_message.dia_content = qsTr("success to start the task")
+                                //                                    pause_stop_message.status = 1
+                                //                                    pause_stop_message.open()
+                                //                                }
                                 btn_stop._is_pause = !is_pause
                             }
                         }
@@ -114,23 +114,23 @@ Rectangle {
                 }
                 Image {
                     id: btn_ending
-                    width:  (parent.width -  parent.btn_spacing)/ 3
+                    width:  (parent.width -  parent.btn_spacing)/ 4
                     height: parent.height
                     source: "qrc:/res/pictures/BUTTON-STOP.png"
                     fillMode: Image.PreserveAspectFit
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-//                            repeat_need_stop_task.x = (parent.parent.width - width ) / 2
-//                            repeat_need_stop_task.y = 0
+                            //                            repeat_need_stop_task.x = (parent.parent.width - width ) / 2
+                            //                            repeat_need_stop_task.y = 0
                             repeat_need_stop_task.open()
                         }
                     }
                     Connections {
                         target: map_task_manager
                         onUpdateStopTaskInfo: {
-//                            repeat_need_stop_task.x = (parent.parent.parent.parent.width - width ) / 2
-//                            repeat_need_stop_task.y =  (parent.parent.parent.parent.height - height ) / 2
+                            //                            repeat_need_stop_task.x = (parent.parent.parent.parent.width - width ) / 2
+                            //                            repeat_need_stop_task.y =  (parent.parent.parent.parent.height - height ) / 2
                             if (status === 0) {
                                 pause_stop_message.dia_title = qsTr("Error")
                                 pause_stop_message.dia_content = qsTr("faild to stop the task!")
@@ -143,6 +143,40 @@ Rectangle {
                                 pause_stop_message.x = 400
                                 pause_stop_message.open()
                             }*/
+                        }
+                    }
+                }
+
+                Rectangle {
+                    width: height// (parent.width -  parent.btn_spacing)/ 4
+                    height: parent.height
+                    color: "#4169E1"
+                    radius: height
+                    border.color: "#D3D3D3"
+                    border.width: 2
+                    Image {
+                        id: btn_clean_work
+                        width: parent.height * 0.8
+                        height: parent.height* 0.8
+                        anchors.centerIn: parent
+                        source: "qrc:/res/pictures/clean_on.png"
+
+                        fillMode: Image.PreserveAspectFit
+                        property bool clean_work: true
+                    }
+
+                    MouseArea{
+                        anchors.fill: parent
+                        onClicked: {
+                            ros_message_manager.setCleanDeviceStates(!btn_clean_work.clean_work)
+                        }
+                    }
+                    Connections{
+                        target: ros_message_manager
+                        onUpdateEnableCleanWork: {
+                            btn_clean_work.clean_work = flag
+                            btn_clean_work.source = btn_clean_work.clean_work ? "qrc:/res/pictures/clean_on.png":
+                                                                                "qrc:/res/pictures/clean_off.png"
                         }
                     }
                 }

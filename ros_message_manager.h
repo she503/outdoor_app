@@ -13,6 +13,7 @@ public:
 
 public:
     Q_INVOKABLE void setSort(int sort_by, int sort_type);
+    Q_INVOKABLE void setCleanDeviceStates(bool flag);
 signals:
     void updateLocalizationInfo(const QString& time, const QString& x, const QString& y,
                                 const QString& heading, const QString& state);
@@ -26,6 +27,7 @@ signals:
     void updateBatteryInfo(const int& soc);
     void updateTrajectoryInfo(const QVariantList& trajectory);
     void updateMonitorMessageInfo(const QVariantList& monitor_message);
+    void updateEnableCleanWork(const bool& flag);
 
 private slots:
 //    void parseWorkFullRefLineInfo(const QJsonObject& obj);
@@ -38,6 +40,7 @@ private slots:
     void parseBatteryInfo(const QJsonObject& obj);
     void parseTrajectoryInfo(const QJsonObject& obj);
     void parseMonitorMessageInfo(const QJsonObject& obj);
+
 private:
     SocketManager* _socket;
 };

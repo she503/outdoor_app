@@ -401,7 +401,6 @@ void MapTaskManager::parseCurrentWorkMapData(const QJsonObject &obj)
     } else {
         qDebug() << "[MapTaskManager::parseCurrentWorkMapData]: " << message;
     }
-
 }
 
 //void MapTaskManager::parseSetMapAndInitPosInfo(const QJsonObject &obj)

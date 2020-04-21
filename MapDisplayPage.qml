@@ -86,7 +86,6 @@ Page {
     onSendInitPoint: {
         var pos = pixelToGeometry(choosePoint[0],choosePoint[1])
         map_task_manager.sendInitPos(pos[0],pos[1])
-        console.info("send_init_pos:" + pos)
     }
 
     function geometryToPixel(X, Y) {
@@ -173,6 +172,7 @@ Page {
                 id: canvas_background
                 width: map_width * map_rate + paint_begin_point * 2
                 height: map_height * map_rate + paint_begin_point * 2
+
 
 
                 function cacuDis(sx,sy,tx,ty){
@@ -477,7 +477,6 @@ Page {
 
                     drawTrees(ctx, var_trees)
                     drawSigns(ctx, var_signals)
-
                 }
             }
 
@@ -969,6 +968,8 @@ Page {
             var pixel_pos = geometryToPixel(x, y)
             vehicle.x = pixel_pos[0] - vehicle.width / 2
             vehicle.y = pixel_pos[1] - vehicle.height / 2
+//            console.info([x,vehicle.x, y, vehicle.y])
+//            console.info([y, vehicle.y])
 
 
             if (map.scale > root.real_rate / 2 && !root.can_drag) {

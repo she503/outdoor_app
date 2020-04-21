@@ -39,7 +39,7 @@ void MapTaskManager::setSocket(SocketManager *socket)
 
 void MapTaskManager::sendInfoTest()
 {
-    emit
+//    emit
 }
 
 //bool MapTaskManager::sendInitPosAndMapName(const QString& map_name, const QString &pos_x, const QString &pos_y)

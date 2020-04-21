@@ -1,5 +1,5 @@
 #include "ros_message_manager.h"
-
+#include "utils.h"
 RosMessageManager::RosMessageManager(QObject *parent) : QObject(parent)
 {
 
@@ -18,6 +18,16 @@ void RosMessageManager::setSocket(SocketManager *socket)
     connect(_socket, SIGNAL(batteryInfo(QJsonObject)), this, SLOT(parseBatteryInfo(QJsonObject)));
     connect(_socket, SIGNAL(trajectoryInfo(QJsonObject)), this, SLOT(parseTrajectoryInfo(QJsonObject)));
     connect(_socket, SIGNAL(monitorMessageInfo(QJsonObject)), this, SLOT(parseMonitorMessageInfo(QJsonObject)));
+}
+
+void RosMessageManager::setSort(int sort_by, int sort_type)
+{
+    QJsonObject obj;
+    obj.insert("message_type", MESSAGE_SORT_MESSAGE);
+    obj.insert("sort_by", sort_by);
+    obj.insert("sort_type", sort_type);
+    QJsonDocument doc(obj);
+    _socket->sendSocketMessage(doc.toJson());
 }
 
 //void RosMessageManager::parseWorkFullRefLineInfo(const QJsonObject &obj)
@@ -100,10 +110,10 @@ void RosMessageManager::parseMonitorMessageInfo(const QJsonObject &obj)
 
         QJsonObject temp_obj = it.value().toObject();
 
-        double error_time = temp_obj.value("error_time").toDouble();
+        QString error_time = temp_obj.value("error_time").toString();
         QString error_code = temp_obj.value("error_code").toString();
         QString error_message = temp_obj.value("error_message").toString();
-        int error_level = temp_obj.value("error_level").toInt();
+        QString error_level = temp_obj.value("error_level").toString();
         QVariantList temp_list = { error_time ,error_level, error_code, error_message};
         error_list.push_back(temp_list);
         ++it;

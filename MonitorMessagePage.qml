@@ -149,39 +149,125 @@ Item {
                     color: "transparent"
                     border.width: 1
                     border.color: Qt.rgba(100, 100, 200, 0.6)
-                    Image {
-                        id: img_exit
-                        height: parent.height * 0.7
-                        width: height
-                        anchors {
-                            right: parent.right
-                            rightMargin: parent.height * 0.2
-                            verticalCenter: parent.verticalCenter
-                        }
-                        source: "qrc:/res/pictures/exit.png"
-                        fillMode: Image.PreserveAspectFit
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                draw_error.close()
+//                    Rectangle {
+//                        width: parent.width
+//                        height: parent.height * 0.5
+//                        anchors.top: parent.top
+//                        color: "transparent"
+//                        Image {
+//                            id: img_exit
+//                            height: parent.height * 0.7
+//                            width: height
+//                            anchors {
+//                                right: parent.right
+//                                rightMargin: parent.height * 0.2
+//                                verticalCenter: parent.verticalCenter
+//                            }
+//                            source: "qrc:/res/pictures/exit.png"
+//                            fillMode: Image.PreserveAspectFit
+//                            MouseArea {
+//                                anchors.fill: parent
+//                                onClicked: {
+//                                    draw_error.close()
+//                                }
+//                            }
+//                        }
+//                        Image {
+//                            id: pic_error_icon
+//                            height: parent.height * 0.6
+//                            width: parent.height
+//                            source: "qrc:/res/pictures/BUTTON-WARNING1.png"
+//                            fillMode: Image.PreserveAspectFit
+//                            anchors.verticalCenter: parent.verticalCenter
+//                        }
+//                        Text {
+//                            text: qsTr("error message:")
+//                            width: parent.width
+//                            height: parent.height
+//                            anchors.left: pic_error_icon.right
+//                            verticalAlignment: Text.AlignVCenter
+//                            font.pixelSize: parent.height * 0.6
+//                        }
+//                    }
+
+                    Rectangle {
+                        width: parent.width
+                        height: parent.height //* 0.5
+                        anchors.bottom: parent.bottom
+                        color: "transparent"
+                        Text {
+                            id: title_time
+                            text: qsTr("error time")
+                            width: parent.width * 0.2
+                            height: parent.height
+                            anchors.left: parent.left
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            font.pixelSize: parent.height * 0.5
+                            font.bold: true
+                            color: "black"
+                            property int sort_type: 0
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    if (title_time.sort_type === 0) {
+                                        title_time.sort_type = 1
+                                    } else if(title_time.sort_type === 1) {
+                                        title_time.sort_type = 0
+                                    }
+                                    ros_message_manager.setSort(0, title_time.sort_type)
+                                }
                             }
                         }
-                    }
-                    Image {
-                        id: pic_error_icon
-                        height: parent.height * 0.6
-                        width: parent.height
-                        source: "qrc:/res/pictures/BUTTON-WARNING1.png"
-                        fillMode: Image.PreserveAspectFit
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-                    Text {
-                        text: qsTr("error message:")
-                        width: parent.width
-                        height: parent.height
-                        anchors.left: pic_error_icon.right
-                        verticalAlignment: Text.AlignVCenter
-                        font.pixelSize: parent.height * 0.6
+                        Text {
+                            id: title_code
+                            text: qsTr("error code")
+                            width: parent.width * 0.2
+                            height: parent.height
+                            anchors.left: title_time.right
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            font.pixelSize: parent.height * 0.5
+                            font.bold: true
+                            color: "black"
+
+                        }
+                        Text {
+                            id: title_level
+                            text: qsTr("error level")
+                            width: parent.width * 0.2
+                            height: parent.height
+                            anchors.left: title_code.right
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            font.pixelSize: parent.height * 0.5
+                            font.bold: true
+                            color: "black"
+                            property int sort_type: 0
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    if (title_level.sort_type === 0) {
+                                        title_level.sort_type = 1
+                                    } else if(title_level.sort_type === 1) {
+                                        title_level.sort_type = 0
+                                    }
+                                    ros_message_manager.setSort(1, title_level.sort_type)
+                                }
+                            }
+                        }
+                        Text {
+                            id: title_message
+                            text: qsTr("error message")
+                            width: parent.width * 0.4
+                            height: parent.height
+                            anchors.left: title_level.right
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            font.pixelSize: parent.height * 0.5
+                            font.bold: true
+                            color: "black"
+                        }
                     }
                 }
                 Rectangle {
@@ -224,7 +310,7 @@ Item {
                                         font.pixelSize: height * 0.3
                                         font.bold: true
                                         color: error_text_color
-                                        horizontalAlignment: Text.AlignLeft
+                                        horizontalAlignment: Text.AlignHCenter
                                         verticalAlignment: Text.AlignVCenter
                                         wrapMode: Text.Wrap
                                     }
@@ -243,7 +329,7 @@ Item {
                                         font.pixelSize: height * 0.3
                                         font.bold: true
                                         color: error_text_color
-                                        horizontalAlignment: Text.AlignLeft
+                                        horizontalAlignment: Text.AlignHCenter
                                         verticalAlignment: Text.AlignVCenter
                                         wrapMode: Text.Wrap
                                     }
@@ -262,7 +348,7 @@ Item {
                                         font.pixelSize: height * 0.3
                                         font.bold: true
                                         color: error_text_color
-                                        horizontalAlignment: Text.AlignLeft
+                                        horizontalAlignment: Text.AlignHCenter
                                         verticalAlignment: Text.AlignVCenter
                                         wrapMode: Text.Wrap
                                     }

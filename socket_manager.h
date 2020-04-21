@@ -37,6 +37,7 @@ public:
     Q_INVOKABLE float getVehicleWidth();
 
     Q_INVOKABLE float getVehicleHeight();
+
 signals:
     void mapsInfo(const QJsonObject& obj);
     void sendMapAndTasks(const QJsonObject& obj);

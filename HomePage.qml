@@ -17,6 +17,9 @@ Rectangle {
 
     Component.onCompleted: {
         var status = map_task_manager.getWorkStatus()
+        if (status <=0) {
+            map_task_manager.sendFirstMapName()
+        }
         if (status <= 2) {
             root.text_visible = false
         } else if (status >= 3) {

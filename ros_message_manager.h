@@ -11,6 +11,8 @@ public:
 
     void setSocket(SocketManager *socket);
 
+public:
+    Q_INVOKABLE void setSort(int sort_by, int sort_type);
 signals:
     void updateLocalizationInfo(const QString& time, const QString& x, const QString& y,
                                 const QString& heading, const QString& state);

@@ -1,4 +1,4 @@
-import QtQuick 2.9
+﻿import QtQuick 2.9
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
@@ -66,7 +66,7 @@ Rectangle {
         btn_start_task.visible = false
         rec_task_control.visible = false
         rec_ref_lines.visible = false
-//        root.startTaskLock()
+        root.startTaskLock()
     }
 
     function toTime(s){
@@ -190,7 +190,7 @@ Rectangle {
             dialog_match_warn.open()
             rec_checked_location.visible = true
         }
-        onUpdateErrorToLoadMapOrNoneTasksInfo: {S
+        onUpdateErrorToLoadMapOrNoneTasksInfo: {
             busy.visible = false
             busy.running = false
             pop_lock_loading_task.close()
@@ -241,6 +241,7 @@ Rectangle {
                         width: list_view_areas.width / 4
                         height: list_view_areas.height
                         property int id_card: model.id_card
+                        property bool is_currentIndex: list_view_areas.currentIndex == index
                         onPressed: {
                             root.chooseMapPage()
                             list_view_areas.currentIndex = index
@@ -256,15 +257,23 @@ Rectangle {
                         Rectangle {
                             width: parent.width
                             height: parent.height
-                            color: list_view_areas.currentIndex === parent.id_card ?
-                                              Qt.rgba(0,191,255, 0.8) : Qt.rgba(205,133,63, 0.5)
+                            color: "transparent"
+//                            color: list_view_areas.currentIndex === parent.id_card ?
+//                                              Qt.rgba(0,191,255, 0.8) : Qt.rgba(205,133,63, 0.5)
                             border.color:  Qt.rgba(205,133,63, 0.5)
+                            Image {
+                                anchors.fill: parent
+                                source: parent.parent.is_currentIndex ?
+                                    "qrc:/res/pictures/map_areas_focus.png" : "qrc:/res/pictures/map_areas_normal.png"
+                            }
                             Text {
                                 text: model.map_name
                                 anchors.fill: parent
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
-                                color: "black"
+                                font.pixelSize: height * 0.4
+                                font.bold: true
+                                color: "white"
                             }
                         }
                     }
@@ -301,16 +310,17 @@ Rectangle {
                     z: 1
                     width: parent.width * 0.2
                     height: parent.height * 0.833
+                    color: "white"
 //                    color: Qt.rgba(0,191,255, 0.5)
-                    LinearGradient {
-                        anchors.fill: parent
-                        start: Qt.point(0, 0)
-                        end: Qt.point(parent.width, 0)
-                        gradient: Gradient {
-                            GradientStop { position: 0.0; color: Qt.rgba(0,191,255, 0.5)}
-                            GradientStop { position: 1.0; color: Qt.rgba(225,255,255, 0.5)}
-                        }
-                    }
+//                    LinearGradient {
+//                        anchors.fill: parent
+//                        start: Qt.point(0, 0)
+//                        end: Qt.point(parent.width, 0)
+//                        gradient: Gradient {
+//                            GradientStop { position: 0.0; color: Qt.rgba(0,191,255, 0.5)}
+//                            GradientStop { position: 1.0; color: Qt.rgba(225,255,255, 0.5)}
+//                        }
+//                    }
                     ListView {
                         id: list_view
                         clip: true
@@ -321,25 +331,33 @@ Rectangle {
                         currentIndex: -1
                         delegate: ItemDelegate {
                             id: item
+                            width: parent.width
                             property int id_card: model.idcard
                             property bool is_active: false
-                            Rectangle {
-                                id: check_style
-                                width: parent.width * 0.1
-                                height: width
-                                anchors.verticalCenter: parent.verticalCenter
-                                anchors.left: parent.left
-                                anchors.leftMargin: parent.width * 0.1
-                                radius: height / 2
-                                border.color: "black"
-                                border.width: 1
-                                Image {
-                                    visible: item.is_active ? true : false
-                                    source: "qrc:/res/pictures/finish.png"
-                                    fillMode: Image.PreserveAspectFit
-                                    anchors.fill: parent
-                                }
+                            Image {
+                                width: parent.width - 4
+                                height: parent.height
+                                source: item.is_active ?
+                                    "qrc:/res/pictures/bar_ref_line0.png" : "qrc:/res/pictures/map_areas_normal.png"
                             }
+
+//                            Rectangle {
+//                                id: check_style
+//                                width: parent.width * 0.1
+//                                height: width
+//                                anchors.verticalCenter: parent.verticalCenter
+//                                anchors.left: parent.left
+//                                anchors.leftMargin: parent.width * 0.1
+//                                radius: height / 2
+//                                border.color: "black"
+//                                border.width: 1
+//                                Image {
+//                                    visible: item.is_active ? true : false
+//                                    source: "qrc:/res/pictures/finish.png"
+//                                    fillMode: Image.PreserveAspectFit
+//                                    anchors.fill: parent
+//                                }
+//                            }
                             Text {
                                 id: checked_text
                                 clip: true
@@ -348,10 +366,12 @@ Rectangle {
                                 verticalAlignment: Text.AlignVCenter
                                 width: parent.width
                                 height: parent.height
-                                anchors.left: check_style.right
-                                anchors.leftMargin: parent.width * 0.05
+                                anchors.left: parent.left
+                                anchors.leftMargin: parent.width * 0.1
                                 font.pixelSize: height * 0.4
-                                color: item.is_active ? "red" : "black"
+                                font.bold: true
+                                color: "white"
+//                                color: item.is_active ? "red" : "black"
                             }
                             onClicked: {
                                 root.chooseTaskPage()
@@ -402,26 +422,38 @@ Rectangle {
                         width: parent.width
                         height: parent.height * 0.2
                         anchors.top: rec_ref_lines.bottom
-//                        color: Qt.rgba(0, 255, 0, 0.5)
-                        LinearGradient {
-                            anchors.fill: parent
-                            start: Qt.point(0, 0)
-                            end: Qt.point(parent.width, 0)
-                            gradient: Gradient {
-                                GradientStop { position: 0.0; color: Qt.rgba(0,191,255, 0.5)}
-                                GradientStop { position: 1.0; color: Qt.rgba(225,255,255, 0.5)}
+                        TLButton {
+                            id: btn_return_choose_map
+                            width: parent.width * 0.8
+                            height: parent.height * 0.5
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            onClicked: {
+
+                            }
+                            Text {
+                                text: qsTr("back to choose map again")
+                                width: parent.width / 2
+                                height: parent.height
+                                color: "lightgreen"
+                                anchors.left: parent.left
+                                anchors.leftMargin: height * 0.05
+                                font.pixelSize: Math.sqrt(parent.height) * 2
+                                font.family: "Arial"
+                                font.weight: Font.Thin
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            Image {
+                                id: img_back
+                                height: parent.height
+                                width: Math.sqrt(parent.height) * 4
+                                anchors.right: parent.right
+                                source: "qrc:/res/pictures/back_style4.png"
+                                opacity: 0.6
+                                fillMode: Image.PreserveAspectFit
                             }
                         }
-                        Image {
-                            id: img_back
-                            height: parent.height * 0.9
-                            width: height
-                            anchors.centerIn: parent
-                            source: "qrc:/res/pictures/back_style2.png"
-                            //rotation: 180
-                            opacity: 0.9
-                            fillMode: Image.PreserveAspectFit
-                        }
+
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
@@ -644,7 +676,7 @@ Rectangle {
         interval: 1000
         onTriggered: {
             timeout++
-            if (timeout > 4) {
+            if (timeout > 9) {
                 busy.running = false
                 timer_busy_wait_time.stop()
                 timeout = 0

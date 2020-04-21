@@ -440,7 +440,7 @@
     </message>
     <message>
         <location filename="TaskProcess.qml" line="333"/>
-        <location filename="TaskProcess.qml" line="527"/>
+        <location filename="TaskProcess.qml" line="524"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
@@ -526,43 +526,53 @@
         <translation>加载地图失败或者无任务信息</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="461"/>
+        <location filename="TaskSettingsPage.qml" line="430"/>
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="TaskSettingsPage.qml" line="436"/>
+        <source>back to choose map again</source>
+        <translation>重选地图</translation>
+    </message>
+    <message>
+        <location filename="TaskSettingsPage.qml" line="494"/>
         <source>Start</source>
         <translation>开始</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="586"/>
-        <location filename="TaskSettingsPage.qml" line="614"/>
-        <location filename="TaskSettingsPage.qml" line="676"/>
+        <location filename="TaskSettingsPage.qml" line="619"/>
+        <location filename="TaskSettingsPage.qml" line="647"/>
+        <location filename="TaskSettingsPage.qml" line="709"/>
         <source>Repeat</source>
         <translation>重复</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="587"/>
+        <location filename="TaskSettingsPage.qml" line="620"/>
         <source>Are you sure?</source>
         <translation>你确定吗？</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="590"/>
-        <location filename="TaskSettingsPage.qml" line="618"/>
-        <location filename="TaskSettingsPage.qml" line="680"/>
+        <location filename="TaskSettingsPage.qml" line="623"/>
+        <location filename="TaskSettingsPage.qml" line="651"/>
+        <location filename="TaskSettingsPage.qml" line="713"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="591"/>
-        <location filename="TaskSettingsPage.qml" line="619"/>
-        <location filename="TaskSettingsPage.qml" line="681"/>
+        <location filename="TaskSettingsPage.qml" line="624"/>
+        <location filename="TaskSettingsPage.qml" line="652"/>
+        <location filename="TaskSettingsPage.qml" line="714"/>
         <source>yes</source>
         <translation>是的</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="615"/>
+        <location filename="TaskSettingsPage.qml" line="648"/>
         <source>dialog_work_down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="677"/>
+        <location filename="TaskSettingsPage.qml" line="710"/>
         <source>Whether to reselect the map?</source>
         <translation>是否重新选择地图？</translation>
     </message>
@@ -571,7 +581,7 @@
         <translation type="vanished">取消</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="525"/>
+        <location filename="TaskSettingsPage.qml" line="558"/>
         <source>SURE</source>
         <translation>确定</translation>
     </message>
@@ -588,7 +598,7 @@
         <translation type="vanished">匹配</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="504"/>
+        <location filename="TaskSettingsPage.qml" line="537"/>
         <source>move and choose point!</source>
         <translation>移动选点！</translation>
     </message>

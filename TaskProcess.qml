@@ -16,14 +16,36 @@ Rectangle {
 
     signal sigBackBtnPress()
     signal stopTaskCommond()
+    signal returnOptionChanged(var current_index)
+    onReturnOptionChanged: {
+        if (current_index === 0) {
+            task_auto_achived.close()
+            map_task_manager.returnMapSelete()
+        } else if (current_index === 1) {
+            task_auto_achived.close()
+
+        }
+    }
 
     Connections {
         target: ros_message_manager
         onUpdateTaskProcessInfo: {
             text_progress.text = "" + progress + " %";
-
+            if (progress == 100) {
+                task_auto_achived.open()
+            }
         }
     }
+    // test progress == 100
+//    Timer {
+//        interval: 6000
+//        running: true
+//        repeat: false
+//        onTriggered: {
+//            text_progress.text = "" + "100" + " %";
+//            task_auto_achived.open()
+//        }
+//    }
 
     Column{
         anchors.fill: parent
@@ -95,18 +117,18 @@ Rectangle {
                                     pause_stop_message.open()
                                 }
                             } else if (status === 1 ) {
-//                                if (!btn_stop._is_pause) {
-//                                    pause_stop_message.dia_title = qsTr("Success")
-//                                    pause_stop_message.dia_content = qsTr("success to pause the task, if you want start the task, please click this btn again.")
-//                                    pause_stop_message.status = 1
-//                                    pause_stop_message.open()
+                                //                                if (!btn_stop._is_pause) {
+                                //                                    pause_stop_message.dia_title = qsTr("Success")
+                                //                                    pause_stop_message.dia_content = qsTr("success to pause the task, if you want start the task, please click this btn again.")
+                                //                                    pause_stop_message.status = 1
+                                //                                    pause_stop_message.open()
 
-//                                } else if (btn_stop._is_pause) {
-//                                    pause_stop_message.dia_title = qsTr("Success")
-//                                    pause_stop_message.dia_content = qsTr("success to start the task")
-//                                    pause_stop_message.status = 1
-//                                    pause_stop_message.open()
-//                                }
+                                //                                } else if (btn_stop._is_pause) {
+                                //                                    pause_stop_message.dia_title = qsTr("Success")
+                                //                                    pause_stop_message.dia_content = qsTr("success to start the task")
+                                //                                    pause_stop_message.status = 1
+                                //                                    pause_stop_message.open()
+                                //                                }
                                 btn_stop._is_pause = !is_pause
                             }
                         }
@@ -121,16 +143,16 @@ Rectangle {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-//                            repeat_need_stop_task.x = (parent.parent.width - width ) / 2
-//                            repeat_need_stop_task.y = 0
+                            //                            repeat_need_stop_task.x = (parent.parent.width - width ) / 2
+                            //                            repeat_need_stop_task.y = 0
                             repeat_need_stop_task.open()
                         }
                     }
                     Connections {
                         target: map_task_manager
                         onUpdateStopTaskInfo: {
-//                            repeat_need_stop_task.x = (parent.parent.parent.parent.width - width ) / 2
-//                            repeat_need_stop_task.y =  (parent.parent.parent.parent.height - height ) / 2
+                            //                            repeat_need_stop_task.x = (parent.parent.parent.parent.width - width ) / 2
+                            //                            repeat_need_stop_task.y =  (parent.parent.parent.parent.height - height ) / 2
                             if (status === 0) {
                                 pause_stop_message.dia_title = qsTr("Error")
                                 pause_stop_message.dia_content = qsTr("faild to stop the task!")
@@ -330,5 +352,268 @@ Rectangle {
             btn_stop._is_pause = false
         }
 
+    }
+
+    Dialog {
+        id: task_auto_achived
+        height: 280
+        width: 420
+        x:(root_main.width - width) / 2
+        y: (root_main.height - height) / 2
+        background: Rectangle {
+            anchors.fill: parent
+            color: "transparent"
+        }
+        contentItem: Item {
+            anchors.fill: parent
+            Rectangle {
+                width: parent.width
+                height: parent.height
+                anchors.centerIn: parent
+                color: "transparent"
+                Image {
+                    anchors.fill: parent
+                    source: "qrc:/res/pictures/background_glow2.png"
+                }
+                Rectangle {
+                    color: Qt.rgba(255, 255, 255, 1)
+                    anchors.centerIn: parent
+                    width: parent.width * 0.8
+                    height: parent.height * 0.75
+                    Rectangle {
+                        id: rect_task_achived_title
+                        width: parent.width
+                        height: parent.height * 0.3
+                        color: "transparent"
+                        Text {
+                            color: "#4876FF"
+                            text: qsTr("Task achieved")
+                            font.pixelSize: parent.height * 0.4
+                            font.bold: true
+                            anchors.centerIn: parent
+                        }
+                        Image {
+                            height: parent.height * 0.4
+                            width: height
+                            anchors {
+                                right: parent.right
+                                top:parent.top
+                                rightMargin: parent.height * 0.1
+                                topMargin: parent.height * 0.1
+                            }
+                            source: "qrc:/res/pictures/exit.png"
+                            fillMode: Image.PreserveAspectFit
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    task_auto_achived.close()
+                                }
+                            }
+                        }
+                    }
+                    Rectangle {
+                        id: rect_task_options
+                        width: parent.width
+                        height: parent.height * 0.8
+                        color: "transparent"
+                        anchors {
+                            top: rect_task_achived_title.bottom
+                        }
+                        Rectangle {
+                            id: select_return_type_list
+                            width: parent.width * 0.85
+                            height: parent.height * 0.6
+                            color: "transparent"
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            ListView {
+                                id: list_return_type
+                                anchors.fill: parent
+                                spacing: height * 0.03
+                                currentIndex: 0
+                                highlight: Rectangle {color: "transparent"}
+                                clip: true
+                                highlightFollowsCurrentItem: false
+                                delegate: ItemDelegate {
+                                    id: item
+                                    height: list_return_type.height * 0.45
+                                    width: parent.width
+                                    property real id_num: model.id_num
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    Rectangle {
+                                        anchors.fill: parent
+                                        anchors.centerIn: parent
+                                        color: list_return_type.currentIndex === parent.id_num ?
+                                                          Qt.rgba(0, 255, 0, 0.1) : "transparent"
+                                        opacity: list_return_type.currentIndex == item.id_num ? 1 : 0.3
+                                        radius: width / 2
+                                        Text {
+                                            id: attr_return_option
+                                            clip: true
+                                            anchors.verticalCenter: parent.verticalCenter
+                                            anchors.left: parent.left
+                                            anchors.leftMargin: parent.height * 0.3
+                                            text: model.btn_text
+                                            width: parent.width * 0.8
+                                            height: parent.height * 0.6
+                                            font.bold: false
+                                            font.pixelSize: list_return_type.currentIndex === item.id_num ?
+                                                              height * 0.8 :height * 0.6
+                                            verticalAlignment: Text.AlignVCenter
+                                            horizontalAlignment: Text.AlignLeft
+                                        }
+                                        Image {
+                                            height: parent.height * 0.5
+                                            width: height
+                                            source: "qrc:/res/pictures/arrow-right.png"
+                                            anchors.right: parent.right
+                                            anchors.verticalCenter: parent.verticalCenter
+                                            verticalAlignment: Image.AlignVCenter
+                                            fillMode: Image.PreserveAspectFit
+                                        }
+                                        Rectangle {
+                                            width: parent.width * 0.75
+                                            height: 0.5
+                                            anchors.bottom: parent.bottom
+                                            anchors.horizontalCenter: parent.horizontalCenter
+                                            color: Qt.rgba(0, 0, 0, 0.1)
+                                        }
+                                    }
+                                    onClicked: {
+                                        list_return_type.currentIndex = index
+                                        returnOptionChanged(list_return_type.currentIndex)
+                                    }
+                                }
+                                model: ListModel {
+                                    id: list_model_attr
+                                    ListElement {
+                                        id_num: 0
+                                        btn_text: qsTr("Continue to perform tasks on this map")
+                                    }
+                                    ListElement {
+                                        id_num: 1
+                                        btn_text: qsTr("Switch map")
+                                    }
+                                }
+                            }
+                        }
+                        Rectangle {
+                            id: rect_update_btns
+                            width: parent.width * 0.6
+                            height: parent.height * 0.2
+                            color: "transparent"
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.top: select_return_type_list.bottom
+                            TLButton {
+                                id: btn_task_achived_sure
+                                width: parent.width * 0.5
+                                height: parent.height * 0.8
+                                anchors.centerIn: parent
+
+                                btn_text: qsTr("exit")
+                                onClicked: {
+                                    task_auto_achived.close()
+                                }
+                            }
+                        }
+
+//                        Column {
+//                            width: parent.width * 0.8
+//                            height: parent.height
+//                            anchors {
+//                                horizontalCenter: parent.horizontalCenter
+//                                top: parent.top
+////                                topMargin: height * 0.1
+//                            }
+//                            spacing: height * 0.05
+
+////                            Rectangle {
+////                                id: rec_continue_old_map
+////                                width: parent.width
+////                                height: parent.height * 0.25
+////                                color: "transparent"
+////                                clip: true
+////                                radius: width * 0.1
+////                                Text {
+////                                    id: text_continue_old_map
+////                                    clip: true
+////                                    anchors.left: parent.left
+////                                    anchors.leftMargin: parent.height * 0.3
+////                                    text: qsTr("Continue to perform tasks on this map")
+////                                    width: parent.width
+////                                    height: parent.height
+////                                    font.bold: false
+////                                    font.pixelSize: height * 0.4
+////                                    verticalAlignment: Text.AlignVCenter
+////                                    horizontalAlignment: Text.AlignLeft
+////                                }
+////                                MouseArea {
+////                                    anchors.fill: parent
+////                                    onClicked: {
+////                                        rec_continue_old_map.color = Qt.rgba(0, 255, 0, 0.1)
+////                                    }
+////                                }
+
+////                            }
+////                            Rectangle {
+////                                id: rec_select_new_map
+////                                width: parent.width
+////                                height: parent.height * 0.25
+////                                color: "transparent"
+////                                clip: true
+////                                radius: width * 0.1
+////                                Text {
+////                                    id: text_select_new_map
+////                                    clip: true
+////                                    anchors.left: parent.left
+////                                    anchors.leftMargin: parent.height * 0.3
+////                                    text: qsTr("Switch map")
+////                                    width: parent.width
+////                                    height: parent.height
+////                                    font.bold: false
+////                                    font.pixelSize: height * 0.4
+////                                    verticalAlignment: Text.AlignVCenter
+////                                    horizontalAlignment: Text.AlignLeft
+////                                }
+////                            }
+
+//                            Rectangle {
+//                                id: rect_update_btns
+//                                width: parent.width
+//                                height: parent.height * 0.2
+//                                color: "transparent"
+//                                TLButton {
+//                                    id: btn_task_achived_sure
+//                                    width: parent.width * 0.4
+//                                    height: parent.height * 0.7
+//                                    anchors {
+//                                        verticalCenter: parent.verticalCenter
+//                                        right: parent.horizontalCenter
+//                                        rightMargin: height * 0.4
+//                                    }
+
+//                                    btn_text: qsTr("OK")
+//                                    onClicked: {
+//                                    }
+//                                }
+//                                TLButton {
+//                                    id: btn_task_achived_cancel
+//                                    width: parent.width * 0.4
+//                                    height: parent.height * 0.7
+//                                    anchors {
+//                                        verticalCenter: parent.verticalCenter
+//                                        left: parent.horizontalCenter
+//                                        leftMargin: height * 0.4
+//                                    }
+//                                    btn_text: qsTr("cancel")
+//                                    onClicked: {
+//                                        task_auto_achived.close()
+//                                    }
+//                                }
+//                            }
+//                        }
+                    }
+                }
+            }
+        }
     }
 }

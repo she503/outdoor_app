@@ -119,12 +119,10 @@ Rectangle {
                             ListElement {
                                 id_num: 0
                                 btn_text: qsTr("car information")
-                                focus_source: "qrc:/res/pictures/home.png"
                             }
                             ListElement {
                                 id_num: 1
                                 btn_text: qsTr("device information")
-                                focus_source: "qrc:/res/pictures/user.png"
                             }
                         }
                     }

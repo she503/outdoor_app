@@ -1,4 +1,4 @@
-﻿import QtQuick 2.9
+import QtQuick 2.9
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
@@ -66,7 +66,7 @@ Rectangle {
         btn_start_task.visible = false
         rec_task_control.visible = false
         rec_ref_lines.visible = false
-        root.startTaskLock()
+//        root.startTaskLock()
     }
 
     function toTime(s){
@@ -300,7 +300,7 @@ Rectangle {
                     visible: false
                     z: 1
                     width: parent.width * 0.2
-                    height: parent.height * 0.834
+                    height: parent.height * 0.833
 //                    color: Qt.rgba(0,191,255, 0.5)
                     LinearGradient {
                         anchors.fill: parent
@@ -402,18 +402,30 @@ Rectangle {
                         width: parent.width
                         height: parent.height * 0.2
                         anchors.top: rec_ref_lines.bottom
-                        color: Qt.rgba(0, 255, 0, 0.5)
+//                        color: Qt.rgba(0, 255, 0, 0.5)
+                        LinearGradient {
+                            anchors.fill: parent
+                            start: Qt.point(0, 0)
+                            end: Qt.point(parent.width, 0)
+                            gradient: Gradient {
+                                GradientStop { position: 0.0; color: Qt.rgba(0,191,255, 0.5)}
+                                GradientStop { position: 1.0; color: Qt.rgba(225,255,255, 0.5)}
+                            }
+                        }
                         Image {
                             id: img_back
-                            anchors.fill: parent
-                            source: "qrc:/res/pictures/arrow-right.png"
-                            rotation: 180
+                            height: parent.height * 0.9
+                            width: height
+                            anchors.centerIn: parent
+                            source: "qrc:/res/pictures/back_style2.png"
+                            //rotation: 180
+                            opacity: 0.9
                             fillMode: Image.PreserveAspectFit
                         }
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                map_task_manager.returnMapSelete()
+                                dialog_return_map_tip.open()
                             }
                         }
                     }
@@ -653,6 +665,26 @@ Rectangle {
         background: Rectangle {
             anchors.fill: parent
             color: "transparent"
+        }
+    }
+    TLDialog {
+        id: dialog_return_map_tip
+        height: parent.height * 0.5
+        width: height * 1.5
+        x: (root.width - width) / 2
+        y: (root.height - height) / 2
+        dia_title: qsTr("Repeat")
+        dia_content: qsTr("Whether to reselect the map?")
+        status: 1
+        ok: true
+        cancel_text: qsTr("cancel")
+        ok_text: qsTr("yes")
+        onCancelClicked: {
+            dialog_return_map_tip.close()
+        }
+        onOkClicked: {
+            dialog_return_map_tip.close()
+            map_task_manager.returnMapSelete()
         }
     }
 }

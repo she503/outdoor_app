@@ -198,7 +198,7 @@ void MapTaskManager::sendFirstMapName()
 void MapTaskManager::returnMapSelete()
 {
     QJsonObject obj;
-    obj.insert("message_type", MESSAGE_RETURN_TO_SLECT_MAP);
+    obj.insert("message_type", MESSAGE_RETURN_TO_SELECT_MAP);
     obj.insert("flag", true);
     QJsonDocument doc(obj);
     _socket->sendSocketMessage(doc.toJson());

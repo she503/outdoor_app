@@ -402,85 +402,94 @@
 <context>
     <name>TaskProcess</name>
     <message>
-        <location filename="TaskProcess.qml" line="108"/>
-        <location filename="TaskProcess.qml" line="113"/>
-        <location filename="TaskProcess.qml" line="156"/>
+        <location filename="TaskProcess.qml" line="99"/>
+        <location filename="TaskProcess.qml" line="104"/>
+        <location filename="TaskProcess.qml" line="147"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="109"/>
+        <location filename="TaskProcess.qml" line="100"/>
         <source>faild to start the task</source>
         <translation>启动任务失败</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="114"/>
+        <location filename="TaskProcess.qml" line="105"/>
         <source>faild to stop the task</source>
         <translation>停止任务失败</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="157"/>
+        <location filename="TaskProcess.qml" line="148"/>
         <source>faild to stop the task!</source>
         <translation>停止任务失败！</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="216"/>
+        <location filename="TaskProcess.qml" line="207"/>
         <source>Current map name: </source>
         <translation>当前工作地图：</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="251"/>
+        <location filename="TaskProcess.qml" line="242"/>
         <source>Work time: </source>
         <translation>已工作时间：</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="286"/>
+        <location filename="TaskProcess.qml" line="277"/>
         <source>task persent: </source>
         <translation>已完成：</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="342"/>
+        <location filename="TaskProcess.qml" line="333"/>
+        <location filename="TaskProcess.qml" line="527"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="343"/>
+        <location filename="TaskProcess.qml" line="334"/>
         <source>sure</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="344"/>
+        <location filename="TaskProcess.qml" line="335"/>
         <source>repeter</source>
         <translation>重复</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="346"/>
+        <location filename="TaskProcess.qml" line="337"/>
         <source>please comfirm if you need to stop task.</source>
         <translation>请确认是否需要停止任务</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="389"/>
+        <location filename="TaskProcess.qml" line="380"/>
         <source>Task achieved</source>
         <translation>任务完成</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="489"/>
+        <location filename="TaskProcess.qml" line="480"/>
         <source>Continue to perform tasks on this map</source>
         <translation>继续在本地图执行任务</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="493"/>
+        <location filename="TaskProcess.qml" line="484"/>
         <source>Switch map</source>
         <translation>切换地图</translation>
     </message>
     <message>
-        <location filename="TaskProcess.qml" line="511"/>
-        <source>exit</source>
-        <translation>退出</translation>
+        <source>warn</source>
+        <translation type="obsolete">错误</translation>
     </message>
     <message>
+        <source>Not selected!</source>
+        <translation type="obsolete">未选择！</translation>
+    </message>
+    <message>
+        <source>exit</source>
+        <translation type="vanished">退出</translation>
+    </message>
+    <message>
+        <location filename="TaskProcess.qml" line="506"/>
         <source>OK</source>
-        <translation type="vanished">确定</translation>
+        <translation>确定</translation>
     </message>
 </context>
 <context>

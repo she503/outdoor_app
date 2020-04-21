@@ -16,16 +16,6 @@ Rectangle {
 
     signal sigBackBtnPress()
     signal stopTaskCommond()
-    signal returnOptionChanged(var current_index)
-    onReturnOptionChanged: {
-        if (current_index === 0) {
-            task_auto_achived.close()
-            map_task_manager.returnMapSelete()
-        } else if (current_index === 1) {
-            task_auto_achived.close()
-
-        }
-    }
 
     Connections {
         target: ros_message_manager
@@ -37,15 +27,15 @@ Rectangle {
         }
     }
     // test progress == 100
-//    Timer {
-//        interval: 6000
-//        running: true
-//        repeat: false
-//        onTriggered: {
-//            text_progress.text = "" + "100" + " %";
-//            task_auto_achived.open()
-//        }
-//    }
+    Timer {
+        interval: 1000
+        running: true
+        repeat: true
+        onTriggered: {
+            text_progress.text = "" + "100" + " %";
+            task_auto_achived.open()
+        }
+    }
 
     Column{
         anchors.fill: parent
@@ -464,6 +454,7 @@ Rectangle {
                                         Image {
                                             height: parent.height * 0.5
                                             width: height
+                                            opacity: 0.1
                                             source: "qrc:/res/pictures/arrow-right.png"
                                             anchors.right: parent.right
                                             anchors.verticalCenter: parent.verticalCenter
@@ -480,7 +471,6 @@ Rectangle {
                                     }
                                     onClicked: {
                                         list_return_type.currentIndex = index
-                                        returnOptionChanged(list_return_type.currentIndex)
                                     }
                                 }
                                 model: ListModel {
@@ -507,11 +497,34 @@ Rectangle {
                                 id: btn_task_achived_sure
                                 width: parent.width * 0.5
                                 height: parent.height * 0.8
-                                anchors.centerIn: parent
+                                anchors {
+                                    verticalCenter: parent.verticalCenter
+                                    right: parent.horizontalCenter
+                                    rightMargin: height * 0.4
+                                }
 
-                                btn_text: qsTr("exit")
+                                btn_text: qsTr("OK")
+                                onClicked: {
+                                    if (list_return_type.currentIndex === 0) {
+                                        map_task_manager.returnMapSelete()
+                                    } else if (list_return_type.currentIndex === 1) {
+
+                                    }
+                                }
+                            }
+                            TLButton {
+                                id: btn_task_achived_cancle
+                                width: parent.width * 0.5
+                                height: parent.height * 0.8
+                                anchors {
+                                    verticalCenter: parent.verticalCenter
+                                    left: parent.horizontalCenter
+                                    leftMargin: height * 0.4
+                                }
+                                btn_text: qsTr("cancel")
                                 onClicked: {
                                     task_auto_achived.close()
+                                    list_return_type.currentIndex = 0
                                 }
                             }
                         }

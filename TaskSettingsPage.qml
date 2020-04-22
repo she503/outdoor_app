@@ -684,7 +684,7 @@ Rectangle {
         }
         onOkClicked: {
             dialog_return_map_tip.close()
-            map_task_manager.returnMapSelete()
+            map_task_manager.turnToMapSelect()
         }
     }
 }

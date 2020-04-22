@@ -22,9 +22,8 @@ Rectangle {
             stack_view.replace(task_settings_page)
             home_page.text_visible = true
         }
-        onUpdateMapData: {
+        onUpdateMapsName: {
             stack_menu.replace(list_view)
-
         }
     }
     Connections {
@@ -36,6 +35,9 @@ Rectangle {
                 list_view.currentIndex = 0
                 home_page.text_visible = false
             }
+        }
+        onUpdateTasksName: {
+            stack_menu.replace(list_view)
         }
     }
 

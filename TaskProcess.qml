@@ -543,7 +543,7 @@ Rectangle {
                                     } else if (list_return_type.currentIndex === 1) {
                                         map_task_manager.turnToMapSelect()
                                     }
-                                    list_return_type.currentIndex = -1
+                                    list_return_type.currentIndex = 0
                                     task_auto_achived.close()
                                 }
                             }

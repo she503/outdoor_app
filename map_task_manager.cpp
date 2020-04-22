@@ -77,7 +77,6 @@ void MapTaskManager::getTasksData(const QStringList &task_name)
             regions.push_back(task_data);
         }
     }
-
     emit updateTaskData(points, regions, lines);
 }
 
@@ -177,6 +176,7 @@ void MapTaskManager::setMapName(const QString &map_name)
     obj.insert("map_name", map_name);
     QJsonDocument doc(obj);
     _socket->sendSocketMessage(doc.toJson());
+    _work_status = WORK_STATUS_MAP_SELECTED_NOT_LOCATING;
 }
 
 int MapTaskManager::getWorkStatus()
@@ -308,8 +308,10 @@ void MapTaskManager::parseRegionsInfo(const QJsonObject &obj)
     if (_map_name_list.size() <= 0) {
         return;
     }
-    _work_status = WORK_STATUS_NONE_WORK;
-    emit updateMapsName(_map_name_list);
+//    _work_status = WORK_STATUS_NONE_WORK;
+    if(_work_status < WORK_STATUS_MAP_SELECTED_NOT_LOCATING) {
+        emit updateMapsName(_map_name_list);
+    }
 }
 
 void MapTaskManager::parseMapAndTasksInfo(const QJsonObject &obj)

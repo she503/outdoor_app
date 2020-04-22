@@ -26,16 +26,6 @@ Rectangle {
             }
         }
     }
-    // test progress == 100
-//    Timer {
-//        interval: 1000
-//        running: true
-//        repeat: true
-//        onTriggered: {
-//            text_progress.text = "" + "100" + " %";
-//            task_auto_achived.open()
-//        }
-//    }
 
     Column{
         anchors.fill: parent
@@ -563,102 +553,6 @@ Rectangle {
                                 }
                             }
                         }
-
-//                        Column {
-//                            width: parent.width * 0.8
-//                            height: parent.height
-//                            anchors {
-//                                horizontalCenter: parent.horizontalCenter
-//                                top: parent.top
-////                                topMargin: height * 0.1
-//                            }
-//                            spacing: height * 0.05
-
-////                            Rectangle {
-////                                id: rec_continue_old_map
-////                                width: parent.width
-////                                height: parent.height * 0.25
-////                                color: "transparent"
-////                                clip: true
-////                                radius: width * 0.1
-////                                Text {
-////                                    id: text_continue_old_map
-////                                    clip: true
-////                                    anchors.left: parent.left
-////                                    anchors.leftMargin: parent.height * 0.3
-////                                    text: qsTr("Continue to perform tasks on this map")
-////                                    width: parent.width
-////                                    height: parent.height
-////                                    font.bold: false
-////                                    font.pixelSize: height * 0.4
-////                                    verticalAlignment: Text.AlignVCenter
-////                                    horizontalAlignment: Text.AlignLeft
-////                                }
-////                                MouseArea {
-////                                    anchors.fill: parent
-////                                    onClicked: {
-////                                        rec_continue_old_map.color = Qt.rgba(0, 255, 0, 0.1)
-////                                    }
-////                                }
-
-////                            }
-////                            Rectangle {
-////                                id: rec_select_new_map
-////                                width: parent.width
-////                                height: parent.height * 0.25
-////                                color: "transparent"
-////                                clip: true
-////                                radius: width * 0.1
-////                                Text {
-////                                    id: text_select_new_map
-////                                    clip: true
-////                                    anchors.left: parent.left
-////                                    anchors.leftMargin: parent.height * 0.3
-////                                    text: qsTr("Switch map")
-////                                    width: parent.width
-////                                    height: parent.height
-////                                    font.bold: false
-////                                    font.pixelSize: height * 0.4
-////                                    verticalAlignment: Text.AlignVCenter
-////                                    horizontalAlignment: Text.AlignLeft
-////                                }
-////                            }
-
-//                            Rectangle {
-//                                id: rect_update_btns
-//                                width: parent.width
-//                                height: parent.height * 0.2
-//                                color: "transparent"
-//                                TLButton {
-//                                    id: btn_task_achived_sure
-//                                    width: parent.width * 0.4
-//                                    height: parent.height * 0.7
-//                                    anchors {
-//                                        verticalCenter: parent.verticalCenter
-//                                        right: parent.horizontalCenter
-//                                        rightMargin: height * 0.4
-//                                    }
-
-//                                    btn_text: qsTr("OK")
-//                                    onClicked: {
-//                                    }
-//                                }
-//                                TLButton {
-//                                    id: btn_task_achived_cancel
-//                                    width: parent.width * 0.4
-//                                    height: parent.height * 0.7
-//                                    anchors {
-//                                        verticalCenter: parent.verticalCenter
-//                                        left: parent.horizontalCenter
-//                                        leftMargin: height * 0.4
-//                                    }
-//                                    btn_text: qsTr("cancel")
-//                                    onClicked: {
-//                                        task_auto_achived.close()
-//                                    }
-//                                }
-//                            }
-//                        }
                     }
                 }
             }

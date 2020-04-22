@@ -168,7 +168,7 @@ Rectangle {
                                     width: parent.width * 0.5
                                     height: parent.height * 0.6
                                     font.bold: true
-                                    font.pixelSize: height * 0.6
+                                    font.pixelSize: Math.sqrt(width) * 1.1
 //                                    anchors.verticalCenter: parent.verticalCenter
                                     //                                verticalAlignment: Text.AlignVCenter
                                     anchors.bottom: parent.bottom
@@ -183,7 +183,7 @@ Rectangle {
                                     width: parent.width * 0.5
                                     height: parent.height * 0.6
                                     font.bold: false
-                                    font.pixelSize: height * 0.6
+                                    font.pixelSize: Math.sqrt(width) * 1.1
                                     text: content
                                 }
                                 Rectangle {
@@ -238,7 +238,7 @@ Rectangle {
                                     width: parent.width * 0.5
                                     height: parent.height * 0.6
                                     font.bold: true
-                                    font.pixelSize: height * 0.6
+                                    font.pixelSize: Math.sqrt(width) * 1.1
 //                                    anchors.verticalCenter: parent.verticalCenter
                                     anchors.bottom: parent.bottom
                                     horizontalAlignment: Text.AlignLeft
@@ -252,7 +252,7 @@ Rectangle {
                                     width: parent.width * 0.5
                                     height: parent.height * 0.6
                                     font.bold: false
-                                    font.pixelSize: height * 0.6
+                                    font.pixelSize: Math.sqrt(width) * 1.1
                                     text: content
                                 }
                                 Rectangle {

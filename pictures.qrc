@@ -91,5 +91,6 @@
         <file>res/pictures/back_style2.png</file>
         <file>res/pictures/begin_point.png</file>
         <file>res/pictures/charge_point.png</file>
+        <file>res/pictures/back_style4.png</file>
     </qresource>
 </RCC>

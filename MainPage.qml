@@ -21,6 +21,9 @@ Rectangle {
             stack_menu.replace(task_process_page)
             stack_view.replace(task_settings_page)
             home_page.text_visible = true
+        }
+        onUpdateMapData: {
+            stack_menu.replace(list_view)
 
         }
     }

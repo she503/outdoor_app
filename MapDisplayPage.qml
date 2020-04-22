@@ -1009,6 +1009,16 @@ Page {
             root.var_ref_line = ref_line
             canvas_ref_line.requestPaint()
         }
+        onUpdateMapsName:{
+            var_ref_line = []
+            var_trajectory = []
+            var_planning_path = []
+            var_planning_ref_path = []
+            ref_line_curren_index = 0
+            canvas_planning_ref_line.requestPaint()
+            canvas_trajectory.requestPaint()
+            canvas_ref_line.requestPaint()
+        }
     }
 
     Connections {

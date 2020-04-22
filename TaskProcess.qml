@@ -133,9 +133,6 @@ Rectangle {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            //                            repeat_need_stop_task.x = (parent.parent.width - width ) / 2
-                            //                            repeat_need_stop_task.y = 0
-//                            repeat_need_stop_task.open()
                             task_auto_achived.open()
 
                         }
@@ -542,10 +539,12 @@ Rectangle {
                                 btn_text: qsTr("OK")
                                 onClicked: {
                                     if (list_return_type.currentIndex === 0) {
-                                        map_task_manager.turnToMapSelect()
-                                    } else if (list_return_type.currentIndex === 1) {
                                         map_task_manager.turnToTaskSelect()
+                                    } else if (list_return_type.currentIndex === 1) {
+                                        map_task_manager.turnToMapSelect()
                                     }
+                                    list_return_type.currentIndex = -1
+                                    task_auto_achived.close()
                                 }
                             }
                             TLButton {

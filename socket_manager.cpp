@@ -16,8 +16,8 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
     _vehicle_height = 0;
 
 //    this->connectToHost("127.0.0.1", "32432");
-    // this->connectToHost("192.168.0.125", "32432");
-    this->connectToHost("192.168.8.165", "32432");
+     this->connectToHost("192.168.0.125", "32432");
+//    this->connectToHost("192.168.8.163", "32432");
 
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));
     connect(_socket, SIGNAL(disconnected()), this, SLOT(disConnet()));
@@ -99,10 +99,10 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
         QJsonDocument doc = QJsonDocument::fromJson(_buffer, &error);
         if (error.error == QJsonParseError::NoError) {
             QJsonObject obj = doc.object();
-
             MessageType message_type = MessageType(obj.value("message_type").toInt());
             switch (message_type) {
             case MessageType::MESSAGE_ALL_MAPS_INFO:
+//                qDebug() << obj;
                 emit mapsInfo(obj);
                 break;
             case MessageType::MESSAGE_SET_INIT_POSE_RST:

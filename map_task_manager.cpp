@@ -202,6 +202,7 @@ void MapTaskManager::turnToMapSelect()
     obj.insert("flag", true);
     QJsonDocument doc(obj);
     _socket->sendSocketMessage(doc.toJson());
+    _work_status = WORK_STATUS_NONE_WORK;
 }
 
 void MapTaskManager::turnToTaskSelect()
@@ -211,6 +212,7 @@ void MapTaskManager::turnToTaskSelect()
     obj.insert("flag", true);
     QJsonDocument doc(obj);
     _socket->sendSocketMessage(doc.toJson());
+    _work_status = WORK_STATUS_MAP_SELECTED_LOCATING;
 }
 
 void MapTaskManager::setTaskCB(const QJsonObject &obj)

@@ -66,7 +66,7 @@ Rectangle {
         btn_start_task.visible = false
         rec_task_control.visible = false
         rec_ref_lines.visible = false
-        root.startTaskLock()
+//        root.startTaskLock()
     }
 
     function toTime(s){
@@ -126,6 +126,8 @@ Rectangle {
             list_model_areas.clear()
             map_areas = maps_name
             map_status = 1
+            root.checked_tasks_name = []
+            monitor_page.clearAllCanvas()
             for (var i = 0; i < map_areas.length; ++i) {
                 list_model_areas.append({"id_card": i, "map_name":map_areas[i]})
             }
@@ -138,6 +140,7 @@ Rectangle {
         onUpdateTasksName: {
             busy.visible = false
             busy.running = false
+            root.checked_tasks_name = []
             pop_lock_loading_task.close()
             tasks_list = tasks
             task_list_model.clear()
@@ -146,7 +149,7 @@ Rectangle {
             } else {
                 vbar.visible = true
             }
-
+            monitor_page.clearAllCanvas()
             for (var i = 0; i < tasks_list.length; ++i) {
                 task_list_model.append({"idcard": i,"check_box_text": tasks_list[i]})
             }
@@ -175,6 +178,7 @@ Rectangle {
 //        }
         onUpdateMapAndTasksInfo: {
             root.choose_map_name = map_name
+
             root.confirmMapPage()
         }
         onUpdateMapAndTaskInfo: {

@@ -101,6 +101,24 @@ Page {
         return [x, y]
     }
 
+    function clearAllCanvas() {
+        var_obstacles = []
+        obstacles_is_polygon = []
+        var_ref_line = []
+        ref_line_curren_index = 0
+        var_planning_path = []
+        var_planning_ref_path = []
+        var_trajectory = []
+        task_points = []
+        task_regions = []
+        task_lines = []
+        canvas_others.requestPaint()
+        canvas_obstacles.requestPaint()
+        canvas_ref_line.requestPaint()
+        canvas_red_ref_line.requestPaint()
+        canvas_planning_ref_line.requestPaint()
+        canvas_trajectory.requestPaint()
+    }
 
     onHeightChanged: {
         map.x = (map.width - canvas_background.width) / 2 / root.real_rate + root.paint_begin_point * 2
@@ -147,7 +165,6 @@ Page {
                 color: "red"
             }
         }
-
         Image {
             id: img_charge
             width: 10
@@ -902,10 +919,10 @@ Page {
             var vehicle_width = socket_manager.getVehicleWidth()
             var vehicle_height = socket_manager.getVehicleHeight()
 
-//            vehicle.width =  vehicle_width * 3/2 * map_rate // 1.3
-//            vehicle.height = vehicle_height * map_rate // 0.74
-            vehicle.height = 0.74 * map_rate
-            vehicle.width = 1.3 * 1.5 * map_rate
+            vehicle.width =  vehicle_width * 3/2 * map_rate // 1.3
+            vehicle.height = vehicle_height * map_rate // 0.74
+//            vehicle.height = 0.74 * map_rate
+//            vehicle.width = 1.3 * 1.5 * map_rate
         }
     }
 

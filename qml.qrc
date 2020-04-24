@@ -22,6 +22,5 @@
         <file>TLRadioButton.qml</file>
         <file>TLInfoDisplayPage.qml</file>
         <file>TLDialog.qml</file>
-        <file>TLProgressBar.qml</file>
     </qresource>
 </RCC>

@@ -203,6 +203,7 @@ void MapTaskManager::turnToMapSelect()
     QJsonDocument doc(obj);
     _socket->sendSocketMessage(doc.toJson());
     _work_status = WORK_STATUS_NONE_WORK;
+//    sendFirstMapName();
 }
 
 void MapTaskManager::turnToTaskSelect()

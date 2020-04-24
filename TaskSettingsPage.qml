@@ -721,6 +721,8 @@ Rectangle {
         onOkClicked: {
             dialog_return_map_tip.close()
             map_task_manager.turnToMapSelect()
+            list_view_areas.currentIndex = 0
+//            map_task_manager.parseMapData()
         }
     }
 }

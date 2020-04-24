@@ -6,6 +6,8 @@
 #include <QDataStream>
 #include <QTimer>
 #include "utils.h"
+#include <QCoreApplication>
+#include <QFile>
 
 SocketManager::SocketManager(QObject *parent) : QObject(parent)
 {
@@ -15,9 +17,16 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
     _vehicle_width = 0;
     _vehicle_height = 0;
 
-//    this->connectToHost("127.0.0.1", "32432");
-    this->connectToHost("192.168.1.125", "32432");
-//    this->connectToHost("192.168.8.117", "32432");
+    QString app_path = QCoreApplication::applicationDirPath();
+    QFile file(app_path + "/ip.txt");
+    QByteArray ip;
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        ip = file.readAll();
+    } else {
+        ip = "192.168.1.125";
+    }
+    this->connectToHost(ip,"32432");
+
 
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));
     connect(_socket, SIGNAL(disconnected()), this, SLOT(disConnet()));
@@ -132,7 +141,6 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
                 emit workDown(obj);
                 break;
 
-
             case  MessageType::MESSAGE_LOGIN_RST:
                 emit checkoutLogin(obj);
                 break;
@@ -148,8 +156,6 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
             case MessageType::MESSAGE_ALL_ACCOUNTS_INFO:
                 emit allUser(obj);
                 break;
-
-
 
             case MESSAGE_CURRENT_WORK_FULL_REF_LINE:
                 emit parseWorkFullRefLineInfo(obj);

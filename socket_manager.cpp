@@ -17,15 +17,15 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
     _vehicle_width = 0;
     _vehicle_height = 0;
 
-    QString app_path = QCoreApplication::applicationDirPath();
-    QFile file(app_path + "/ip.txt");
-    QByteArray ip;
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        ip = file.readAll();
-    } else {
-        ip = "192.168.1.125";
-    }
-    this->connectToHost(ip,"32432");
+//    QString app_path = QCoreApplication::applicationDirPath();
+//    QFile file(app_path + "/ip.txt");
+//    QByteArray ip;
+//    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+//        ip = file.readAll();
+//    } else {
+//        ip = "192.168.1.125";
+//    }
+    this->connectToHost("192.168.1.102","32432");
 
 
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));

@@ -15,6 +15,7 @@
         <file>WelcomePage.qml</file>
         <file>VerifyPasswordPage.qml</file>
         <file>MenuPage.qml</file>
+        <file>FaildToConnectPage.qml</file>
     </qresource>
     <qresource prefix="/CustomControl">
         <file>TLTextField.qml</file>

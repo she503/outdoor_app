@@ -1,5 +1,5 @@
-#ifndef ACCOUNT_MANAGER_H
-#define ACCOUNT_MANAGER_H
+#ifndef TERGEO_APP_ACCOUNT_MANAGER_H
+#define TERGEO_APP_ACCOUNT_MANAGER_H
 
 #include <QObject>
 #include <QJsonObject>
@@ -19,15 +19,15 @@ public:
     /**
      * @brief 添加用户
      */
-    Q_INVOKABLE void accountAdd(const QString& username, const QString& password, const int& level);
-
+    Q_INVOKABLE void accountAdd(const QString& username,
+                                const QString& password, const int& level);
 
     /**
      * @brief 更新用户
      */
     Q_INVOKABLE void accountUpdate(const QString& username, const QString& password,
-                                   const int& level, QString old_pwd = "", bool need_old_pwd = false);
-
+                                   const int& level, QString old_pwd = "",
+                                   bool need_old_pwd = false);
 
     /**
      * @brief 删除用户
@@ -44,39 +44,33 @@ public:
     /**
      * @brief 获取用户信息
      */
-    Q_INVOKABLE void getAllAccounts();
+    Q_INVOKABLE QMap<QString, int > getAllAccountsInfo();
 
-
-    Q_INVOKABLE void getCurrentUserLevel();
 
     Q_INVOKABLE int getCurrentLevel();
 
 signals:
-    void emitCheckOutLogin(const int& status, const QString& message);
+    void emitLoginRst(const int& status, const QString& message);
+    void emitAddAccountRst(const int& status, const QString& message);
+    void emitDeleteAccountRst(const int& status, const QString& message);
+    void emitUpdateAccountRst(const int& status, const QString& message);
     void emitAllAccountInfo(const QJsonObject& accounts_info);
-    void emitAddAccountCB(const int& status, const QString& message);
-    void emitDeleteAccountCB(const int& status, const QString& message);
-    void emitUpdateAccountCB(const int& status, const QString& message);
-    void emitNameAndLevel(const QString& user_name, const int& level);
-    void emitLevel(const int& level);
-
 
 private slots:
-    void checkoutLogin(const QJsonObject& obj);
-    void parseAddStatus(const QJsonObject& obj);
-    void parseDeleteStatus(const QJsonObject& obj);
-    void parseUpdateStatus(const QJsonObject& obj);
+    void parseLoginRst(const QJsonObject& obj);
+    void parseAddRst(const QJsonObject& obj);
+    void parseDeleteRst(const QJsonObject& obj);
+    void parseUpdateRst(const QJsonObject& obj);
     void parseAllAccountsInfo(const QJsonObject& obj);
 
-
 private:
-
     SocketManager* _socket;
     QJsonObject _all_accounts_obj;
-    QMap<QString, QPair<QString, PermissionLevel>> _accounts_map;
-    QString _username;
-    QString _password;
-    int _level;
+    QMap<QString, QPair<QString, PermissionLevel> > _accounts_map;
+
+    QString _current_username;
+    QString _current_password;
+    int _current_level;
 };
 
 #endif // ACCOUNT_MANAGER_H

@@ -1,5 +1,6 @@
 #include "ros_message_manager.h"
 #include "utils.h"
+
 RosMessageManager::RosMessageManager(QObject *parent) : QObject(parent)
 {
 
@@ -8,44 +9,25 @@ RosMessageManager::RosMessageManager(QObject *parent) : QObject(parent)
 void RosMessageManager::setSocket(SocketManager *socket)
 {
     _socket = socket;
-//    connect(_socket, SIGNAL(parseWorkFullRefLineInfo(QJsonObject)), this, SLOT(parseWorkFullRefLineInfo(QJsonObject)));
-    connect(_socket, SIGNAL(localizationInfo(QJsonObject)), this, SLOT(parseLocalizationInfo(QJsonObject)));
-    connect(_socket, SIGNAL(chassisInfo(QJsonObject)), this, SLOT(parseChassisInfo(QJsonObject)));
-    connect(_socket, SIGNAL(obstaclesInfo(QJsonObject)), this, SLOT(parseObstacleInfo(QJsonObject)));
-    connect(_socket, SIGNAL(planningInfo(QJsonObject)), this, SLOT(parsePlanningInfo(QJsonObject)));
-    connect(_socket, SIGNAL(planningRefInfo(QJsonObject)), this, SLOT(parsePlanningRefInfo(QJsonObject)));
-    connect(_socket, SIGNAL(taskProcessInfo(QJsonObject)), this, SLOT(parseTaskProcessInfo(QJsonObject)));
-    connect(_socket, SIGNAL(batteryInfo(QJsonObject)), this, SLOT(parseBatteryInfo(QJsonObject)));
-    connect(_socket, SIGNAL(trajectoryInfo(QJsonObject)), this, SLOT(parseTrajectoryInfo(QJsonObject)));
-    connect(_socket, SIGNAL(monitorMessageInfo(QJsonObject)), this, SLOT(parseMonitorMessageInfo(QJsonObject)));
-    connect(_socket, SIGNAL(enableCleanWork(bool)), this, SIGNAL(updateEnableCleanWork(bool)));
+    connect(_socket, SIGNAL(localizationInfo(QJsonObject)),
+            this, SLOT(parseLocalizationInfo(QJsonObject)));
+    connect(_socket, SIGNAL(chassisInfo(QJsonObject)),
+            this, SLOT(parseChassisInfo(QJsonObject)));
+    connect(_socket, SIGNAL(obstaclesInfo(QJsonObject)),
+            this, SLOT(parseObstacleInfo(QJsonObject)));
+    connect(_socket, SIGNAL(planningInfo(QJsonObject)),
+            this, SLOT(parsePlanningInfo(QJsonObject)));
+    connect(_socket, SIGNAL(planningRefInfo(QJsonObject)),
+            this, SLOT(parsePlanningRefInfo(QJsonObject)));
+    connect(_socket, SIGNAL(taskProcessInfo(QJsonObject)),
+            this, SLOT(parseTaskProcessInfo(QJsonObject)));
+    connect(_socket, SIGNAL(batteryInfo(QJsonObject)),
+            this, SLOT(parseBatteryInfo(QJsonObject)));
+    connect(_socket, SIGNAL(trajectoryInfo(QJsonObject)),
+            this, SLOT(parseTrajectoryInfo(QJsonObject)));
+    connect(_socket, SIGNAL(monitorMessageInfo(QJsonObject)),
+            this, SLOT(parseMonitorMessageInfo(QJsonObject)));
 }
-
-void RosMessageManager::setSort(int sort_by, int sort_type)
-{
-    QJsonObject obj;
-    obj.insert("message_type", MESSAGE_SORT_MESSAGE);
-    obj.insert("sort_by", sort_by);
-    obj.insert("sort_type", sort_type);
-    QJsonDocument doc(obj);
-    _socket->sendSocketMessage(doc.toJson());
-}
-
-void RosMessageManager::setCleanDeviceStates(bool flag)
-{
-    QJsonObject obj;
-    obj.insert("message_type", MESSAGE_ENABLE_CLEAN_WORK);
-    obj.insert("flag", flag);
-    QJsonDocument doc(obj);
-    _socket->sendSocketMessage(doc.toJson());
-}
-
-//void RosMessageManager::parseWorkFullRefLineInfo(const QJsonObject &obj)
-//{
-//    QJsonObject ref_line_obj = obj.value("ref_line").toObject();
-//    QVariantList pts = ref_line_obj.value("pts").toArray().toVariantList();
-////    emit updateRefLine(pts);
-//}
 
 void RosMessageManager::parseLocalizationInfo(const QJsonObject &obj)
 {
@@ -67,7 +49,9 @@ void RosMessageManager::parseChassisInfo(const QJsonObject &obj)
     int drive_mode = obj.value("drive_mode").toInt();
     int cleaning_agency_state = obj.value("cleaning_agency_state").toInt();
     bool water_tank_signal = obj.value("water_tank_signal").toBool();
-    emit updateChassisInfo(time, speed, omega, brake_state, drive_mode, cleaning_agency_state,water_tank_signal);
+    emit updateChassisInfo(time, speed, omega,
+                           brake_state, drive_mode,
+                           cleaning_agency_state,water_tank_signal);
 }
 
 void RosMessageManager::parseObstacleInfo(const QJsonObject &obj)
@@ -111,20 +95,19 @@ void RosMessageManager::parseTrajectoryInfo(const QJsonObject &obj)
 
 void RosMessageManager::parseMonitorMessageInfo(const QJsonObject &obj)
 {
-    QJsonObject monitor_messages_obj = obj.value("monitor_messages").toObject();
+    QString time_str = obj.value("time").toString();
 
+    QJsonObject monitor_messages_obj = obj.value("monitor_messages").toObject();
     QJsonObject::const_iterator it = monitor_messages_obj.begin();
     QVariantList error_list;
 
     while (it != monitor_messages_obj.end()) {
-
         QJsonObject temp_obj = it.value().toObject();
-
-        QString error_time = temp_obj.value("error_time").toString();
         QString error_code = temp_obj.value("error_code").toString();
         QString error_message = temp_obj.value("error_message").toString();
         QString error_level = temp_obj.value("error_level").toString();
-        QVariantList temp_list = { error_time ,error_level, error_code, error_message};
+
+        QVariantList temp_list = { time_str ,error_level, error_code, error_message};
         error_list.push_back(temp_list);
         ++it;
     }

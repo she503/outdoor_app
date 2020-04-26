@@ -169,7 +169,7 @@ Rectangle {
                     MouseArea{
                         anchors.fill: parent
                         onClicked: {
-                            ros_message_manager.setCleanDeviceStates(!btn_clean_work.clean_work)
+                            ros_message_manager.setCleanDeviceState(!btn_clean_work.clean_work)
                         }
                     }
                     Connections{

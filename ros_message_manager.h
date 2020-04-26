@@ -1,8 +1,9 @@
-#ifndef ROSMESSAGEMANAGER_H
-#define ROSMESSAGEMANAGER_H
+#ifndef TERGEO_APP_ROS_MESSAGEMANAGER_H
+#define TERGEO_APP_ROS_MESSAGEMANAGER_H
 
 #include <QObject>
 #include "socket_manager.h"
+
 class RosMessageManager : public QObject
 {
     Q_OBJECT
@@ -11,9 +12,6 @@ public:
 
     void setSocket(SocketManager *socket);
 
-public:
-    Q_INVOKABLE void setSort(int sort_by, int sort_type);
-    Q_INVOKABLE void setCleanDeviceStates(bool flag);
 signals:
     void updateLocalizationInfo(const QString& time, const QString& x, const QString& y,
                                 const QString& heading, const QString& state);
@@ -26,11 +24,10 @@ signals:
     void updateTaskProcessInfo(const int& current_index, const QString& progress);
     void updateBatteryInfo(const int& soc);
     void updateTrajectoryInfo(const QVariantList& trajectory);
+
     void updateMonitorMessageInfo(const QVariantList& monitor_message);
-    void updateEnableCleanWork(const bool& flag);
 
 private slots:
-//    void parseWorkFullRefLineInfo(const QJsonObject& obj);
     void parseLocalizationInfo(const QJsonObject& obj);
     void parseChassisInfo(const QJsonObject& obj);
     void parseObstacleInfo(const QJsonObject& obj);
@@ -39,6 +36,7 @@ private slots:
     void parseTaskProcessInfo(const QJsonObject& obj);
     void parseBatteryInfo(const QJsonObject& obj);
     void parseTrajectoryInfo(const QJsonObject& obj);
+
     void parseMonitorMessageInfo(const QJsonObject& obj);
 
 private:

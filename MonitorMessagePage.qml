@@ -26,7 +26,6 @@ Item {
     Connections {
         target: ros_message_manager
         onUpdateMonitorMessageInfo: {
-            console.info("21212121212")
             message_list_model.clear()
             root.has_error = true
             if (!is_first_get_error) {

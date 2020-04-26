@@ -1,9 +1,10 @@
-#ifndef MAPTASKMANAGER_H
-#define MAPTASKMANAGER_H
+#ifndef TERGEO_APP_MAP_TASK_MANAGER_H
+#define TERGEO_APP_MAP_TASK_MANAGER_H
 
 #include <QObject>
 
 #include "utils.h"
+#include "status_manager.h"
 #include "socket_manager.h"
 
 class MapTaskManager : public QObject
@@ -12,81 +13,40 @@ class MapTaskManager : public QObject
 public:
     explicit MapTaskManager(QObject *parent = nullptr);
 
-    /**
-     * @brief 地图点击初始化
-     */
-//    Q_INVOKABLE bool sendInitPosAndMapName(const QString &map_name, const QString& pos_x, const QString& pos_y);
+    void setSocketManager(SocketManager* socket_manager);
+    void setStatusManager(StatusManager* status_manager);
+
     Q_INVOKABLE void sendInitPos(const double& pos_x, const double& pos_y);
-
-    /**
-      * @brief send map info by param map_name
-      */
-    Q_INVOKABLE void parseMapData(const QString& map_name);
-
-    /**
-      * @brief get tasks data
-      */
-    Q_INVOKABLE void getTasksData(const QStringList &task_name);
-
-    /**
-      * @brief get map features
-      */
-    Q_INVOKABLE void getFeature(const QString& map_name);
-
-//    /**
-//      * @brief get map tasks name
-//      */
-//    Q_INVOKABLE void getMapTask(const QString& map_name);
-
-    /**
-     * @brief get maps name
-     */
-    Q_INVOKABLE void getMapsName();
-
-    /**
-      * @brief choose the tasks than send them to server
-      */
-    Q_INVOKABLE void sentMapTasksName(const QStringList& task_list);
-
-    Q_INVOKABLE bool judgeIsMapTasks();
-
-    Q_INVOKABLE void sendPauseTaskCommond(const bool& is_pause);
-
-//    Q_INVOKABLE void sendStopTaskCommond();
-
-    Q_INVOKABLE void getFirstMap();
-
-    Q_INVOKABLE bool getIsWorking();
 
     Q_INVOKABLE void setMapName(const QString& map_name);
 
+    Q_INVOKABLE QVariantList getMapRoads(const QString& map_name);
+
+    Q_INVOKABLE QVariantList getTasksData(const QStringList &task_name);
+
+    Q_INVOKABLE QVariantList getMapFeature(const QString& map_name);
+
+    Q_INVOKABLE QStringList getMapsName();
+
+    Q_INVOKABLE void setWorkTasksName(const QStringList& task_list);
+
+    Q_INVOKABLE void setPauseTaskCommond(const bool is_pause);
+
     Q_INVOKABLE int getWorkStatus();
+    Q_INVOKABLE void setWorkStatus(const int status);
+    Q_INVOKABLE bool isInWorkingState();
 
-    Q_INVOKABLE void sendFirstMapName();
+    Q_INVOKABLE void turnToSelectMap();
 
-    Q_INVOKABLE void turnToMapSelect();
+    Q_INVOKABLE void turnToSelectTask();
 
-    Q_INVOKABLE void turnToTaskSelect();
+    Q_INVOKABLE void setEnableCleanWork(bool flag);
 
-public:
-    void setSocket(SocketManager* socket);
-    void sendInfoTest();
+    //    Q_INVOKABLE bool judgeIsMapTasks();
+
 private:
+    void parseTasksData(const QJsonObject& tasks_obj);
 
-    void parseTasksName(const QJsonObject& tasks_obj);
-
-
-    QVariantList parseSignals(const QJsonObject &obj);
-    QVariantList parseTrees(const QJsonObject &obj);
-    QVariantList parseStopSigns(const QJsonObject &obj);
-    QVariantList parseSpeedBumps(const QJsonObject &obj);
-    QVariantList parseRoadEdges(const QJsonObject &obj);
-    QVariantList parseLaneLines(const QJsonObject &obj);
-    QList<QVariantList> parseClearAreas(const QJsonObject &obj);
-    QList<QVariantList> parseCrosswalks(const QJsonObject &obj);
-    QList<QVariantList> parseJunctions(const QJsonObject &obj);
-    QList<QVariantList> parseParkingSpaces(const QJsonObject &obj);
-    QList<QVariantList> parseRoads(const QJsonObject &obj);
 signals:
     void updateErrorToLoadMapOrNoneTasksInfo(const QString& message);
     void updateInitPosInfo(const int& status, const QString& message);
@@ -124,7 +84,10 @@ signals:
     void updateStopTaskInfo(const int& status);
     void updateMapName(const QString& map_name, const int& index);
 
-    void sendWorkDown();
+    void sendWorkDone();
+
+    void updateEnableCleanWork(const bool& flag);
+
 private slots:
     void setInitPosCB(const QJsonObject& obj);
 
@@ -148,20 +111,16 @@ private slots:
     void parseWorkDown();
 
 private:
-    SocketManager* _socket;
-    QMap<QString, QJsonObject> _maps;
-    QMap<QString, QPair<qint8, QVariantList>> _tasks;
-    QStringList _map_name_list;
-    QStringList _task_name;
-    QJsonObject _feature_obj;
-    QJsonObject _task_data_obj;
-    QVariantList _pts;
+    SocketManager* _socket_manager;
+    StatusManager* _status_manager;
 
-    WorkStatus _work_status;
+    QMap<QString, QJsonObject> _all_maps;
+    QMap<QString, QJsonObject> _all_features;
 
-//    bool _is_
+    QJsonObject _tasks_in_map;
+    QStringList _tasks_name_in_map;
 
-
+    QVariantList _full_ref_line;
 };
 
 #endif // MAPTASKMANAGER_H

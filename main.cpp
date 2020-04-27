@@ -60,6 +60,7 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty())
         return -1;
 
+    socket_manager->connectToServer();
 
     return app.exec();
 }

@@ -14,11 +14,6 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
     _socket = new QTcpSocket(this);
     _socket->setReadBufferSize(10 * 1024 * 1024);
 
-//    this->connectToHost("127.0.0.1", "32432");
-//    this->connectToHost("192.168.1.125", "32432");
-    this->connectToHost("192.168.8.127", "32432");
-//    this->connectToHost("192.168.1.102", "32432");
-
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));
     connect(_socket, SIGNAL(disconnected()), this, SLOT(disConnet()));
 }
@@ -30,19 +25,27 @@ SocketManager::~SocketManager()
     _socket->close();
 }
 
+bool SocketManager::connectToServer()
+{
+    return this->connectToHost("127.0.0.1", "32432");
+//    return this->connectToHost("192.168.8.127", "32432");
+//    return this->connectToHost("192.168.1.125", "32432");
+//    return this->connectToHost("192.168.1.102", "32432");
+}
+
 bool SocketManager::connectToHost(const QString &ip, const QString &port)
 {
     _socket->abort();
     _socket->connectToHost(ip, port.toInt());
     if (!_socket->waitForConnected(1000)) {
         qDebug() << "[SocketManager::connectToHost]: error!!!";
+        emit emitConnectToServerError();
         return false;
     } else {
         QJsonObject object;
         object.insert("message_type", int(MESSAGE_NEW_DEIVCE_CONNECT));
         object.insert("sender", TLSocketType::TERGEO_APP);
         QJsonDocument doc(object);
-        _is_connected = true;
         this->sendSocketMessage(doc.toJson());
         return true;
     }
@@ -53,19 +56,8 @@ bool SocketManager::disConnet()
     QString message = tr("app disconnect to server!");
     _socket->disconnectFromHost();
     _socket->close();
-    _is_connected = false;
     emit appDisconnected(message);
     return true;
-}
-
-bool SocketManager::judgeIsConnected()
-{
-    QString message = tr("app cannot to connect server, please check your wifi and IP!");
-
-    if(!_is_connected) {
-//        emit emitFaildToLogin(message);
-    }
-    return _is_connected;
 }
 
 void SocketManager::readSocketData()
@@ -122,7 +114,7 @@ void SocketManager::parseSocketData(const QByteArray &buffer)
         emit emitSetInitPosRST(obj);
         break;
     case MessageType::MESSAGE_CURRENT_MAP_AND_TASKS:
-        emit emitMapAndTasks(obj); //yi ge di tu he gai di tu de suo you can kao xian
+        emit emitMapAndTasks(obj);
         break;
     case MessageType::MESSAGE_CURRENT_WORK_MAP_DATA:
         emit emitCurrentWorkMapData(obj);
@@ -134,8 +126,7 @@ void SocketManager::parseSocketData(const QByteArray &buffer)
         emit emitSetTasksRST(obj);
         break;
     case MessageType::MESSAGE_PAUSE_TASK_RST:
-        emit emitPauseTaskRST(obj.value("current_status").toBool(),
-                              obj.value("status").toInt());
+        emit emitPauseTaskRST(obj);
         break;
     case MessageType::MESSAGE_WORK_DONE:
         emit emitWorkDone(obj);

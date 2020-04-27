@@ -1,12 +1,10 @@
 #ifndef TERGEO_APP_QJSON_TRANSFORMER_H
 #define TERGEO_APP_QJSON_TRANSFORMER_H
 
-
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QVariantList>
-
 
 class QJsonTransformer
 {

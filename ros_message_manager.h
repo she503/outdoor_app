@@ -16,8 +16,8 @@ signals:
     void updateLocalizationInfo(const QString& time, const QString& x, const QString& y,
                                 const QString& heading, const QString& state);
     void updateChassisInfo(const QString& time, const QString& speed, const QString& omega,
-                           const int& brak_state, const int& drive_mode, const int& cleaning_agency_state,
-                           const bool& water_tank_signal);
+                           const int& brak_state, const int& drive_mode,
+                           const int& cleaning_agency_state, const bool& water_tank_signal);
     void updateObstacleInfo(const bool& is_polygon, const QVariantList& obstacles);
     void updatePlanningInfo(const QVariantList& planning_path);
     void updatePlanningRefInfo(const QVariantList& planning_path);

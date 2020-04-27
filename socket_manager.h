@@ -22,6 +22,8 @@ public:
     explicit SocketManager(QObject *parent = nullptr);
     ~SocketManager();
 
+    bool connectToServer();
+
     bool sendSocketMessage(const QByteArray& message);
 
     void setVehicleInfoManager(VehicleInfoManager* vehicle_info_manager);
@@ -36,8 +38,6 @@ public:
      */
     Q_INVOKABLE bool disConnet();
 
-    Q_INVOKABLE bool judgeIsConnected();
-
 signals:
     void emitLoginRst(const QJsonObject& obj);
     void emitAddUserRst(const QJsonObject& obj);
@@ -49,12 +49,12 @@ signals:
     void emitSetInitPosRST(const QJsonObject& obj);
     void emitMapAndTasks(const QJsonObject& obj);
     void emitCurrentWorkMapData(const QJsonObject& obj);
+    void emitFullRefLine(const QJsonObject& obj);
     void emitSetMapNameRst(const QJsonObject& obj);
     void emitSetTasksRST(const QJsonObject& obj);
-    void emitPauseTaskRST(const bool& is_pause, const int& status);
+    void emitPauseTaskRST(QJsonObject);
     void emitWorkDone(const QJsonObject& obj);
     void emitWorkError(const QJsonObject& obj);
-    void emitFullRefLine(const QJsonObject& obj);
 
     // ros msgs
     void emitLocalizationInfo(const QJsonObject& obj);
@@ -71,6 +71,7 @@ signals:
 
     // app断开连接发出信号
     void appDisconnected(const QString& message);
+    void emitConnectToServerError();
 
 private:
     void parseVehicleSize(const QJsonObject& obj);
@@ -82,7 +83,6 @@ private slots:
 private:
     QTcpSocket* _socket;
     QByteArray _buffer;
-    bool _is_connected;
 
     VehicleInfoManager* _vehicle_info_manager;
 };

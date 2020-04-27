@@ -1,5 +1,5 @@
-#ifndef SOCKET_MANAGER_H
-#define SOCKET_MANAGER_H
+#ifndef TERGEO_APP_SOCKET_MANAGER_H
+#define TERGEO_APP_SOCKET_MANAGER_H
 
 #include <QObject>
 #include <QTcpSocket>
@@ -13,6 +13,8 @@
 #include <QJsonValue>
 #include <QMap>
 
+#include "vehicle_info_manager.h"
+
 class SocketManager : public QObject
 {
     Q_OBJECT
@@ -21,6 +23,8 @@ public:
     ~SocketManager();
 
     bool sendSocketMessage(const QByteArray& message);
+
+    void setVehicleInfoManager(VehicleInfoManager* vehicle_info_manager);
 
     /**
     * @brief 连接服务器
@@ -34,73 +38,53 @@ public:
 
     Q_INVOKABLE bool judgeIsConnected();
 
-    Q_INVOKABLE float getVehicleWidth();
-
-    Q_INVOKABLE float getVehicleHeight();
-
 signals:
-    void mapsInfo(const QJsonObject& obj);
-    void sendMapAndTasks(const QJsonObject& obj);
-    void sendMapAndTask(const QJsonObject& obj);
-    void setMapAndInitPosRST(const QJsonObject& obj);
+    void emitLoginRst(const QJsonObject& obj);
+    void emitAddUserRst(const QJsonObject& obj);
+    void emitDeleteUserRst(const QJsonObject& obj);
+    void emitUpdateUserRst(const QJsonObject& obj);
+    void emitAllAccountsInfo(const QJsonObject& obj);
 
+    void emitAllMapsInfo(const QJsonObject& obj);
+    void emitSetInitPosRST(const QJsonObject& obj);
+    void emitMapAndTasks(const QJsonObject& obj);
+    void emitCurrentWorkMapData(const QJsonObject& obj);
+    void emitSetMapNameRst(const QJsonObject& obj);
+    void emitSetTasksRST(const QJsonObject& obj);
+    void emitPauseTaskRST(const bool& is_pause, const int& status);
+    void emitWorkDone(const QJsonObject& obj);
+    void emitWorkError(const QJsonObject& obj);
+    void emitFullRefLine(const QJsonObject& obj);
 
-    void tasksData(const QJsonObject& obj);
-    void setInitPosRST(const QJsonObject& obj);
-    void parseMapName(const QJsonObject& obj);
-    void currentWorkMapData(const QJsonObject& obj);
+    // ros msgs
+    void emitLocalizationInfo(const QJsonObject& obj);
+    void emitTaskInfo(const QJsonObject& obj);
+    void emitChassisInfo(const QJsonObject& obj);
+    void emitObstaclesInfo(const QJsonObject& obj);
+    void emitPlanningPath(const QJsonObject& obj);
+    void emitPlanningRefLine(const QJsonObject& obj);
+    void emitBatteryInfo(const QJsonObject& obj);
+    void emitTrajectoryInfo(const QJsonObject& obj);
+    void emitMonitorMessage(const QJsonObject& obj);
 
-
-    void checkoutLogin(const QJsonObject& obj);
-    void addUser(const QJsonObject& obj);
-    void deleteUser(const QJsonObject& obj);
-    void updateUser(const QJsonObject& obj);
-    void allUser(const QJsonObject& obj);
-
-//    void localizationInitRST(const QJsonObject& obj);
-    void setTasksRST(const QJsonObject& obj);
-    void workDown(const QJsonObject& obj);
-
-    void taskProcessInfo(const QJsonObject& obj);
+    void emitEnableCleanWorkRst(const bool flag);
 
     // app断开连接发出信号
     void appDisconnected(const QString& message);
-    
-    // 数据发送
-    void sendDataToSocket(const QByteArray& data);
-
-
-    //
-    void parseWorkFullRefLineInfo(const QJsonObject& obj);
-    void localizationInfo(const QJsonObject& obj);
-    void chassisInfo(const QJsonObject& obj);
-    void obstaclesInfo(const QJsonObject& obj);
-    void planningInfo(const QJsonObject& obj);
-    void planningRefInfo(const QJsonObject& obj);
-    void batteryInfo(const QJsonObject& obj);
-    void trajectoryInfo(const QJsonObject& obj);
-    void monitorMessageInfo(const QJsonObject& obj);
-
-    //message
-    void emitFaildToLogin(const QString& message);
-
-    void pauseTaskRST(const bool& is_pause, const int& status);
-    void pauseStopTaskRST(const int& status);
-
-    void enableCleanWork(const bool& flag);
 
 private:
-    void getVehicleWidthHeight(const QJsonObject& obj);
+    void parseVehicleSize(const QJsonObject& obj);
 
 private slots:
-    void readSocketData(/*const QByteArray& buffer*/);
+    void readSocketData();
+    void parseSocketData(const QByteArray& buffer);
 
 private:
     QTcpSocket* _socket;
     QByteArray _buffer;
     bool _is_connected;
-    float _vehicle_width;
-    float _vehicle_height;
+
+    VehicleInfoManager* _vehicle_info_manager;
 };
 
 #endif // SOCKET_MANAGER_H

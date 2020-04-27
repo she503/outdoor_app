@@ -1,7 +1,6 @@
 #include "account_manager.h"
 
 #include <QCoreApplication>
-#include <QDebug>
 
 AccountManager::AccountManager(QObject *parent) : QObject(parent)
 {
@@ -16,15 +15,22 @@ AccountManager::~AccountManager()
 void AccountManager::setSocket(SocketManager *socket)
 {
     _socket = socket;
-    connect(_socket, SIGNAL(checkoutLogin(QJsonObject)), this, SLOT(checkoutLogin(QJsonObject)));
-    connect(_socket, SIGNAL(addUser(QJsonObject)), this, SLOT(parseAddStatus(QJsonObject)));
-    connect(_socket, SIGNAL(deleteUser(QJsonObject)), this, SLOT(parseDeleteStatus(QJsonObject)));
-    connect(_socket, SIGNAL(updateUser(QJsonObject)), this, SLOT(parseUpdateStatus(QJsonObject)));
-    connect(_socket, SIGNAL(allUser(QJsonObject)), this, SLOT(parseAllAccountsInfo(QJsonObject)));
 
+    connect(_socket, SIGNAL(emitLoginRst(QJsonObject)),
+            this, SLOT(parseLoginRst(QJsonObject)));
+    connect(_socket, SIGNAL(emitAddUserRst(QJsonObject)),
+            this, SLOT(parseAddRst(QJsonObject)));
+    connect(_socket, SIGNAL(emitDeleteUserRst(QJsonObject)),
+            this, SLOT(parseDeleteRst(QJsonObject)));
+    connect(_socket, SIGNAL(emitUpdateUserRst(QJsonObject)),
+            this, SLOT(parseUpdateRst(QJsonObject)));
+
+    connect(_socket, SIGNAL(emitAllAccountsInfo(QJsonObject)),
+            this, SLOT(parseAllAccountsInfo(QJsonObject)));
 }
 
-void AccountManager::accountAdd(const QString &username, const QString &password, const int &level)
+void AccountManager::accountAdd(const QString &username,
+                                const QString &password, const int &level)
 {
     QJsonObject obj;
     obj.insert("message_type", int(MessageType::MESSAGE_ADD_ACCOUNT));
@@ -35,8 +41,8 @@ void AccountManager::accountAdd(const QString &username, const QString &password
     _socket->sendSocketMessage(doc.toJson());
 }
 
-void AccountManager::accountUpdate(const QString &username, const QString &password, const int &level,
-                                   QString old_pwd, bool need_old_pwd)
+void AccountManager::accountUpdate(const QString &username, const QString &password,
+                                   const int &level, QString old_pwd, bool need_old_pwd)
 {
     if (need_old_pwd ) {
         QString real_old_pwd = _accounts_map.value(username).first;
@@ -74,57 +80,57 @@ void AccountManager::accountLogin(const QString &username, const QString &passwo
     obj.insert("password", password);
     QJsonDocument doc(obj);
     _socket->sendSocketMessage(doc.toJson());
-    _username = username;
-    _password = password;
+    _current_username = username;
+    _current_password = password;
 }
 
-void AccountManager::getAllAccounts()
+QMap<QString, int> AccountManager::getAllAccountsInfo()
 {
-    if (!_all_accounts_obj.empty()) {
-        emit emitAllAccountInfo(_all_accounts_obj);
+    QMap<QString, int> all_accounts_info;
+    QMap<QString, QPair<QString, PermissionLevel> >::const_iterator iter =
+            _accounts_map.constBegin();
+    for (; iter != _accounts_map.constEnd(); ++iter) {
+        all_accounts_info[iter.key()] = int(iter.value().second);
     }
-}
-
-void AccountManager::getCurrentUserLevel()
-{
-    emit emitNameAndLevel(_username, _level);
+    return all_accounts_info;
 }
 
 int AccountManager::getCurrentLevel()
 {
-    return _level;
+    return _current_level;
 }
 
-void AccountManager::checkoutLogin(const QJsonObject &obj)
+void AccountManager::parseLoginRst(const QJsonObject &obj)
 {
     int status = obj.value("status").toInt();
     QString message = obj.value("message").toString();
     int level = obj.value("level").toInt();
-    emit emitCheckOutLogin(status, message);
+
     if (status == 1) {
-        _level = level;
-        emitLevel(_level);
+        _current_level = level;
     } else if (status == 0) {
-        _username = "";
-        _password = "";
+        _current_username = "";
+        _current_password = "";
     }
+
+    emit emitLoginRst(status, message);
 }
 
-void AccountManager::parseAddStatus(const QJsonObject &obj)
+void AccountManager::parseAddRst(const QJsonObject &obj)
 {
     int status = obj.value("status").toInt();
     QString message = obj.value("message").toString();
-    emit emitAddAccountCB(status, message);
+    emit emitAddAccountRst(status, message);
 }
 
-void AccountManager::parseDeleteStatus(const QJsonObject &obj)
+void AccountManager::parseDeleteRst(const QJsonObject &obj)
 {
     int status = obj.value("status").toInt();
     QString message = obj.value("message").toString();
-    emit emitDeleteAccountCB(status, message);
+    emit emitDeleteAccountRst(status, message);
 }
 
-void AccountManager::parseUpdateStatus(const QJsonObject &obj)
+void AccountManager::parseUpdateRst(const QJsonObject &obj)
 {
     int status = obj.value("status").toInt();
     QString message = obj.value("message").toString();
@@ -143,12 +149,11 @@ void AccountManager::parseAllAccountsInfo(const QJsonObject &obj)
         int permission_level = temp.value("permission_level").toInt();
         QString password = temp.value("password").toString();
         account_username_level.insert(username, permission_level);
-        QPair<QString, PermissionLevel> level_pwd(password, (PermissionLevel)permission_level);
+        QPair<QString, PermissionLevel> level_pwd(
+                    password, (PermissionLevel)permission_level);
         _accounts_map.insert(username, level_pwd);
         ++it;
     }
     _all_accounts_obj = account_username_level;
     emit emitAllAccountInfo(account_username_level);
 }
-
-

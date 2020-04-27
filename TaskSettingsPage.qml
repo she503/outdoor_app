@@ -204,7 +204,7 @@ Rectangle {
 
         }
 
-        onSendWorkDown: {
+        onsendWorkDone: {
 
         }
 

@@ -7,7 +7,7 @@
 #include <QTimer>
 #include "utils.h"
 #include <QCoreApplication>
-#include <QFile>
+
 
 SocketManager::SocketManager(QObject *parent) : QObject(parent)
 {
@@ -17,16 +17,10 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
     _vehicle_width = 0;
     _vehicle_height = 0;
 
-//    QString app_path = QCoreApplication::applicationDirPath();
-//    QFile file(app_path + "/ip.txt");
-//    QByteArray ip;
-//    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-//        ip = file.readAll();
-//    } else {
-//        ip = "192.168.1.125";
-//    }
-    this->connectToHost("192.168.1.102","32432");
-
+    this->connectToHost("127.0.0.1", "32432");
+//    this->connectToHost("192.168.1.125", "32432");
+//    this->connectToHost("192.168.8.114", "32432");
+//    this->connectToHost("192.168.1.102", "32432");
 
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));
     connect(_socket, SIGNAL(disconnected()), this, SLOT(disConnet()));
@@ -60,9 +54,9 @@ bool SocketManager::connectToHost(const QString &ip, const QString &port)
 bool SocketManager::disConnet()
 {
     QString message = tr("app disconnect to server!");
-
     _socket->disconnectFromHost();
     _socket->close();
+    _is_connected = false;
     emit appDisconnected(message);
     return true;
 }
@@ -77,22 +71,11 @@ bool SocketManager::judgeIsConnected()
     return _is_connected;
 }
 
-float SocketManager::getVehicleWidth()
-{
-    return _vehicle_width;
-}
-
-float SocketManager::getVehicleHeight()
-{
-    return _vehicle_height;
-}
-
-void SocketManager::readSocketData(/*const QByteArray& buffer*/)
+void SocketManager::readSocketData()
 {
     if (_socket->bytesAvailable() < 4) {
         return;
     }
-
     _buffer += _socket->readAll();
     QByteArrayList buffer_list = _buffer.split('$');
     int complete_buffer_num = 0;
@@ -103,114 +86,112 @@ void SocketManager::readSocketData(/*const QByteArray& buffer*/)
     }
 
     for (int i = 0; i < complete_buffer_num; ++i) {
-        _buffer = buffer_list.at(i);
-        QJsonParseError error;
-        QJsonDocument doc = QJsonDocument::fromJson(_buffer, &error);
-        if (error.error == QJsonParseError::NoError) {
-            QJsonObject obj = doc.object();
-            MessageType message_type = MessageType(obj.value("message_type").toInt());
-            switch (message_type) {
-            case MessageType::MESSAGE_ALL_MAPS_INFO:
-                emit mapsInfo(obj);
-                break;
-            case MessageType::MESSAGE_SET_INIT_POSE_RST:
-                emit setInitPosRST(obj);
-                break;
-            case MessageType::MESSAGE_CURRENT_MAP_AND_TASKS:
-                emit sendMapAndTasks(obj); //yi ge di tu he gai di tu de suo you can kao xian
-                break;
-            case MessageType::MESSAGE_TASKS_INFO:
-                emit tasksData(obj);
-                break;
-            case MessageType::MESSAGE_CURRENT_WORK_MAP_DATA:
-                emit currentWorkMapData(obj);
-                break;
-            case MESSAGE_SET_MAP_RST:
-                emit parseMapName(obj);
-                break;
-            case MessageType::MESSAGE_SET_TASKS_RST:
-                emit setTasksRST(obj);
-                break;
-            case MessageType::MESSAGE_PAUSE_TASK_RST:
-                emit pauseTaskRST(obj.value("current_status").toBool(),obj.value("status").toInt());
-                break;
-//            case MessageType::MESSAGE_STOP_TASK_RST:
-//                emit pauseStopTaskRST(obj.value("status").toInt());
-//                break;
-            case MessageType::MESSAGE_WORK_DOWN:
-                emit workDown(obj);
-                break;
-
-            case  MessageType::MESSAGE_LOGIN_RST:
-                emit checkoutLogin(obj);
-                break;
-            case MessageType::MESSAGE_ADD_ACCOUNT_RST:
-                emit addUser(obj);
-                break;
-            case MessageType::MESSAGE_DELETE_ACCOUNT_RST:
-                emit deleteUser(obj);
-                break;
-            case MessageType::MESSAGE_UPDATE_ACCOUNT_RST:
-                emit updateUser(obj);
-                break;
-            case MessageType::MESSAGE_ALL_ACCOUNTS_INFO:
-                emit allUser(obj);
-                break;
-
-            case MESSAGE_CURRENT_WORK_FULL_REF_LINE:
-                emit parseWorkFullRefLineInfo(obj);
-                break;
-            case MessageType::MESSAGE_LOCALIZATION_INFO:
-                emit localizationInfo(obj);
-                break;
-            case MessageType::MESSAGE_TASK_INFO:
-                emit taskProcessInfo(obj);
-                break;
-            case MessageType::MESSAGE_CHASSIS_INFO:
-                emit chassisInfo(obj);
-                break;
-            case MessageType::MESSAGE_PERCEPTION_OBSTACLES:
-                emit obstaclesInfo(obj);
-                break;
-            case MessageType::MESSAGE_PLANNING_COMMAND_PATH:
-                emit planningInfo(obj);
-                break;
-            case MessageType::MESSAGE_PLANNING_REF_LINE:
-                emit planningRefInfo(obj);
-                break;
-            case MessageType::MESSAGE_BATTERY_SOC:
-                emit batteryInfo(obj);
-                break;
-            case MESSAGE_TRAJECTORY:
-                emit trajectoryInfo(obj);
-                break;
-            case MESSAGE_MONITOR_MESSAGE:
-                emit monitorMessageInfo(obj);
-                break;
-            case MESSAGE_VEHICLE_SIZE:
-                this->getVehicleWidthHeight(obj);
-                break;
-            case MESSAGE_ENABLE_CLEAN_WORK_RST:
-            {
-                emit this->enableCleanWork(obj.value("current_status").toBool());
-                break;
-            }
-            default:
-                qDebug() << "======>" <<obj;
-                break;
-            }
-        } else {
-            qDebug() << "[SocketManager::readSocketData]: json error  " << error.errorString();
-
-        }
+        this->parseSocketData(buffer_list.at(i));
     }
     _buffer = buffer_list.at(complete_buffer_num);
 }
 
-void SocketManager::getVehicleWidthHeight(const QJsonObject &obj)
+void SocketManager::parseSocketData(const QByteArray &buffer)
 {
-    _vehicle_height = obj.value("height").toDouble();
-    _vehicle_width = obj.value("width").toDouble();
+    QJsonParseError error;
+    QJsonDocument doc = QJsonDocument::fromJson(buffer, &error);
+    if (error.error != QJsonParseError::NoError) {
+        return;
+    }
+    QJsonObject obj = doc.object();
+    MessageType message_type = MessageType(obj.value("message_type").toInt());
+    switch (message_type)
+    {
+    case  MessageType::MESSAGE_LOGIN_RST:
+        emit emitLoginRst(obj);
+        break;
+    case MessageType::MESSAGE_ADD_ACCOUNT_RST:
+        emit emitAddUserRst(obj);
+        break;
+    case MessageType::MESSAGE_DELETE_ACCOUNT_RST:
+        emit emitDeleteUserRst(obj);
+        break;
+    case MessageType::MESSAGE_UPDATE_ACCOUNT_RST:
+        emit emitUpdateUserRst(obj);
+        break;
+    case MessageType::MESSAGE_ALL_ACCOUNTS_INFO:
+        emit emitAllAccountsInfo(obj);
+        break;
+
+    case MessageType::MESSAGE_ALL_MAPS_INFO:
+        emit emitAllMapsInfo(obj);
+        break;
+    case MessageType::MESSAGE_SET_INIT_POSE_RST:
+        emit emitSetInitPosRST(obj);
+        break;
+    case MessageType::MESSAGE_CURRENT_MAP_AND_TASKS:
+        emit emitMapAndTasks(obj); //yi ge di tu he gai di tu de suo you can kao xian
+        break;
+    case MessageType::MESSAGE_CURRENT_WORK_MAP_DATA:
+        emit emitCurrentWorkMapData(obj);
+        break;
+    case MESSAGE_SET_MAP_RST:
+        emit emitSetMapNameRst(obj);
+        break;
+    case MessageType::MESSAGE_SET_TASKS_RST:
+        emit emitSetTasksRST(obj);
+        break;
+    case MessageType::MESSAGE_PAUSE_TASK_RST:
+        emit emitPauseTaskRST(obj.value("current_status").toBool(),
+                              obj.value("status").toInt());
+        break;
+    case MessageType::MESSAGE_WORK_DONE:
+        emit emitWorkDone(obj);
+        break;
+    case MessageType::MESSAGE_WORK_ERROR:
+        emit emitWorkError(obj);
+        break;
+    case MESSAGE_CURRENT_WORK_FULL_REF_LINE:
+        emit emitFullRefLine(obj);
+        break;
+
+    case MessageType::MESSAGE_LOCALIZATION_INFO:
+        emit emitLocalizationInfo(obj);
+        break;
+    case MessageType::MESSAGE_TASK_INFO:
+        emit emitTaskInfo(obj);
+        break;
+    case MessageType::MESSAGE_CHASSIS_INFO:
+        emit emitChassisInfo(obj);
+        break;
+    case MessageType::MESSAGE_PERCEPTION_OBSTACLES:
+        emit emitObstaclesInfo(obj);
+        break;
+    case MessageType::MESSAGE_PLANNING_COMMAND_PATH:
+        emit emitPlanningPath(obj);
+        break;
+    case MessageType::MESSAGE_PLANNING_REF_LINE:
+        emit emitPlanningRefLine(obj);
+        break;
+    case MessageType::MESSAGE_BATTERY_SOC:
+        emit emitBatteryInfo(obj);
+        break;
+    case MESSAGE_TRAJECTORY:
+        emit emitTrajectoryInfo(obj);
+        break;
+    case MESSAGE_MONITOR_MESSAGE:
+        emit emitMonitorMessage(obj);
+        break;
+    case MESSAGE_VEHICLE_SIZE:
+        this->parseVehicleSize(obj);
+        break;
+    case MESSAGE_ENABLE_CLEAN_WORK_RST:
+        emit emitEnableCleanWorkRst(obj.value("current_status").toBool());
+        break;
+    default:
+        break;
+    }
+}
+
+void SocketManager::parseVehicleSize(const QJsonObject &obj)
+{
+    _vehicle_info_manager->setVehicleHeight(obj.value("height").toDouble());
+    _vehicle_info_manager->setVehicleWidth(obj.value("width").toDouble());
 }
 
 bool SocketManager::sendSocketMessage(const QByteArray &message)
@@ -228,4 +209,9 @@ bool SocketManager::sendSocketMessage(const QByteArray &message)
         }
     }
     return false;
+}
+
+void SocketManager::setVehicleInfoManager(VehicleInfoManager *vehicle_info_manager)
+{
+    _vehicle_info_manager = vehicle_info_manager;
 }

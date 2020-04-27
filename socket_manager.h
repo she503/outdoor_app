@@ -22,21 +22,14 @@ public:
     explicit SocketManager(QObject *parent = nullptr);
     ~SocketManager();
 
-    bool connectToServer();
+    Q_INVOKABLE bool connectToServer();
+    Q_INVOKABLE bool disConnet();
 
     bool sendSocketMessage(const QByteArray& message);
 
     void setVehicleInfoManager(VehicleInfoManager* vehicle_info_manager);
 
-    /**
-    * @brief 连接服务器
-    */
-    Q_INVOKABLE bool connectToHost(const QString& ip, const QString& port);
-
-    /**
-     * @brief 断开服务器
-     */
-    Q_INVOKABLE bool disConnet();
+    bool connectToHost(const QString& ip, const QString& port);
 
 signals:
     void emitLoginRst(const QJsonObject& obj);
@@ -71,7 +64,6 @@ signals:
 
     // app断开连接发出信号
     void appDisconnected(const QString& message);
-    void emitConnectToServerError();
 
 private:
     void parseVehicleSize(const QJsonObject& obj);

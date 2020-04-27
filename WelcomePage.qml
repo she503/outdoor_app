@@ -6,7 +6,7 @@ import QtQuick.Controls 2.2
 
 Page {
     id: page
-    signal timeToClose()
+    signal finishAnimation()
 
     Rectangle {
         id: rec_pic
@@ -34,7 +34,7 @@ Page {
         duration: 1200
         running: true
         onStopped: {
-             page.timeToClose()
+             page.finishAnimation()
         }
     }
 }

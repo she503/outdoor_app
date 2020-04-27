@@ -9,17 +9,24 @@ ApplicationWindow {
     width: 640
     height: 480
 
+    property bool connect_to_server: false
+
+    Component.onCompleted: {
+        connect_to_server = socket_manager.connectToServer()
+    }
+
     property Component fail_connect_page: FaildToConnectPage{
         onSuccessToConnect: {
             stack_view.replace(login_page)
         }
     }
+
     property Component welcome_page: WelcomePage {
-        onTimeToClose: {
-            if (!socket_manager.judgeIsConnected()) {
-                stack_view.push(fail_connect_page)
+        onFinishAnimation: {
+            if (!connect_to_server) {
+                stack_view.replace(fail_connect_page)
             } else {
-                stack_view.push(login_page)
+                stack_view.replace(login_page)
             }
         }
     }
@@ -31,7 +38,7 @@ ApplicationWindow {
         width: root.width
         height: root.height
         onSuccessToLogin: {
-            stack_view.push(main_page)
+            stack_view.replace(main_page)
         }
     }
     StackView {

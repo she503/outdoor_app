@@ -65,7 +65,7 @@ signals:
 
     void emitWorkFullRefLine(const QVariantList& ref_line);
 
-    void emitPauseTaskRst(const bool& is_pause, const int& status);
+    void emitPauseTaskRst(const bool is_pause, const int status);
     void emitWorkDone();
 
 private:

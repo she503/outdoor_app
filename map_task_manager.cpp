@@ -3,8 +3,7 @@
 
 MapTaskManager::MapTaskManager(QObject *parent) : QObject(parent)
 {
-    _work_status = WORK_STATUS_NONE_WORK;
-    _full_ref_line = {};
+
 }
 
 void MapTaskManager::setSocketManager(SocketManager *socket_manager)
@@ -67,7 +66,7 @@ QVariantList MapTaskManager::getMapRoads(const QString &map_name)
 
 QVariantList MapTaskManager::getTasksData(const QStringList &tasks_name)
 {
-    if (_tasks_in_map.empty()) {
+    if (_all_tasks_in_map.empty()) {
         return QVariantList();
     }
 
@@ -195,7 +194,7 @@ void MapTaskManager::parseAllMapsInfo(const QJsonObject &obj)
     if (status == 0) {
         QString error_message = obj.value("message").toString();
         qDebug() << "[SocketManager::parseRegionsInfo]: " << error_message;
-        emit getAllMapsInfoError(error_message);
+        emit emitGetAllMapsInfoError(error_message);
         _status_manager->setWorkStatus(WORK_STATUS_NULL);
         return;
     }
@@ -244,7 +243,7 @@ void MapTaskManager::parseMapAndTasksInfo(const QJsonObject &obj)
     int status = obj.value("status").toInt();
     QString message = obj.value("message").toString();
     if (status == 0) {
-        emit getMapAndTasksInfoError(message);
+        emit emitGetMapAndTasksInfoError(message);
         qDebug() << "[MapTaskManager::parseMapAndTasksInfo]: " << message;
         return;
     }
@@ -313,7 +312,7 @@ void MapTaskManager::parseWorkRefLineInfo(const QJsonObject &obj)
 void MapTaskManager::parsePauseTaskRst(const QJsonObject &obj)
 {
     emit emitPauseTaskRst(obj.value("current_status").toBool(),
-                          obj.value("status"));
+                          obj.value("status").toInt());
 }
 
 void MapTaskManager::parseWorkDoneInfo(const QJsonObject &obj)

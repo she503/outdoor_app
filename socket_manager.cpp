@@ -39,7 +39,6 @@ bool SocketManager::connectToHost(const QString &ip, const QString &port)
     _socket->connectToHost(ip, port.toInt());
     if (!_socket->waitForConnected(1000)) {
         qDebug() << "[SocketManager::connectToHost]: error!!!";
-        emit emitConnectToServerError();
         return false;
     } else {
         QJsonObject object;

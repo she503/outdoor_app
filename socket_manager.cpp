@@ -14,12 +14,9 @@ SocketManager::SocketManager(QObject *parent) : QObject(parent)
     _socket = new QTcpSocket(this);
     _socket->setReadBufferSize(10 * 1024 * 1024);
 
-    _vehicle_width = 0;
-    _vehicle_height = 0;
-
-    this->connectToHost("127.0.0.1", "32432");
+//    this->connectToHost("127.0.0.1", "32432");
 //    this->connectToHost("192.168.1.125", "32432");
-//    this->connectToHost("192.168.8.114", "32432");
+    this->connectToHost("192.168.8.127", "32432");
 //    this->connectToHost("192.168.1.102", "32432");
 
     connect(_socket, SIGNAL(readyRead()), this, SLOT(readSocketData()));

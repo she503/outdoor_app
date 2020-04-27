@@ -4,12 +4,10 @@ import "CustomControl"
 Item{
     id: root
 
-//    property real rate: Math.min(width, height) / 400
-    property var current_login_password: password.text
-    property var user_level: 0
-    property string test_text: "root"
     signal successToLogin()
-    signal connectFail()
+
+    property real _login_faild_time: 0
+    property string _default_test_user: "root"
 
     FontLoader {
         id: font_hanzhen;
@@ -102,12 +100,12 @@ Item{
                     id: username
                     width: parent.width * 0.55
                     height: parent.height * 0.8
-                    text: root.test_text
                     anchors {
                         verticalCenter: parent.verticalCenter
                         left: lab_user.right
                         leftMargin: parent.width * 0.05
                     }
+                    text: root._default_test_user
                     placeholderText: qsTr("enter your username.")
                     pic_name: "qrc:/res/pictures/username.png"
                     btn_radius: height * 0.1
@@ -119,10 +117,8 @@ Item{
                 width: parent.width * 0.95
                 height: parent.height * 0.2
                 color:"transparent"
-                property real login_count: 0
                 anchors{
                     top: rect_username.bottom
-//                    topMargin: height * 0.01
                     left: parent.left
                     leftMargin: width * 0.05
                 }
@@ -143,13 +139,13 @@ Item{
                     id: password
                     width: parent.width * 0.55
                     height: parent.height * 0.8
-                    text: root.test_text
                     anchors {
                         left: lab_pwd.right
                         leftMargin: parent.width * 0.05
                         verticalCenter: parent.verticalCenter
 
                     }
+                    text: root._default_test_user
                     btn_radius: height * 0.1
                     placeholderText: qsTr("enter your password.")
                     echoMode: TextInput.Password
@@ -172,16 +168,14 @@ Item{
 
                 }
                 onClicked: {
-                    if (rect_pwd.login_count < 3 ) {
+                    if (root._login_faild_time < 3 ) {
                         account_manager.accountLogin(username.text, password.text)
-                        rect_pwd.login_count++
+                        ++ root._login_faild_time
                     } else {
-                        message_connect_faild.dia_title = qsTr("login failed!")
-                        message_connect_faild.dia_content = qsTr("Multiple login failures,please contact the administrator!")
-                        message_connect_faild.open()
+                        message_login_faild.dia_title = qsTr("login failed!")
+                        message_login_faild.dia_content = qsTr("Multiple login failures,please contact the administrator!")
+                        message_login_faild.open()
                     }
-
-
                 }
             }
         }
@@ -189,48 +183,18 @@ Item{
 
     Connections {
         target: account_manager
-        onEmitCheckOutLogin: {
+        onEmitLoginRst: {
             if (status === 0) {
                 message_login_faild.dia_title = qsTr("Error")
-//                message_login_faild.dia_content = message
                 message_login_faild.dia_content = qsTr("Account or password is wrong!")
                 message_login_faild.open()
             } else if (status === 1) {
                 root.successToLogin()
+                root._login_faild_time = 0
             }
         }
-
     }
 
-    Connections {
-        target: socket_manager
-        onEmitFaildToLogin: {
-            message_connect_faild.dia_content = message
-            message_connect_faild.open()
-            root.connectFail()
-
-        }
-        onAppDisconnected: {
-            message_connect_faild.dia_content = message
-            message_connect_faild.open()
-            root.connectFail()
-        }
-    }
-
-    TLDialog {
-        id: message_connect_faild
-        height: parent.height * 0.5
-        width: height * 1.5
-        x: (root.width - width) / 2
-        y: (root.height - height) / 2
-        dia_title: qsTr("connect error!")
-        status: 0
-        cancel_text: qsTr("OK")
-
-        onCancelClicked: {
-            Qt.quit()
-        }
-    }
     TLDialog {
         id: message_login_faild
         height: parent.height * 0.5

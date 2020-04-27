@@ -20,7 +20,7 @@ public:
     StatusManager(QObject *parent = nullptr);
 
     void setWorkStatus(const int status);
-    int getWorkStatus();
+    Q_INVOKABLE int getWorkStatus();
 
 signals:
     void workStatusUpdate(const int status);

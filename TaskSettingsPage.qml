@@ -204,9 +204,6 @@ Rectangle {
 
         }
 
-        onsendWorkDone: {
-
-        }
 
         onUpdateMapName: {
             list_view_areas.currentIndex = index

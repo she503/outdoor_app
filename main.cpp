@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 
     SocketManager* socket_manager = new SocketManager(&engine);
     engine.rootContext()->setContextProperty("socket_manager", socket_manager);
-    socket_manager->setVehicleInfoManager(vehicle_info);
+    socket_manager->setVehicleInfoManager(vehicle_info_manager);
 
     AccountManager* account_manager = new AccountManager(&engine);
     engine.rootContext()->setContextProperty("account_manager", account_manager);
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 
     MapTaskManager* map_task_manager = new MapTaskManager(&engine);
     engine.rootContext()->setContextProperty("map_task_manager", map_task_manager);
-    map_task_manager->setSocket(socket_manager);
+    map_task_manager->setSocketManager(socket_manager);
     map_task_manager->setStatusManager(status_manager);
 
     RosMessageManager* ros_message_manager = new RosMessageManager(&engine);

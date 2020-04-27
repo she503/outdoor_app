@@ -6,23 +6,17 @@ import "CustomControl"
 Rectangle {
     id: root
 
-    property var v_accounts_info
+    property var v_accounts_info: {}
 
     property string checked_user_name: ""
     property int checked_user_level: 0
-    property int v_user_level: 0
+    property int v_user_level: account_manager.getCurrentUserLevel()
     property string v_user_name: ""
     property int admin_num: 0
     property real rate: Math.min(width, height) / 400
 
     color: "transparent"
 
-    Connections {
-        target: account_manager
-        onEmitNameAndLevel: {
-            v_user_level = level
-        }
-    }
 
     Dialog {
         id: message_update_uer
@@ -171,68 +165,6 @@ Rectangle {
                 }
             }
         }
-
-//        Column {
-//            width: parent.width
-//            height: parent.height
-//            anchors.centerIn: message_update_uer.Center
-//            spacing: height * 0.05
-//            TextField {
-//                id: field_old_pwd
-//                visible: root.v_user_level > root.checked_user_level ? false : true
-//                width: parent.width * 0.9
-//                height: parent.height * 0.3
-//                placeholderText: qsTr("Please enter old pwd")
-//                font.pixelSize: height * 0.2
-//                validator: RegExpValidator{regExp:/^.[A-Za-z0-9_]{0,11}$/}
-//            }
-//            TextField {
-//                id: field_new_pwd
-//                width: parent.width * 0.9
-//                height: parent.height * 0.3
-//                placeholderText: qsTr("Please enter new pwd")
-//                font.pixelSize: height * 0.2
-//                validator: RegExpValidator{regExp:/^.[A-Za-z0-9]{0,6}$/}
-//            }
-//            Rectangle {
-//                id: rect_update_btns
-//                width: parent.width * 0.9
-//                height: parent.height * 0.2
-//                Button {
-//                    id: btn_update_pwd
-//                    width: parent.width * 0.45
-//                    height: parent.height
-//                    text: qsTr("OK")
-//                    onClicked: {
-//                        if (field_new_pwd.text.trim() === "") {
-//                            message_account.dia_title = qsTr("Error")
-//                            message_account.dia_content = qsTr("password cannot be empty!!!")
-//                            message_account.status = 0
-//                            message_account.open()
-//                        } else {
-//                            if(root.v_user_level <= root.checked_user_level) {
-//                                account_manager.accountUpdate(root.checked_user_name, field_new_pwd.text, root.checked_user_level, field_old_pwd.text, true)
-//                            } else {
-//                                account_manager.accountUpdate(root.checked_user_name, field_new_pwd.text, root.checked_user_level)
-//                            }
-//                        }
-//                    }
-//                }
-//                Button {
-//                    id: btn_update_cancel
-//                    anchors.left: btn_update_pwd.right
-//                    anchors.leftMargin: parent.width * 0.1
-//                    width: parent.width * 0.45
-//                    height: parent.height
-//                    text: qsTr("cancel")
-//                    onClicked: {
-//                        field_old_pwd.text = ""
-//                        field_new_pwd.text = ""
-//                        message_update_uer.close()
-//                    }
-//                }
-//            }
-//        }
     }
 
     TLDialog {
@@ -644,8 +576,6 @@ Rectangle {
                         id: item_de
                         width: list_view_user.width
                         height: list_view_user.height * 0.14
-                        //                    highlighted: ListView.isCurrentItem
-
                         Rectangle {
                             id: rect_circle
                             width: 19 * rate
@@ -708,19 +638,35 @@ Rectangle {
                     }
                     model: ListModel {
                         id: user_list_model
+                        Component.onCompleted: {
+                            root.admin_num = 0
+                            root.v_accounts_info = account_manager.getAllAccountsInfo()
+                            user_list_model.clear()
+
+                            var nomal_level = qsTr("nomal_level")
+                            var admin_level = qsTr("admin_level")
+
+
+                            for (var key in root.v_accounts_info) {
+                                if (root.v_accounts_info[key] === 0) {
+                                    console.info("error user level")
+                                } else if (root.v_accounts_info[key] === 1) {
+                                    user_list_model.append({ "user_name": key, "level": nomal_level, "user_level": root.v_accounts_info[key]})
+                                } else if (root.v_accounts_info[key] === 2) {
+                                    user_list_model.append({"user_name": key, "level": admin_level, "user_level": root.v_accounts_info[key]})
+                                    ++root.admin_num;
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     }
-    Component.onCompleted: {
-        account_manager.getAllAccounts()
-        account_manager.getCurrentUserLevel()
-    }
 
     Connections {
         target: account_manager
-        onEmitAddAccountCB: {
+        onEmitAddAccountRst: {
             switch (status) {
             case 0:
                 message_account.dia_content = qsTr("user name has exited !")
@@ -736,27 +682,8 @@ Rectangle {
                 break;
             }
         }
-        onEmitAllAccountInfo: {
-            root.admin_num = 0
-            root.v_accounts_info = accounts_info
-            user_list_model.clear()
 
-            var nomal_level = qsTr("nomal_level")
-            var admin_level = qsTr("admin_level")
-
-
-            for (var key in root.v_accounts_info) {
-                if (root.v_accounts_info[key] === 0) {
-                    console.info("error user level")
-                } else if (root.v_accounts_info[key] === 1) {
-                    user_list_model.append({ "user_name": key, "level": nomal_level, "user_level": accounts_info[key]})
-                } else if (root.v_accounts_info[key] === 2) {
-                    user_list_model.append({"user_name": key, "level": admin_level, "user_level": accounts_info[key]})
-                    ++root.admin_num;
-                }
-            }
-        }
-        onEmitDeleteAccountCB: {
+        onEmitDeleteAccountRst: {
             switch(status) {
             case 0:
                 message_account.dia_title = qsTr("delete error")//qsTr("This one user is last admin,\n you are not allowed to delete it!")
@@ -778,7 +705,8 @@ Rectangle {
                 break;
             }
         }
-        onEmitUpdateAccountCB: {
+
+        onEmitUpdateAccountRst: {
             switch(status) {
             case 0:
                 message_account.dia_title = qsTr("update error")
@@ -798,126 +726,3 @@ Rectangle {
         }
     }
 }
-
-//Rectangle {
-//    id: rect_nomal
-//    height: parent.width > parent.height ? parent.height * 0.9 : parent.width * 0.9 * 0.787
-//    width: parent.width > parent.height ? parent.height * 0.9 * 1.27 : parent.width * 0.9
-//    anchors.centerIn: parent
-//    color: "transparent"
-//    visible: root.v_user_level === 1 ? true : false
-//    Image {
-//        id: img
-//        anchors.fill: parent
-//        source: "qrc:/res/pictures/background_glow1.png"
-//    }
-//    Rectangle {
-//        width: parent.width * 0.88
-//        height: parent.height * 0.85
-//        anchors.centerIn: parent
-//        color: Qt.rgba(255, 255, 255, 0.6)
-//        Rectangle {
-//            id: rect_noaml_update
-//            width: parent.width
-//            height: parent.height * 0.15
-//            anchors{
-//                top: parent.top
-//                topMargin: parent.height * 0.07
-//            }
-//            color: "transparent"
-//            Rectangle {
-//                width: parent.width * 0.3
-//                height: parent.height
-//                color: "transparent"
-//                anchors.left: parent.left
-//                Text {
-//                    text: qsTr("Welcome:")
-//                    font.pixelSize: parent.height * 0.4
-//                    color: "white"
-//                    font.bold: true
-//                    anchors {
-//                        bottom: parent.bottom
-//                        left: parent.left
-//                        leftMargin: parent.height * 0.2
-//                    }
-//                }
-//            }
-//            Button {
-//                id: btn_update_nomal
-//                width: parent.width * 0.2
-//                height: parent.height * 0.5
-
-//                Text {
-//                    width: parent.width
-//                    height: parent.height * 0.8
-//                    font.pixelSize: parent.height * 0.5
-//                    text: qsTr("update")
-//                    color: "white"
-//                    horizontalAlignment: Text.AlignHCenter
-//                    anchors.top: parent.top
-
-//                }
-
-//                background: Image {
-//                    id: img_update_nomal
-//                    anchors.fill: parent
-//                    source: !enabled ? "qrc:/res/pictures/btn_2.png" : "qrc:/res/pictures/btn_1.png"
-//                }
-
-//                anchors {
-//                    bottom: parent.bottom
-//                    right: parent.right
-//                    rightMargin: width * 0.4
-//                }
-////                    anchors {
-////                        top: parent.top
-////                        topMargin: parent.height * 0.1
-////                        right: parent.right
-////                        rightMargin: width * 0.4
-////                    }
-//                onClicked: {
-//                    root.checked_user_name = root.v_user_name
-//                    root.checked_user_level = 1
-//                    message_update_uer.open()
-//                }
-//            }
-//            Rectangle {
-//                width: parent.width * 0.93
-//                height: 0.5
-//                anchors.bottom: parent.bottom
-//                anchors.horizontalCenter: parent.horizontalCenter
-//                color: Qt.rgba(255, 255, 255, 0.5)
-//            }
-//        }
-
-//        Rectangle {
-//            id: rect_nomal_user_name_text
-//            width: parent.width * 0.8
-//            height: parent.height * 0.6
-//            anchors{
-//                top: rect_noaml_update.bottom
-//                horizontalCenter: parent.horizontalCenter
-//            }
-//            color: "transparent"
-//            Component.onCompleted: {
-//                for (var key in root.v_accounts_info) {
-//                    if (key === root.user_name)
-//                    {
-//                        root.user_level = root.v_accounts_info[key]
-//                    }
-
-//                }
-//            }
-
-//            Text {
-//                id: nomal_user_name_text
-//                anchors.fill: parent
-//                horizontalAlignment: Text.AlignHCenter
-//                verticalAlignment: Text.AlignVCenter
-//                font.pixelSize: parent.height * 0.1
-//                text: ""
-//                color: "white"
-//            }
-//        }
-//    }
-//}

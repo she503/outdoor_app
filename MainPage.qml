@@ -6,62 +6,33 @@ import "CustomControl"
 Rectangle {
     id: root
 
-
-    property alias root_main: root
     color: "transparent"
     property Component user_manage_page: UserManagePage {}
     property Component help_document_page: HelpDocumentPage { }
     property Component about_machine_page: AboutMachinePage { }
 
-
-    //to do
-    Connections {
-        target: map_task_manager
-        onUpdateMapAndTaskInfo: {
-            stack_menu.replace(task_process_page)
-            stack_view.replace(task_settings_page)
-            home_page.text_visible = true
-        }
-        onUpdateMapsName: {
-            stack_menu.replace(list_view)
-        }
-    }
-    Connections {
-        target: map_task_manager
-        onUpdateStopTaskInfo: {
-            if (status === 1) {
-                list_view.mainPageChanged(0)
-                stack_menu.replace(list_view)
-                list_view.currentIndex = 0
-                home_page.text_visible = false
-            }
-        }
-        onUpdateTasksName: {
-            stack_menu.replace(list_view)
-        }
-    }
-
-
-    HomePage {
+    Component{
         id: home_page
+        HomePage {
 
-        onCenterBtnPress: {
-            if (list_view.cant_clicked_task) {
+            onCenterBtnPress: {
+                if (list_view.cant_clicked_task) {
 
-            } else {
-                if (status <= 2) {
-                    home_page.text_visible = false
-                    if (account_manager.getCurrentLevel() <= 1) {
-                        list_view.currentIndex = 1
-                    } else {
-                        list_view.currentIndex = 2
+                } else {
+                    if (status <= 2) {
+                        home_page._text_visible = false
+                        if (account_manager.getCurrentUserLevel() <= 1) {
+                            list_view.currentIndex = 1
+                        } else {
+                            list_view.currentIndex = 2
+                        }
+                        menu_stack.replace(list_view)
+                        list_view.mainPageChanged(1)
+                    } else if (status >= 3) {
+                        home_page._text_visible = true
+                        menu_stack.replace(task_process_page)
+                        list_view.mainPageChanged(1)
                     }
-                    stack_menu.replace(list_view)
-                    list_view.mainPageChanged(1)
-                } else if (status >= 3) {
-                    home_page.text_visible = true
-                    stack_menu.replace(task_process_page)
-                    list_view.mainPageChanged(1)
                 }
             }
         }
@@ -80,6 +51,10 @@ Rectangle {
         onStartTaskLock: {
             verify_password_page.pop_lock.open()
         }
+    }
+    VerifyPasswordPage {
+        id: verify_password_page
+        anchors.fill: parent
     }
 
     Image {
@@ -103,21 +78,9 @@ Rectangle {
                 rightMargin: height * 0.6
                 verticalCenter: parent.verticalCenter
             }
-            onLockScreen: {
-                message_view.is_locked = true
-                verify_password_page.pop_lock.open()
-            }
-            onCannotOperatorTask: {
-                list_view.cant_clicked_task = true
-                list_view.mainPageChanged(0)
-                list_view.currentIndex = 0
-            }
         }
     }
-    VerifyPasswordPage {
-        id: verify_password_page
-        anchors.fill: parent
-    }
+
 
     Rectangle {
         id: rec_left
@@ -129,7 +92,7 @@ Rectangle {
         color: "transparent"
 
         StackView {
-            id: stack_menu
+            id: menu_stack
             anchors.fill: parent
             initialItem: list_view
 
@@ -151,9 +114,6 @@ Rectangle {
                 } else if (current_index === 1) {
                     task_settings_page.visible = true
                     stack_view.replace(task_settings_page)
-                    map_task_manager.judgeIsMapTasks()
-                    map_task_manager.getFirstMap()
-                    map_task_manager.sendFirstMapName()
                 } else if (current_index === 2) {
                     stack_view.replace(help_document_page)
                 } else if (current_index === 3) {
@@ -163,12 +123,12 @@ Rectangle {
             }
         }
 
-        TaskProcess{
+        TaskProcess {
             id:task_process_page
             visible: false
             onSigBackBtnPress: {
                 list_view.currentIndex = 0
-                stack_menu.replace(list_view)
+                menu_stack.replace(list_view)
                 stack_view.replace(home_page)
             }
             onStopTaskCommond: {
@@ -198,10 +158,5 @@ Rectangle {
 
             }
         }
-    }
-
-
-    TLDialog {
-        id: dialog_working_states
     }
 }

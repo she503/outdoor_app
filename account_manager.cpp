@@ -50,7 +50,7 @@ void AccountManager::accountUpdate(const QString &username, const QString &passw
             QJsonObject temp_obj;
             temp_obj.insert("status", 0);
             temp_obj.insert("message", "error old pwd");
-            parseUpdateStatus(temp_obj);
+//            parseUpdateStatus(temp_obj);
             return;
         }
     }
@@ -84,21 +84,17 @@ void AccountManager::accountLogin(const QString &username, const QString &passwo
     _current_password = password;
 }
 
-QMap<QString, int> AccountManager::getAllAccountsInfo()
+QJsonObject AccountManager::getAllAccountsInfo()
 {
-    QMap<QString, int> all_accounts_info;
+    QJsonObject all_accounts_info_obj;
     QMap<QString, QPair<QString, PermissionLevel> >::const_iterator iter =
             _accounts_map.constBegin();
     for (; iter != _accounts_map.constEnd(); ++iter) {
-        all_accounts_info[iter.key()] = int(iter.value().second);
+        all_accounts_info_obj.insert(iter.key(), int(iter.value().second));
     }
-    return all_accounts_info;
+    return all_accounts_info_obj;
 }
 
-int AccountManager::getCurrentLevel()
-{
-    return _current_level;
-}
 
 void AccountManager::parseLoginRst(const QJsonObject &obj)
 {
@@ -134,7 +130,7 @@ void AccountManager::parseUpdateRst(const QJsonObject &obj)
 {
     int status = obj.value("status").toInt();
     QString message = obj.value("message").toString();
-    emit emitUpdateAccountCB(status, message);
+    emit emitUpdateAccountRst(status, message);
 }
 
 void AccountManager::parseAllAccountsInfo(const QJsonObject &obj)

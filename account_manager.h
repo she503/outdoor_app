@@ -44,10 +44,16 @@ public:
     /**
      * @brief 获取用户信息
      */
-    Q_INVOKABLE QMap<QString, int > getAllAccountsInfo();
+    Q_INVOKABLE QJsonObject getAllAccountsInfo();
 
 
-    Q_INVOKABLE int getCurrentLevel();
+    Q_INVOKABLE int getCurrentUserLevel() { return _current_level;}
+
+    Q_INVOKABLE QString getCurrentUserName() { return _current_username;}
+
+    Q_INVOKABLE QString getCurrentUserPwd() { return _current_password;}
+
+    Q_INVOKABLE bool checkoutPwd(const QString& pwd) { return pwd.compare(_current_password) == 0; }
 
 signals:
     void emitLoginRst(const int& status, const QString& message);

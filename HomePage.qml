@@ -50,7 +50,7 @@ Rectangle {
                 height: parent.height * 0.6
                 anchors.centerIn: parent
                 color: "transparent"
-                visible: root._text_visible
+                visible:  status_manager.getWorkStatus() === 5
                 Text{
                     id: text_progress
                     width: parent.width

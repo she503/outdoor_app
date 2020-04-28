@@ -31,6 +31,11 @@ Rectangle {
         }
     }
 
+    Component.onCompleted: {
+        map_task_manager.setWorkMapName(map_task_manager.getCurrentMapName())
+
+    }
+
 
     TaskProcess {
        id: task_process_page
@@ -46,9 +51,12 @@ Rectangle {
     Connections {
         target: status_manager
         onWorkStatusUpdate: {
-            if (status < 5) {
-                menu_stack.tlReplace(list_view)
+            if (status <= 1) {
                 list_view.currentIndex = 2
+                menu_stack.tlReplace(list_view)
+
+            } else if (status > 1 && status < 5) {
+                menu_stack.tlReplace(list_view)
             } else if (status === 5) {
                 menu_stack.tlReplace(task_process_page)
             }

@@ -1,7 +1,7 @@
 #include "map_task_manager.h"
 #include "qjson_transformer.h"
 
-MapTaskManager::MapTaskManager(QObject *parent) : QObject(parent)
+MapTaskManager::MapTaskManager(QObject *parent) : QObject(parent),_work_full_ref_line({})
 {
 
 }
@@ -28,7 +28,7 @@ void MapTaskManager::setSocketManager(SocketManager *socket_manager)
     connect(_socket_manager, SIGNAL(emitPauseTaskRST(QJsonObject)),
             this, SLOT(parsePauseTaskRst(QJsonObject)));
     connect(_socket_manager, SIGNAL(emitWorkDone(QJsonObject)),
-            this, SLOT(parseWorkDoneInfo(QJsonObject)));
+            this, SLOT(parseWorkDoneInfo()));
 }
 
 void MapTaskManager::setStatusManager(StatusManager* status_manager) {
@@ -56,12 +56,22 @@ void MapTaskManager::setWorkMapName(const QString &map_name)
 
 QVariantList MapTaskManager::getMapRoads(const QString &map_name)
 {
-    if (_all_maps.empty()) {
+    if (_all_maps.empty() || map_name == "") {
         return QVariantList();
     }
 
     QJsonObject obj = _all_maps.value(map_name);
     return QJsonTransformer::ParseRoads(obj.value("roads").toObject());
+}
+
+QVariantList MapTaskManager::getMapRoadEdges(const QString &map_name)
+{
+    if (_all_maps.empty()) {
+        return QVariantList();
+    }
+
+    QJsonObject obj = _all_maps.value(map_name);
+    return QJsonTransformer::ParseRoadEdges(obj.value("road_edges").toObject());
 }
 
 QVariantList MapTaskManager::getTasksData(const QStringList &tasks_name)
@@ -217,6 +227,8 @@ void MapTaskManager::parseAllMapsInfo(const QJsonObject &obj)
         feature_temp_obj.insert("charge_point", charge_point_obj);
         _all_features.insert(map_name, feature_temp_obj);
     }
+    _current_map_name = _all_maps.firstKey();
+
     _status_manager->setWorkStatus(WORK_STATUS_NONE_WORK);
 }
 
@@ -286,6 +298,7 @@ void MapTaskManager::parseWorkMapInfo(const QJsonObject &obj)
     QJsonObject area_obj = obj.value("area").toObject();
     QString map_name = area_obj.value("name").toString();
     _all_maps[map_name] = area_obj;
+    _current_map_name = map_name;
 
     _status_manager->setWorkStatus(WORK_STATUS_WORKING);
 
@@ -306,6 +319,7 @@ void MapTaskManager::parseWorkRefLineInfo(const QJsonObject &obj)
 
     QJsonObject ref_line_obj = obj.value("ref_line").toObject();
     QVariantList ref_line = ref_line_obj.value("pts").toArray().toVariantList();
+    _work_full_ref_line = ref_line;
     emit emitWorkFullRefLine(ref_line);
 }
 
@@ -315,7 +329,7 @@ void MapTaskManager::parsePauseTaskRst(const QJsonObject &obj)
                           obj.value("status").toInt());
 }
 
-void MapTaskManager::parseWorkDoneInfo(const QJsonObject &obj)
+void MapTaskManager::parseWorkDoneInfo()
 {
     emit emitWorkDone();
     _status_manager->setWorkStatus(WORK_STATUS_WORK_DONE);

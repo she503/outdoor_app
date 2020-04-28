@@ -9,23 +9,23 @@ RosMessageManager::RosMessageManager(QObject *parent) : QObject(parent)
 void RosMessageManager::setSocket(SocketManager *socket)
 {
     _socket = socket;
-    connect(_socket, SIGNAL(localizationInfo(QJsonObject)),
+    connect(_socket, SIGNAL(emitLocalizationInfo(QJsonObject)),
             this, SLOT(parseLocalizationInfo(QJsonObject)));
-    connect(_socket, SIGNAL(chassisInfo(QJsonObject)),
+    connect(_socket, SIGNAL(emitChassisInfo(QJsonObject)),
             this, SLOT(parseChassisInfo(QJsonObject)));
-    connect(_socket, SIGNAL(obstaclesInfo(QJsonObject)),
+    connect(_socket, SIGNAL(emitObstaclesInfo(QJsonObject)),
             this, SLOT(parseObstacleInfo(QJsonObject)));
-    connect(_socket, SIGNAL(planningInfo(QJsonObject)),
+    connect(_socket, SIGNAL(emitPlanningPath(QJsonObject)),
             this, SLOT(parsePlanningInfo(QJsonObject)));
-    connect(_socket, SIGNAL(planningRefInfo(QJsonObject)),
+    connect(_socket, SIGNAL(emitPlanningRefLine(QJsonObject)),
             this, SLOT(parsePlanningRefInfo(QJsonObject)));
-    connect(_socket, SIGNAL(taskProcessInfo(QJsonObject)),
+    connect(_socket, SIGNAL(emitTaskInfo(QJsonObject)),
             this, SLOT(parseTaskProcessInfo(QJsonObject)));
-    connect(_socket, SIGNAL(batteryInfo(QJsonObject)),
+    connect(_socket, SIGNAL(emitBatteryInfo(QJsonObject)),
             this, SLOT(parseBatteryInfo(QJsonObject)));
-    connect(_socket, SIGNAL(trajectoryInfo(QJsonObject)),
+    connect(_socket, SIGNAL(emitTrajectoryInfo(QJsonObject)),
             this, SLOT(parseTrajectoryInfo(QJsonObject)));
-    connect(_socket, SIGNAL(monitorMessageInfo(QJsonObject)),
+    connect(_socket, SIGNAL(emitMonitorMessage(QJsonObject)),
             this, SLOT(parseMonitorMessageInfo(QJsonObject)));
 }
 

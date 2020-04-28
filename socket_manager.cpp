@@ -27,8 +27,8 @@ SocketManager::~SocketManager()
 
 bool SocketManager::connectToServer()
 {
-    return this->connectToHost("127.0.0.1", "32432");
-//    return this->connectToHost("192.168.8.127", "32432");
+//    return this->connectToHost("127.0.0.1", "32432");
+    return this->connectToHost("192.168.8.127", "32432");
 //    return this->connectToHost("192.168.1.125", "32432");
 //    return this->connectToHost("192.168.1.102", "32432");
 }

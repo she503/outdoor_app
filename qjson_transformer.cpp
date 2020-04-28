@@ -1,5 +1,5 @@
 #include "qjson_transformer.h"
-
+#include <QDebug>
 QJsonTransformer::QJsonTransformer()
 {
 
@@ -8,26 +8,25 @@ QJsonTransformer::QJsonTransformer()
 QVariantList QJsonTransformer::ParseRoads(const QJsonObject &obj)
 {
     QVariantList list;
-    if (obj.contains("roads")) {
-        QVariantList var_include;
-        QJsonObject temp_obj = obj.value("roads").toObject();
-        if (temp_obj.contains("include")) {
-            QJsonObject include_obj = temp_obj.value("include").toObject();
-            for (int i = 0; i < include_obj.size(); ++i) {
-                QVariant pos = include_obj.value(QString::number(i));
-                var_include.append(pos);
-            }
-            list.append(var_include);
+
+    QVariantList var_include;
+
+    if (obj.contains("include")) {
+        QJsonObject include_obj = obj.value("include").toObject();
+        for (int i = 0; i < include_obj.size(); ++i) {
+            QVariant pos = include_obj.value(QString::number(i));
+            var_include.append(pos);
         }
-        if (temp_obj.contains("exclude")) {
-            QVariantList var_exclude;
-            QJsonObject exclude_obj = temp_obj.value("exclude").toObject();
-            for (int i = 0; i < exclude_obj.size(); ++i) {
-                QVariant pos = exclude_obj.value(QString::number(i));
-                var_exclude.append(pos);
-            }
-            list.append(var_exclude);
+        list.push_back(var_include);
+    }
+    if (obj.contains("exclude")) {
+        QVariantList var_exclude;
+        QJsonObject exclude_obj = obj.value("exclude").toObject();
+        for (int i = 0; i < exclude_obj.size(); ++i) {
+            QVariant pos = exclude_obj.value(QString::number(i));
+            var_exclude.append(pos);
         }
+        list.push_back(var_exclude);
     }
     return list;
 }
@@ -87,17 +86,15 @@ QVariantList QJsonTransformer::ParseSpeedBumps(const QJsonObject &obj)
 QVariantList QJsonTransformer::ParseRoadEdges(const QJsonObject &obj)
 {
     QVariantList list;
-    if (obj.contains("road_edges")) {
-        QJsonObject temp_obj = obj.value("road_edges").toObject();
-        for (int i = 0; i < temp_obj.size(); ++i) {
-            QJsonObject pos_obj = temp_obj.value(QString::number(i)).toObject();
-            QJsonArray temp_arr;
-            temp_arr.append(pos_obj.value("pos"));
-            temp_arr.append(pos_obj.value("type"));
-            QVariant pos = temp_arr;
-            list.append(pos);
-        }
+    for (int i = 0; i < obj.size(); ++i) {
+        QJsonObject pos_obj = obj.value(QString::number(i)).toObject();
+        QJsonArray temp_arr;
+        temp_arr.append(pos_obj.value("pos"));
+        temp_arr.append(pos_obj.value("type"));
+        QVariant pos = temp_arr;
+        list.append(pos);
     }
+
     return list;
 }
 

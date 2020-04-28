@@ -1,6 +1,6 @@
 ﻿import QtQuick 2.0
 import QtQuick.Controls 2.2
-import "CustomControl"
+import "customControl"
 
 
 
@@ -75,12 +75,12 @@ Rectangle {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            map_task_manager.sendPauseTaskCommond(!btn_stop._is_pause)
+                            map_task_manager.setPauseTaskCommond(!btn_stop._is_pause)
                         }
                     }
                     Connections {
                         target: map_task_manager
-                        onUpdatePauseTaskInfo: {
+                        onEmitPauseTaskRst: {
                             pause_stop_message.x = (parent.parent.parent.parent.width - width ) / 2
                             pause_stop_message.y =  (parent.parent.parent.parent.height - height ) / 2
                             y: (parent.parent.parent.parent.height - height ) / 2
@@ -97,18 +97,7 @@ Rectangle {
                                     pause_stop_message.open()
                                 }
                             } else if (status === 1 ) {
-                                //                                if (!btn_stop._is_pause) {
-                                //                                    pause_stop_message.dia_title = qsTr("Success")
-                                //                                    pause_stop_message.dia_content = qsTr("success to pause the task, if you want start the task, please click this btn again.")
-                                //                                    pause_stop_message.status = 1
-                                //                                    pause_stop_message.open()
 
-                                //                                } else if (btn_stop._is_pause) {
-                                //                                    pause_stop_message.dia_title = qsTr("Success")
-                                //                                    pause_stop_message.dia_content = qsTr("success to start the task")
-                                //                                    pause_stop_message.status = 1
-                                //                                    pause_stop_message.open()
-                                //                                }
                                 btn_stop._is_pause = !is_pause
                             }
                         }
@@ -125,25 +114,6 @@ Rectangle {
                         onClicked: {
                             task_auto_achived.open()
 
-                        }
-                    }
-                    Connections {
-                        target: map_task_manager
-                        onUpdateStopTaskInfo: {
-                            //                            repeat_need_stop_task.x = (parent.parent.parent.parent.width - width ) / 2
-                            //                            repeat_need_stop_task.y =  (parent.parent.parent.parent.height - height ) / 2
-                            if (status === 0) {
-                                pause_stop_message.dia_title = qsTr("Error")
-                                pause_stop_message.dia_content = qsTr("faild to stop the task!")
-                                pause_stop_message.status = 0
-                                pause_stop_message.open()
-                            } /*else if (status === 1) {
-                                pause_stop_message.dia_title = qsTr("Success")
-                                pause_stop_message.dia_content = qsTr("success to stop the task!")
-                                pause_stop_message.status = 1
-                                pause_stop_message.x = 400
-                                pause_stop_message.open()
-                            }*/
                         }
                     }
                 }
@@ -169,12 +139,12 @@ Rectangle {
                     MouseArea{
                         anchors.fill: parent
                         onClicked: {
-                            ros_message_manager.setCleanDeviceState(!btn_clean_work.clean_work)
+                            map_task_manager.setEnableCleanWork(!btn_clean_work.clean_work)
                         }
                     }
                     Connections{
-                        target: ros_message_manager
-                        onUpdateEnableCleanWork: {
+                        target: socket_manager
+                        onEmitEnableCleanWorkRst: {
                             btn_clean_work.clean_work = flag
                             btn_clean_work.source = btn_clean_work.clean_work ? "qrc:/res/pictures/clean_on.png":
                                                                                 "qrc:/res/pictures/clean_off.png"
@@ -371,8 +341,7 @@ Rectangle {
         id: task_auto_achived
         height: 280
         width: 420
-        x:(root_main.width - width) / 2
-        y: (root_main.height - height) / 2
+
         background: Rectangle {
             anchors.fill: parent
             color: "transparent"
@@ -529,9 +498,9 @@ Rectangle {
                                 btn_text: qsTr("OK")
                                 onClicked: {
                                     if (list_return_type.currentIndex === 0) {
-                                        map_task_manager.turnToTaskSelect()
+                                        map_task_manager.turnToSelectTask()
                                     } else if (list_return_type.currentIndex === 1) {
-                                        map_task_manager.turnToMapSelect()
+                                        map_task_manager.turnToSelectMap()
                                     }
                                     list_return_type.currentIndex = 0
                                     task_auto_achived.close()

@@ -22,6 +22,8 @@ public:
 
     Q_INVOKABLE QVariantList getMapRoads(const QString& map_name);
 
+    Q_INVOKABLE QVariantList getMapRoadEdges(const QString& map_name);
+
     Q_INVOKABLE QVariantList getTasksData(const QStringList &tasks_name);
 
     Q_INVOKABLE QVariantList getMapFeature(const QString& map_name);
@@ -31,6 +33,8 @@ public:
     Q_INVOKABLE QString getCurrentMapName();
 
     Q_INVOKABLE QStringList getTasksName();
+
+    Q_INVOKABLE QVariantList getWorkFullRefLine() { return _work_full_ref_line;}
 
     Q_INVOKABLE void setWorkTasksName(const QStringList& task_list);
 
@@ -52,7 +56,7 @@ private slots:
     void parseWorkRefLineInfo(const QJsonObject& obj);
 
     void parsePauseTaskRst(const QJsonObject &obj);
-    void parseWorkDoneInfo(const QJsonObject& obj);
+    void parseWorkDoneInfo();
 
 signals:
     void emitGetAllMapsInfoError(const QString& error_message);
@@ -77,6 +81,8 @@ private:
 
     QString _current_map_name;
     QMap<QString, QJsonObject> _all_tasks_in_map;
+
+    QVariantList _work_full_ref_line;
 };
 
 #endif // MAPTASKMANAGER_H

@@ -1,6 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
-import "CustomControl"
+import "customControl"
 Rectangle{
     id: root
 
@@ -46,11 +46,11 @@ Rectangle{
             anchors.horizontalCenter: parent.horizontalCenter
             btn_text:"connect"
             onClicked: {
-                if(socket_manager.connectToHost(ip.text, "32432")) {
-                    root.successToConnect()
-                } else {
-                    faild.open()
-                }
+//                if(socket_manager.connectToHost(ip.text, "32432")) {
+//                    root.successToConnect()
+//                } else {
+//                    faild.open()
+//                }
             }
         }
     }

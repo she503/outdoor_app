@@ -3,20 +3,19 @@ import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
 import QtQuick.Controls.Styles 1.4
-import "./CustomControl"
+import "./customControl"
 
 Rectangle {
     id: root
     color: "transparent"
-    property var map_areas: []
+    property var _maps_name: []
     /*
-      @ map_status  ===> -1: init param; 0: load map faildX; 1: load map success;
+      @ map_status  ===> 0: load map faildX; 1: load map success;
       @ error       ===> if map load faild, it is map error information
       */
-    property var map_status: -1
+    property var map_status: status_manager.getWorkStatus()
     property string error: ""
 
-    property real timeout: 0
     property int init_time: 0
     property string choose_map_name: ""
     property string work_time: ""
@@ -26,47 +25,97 @@ Rectangle {
 
     signal startTaskLock()
 
+    function updateMapSettingPage(status) {
+        if (status <= 3) {
+            list_model_areas.clear()
+            for (var i = 0; i < _maps_name.length; ++i) {
+                list_model_areas.append({"map_name":_maps_name[i]})
+            }
+            chooseMapPage()
+        } else if (status === 4) {
+            chooseTaskPage()
+        } else if (status === 5 ) {
+            startTaskPage()
+        } else if (status >= 6) {
+
+        }
+
+    }
+
+    Component.onCompleted: {
+        var work_status = status_manager.getWorkStatus()
+        if (work_status === 4) {
+            var tasks_name = map_task_manager.getTasksName()
+            for (var i = 0; i < tasks_name.length; ++i) {
+                task_list_model.append({"idcard": i,"task_name": tasks_name[i]})
+            }
+        }
+
+        updateMapSettingPage(work_status)
+    }
+
+    Connections{
+        target: status_manager
+        onWorkStatusUpdate: {
+            var tasks_name = map_task_manager.getTasksName()
+            task_list_model.clear()
+            for (var i = 0; i < tasks_name.length; ++i) {
+                task_list_model.append({"idcard": i,"task_name": tasks_name[i]})
+            }
+            list_model_areas.clear()
+            var maps_name = map_task_manager.getMapsName()
+
+            for (var j = 0; j < maps_name.length; ++j) {
+                list_model_areas.append({"map_name": maps_name[j]})
+            }
+
+            updateMapSettingPage(status)
+            root.checked_tasks_name = []
+            monitor_page.clearAllCanvas()
+            monitor_page.paintingMap(map_task_manager.getCurrentMapName())
+        }
+    }
+
+
+
+    function hideAllComponent() {
+        rec_header_bar.visible = false
+        rec_header_bar.height = 0
+        rect_decoration.visible = false
+        rec_checked_location.visible = false
+        rec_task_control.visible = false
+        rec_ref_lines.visible = false
+        monitor_page.choose_marker.visible = false
+        btn_start_task.visible = false
+    }
+
     function chooseMapPage() {
+        hideAllComponent()
         rec_header_bar.visible = true
         rec_header_bar.height = rec_task_page.height * 0.1
         rect_decoration.visible = true
         rec_checked_location.visible = true
-
-        rec_task_control.visible = false
-        rec_ref_lines.visible = false
-
         monitor_page.choose_marker.visible = true
 
         task_list_model.clear()
     }
 
     function confirmMapPage() {
-        rec_header_bar.visible = false
-        rec_header_bar.height = 0
-        rect_decoration.visible = false
-        rec_checked_location.visible = false
-
+        hideAllComponent()
         rec_ref_lines.visible = true
-
-        monitor_page.choose_marker.visible = false
-        btn_start_task.visible = false
         rec_task_control.visible = true
 
-//        map_task_manager.getMapTask( root.choose_map_name )
     }
 
     function chooseTaskPage() {
-        confirmMapPage()
+        hideAllComponent()
         btn_start_task.visible = true
         rec_task_control.visible = true
+        rec_ref_lines.visible = true
     }
 
     function startTaskPage() {
-        chooseTaskPage()
-        btn_start_task.visible = false
-        rec_task_control.visible = false
-        rec_ref_lines.visible = false
-//        root.startTaskLock()
+        hideAllComponent()
     }
 
     function toTime(s){
@@ -113,104 +162,6 @@ Rectangle {
         source: "qrc:/res/font/hanzhen.ttf"
     }
 
-
-
-    Component.onCompleted: {
-       map_task_manager.getMapsName()
-
-    }
-
-    Connections {
-        target: map_task_manager
-        onUpdateMapsName: {
-            list_model_areas.clear()
-            map_areas = maps_name
-            map_status = 1
-            root.checked_tasks_name = []
-            monitor_page.clearAllCanvas()
-            for (var i = 0; i < map_areas.length; ++i) {
-                list_model_areas.append({"id_card": i, "map_name":map_areas[i]})
-            }
-            chooseMapPage()
-        }
-        onGetMapInfoError: {
-            map_status = 0
-            error = error_message
-        }
-        onUpdateTasksName: {
-            busy.visible = false
-            busy.running = false
-            root.checked_tasks_name = []
-            pop_lock_loading_task.close()
-            tasks_list = tasks
-            task_list_model.clear()
-            if (tasks_list.length <= 4 ) {
-                vbar.visible = false
-            } else {
-                vbar.visible = true
-            }
-            monitor_page.clearAllCanvas()
-            for (var i = 0; i < tasks_list.length; ++i) {
-                task_list_model.append({"idcard": i,"check_box_text": tasks_list[i]})
-            }
-            confirmMapPage()
-        }
-//        onLocalizationInitInfo: {
-//            if (status === 0) {
-//                root.chooseMapPage()
-//                dialog_match_warn.dia_title = message
-//                dialog_match_warn.open()
-//            } else if (status === 1) {
-//                root.confirmMapPage()
-//            }
-//            busy.running = false
-//        }
-        onSetTaskInfo: {
-            root.chooseTaskPage()
-            dialog_match_warn.dia_title = qsTr("Error")
-            dialog_match_warn.dia_content = qsTr("message set task")//message
-            dialog_match_warn.open()
-        }
-//        onUpdateSetMapAndInitPosInfo: {
-//            busy.running = false
-//            dialog_match_warn.dia_content = message
-//            dialog_match_warn.open()
-//        }
-        onUpdateMapAndTasksInfo: {
-            root.choose_map_name = map_name
-
-            root.confirmMapPage()
-        }
-        onUpdateMapAndTaskInfo: {
-            root.choose_map_name = map_name
-            root.startTaskPage()
-        }
-        onUpdateInitPosInfo: {
-            busy.visible = false
-            busy.running = false
-            pop_lock_loading_task.close()
-            dialog_match_warn.dia_title = qsTr("Error ")
-            dialog_match_warn.dia_content = qsTr("message")//message
-            dialog_match_warn.open()
-            rec_checked_location.visible = true
-        }
-        onUpdateErrorToLoadMapOrNoneTasksInfo: {
-            busy.visible = false
-            busy.running = false
-            pop_lock_loading_task.close()
-            dialog_match_warn.dia_title = qsTr("Error ")
-            dialog_match_warn.dia_content = qsTr("message map && task")//message
-            dialog_match_warn.open()
-
-        }
-
-
-        onUpdateMapName: {
-            list_view_areas.currentIndex = index
-            map_task_manager.parseMapData(map_name)
-            map_task_manager.getFeature(map_name)
-        }
-    }
     Rectangle {
         id: rec_glow_background
         anchors.fill: parent
@@ -225,7 +176,7 @@ Rectangle {
             height: parent.height * 0.88
             anchors.centerIn: parent
             color: "transparent"
-            visible: root.map_status === 1 ? true : false
+            visible: root.map_status !== 0
             Rectangle {
                 id: rec_header_bar
                 width: parent.width
@@ -241,30 +192,24 @@ Rectangle {
                     delegate: ItemDelegate {
                         width: list_view_areas.width / 4
                         height: list_view_areas.height
-                        property int id_card: model.id_card
-                        property bool is_currentIndex: list_view_areas.currentIndex == index
                         onPressed: {
                             root.chooseMapPage()
                             list_view_areas.currentIndex = index
 
                             root.choose_map_name = model.map_name
                             monitor_page.choose_map_name = model.map_name
-
-                            map_task_manager.setMapName(model.map_name)
-//                            map_task_manager.parseMapData(model.map_name)
-//                            map_task_manager.getFeature(model.map_name)
+                            map_task_manager.setWorkMapName(model.map_name)
+                            monitor_page.paintingMap(model.map_name)
                         }
 
                         Rectangle {
                             width: parent.width
                             height: parent.height
                             color: "transparent"
-//                            color: list_view_areas.currentIndex === parent.id_card ?
-//                                              Qt.rgba(0,191,255, 0.8) : Qt.rgba(205,133,63, 0.5)
                             border.color:  Qt.rgba(205,133,63, 0.5)
                             Image {
                                 anchors.fill: parent
-                                source: parent.parent.is_currentIndex ?
+                                source: parent.parent.focus ?
                                     "qrc:/res/pictures/map_areas_focus.png" : "qrc:/res/pictures/map_areas_normal.png"
                             }
                             Text {
@@ -280,6 +225,12 @@ Rectangle {
                     }
                     model: ListModel {
                         id: list_model_areas
+                        Component.onCompleted: {
+                            root._maps_name = map_task_manager.getMapsName()
+                            for (var i = 0; i < _maps_name.length; ++i) {
+                                list_model_areas.append({"map_name":_maps_name[i]})
+                            }
+                        }
                     }
                 }
             }
@@ -312,16 +263,6 @@ Rectangle {
                     width: parent.width * 0.2
                     height: parent.height * 0.833
                     color: "white"
-//                    color: Qt.rgba(0,191,255, 0.5)
-//                    LinearGradient {
-//                        anchors.fill: parent
-//                        start: Qt.point(0, 0)
-//                        end: Qt.point(parent.width, 0)
-//                        gradient: Gradient {
-//                            GradientStop { position: 0.0; color: Qt.rgba(0,191,255, 0.5)}
-//                            GradientStop { position: 1.0; color: Qt.rgba(225,255,255, 0.5)}
-//                        }
-//                    }
                     ListView {
                         id: list_view
                         clip: true
@@ -341,28 +282,10 @@ Rectangle {
                                 source: item.is_active ?
                                     "qrc:/res/pictures/bar_ref_line0.png" : "qrc:/res/pictures/map_areas_normal.png"
                             }
-
-//                            Rectangle {
-//                                id: check_style
-//                                width: parent.width * 0.1
-//                                height: width
-//                                anchors.verticalCenter: parent.verticalCenter
-//                                anchors.left: parent.left
-//                                anchors.leftMargin: parent.width * 0.1
-//                                radius: height / 2
-//                                border.color: "black"
-//                                border.width: 1
-//                                Image {
-//                                    visible: item.is_active ? true : false
-//                                    source: "qrc:/res/pictures/finish.png"
-//                                    fillMode: Image.PreserveAspectFit
-//                                    anchors.fill: parent
-//                                }
-//                            }
                             Text {
                                 id: checked_text
                                 clip: true
-                                text: model.check_box_text
+                                text: model.task_name
                                 horizontalAlignment: Text.AlignLeft
                                 verticalAlignment: Text.AlignVCenter
                                 width: parent.width
@@ -391,7 +314,12 @@ Rectangle {
                                     }
                                     root.checked_tasks_name = temp_str
                                 }
-                                map_task_manager.getTasksData(root.checked_tasks_name)
+                                var tasks_data = map_task_manager.getTasksData(root.checked_tasks_name)
+                                monitor_page._task_lines = tasks_data[0]
+                                monitor_page._task_points = tasks_data[1]
+                                monitor_page._task_regions = tasks_data[2]
+                                monitor_page.paintTasks()
+
                             }
                         }
                         model: ListModel {
@@ -503,7 +431,7 @@ Rectangle {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            map_task_manager.sentMapTasksName(root.checked_tasks_name)
+                            map_task_manager.setWorkTasksName(root.checked_tasks_name)
                             timer_task_timing.start()
                         }
                     }
@@ -601,62 +529,19 @@ Rectangle {
         }
     }
 
-    TLDialog {
-        id: dialog_match_warn
-        height: parent.height * 0.5
-        width: height * 1.5
-        x: (root.width - width) / 2
-        y: (root.height - height) / 2
-        dia_title: "error"
-    }
-
-    TLDialog {
-        id: dialog_resure
-        height: parent.height * 0.5
-        width: height * 1.5
-        x: (root.width - width) / 2
-        y: (root.height - height) / 2
-        dia_title: qsTr("Repeat")
-        dia_content: qsTr("Are you sure?")
-        status: 1
-        ok: true
-        cancel_text: qsTr("cancel")
-        ok_text: qsTr("yes")
-        onOkClicked: {
-            dialog_resure.close()
-            monitor_page.sendInitPoint()
-            busy.visible = true
-            busy.running = true
-            rec_checked_location.visible = false
-            pop_lock_loading_task.open()
-            timer_cant_control_pop.start()
-            timer_busy_wait_time.start()
-        }
-        onCancelClicked: {
-            root.chooseMapPage()
-            dialog_resure.close()
+    Connections {
+        target: map_task_manager
+        onEmitSetInitPoseRstInfo: {
+            busy.visible = false
+            busy.running = false
+            pop_lock_loading_task.close()
+            dialog_match_warn.dia_title = qsTr("Error ")
+            dialog_match_warn.dia_content = qsTr("message")//message
+            dialog_match_warn.open()
+            rec_checked_location.visible = true
         }
     }
 
-    TLDialog {
-        id: dialog_work_down
-        width: root.width * 0.4
-        height: root.height * 0.3
-        x: (root.width - width) / 2
-        y: (root.height - height) / 2
-        dia_title: qsTr("Repeat")
-        dia_content: qsTr("dialog_work_down")
-        status: 1
-        ok: true
-        cancel_text: qsTr("cancel")
-        ok_text: qsTr("yes")
-        onOkClicked: {
-
-        }
-        onCancelClicked: {
-
-        }
-    }
     Timer {
         id: timer_cant_control_pop
         running: false
@@ -667,22 +552,6 @@ Rectangle {
                 pop_lock_loading_task.open()
             } else {
                 pop_lock_loading_task.close()
-            }
-        }
-    }
-    Timer {
-        id: timer_busy_wait_time
-        running: busy.running
-        repeat: true
-        interval: 1000
-        onTriggered: {
-            timeout++
-            if (timeout > 9) {
-                busy.running = false
-                timer_busy_wait_time.stop()
-                timeout = 0
-            } else {
-
             }
         }
     }
@@ -717,9 +586,157 @@ Rectangle {
         }
         onOkClicked: {
             dialog_return_map_tip.close()
-            map_task_manager.turnToMapSelect()
-            list_view_areas.currentIndex = 0
-//            map_task_manager.parseMapData()
+            map_task_manager.turnToSelectMap()
+
         }
     }
+    TLDialog {
+        id: dialog_work_down
+        width: root.width * 0.4
+        height: root.height * 0.3
+        x: (root.width - width) / 2
+        y: (root.height - height) / 2
+        dia_title: qsTr("Repeat")
+        dia_content: qsTr("dialog_work_down")
+        status: 1
+        ok: true
+        cancel_text: qsTr("cancel")
+        ok_text: qsTr("yes")
+        onOkClicked: {
+
+        }
+        onCancelClicked: {
+
+        }
+    }
+    TLDialog {
+        id: dialog_match_warn
+        height: parent.height * 0.5
+        width: height * 1.5
+        x: (root.width - width) / 2
+        y: (root.height - height) / 2
+        dia_title: "error"
+    }
+
+    TLDialog {
+        id: dialog_resure
+        height: parent.height * 0.5
+        width: height * 1.5
+        x: (root.width - width) / 2
+        y: (root.height - height) / 2
+        dia_title: qsTr("Repeat")
+        dia_content: qsTr("Are you sure?")
+        status: 1
+        ok: true
+        cancel_text: qsTr("cancel")
+        ok_text: qsTr("yes")
+        onOkClicked: {
+            dialog_resure.close()
+            monitor_page.sendInitPoint()
+            busy.visible = true
+            busy.running = true
+            rec_checked_location.visible = false
+            pop_lock_loading_task.open()
+            timer_cant_control_pop.start()
+        }
+        onCancelClicked: {
+            root.chooseMapPage()
+            dialog_resure.close()
+        }
+    }
+
+
+
 }
+
+//    Connections {
+//        target: map_task_manager
+//        onUpdateMapsName: {
+//            list_model_areas.clear()
+//            map_areas = maps_name
+//            map_status = 1
+//            root.checked_tasks_name = []
+//            monitor_page.clearAllCanvas()
+//            for (var i = 0; i < map_areas.length; ++i) {
+//                list_model_areas.append({"id_card": i, "map_name":map_areas[i]})
+//            }
+//            chooseMapPage()
+//        }
+//        onGetMapInfoError: {
+//            map_status = 0
+//            error = error_message
+//        }
+//        onUpdateTasksName: {
+//            busy.visible = false
+//            busy.running = false
+//            root.checked_tasks_name = []
+//            pop_lock_loading_task.close()
+//            tasks_list = tasks
+//            task_list_model.clear()
+//            if (tasks_list.length <= 4 ) {
+//                vbar.visible = false
+//            } else {
+//                vbar.visible = true
+//            }
+//            monitor_page.clearAllCanvas()
+//            for (var i = 0; i < tasks_list.length; ++i) {
+//                task_list_model.append({"idcard": i,"check_box_text": tasks_list[i]})
+//            }
+//            confirmMapPage()
+//        }
+////        onLocalizationInitInfo: {
+////            if (status === 0) {
+////                root.chooseMapPage()
+////                dialog_match_warn.dia_title = message
+////                dialog_match_warn.open()
+////            } else if (status === 1) {
+////                root.confirmMapPage()
+////            }
+////            busy.running = false
+////        }
+//        onSetTaskInfo: {
+//            root.chooseTaskPage()
+//            dialog_match_warn.dia_title = qsTr("Error")
+//            dialog_match_warn.dia_content = qsTr("message set task")//message
+//            dialog_match_warn.open()
+//        }
+////        onUpdateSetMapAndInitPosInfo: {
+////            busy.running = false
+////            dialog_match_warn.dia_content = message
+////            dialog_match_warn.open()
+////        }
+//        onUpdateMapAndTasksInfo: {
+//            root.choose_map_name = map_name
+
+//            root.confirmMapPage()
+//        }
+//        onUpdateMapAndTaskInfo: {
+//            root.choose_map_name = map_name
+//            root.startTaskPage()
+//        }
+//        onEmitSetInitPoseRstInfo: {
+//            busy.visible = false
+//            busy.running = false
+//            pop_lock_loading_task.close()
+//            dialog_match_warn.dia_title = qsTr("Error ")
+//            dialog_match_warn.dia_content = qsTr("message")//message
+//            dialog_match_warn.open()
+//            rec_checked_location.visible = true
+//        }
+//        onUpdateErrorToLoadMapOrNoneTasksInfo: {
+//            busy.visible = false
+//            busy.running = false
+//            pop_lock_loading_task.close()
+//            dialog_match_warn.dia_title = qsTr("Error ")
+//            dialog_match_warn.dia_content = qsTr("message map && task")//message
+//            dialog_match_warn.open()
+
+//        }
+
+
+//        onUpdateMapName: {
+//            list_view_areas.currentIndex = index
+//            map_task_manager.parseMapData(map_name)
+//            map_task_manager.getFeature(map_name)
+//        }
+//    }

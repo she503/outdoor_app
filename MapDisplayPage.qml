@@ -47,9 +47,9 @@ Page {
     property var choosePoint: []
     property alias choose_marker: choose_marker
 
-    property var task_points: []
-    property var task_regions: []
-    property var task_lines: []
+    property var _task_points: []
+    property var _task_regions: []
+    property var _task_lines: []
 
     property var begin_points: []
     property var charge_points: []
@@ -58,29 +58,140 @@ Page {
 
     property bool can_drag: false
 
-    Connections {
-        target: map_task_manager
-        onUpdateStopTaskInfo: {
-            if (status === 1) {
-                var_obstacles = []
-                obstacles_is_polygon = []
-                var_ref_line = []
-                var_planning_path = []
-                ref_line_curren_index = 0
-                var_planning_ref_path = []
-                var_trajectory = []
+    function paintTasks(){
+        canvas_others.requestPaint()
+    }
 
-                canvas_others.requestPaint()
-                canvas_obstacles.requestPaint()
-                canvas_ref_line.requestPaint()
-                canvas_red_ref_line.requestPaint()
-                canvas_planning_ref_line.requestPaint()
-                canvas_trajectory.requestPaint()
-                vehicle.x = -200
-                vehicle.y = -200
+    function paintingMap(current_map_name) {
+        map.scale = 1 / root.real_rate
+        img_charge.visible = false
+        img_begin.visible = false
+        min_x = Number.POSITIVE_INFINITY
+        min_y = Number.POSITIVE_INFINITY
+        max_y = Number.NEGATIVE_INFINITY
+        max_x = Number.NEGATIVE_INFINITY
+        var work_status = status_manager.getWorkStatus()
+        var map_road_data = []
+        var map_road_edges_data = []
+        if (work_status <= 2 || work_status > 5) { //WORK_STATUS_SELECTING_MAP
+            map_road_edges_data = map_task_manager.getMapRoadEdges(current_map_name)
+            map_road_data = map_task_manager.getMapRoads(current_map_name)
+        } else if (work_status > 3 && work_status <= 5) {
+            map_road_edges_data = map_task_manager.getMapRoadEdges(current_map_name)
+            map_road_data = map_task_manager.getMapRoads(current_map_name)
+        }
+        root.var_road_edges = map_road_edges_data
+        root.var_roads_include = map_road_data[0]
+        root.var_roads_exclude = map_road_data[1]
+
+        var all_x = []
+        var all_y = []
+
+        for (var i = 0; i < var_road_edges.length; ++i) {
+            for (var j = 0; j < var_road_edges[i][0].length; ++j) {
+                var pos_x = var_road_edges[i][0][j][0]
+                var pos_y = var_road_edges[i][0][j][1]
+                min_x = Math.min(min_x, pos_x)
+                max_x = Math.max(max_x, pos_x)
+                min_y = Math.min(min_y, pos_y)
+                max_y = Math.max(max_y, pos_y)
+
             }
         }
+        for (var p = 0; p < var_roads_include.length; ++p) {
+            for (var q = 0; q < var_roads_include[p].length; ++q) {
+                var pos_x = var_roads_include[p][q][0]
+                var pos_y = var_roads_include[p][q][1]
+                all_x.push(pos_x)
+                all_y.push(pos_y)
+                min_x = Math.min(min_x, pos_x)
+                max_x = Math.max(max_x, pos_x)
+                min_y = Math.min(min_y, pos_y)
+                max_y = Math.max(max_y, pos_y)
+            }
+        }
+
+
+        map_width = max_x - min_x
+        map_height = max_y - min_y
+
+        map_rate = map_width > map_height ? (map.width / map_width) :
+                                            (map.height / map_height)
+
+        map_rate *= real_rate
+
+        map.x = (map.width - canvas_background.width) / 2 / root.real_rate + root.paint_begin_point * 2
+        map.y = (map.height - canvas_background.height) / 2 / root.real_rate
+
+        canvas_background.requestPaint()
+
+        var vehicle_width = vehicle_info_manager.getVehicleWidth()
+        var vehicle_height = vehicle_info_manager.getVehicleHeight()
+
+        vehicle.width =  vehicle_width * 3/2 * map_rate // 1.3
+        vehicle.height = vehicle_height * map_rate // 0.74
+
+
+
     }
+
+    Component.onCompleted: {
+        var work_status = status_manager.getWorkStatus()
+        var current_map_name = map_task_manager.getCurrentMapName()
+        root.paintingMap(current_map_name)
+        if (work_status === 5) {
+            root.var_ref_line = map_task_manager.getWorkFullRefLine()
+            canvas_ref_line.requestPaint()
+        }
+
+    }
+
+    Connections {
+        target: map_task_manager
+        onEmitWorkFullRefLine: {
+            root.var_ref_line = ref_line
+            canvas_ref_line.requestPaint()
+
+        }
+    }
+
+    Connections {
+        target: ros_message_manager
+        onUpdateLocalizationInfo: {
+            vehicle.visible = true
+            var pixel_pos = geometryToPixel(x, y)
+            vehicle.x = pixel_pos[0] - vehicle.width / 2
+            vehicle.y = pixel_pos[1] - vehicle.height / 2
+
+            if (map.scale > root.real_rate / 2 && !root.can_drag) {
+                map.x = (map.width / 2 - vehicle.x - vehicle.width / 2) * (map.scale)
+                map.y = (map.height / 2 - vehicle.y - vehicle.height / 2) * (map.scale)
+            }
+            vehicle.rotation = -heading
+        }
+        onUpdateObstacleInfo: {
+            var_obstacles = obstacles
+            obstacles_is_polygon = is_polygon
+            canvas_obstacles.requestPaint()
+        }
+        onUpdatePlanningInfo: {
+            var_planning_path = planning_path
+            canvas_red_ref_line.requestPaint()
+        }
+        onUpdatePlanningRefInfo: {
+            root.var_planning_ref_path = planning_path
+            canvas_planning_ref_line.requestPaint()
+        }
+        onUpdateTaskProcessInfo: {
+            ref_line_curren_index = current_index
+            canvas_red_ref_line.requestPaint()
+        }
+        onUpdateTrajectoryInfo: {
+            var_trajectory = trajectory
+            canvas_trajectory.requestPaint()
+        }
+    }
+
 
     signal sendInitPoint()
     onSendInitPoint: {
@@ -109,9 +220,9 @@ Page {
         var_planning_path = []
         var_planning_ref_path = []
         var_trajectory = []
-        task_points = []
-        task_regions = []
-        task_lines = []
+        _task_points = []
+        _task_regions = []
+        _task_lines = []
         canvas_others.requestPaint()
         canvas_obstacles.requestPaint()
         canvas_ref_line.requestPaint()
@@ -573,9 +684,9 @@ Page {
                 onPaint: {
                     var ctx = getContext("2d")
                     ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
-                    drawLine(ctx, root.task_lines)
-                    drawPoint(ctx, root.task_points)
-                    drawRegion(ctx, root.task_regions)
+                    drawLine(ctx, root._task_lines)
+                    drawPoint(ctx, root._task_points)
+                    drawRegion(ctx, root._task_regions)
                 }
             }
             Canvas {
@@ -792,7 +903,7 @@ Page {
 
             VehicleItem {
                 id: vehicle
-                visible: false
+                visible: true
                 opacity: 1
             }
         }
@@ -842,219 +953,159 @@ Page {
 
     }
 
-    //Map
-    Connections {
-        target: map_task_manager
-        onUpdateMapData: {
-            map.scale = 1 / root.real_rate
-            img_charge.visible = false
-            img_begin.visible = false
-            min_x = Number.POSITIVE_INFINITY
-            min_y = Number.POSITIVE_INFINITY
-            max_y = Number.NEGATIVE_INFINITY
-            max_x = Number.NEGATIVE_INFINITY
-            var_trees = trees
-            var_signals = signs
-            var_stop_signs = stop_signs
-            var_speed_bumps = speed_bumps
-            var_road_edges = road_edges
-            var_lane_lines = lane_lines
-            var_clear_areas_include = clear_areas_include
-            var_crosswalks = crosswalks
-            var_junctions = junctions
-            var_parking_spaces = parking_spaces
-            var_roads_include = roads_include
-            var_roads_exclude = roads_exclude
 
 
-            var all_x = []
-            var all_y = []
+//    // map feature and task
+//    Connections {
+//        target: map_task_manager
+//        onUpdateMapFeature: {
 
-            for (var i = 0; i < var_road_edges.length; ++i) {
-                min_x = var_road_edges[0][0][0][0]
-                max_x = var_road_edges[0][0][0][0]
-                min_y = var_road_edges[0][0][0][1]
-                max_y = var_road_edges[0][0][0][1]
-                for (var j = 0; j < var_road_edges[i][0].length; ++j) {
-                    var pos_x = var_road_edges[i][0][j][0]
-                    var pos_y = var_road_edges[i][0][j][1]
-                    min_x = Math.min(min_x, pos_x)
-                    max_x = Math.max(max_x, pos_x)
-                    min_y = Math.min(min_y, pos_y)
-                    max_y = Math.max(max_y, pos_y)
-                }
-            }
-            for (var p = 0; p < var_roads_include.length; ++p) {
-                for (var q = 0; q < var_roads_include[p].length; ++q) {
-                    var pos_x = var_roads_include[p][q][0]
-                    var pos_y = var_roads_include[p][q][1]
-                    all_x.push(pos_x)
-                    all_y.push(pos_y)
-                    min_x = Math.min(min_x, pos_x)
-                    max_x = Math.max(max_x, pos_x)
-                    min_y = Math.min(min_y, pos_y)
-                    max_y = Math.max(max_y, pos_y)
-                }
-            }
+//            root.begin_points = begin_point
+//            root.charge_points = charge_point
+//            var point_x = 0
+//            var point_y = 0
+//            var is_point = false
+//            for(var key in begin_point) {
+//                if (key === "x") {
+//                    point_x = begin_point[key]
 
-            map_width = max_x - min_x
-            map_height = max_y - min_y
+//                } else if (key === "y") {
+//                    point_y = begin_point[key]
+//                    is_point = true
+//                }
+//                if (is_point) {
+//                    var pixel_pos = geometryToPixel(point_x, point_y)
+//                    img_begin.x = pixel_pos[0] - img_begin.width / 2
+//                    img_begin.y = pixel_pos[1] - img_begin.height / 2
+//                    img_begin.visible = true
+//                }
+//            }
 
-            map_rate = map_width > map_height ? (map.width / map_width) :
-                                                (map.height / map_height)
+//            var point_xx = 0
+//            var point_yy = 0
+//            var is_pointt = false
+//            for(var keyy in charge_point) {
+//                if (keyy === "x") {
+//                    point_xx = charge_point[key]
+//                } else if (keyy === "y") {
+//                    point_yy = charge_point[key]
+//                    is_pointt = true
+//                }
+//                if (is_pointt) {
+//                    var pixel_poss = geometryToPixel(point_xx, point_yy)
+//                    img_charge.x = pixel_poss[0] - img_charge.width / 2
+//                    img_charge.y = pixel_poss[1] - img_charge.height / 2
+//                    img_charge.visible = true
+//                }
+//            }
+//        }
+//        onUpdateTaskData: {
+//            task_points = points    //task_points[0]
+//            task_regions = regions
+//            task_lines = lines
+//            canvas_others.requestPaint()
+//        }
+//    }
+//    Connections {
+//        target: map_task_manager
+//        onUpdateStopTaskInfo: {
+//            if (status === 1) {
+//                var_obstacles = []
+//                obstacles_is_polygon = []
+//                var_ref_line = []
+//                var_planning_path = []
+//                ref_line_curren_index = 0
+//                var_planning_ref_path = []
+//                var_trajectory = []
 
-            map_rate *= real_rate
-
-            map.x = (map.width - canvas_background.width) / 2 / root.real_rate + root.paint_begin_point * 2
-            map.y = (map.height - canvas_background.height) / 2 / root.real_rate
-
-            canvas_background.requestPaint()
-
-
-            task_points = []
-            task_regions = []
-            task_lines = []
-            canvas_others.requestPaint()
-
-            var vehicle_width = socket_manager.getVehicleWidth()
-            var vehicle_height = socket_manager.getVehicleHeight()
-
-            vehicle.width =  vehicle_width * 3/2 * map_rate // 1.3
-            vehicle.height = vehicle_height * map_rate // 0.74
-//            vehicle.height = 0.74 * map_rate
-//            vehicle.width = 1.3 * 1.5 * map_rate
-        }
-    }
-
-    // map feature and task
-    Connections {
-        target: map_task_manager
-        onUpdateMapFeature: {
-
-            root.begin_points = begin_point
-            root.charge_points = charge_point
-            var point_x = 0
-            var point_y = 0
-            var is_point = false
-            for(var key in begin_point) {
-                if (key === "x") {
-                    point_x = begin_point[key]
-
-                } else if (key === "y") {
-                    point_y = begin_point[key]
-                    is_point = true
-                }
-                if (is_point) {
-                    var pixel_pos = geometryToPixel(point_x, point_y)
-                    img_begin.x = pixel_pos[0] - img_begin.width / 2
-                    img_begin.y = pixel_pos[1] - img_begin.height / 2
-                    img_begin.visible = true
-                }
-            }
-
-            var point_xx = 0
-            var point_yy = 0
-            var is_pointt = false
-            for(var keyy in charge_point) {
-                if (keyy === "x") {
-                    point_xx = charge_point[key]
-                } else if (keyy === "y") {
-                    point_yy = charge_point[key]
-                    is_pointt = true
-                }
-                if (is_pointt) {
-                    var pixel_poss = geometryToPixel(point_xx, point_yy)
-                    img_charge.x = pixel_poss[0] - img_charge.width / 2
-                    img_charge.y = pixel_poss[1] - img_charge.height / 2
-                    img_charge.visible = true
-                }
-            }
-        }
-        onUpdateTaskData: {
-            task_points = points    //task_points[0]
-            task_regions = regions
-            task_lines = lines
-            canvas_others.requestPaint()
-        }
-    }
-
-    Connections {
-        target: ros_message_manager
-        onUpdateLocalizationInfo: {
-            vehicle.visible = true
-            var pixel_pos = geometryToPixel(x, y)
-            vehicle.x = pixel_pos[0] - vehicle.width / 2
-            vehicle.y = pixel_pos[1] - vehicle.height / 2
-//            console.info([x,vehicle.x, y, vehicle.y])
-//            console.info([y, vehicle.y])
+//                canvas_others.requestPaint()
+//                canvas_obstacles.requestPaint()
+//                canvas_ref_line.requestPaint()
+//                canvas_red_ref_line.requestPaint()
+//                canvas_planning_ref_line.requestPaint()
+//                canvas_trajectory.requestPaint()
+//                vehicle.x = -200
+//                vehicle.y = -200
+//            }
+//        }
+//    }
+//    Connections {
+//        target: ros_message_manager
+//        onUpdateLocalizationInfo: {
+//            vehicle.visible = true
+//            var pixel_pos = geometryToPixel(x, y)
+//            vehicle.x = pixel_pos[0] - vehicle.width / 2
+//            vehicle.y = pixel_pos[1] - vehicle.height / 2
+////            console.info([x,vehicle.x, y, vehicle.y])
+////            console.info([y, vehicle.y])
 
 
-            if (map.scale > root.real_rate / 2 && !root.can_drag) {
-                map.x = (map.width / 2 - vehicle.x - vehicle.width / 2) * (map.scale)
-                map.y = (map.height / 2 - vehicle.y - vehicle.height / 2) * (map.scale)
-            }
+//            if (map.scale > root.real_rate / 2 && !root.can_drag) {
+//                map.x = (map.width / 2 - vehicle.x - vehicle.width / 2) * (map.scale)
+//                map.y = (map.height / 2 - vehicle.y - vehicle.height / 2) * (map.scale)
+//            }
 
-            vehicle.rotation = -heading
-        }
-        onUpdateObstacleInfo: {
-            var_obstacles = obstacles
-            obstacles_is_polygon = is_polygon
-            canvas_obstacles.requestPaint()
-        }
-        onUpdatePlanningInfo: {
-            var_planning_path = planning_path
-            canvas_red_ref_line.requestPaint()
-        }
-        onUpdatePlanningRefInfo: {
-            root.var_planning_ref_path = planning_path
-            canvas_planning_ref_line.requestPaint()
-        }
-        onUpdateTaskProcessInfo: {
-            ref_line_curren_index = current_index
-            canvas_red_ref_line.requestPaint()
-        }
-        onUpdateTrajectoryInfo: {
-            var_trajectory = trajectory
-            canvas_trajectory.requestPaint()
-        }
-    }
+//            vehicle.rotation = -heading
+//        }
+//        onUpdateObstacleInfo: {
+//            var_obstacles = obstacles
+//            obstacles_is_polygon = is_polygon
+//            canvas_obstacles.requestPaint()
+//        }
+//        onUpdatePlanningInfo: {
+//            var_planning_path = planning_path
+//            canvas_red_ref_line.requestPaint()
+//        }
+//        onUpdatePlanningRefInfo: {
+//            root.var_planning_ref_path = planning_path
+//            canvas_planning_ref_line.requestPaint()
+//        }
+//        onUpdateTaskProcessInfo: {
+//            ref_line_curren_index = current_index
+//            canvas_red_ref_line.requestPaint()
+//        }
+//        onUpdateTrajectoryInfo: {
+//            var_trajectory = trajectory
+//            canvas_trajectory.requestPaint()
+//        }
+//    }
 
-    // | reference line | localization | obstacles | task Process | planning
-    Connections {
-        target: map_task_manager
-        onUpdateRefLine: {
-            root.var_ref_line = ref_line
-            canvas_ref_line.requestPaint()
-        }
-        onUpdateMapsName:{
-            var_ref_line = []
-            var_trajectory = []
-            var_planning_path = []
-            var_planning_ref_path = []
-            ref_line_curren_index = 0
-            canvas_planning_ref_line.requestPaint()
-            canvas_trajectory.requestPaint()
-            canvas_ref_line.requestPaint()
-        }
-    }
+//    // | reference line | localization | obstacles | task Process | planning
+//    Connections {
+//        target: map_task_manager
+//        onUpdateRefLine: {
+//            root.var_ref_line = ref_line
+//            canvas_ref_line.requestPaint()
+//        }
+//        onUpdateMapsName:{
+//            var_ref_line = []
+//            var_trajectory = []
+//            var_planning_path = []
+//            var_planning_ref_path = []
+//            ref_line_curren_index = 0
+//            canvas_planning_ref_line.requestPaint()
+//            canvas_trajectory.requestPaint()
+//            canvas_ref_line.requestPaint()
+//        }
+//    }
 
-    Connections {
-        target: map_task_manager
-        onUpdateStopTaskInfo: {
-            if (status === 1) {
-                var_ref_line = []
-                var_planning_path = []
-                ref_line_curren_index = 0
-                canvas_red_ref_line.requestPaint()
-            }
-        }
-    }
+//    Connections {
+//        target: map_task_manager
+//        onUpdateStopTaskInfo: {
+//            if (status === 1) {
+//                var_ref_line = []
+//                var_planning_path = []
+//                ref_line_curren_index = 0
+//                canvas_red_ref_line.requestPaint()
+//            }
+//        }
+//    }
 
-    Connections {
-        target: map_task_manager
-        onUpdateInitPosInfo: {
-            vehicle.x = 0
-            vehicle.y = 0
-        }
-    }
+//    Connections {
+//        target: map_task_manager
+//        onUpdateInitPosInfo: {
+//            vehicle.x = 0
+//            vehicle.y = 0
+//        }
+//    }
 }

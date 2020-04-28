@@ -5,7 +5,7 @@ ListView {
     id: root
     signal mainPageChanged(var current_index)
 
-    property int _level: -1
+    property int _level: account_manager.getCurrentUserLevel()
     property bool _monitor_error: false
 
     spacing: height * 0.002
@@ -15,7 +15,7 @@ ListView {
     highlightFollowsCurrentItem: false
     delegate: ItemDelegate {
         id: item
-        height: root.level <= 1 ? root.height / 4 : root.height / 5
+        height: root._level <= 1 ? root.height / 4 : root.height / 5
         width: parent.width
         property real id_num: model.id_num
         Rectangle {

@@ -2,7 +2,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Extras 1.4
 import QtQuick.Controls.Styles 1.4
-import "CustomControl"
+import "customControl"
 //todo
 Rectangle {
     property bool _text_visible: false
@@ -131,6 +131,7 @@ Rectangle {
             Image {
                 z: 1
                 id: pic_start
+                visible: status_manager.getWorkStatus() !== 5
                 anchors.fill: parent
                 source: "qrc:/res/pictures/start_3.png"
             }

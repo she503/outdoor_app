@@ -17,7 +17,7 @@
         <file>MenuPage.qml</file>
         <file>FaildToConnectPage.qml</file>
     </qresource>
-    <qresource prefix="/CustomControl">
+    <qresource prefix="/customControl">
         <file>TLTextField.qml</file>
         <file>TLButton.qml</file>
         <file>TLRadioButton.qml</file>

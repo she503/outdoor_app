@@ -22,10 +22,12 @@ Rectangle {
         onCenterBtnPress: {
             var status = status_manager.getWorkStatus()
             if (status < 5) {
-
+                menu_stack.tlReplace(list_view)
+                list_view.currentIndex = 2
             } else if (status === 5) {
-                list_view.mainPageChanged(1)
+                menu_stack.tlReplace(task_process_page)
             }
+            list_view.mainPageChanged(1)
         }
     }
 
@@ -44,10 +46,11 @@ Rectangle {
     Connections {
         target: status_manager
         onWorkStatusUpdate: {
-            if (status === 5) {
-                menu_stack.tlReplace(task_process_page)
-            } else {
+            if (status < 5) {
                 menu_stack.tlReplace(list_view)
+                list_view.currentIndex = 2
+            } else if (status === 5) {
+                menu_stack.tlReplace(task_process_page)
             }
         }
     }

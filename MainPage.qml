@@ -1,7 +1,8 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
-import "customControl"
+import "./customControl"
+import "./user"
 
 Rectangle {
     id: root
@@ -11,6 +12,7 @@ Rectangle {
     property Component help_document_page: HelpDocumentPage { }
     property Component about_machine_page: AboutMachinePage { }
     property Component verify_password_page: VerifyPasswordPage { }
+    property Component message_view: MonitorMessagePage { }
     property Component task_settings_page: TaskSettingsPage{
         onStartTaskLock: {
             verify_password_page.pop_lock.open()
@@ -27,7 +29,6 @@ Rectangle {
         }
     }
 
-    property Component message_view: MonitorMessagePage { }
 
     TaskProcess {
        id: task_process_page

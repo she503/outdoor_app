@@ -60,10 +60,10 @@ private slots:
 
 signals:
     void emitGetAllMapsInfoError(const QString& error_message);
-    void emitSetMapNameRstInfo(const int& status, const QString& message);
-    void emitSetInitPoseRstInfo(const int& status, const QString& message);
+    void emitSetMapNameRstInfo(const int& status, const QString& error_message);
+    void emitSetInitPoseRstInfo(const int& status, const QString& error_message);
     void emitGetMapAndTasksInfoError(const QString& error_message);
-    void emitSetTasksRstInfo(const int& status, const QString& message);
+    void emitSetTasksRstInfo(const int& status, const QString& error_message);
     void emitGetWorkMapInfoError(const QString& error_message);
     void emitGetWorkRefLineInfoError(const QString& error_message);
 

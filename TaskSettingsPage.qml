@@ -327,24 +327,8 @@ Rectangle {
                         }
 
 
-                        ScrollBar.vertical: ScrollBar {
-                            id: vbar
-                            visible: false
-                            hoverEnabled: true
-                            active: hovered || pressed
-                            orientation: Qt.Vertical
-                            size: 0.1
-                            anchors.top: parent.top
-                            anchors.right: parent.right
-                            anchors.bottom: parent.bottom
-                            policy: ScrollBar.AsNeeded
-                            contentItem: Rectangle {
-                                implicitWidth: 4
-                                implicitHeight: 1
-                                radius: width / 2
-                                color: vbar.pressed ? "#ffffaa" : "#c2f4c6"
-                            }
-                        }
+                        ScrollBar.vertical: TLScrollBar { visible: task_list_model.count > 6 }
+
                     }
                     Rectangle {
                         id: rect_back

@@ -87,10 +87,11 @@ Rectangle{
         }
     }
 
-    TLDialog {
+    TLMessageBox {
         id: faild;
-        dia_title: "faild"
-        dia_content: "faild to connect"
+        dia_type: 0
+        dia_title: qsTr("faild")
+        dia_text: qsTr("faild to connect")
     }
 
 }

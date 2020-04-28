@@ -10,17 +10,11 @@ ApplicationWindow {
     height: 480
 
     property bool connect_to_server: false
-
-    Component.onCompleted: {
-        connect_to_server = socket_manager.connectToServer()
-    }
-
     property Component fail_connect_page: FaildToConnectPage{
         onSuccessToConnect: {
             stack_view.replace(login_page)
         }
     }
-
     property Component welcome_page: WelcomePage {
         onFinishAnimation: {
             if (!connect_to_server) {
@@ -31,6 +25,16 @@ ApplicationWindow {
         }
     }
     property Component main_page: MainPage {}
+
+    MessageBox{
+        id: message_box
+        anchors.fill: parent
+    }
+
+    Component.onCompleted: {
+        connect_to_server = socket_manager.connectToServer()
+    }
+
 
     LoginPage {
         id: login_page

@@ -135,6 +135,7 @@ void AccountManager::parseUpdateRst(const QJsonObject &obj)
 
 void AccountManager::parseAllAccountsInfo(const QJsonObject &obj)
 {
+    _accounts_map.clear();
     QJsonObject accounts_info = obj.value("accounts_info").toObject();
 
     QJsonObject account_username_level;

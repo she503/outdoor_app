@@ -1,388 +1,34 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
-//import QtQuick.Controls.Styles 1.4
-import "customControl"
+import "../customControl"
 
 Rectangle {
     id: root
-
-    property var v_accounts_info: {}
-
-    property string checked_user_name: ""
-    property int checked_user_level: 0
-    property int v_user_level: account_manager.getCurrentUserLevel()
-    property string v_user_name: ""
-    property int admin_num: 0
-    property real rate: Math.min(width, height) / 400
-
     color: "transparent"
 
+    property var p_accounts_info: {}
+    property int p_admin_num: 0
 
-    Dialog {
-        id: message_update_uer
-        height: parent.height * 0.5
-        width: height * 1.5
-        x:(root.width - width) / 2
-        y: (root.height - height) / 2
-        background: Rectangle {
-            anchors.fill: parent
-            color: "transparent"
-        }
-        contentItem: Item {
-            anchors.fill: parent
-            Rectangle {
-                id: rect_update_user_input
-                width: parent.width
-                height: parent.height
-                anchors.centerIn: parent
-                color: "transparent"
-                Image {
-                    anchors.fill: parent
-                    source: "qrc:/res/pictures/background_glow2.png"
-                }
-                Rectangle {
-                    color: Qt.rgba(255, 255, 255, 1)
-                    anchors.centerIn: parent
-                    width: parent.width * 0.8
-                    height: parent.height * 0.75
-                    Rectangle {
-                        id: rect_update_title
-                        width: parent.width
-                        height: parent.height * 0.3
-                        color: "transparent"
-                        Text {
-                            color: "#4876FF"
-                            text: qsTr("update user pwd")
-                            font.pixelSize: parent.height * 0.3
-                            font.bold: true
-                            anchors.centerIn: parent
-                        }
-                        Image {
-                            height: parent.height * 0.4
-                            width: height
-                            anchors {
-                                right: parent.right
-                                top:parent.top
-                                rightMargin: parent.height * 0.1
-                                topMargin: parent.height * 0.1
-                            }
-                            source: "qrc:/res/pictures/exit.png"
-                            fillMode: Image.PreserveAspectFit
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: {
-                                    message_update_uer.close()
-                                }
-                            }
-                        }
-                    }
-                    Rectangle {
-                        id: rect_update_user
-                        width: parent.width
-                        height: parent.height * 0.8
-                        color: "transparent"
-                        anchors {
-                            top: rect_update_title.bottom
-                        }
-                        Column {
-                            width: parent.width * 0.6
-                            height: parent.height
-                            anchors {
-                                horizontalCenter: parent.horizontalCenter
-                                top: parent.top
-                                topMargin: height * 0.1
-                            }
-                            spacing: height * 0.05
-                            TLTextField {
-                                id: field_old_pwd
-                                visible: root.v_user_level > root.checked_user_level ? false : true
-                                width: parent.width
-                                height: parent.height * 0.2
-                                btn_radius:  height * 0.2
-                                placeholderText: qsTr("Please enter old pwd")
-                                pic_name: "qrc:/res/pictures/password.png"
-                            }
-                            TLTextField {
-                                id: field_new_pwd
-                                width: parent.width
-                                height: parent.height * 0.2
-                                btn_radius:  height * 0.2
-                                placeholderText: qsTr("Please enter new pwd")
-                                font_size: height * 0.4
-                                pic_name: "qrc:/res/pictures/password.png"
-                            }
-                            Rectangle {
-                                id: rect_update_btns
-                                width: parent.width
-                                height: parent.height * 0.2
-                                color: "transparent"
-                                TLButton {
-                                    id: btn_update_pwd
-                                    width: parent.width * 0.4
-                                    height: parent.height * 0.7
-                                    anchors {
-                                        verticalCenter: parent.verticalCenter
-                                        right: parent.horizontalCenter
-                                        rightMargin: height * 0.4
-                                    }
+    function initAllAccountInfo() {
+        root.p_admin_num = 0
+        root.p_accounts_info = account_manager.getAllAccountsInfo()
+        user_list_model.clear()
 
-                                    btn_text: qsTr("OK")
-                                    onClicked: {
-                                        if (field_new_pwd.text.trim() === "") {
-                                            message_account.dia_title = qsTr("Error")
-                                            message_account.dia_content = qsTr("password cannot be empty!!!")
-                                            message_account.status = 0
-                                            message_account.open()
-                                        } else {
-                                            if(root.v_user_level <= root.checked_user_level) {
-                                                account_manager.accountUpdate(root.checked_user_name, field_new_pwd.text, root.checked_user_level, field_old_pwd.text, true)
-                                            } else {
-                                                account_manager.accountUpdate(root.checked_user_name, field_new_pwd.text, root.checked_user_level)
-                                            }
-                                        }
-                                    }
-                                }
-                                TLButton {
-                                    id: btn_update_cancel
-                                    width: parent.width * 0.4
-                                    height: parent.height * 0.7
-                                    anchors {
-                                        verticalCenter: parent.verticalCenter
-                                        left: parent.horizontalCenter
-                                        leftMargin: height * 0.4
-                                    }
-                                    btn_text: qsTr("cancel")
-                                    onClicked: {
-                                        field_old_pwd.text = ""
-                                        field_new_pwd.text = ""
-                                        message_update_uer.close()
-                                    }
-                                }
-                            }
-                        }
-                    }
+        var nomal_level = qsTr("nomal_level")
+        var admin_level = qsTr("admin_level")
 
-                }
+        for (var key in root.p_accounts_info) {
+            if (root.p_accounts_info[key] === 0) {
+                console.info("error user level")
+            } else if (root.p_accounts_info[key] === 1) {
+                user_list_model.append({ "user_name": key, "level": nomal_level, "user_level": root.p_accounts_info[key]})
+            } else if (root.p_accounts_info[key] === 2) {
+                user_list_model.append({"user_name": key, "level": admin_level, "user_level": root.p_accounts_info[key]})
+                ++root.p_admin_num;
             }
         }
-    }
-
-    TLDialog {
-        id: message_account
-        height: parent.height * 0.5
-        width: height * 1.5
-        x: (root.width - width) / 2
-        y: (root.height - height) / 2
-        ok: false
-        onCancelClicked: {
-            dialog_add_user.close()
-            message_account.close()
-        }
-    }
-
-    TLDialog {
-        id: dialog_update_success
-        height: parent.height * 0.5
-        width: height * 1.5
-        status: 1
-        dia_title: qsTr("update success")
-        dia_content: qsTr("update success")
-        onCancelClicked: {
-            dialog_update_success.close()
-            message_update_uer.close()
-        }
-    }
-    Dialog {
-        id: dialog_add_user
-        height: parent.height * 0.5
-        width: height * 1.5
-        x:(root.width - width) / 2
-        y: (root.height - height) / 2
-        background: Rectangle {
-            anchors.fill: parent
-            color: "transparent"
-        }
-        contentItem: Item {
-            anchors.fill: parent
-            Rectangle {
-                id: rect_password_input
-                width: parent.width
-                height: parent.height
-                anchors.centerIn: parent
-                color: "transparent"
-                Image {
-                    anchors.fill: parent
-                    source: "qrc:/res/pictures/background_glow2.png"
-                }
-                Rectangle {
-                    color: Qt.rgba(255, 255, 255, 1)
-                    anchors.centerIn: parent
-                    width: parent.width * 0.8
-                    height: parent.height * 0.75
-                    Rectangle {
-                        id: rect_unlock_title
-                        width: parent.width
-                        height: parent.height * 0.3
-                        color: "transparent"
-                        Text {
-                            color: "#4876FF"
-                            text: qsTr("add user")
-                            font.pixelSize: parent.height * 0.3
-                            font.bold: true
-                            anchors.centerIn: parent
-                        }
-                        Image {
-                            id: img_exit
-                            height: parent.height * 0.4
-                            width: height
-                            anchors {
-                                right: parent.right
-                                top:parent.top
-                                rightMargin: parent.height * 0.1
-                                topMargin: parent.height * 0.1
-                            }
-                            source: "qrc:/res/pictures/exit.png"
-                            fillMode: Image.PreserveAspectFit
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: {
-                                    dialog_add_user.close()
-                                }
-                            }
-                        }
-                    }
-                    Rectangle {
-                        id: rect_add_user
-                        width: parent.width * 0.8
-                        height: parent.height * 0.7
-                        anchors{
-                            top: rect_unlock_title.bottom
-                            horizontalCenter: parent.horizontalCenter
-                        }
-                        color: "transparent"
-
-                        Rectangle {
-                            id: user_rect
-                            width: parent.width
-                            height: parent.height * 0.2
-                            anchors {
-                                top: parent.top
-                            }
-                            color: "transparent"
-                            Text {
-                                id: text_use
-                                text: qsTr("username:")
-                                width: parent.width * 0.3
-                                height: parent.height
-                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignRight
-                                color: "#1a7ec0"
-                                font.pixelSize: height * 0.5
-                                anchors{
-                                    top: parent.top
-                                    //                        topMargin: parent.height * 0.2
-                                    left: parent.left
-                                }
-                            }
-
-                            TLTextField {
-                                id: btn_add_username
-                                width: parent.width * 0.6
-                                height: parent.height
-                                anchors {
-                                    top: parent.top
-                                    topMargin: parent.height * 0.1
-                                    left: text_use.right
-                                    leftMargin: parent.width * 0.05
-                                }
-                                btn_radius:  height * 0.2
-                                placeholderText: qsTr("enter new user name.")
-                                pic_name: "qrc:/res/pictures/username.png"
-                            }
-                        }
-
-                        Rectangle {
-                            id: pwd_rect
-                            width: parent.width
-                            height: parent.height * 0.2
-                            anchors {
-                                top: user_rect.bottom
-                                topMargin: parent.height * 0.1
-                            }
-                            color: "transparent"
-                            Text {
-                                id: text_pwd
-                                text: qsTr("password:")
-                                width: parent.width * 0.3
-                                height: parent.height
-                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignRight
-                                color: "#1a7ec0"
-                                font.pixelSize: height * 0.5
-                                anchors{
-                                    top: parent.top
-                                    left: parent.left
-                                }
-                            }
-                            TLTextField {
-                                id: btn_add_pwd
-                                width: parent.width * 0.6
-                                height: parent.height
-                                anchors {
-                                    top: parent.top
-                                    topMargin: parent.height * 0.1
-                                    left: text_pwd.right
-                                    leftMargin: parent.width * 0.05
-
-                                }
-                                btn_radius:  height * 0.2
-                                placeholderText: qsTr("enter new password.")
-                                pic_name: "qrc:/res/pictures/password.png"
-                            }
-
-                        }
-
-                        TLRadioButton {
-                            id: radio_btn
-                            width: parent.width
-                            height: parent.height * 0.1
-                            anchors{
-                                top: pwd_rect.bottom
-                                topMargin: parent.height * 0.08
-                                horizontalCenter: parent.horizontalCenter
-                            }
-                        }
-
-                        TLButton {
-                            id: btn_registered
-                            width: parent.width * 0.4
-                            height: parent.height * 0.15
-                            anchors{
-                                top: radio_btn.bottom
-                                topMargin: parent.height * 0.08
-                                horizontalCenter: parent.horizontalCenter
-                            }
-                            btn_text: qsTr("OK")
-                            onClicked: {
-                                if (btn_add_pwd.text === "" || btn_add_username.text === "" ||
-                                        radio_btn.checked_num === -1) {
-                                    message_account.dia_title = qsTr("add error")
-                                    message_account.dia_content = qsTr("some information is empty!!!")
-                                    message_account.status = 0
-                                    message_account.open()
-                                    return
-                                } else {
-                                    var level = radio_btn.checked_num
-                                    account_manager.accountAdd(btn_add_username.text, btn_add_pwd.text, level)
-                                }
-                            }
-                        }
-                    }
-
-
-                }
-            }
-        }
+        list_view_user.currentIndex = -1
+        btns.p_is_choose_account = false
     }
 
     Rectangle {
@@ -425,120 +71,13 @@ Rectangle {
                     }
                 }
 
-                Button {
-                    id: btn_delete
-                    width: parent.width * 0.2
-                    height: parent.height * 0.5
-                    contentItem: Text {
-                        width: parent.width
-                        height: parent.height * 0.8
-                        anchors.top: parent.top
-                        font.pixelSize: parent.height * 0.53
-                        text: qsTr("delete")
-                        color: "white"
-                        horizontalAlignment: Text.AlignHCenter
-                        anchors.topMargin: parent.height * 0.05
-                    }
-                    enabled: list_view_user.currentIndex === -1 ? false : true
-
-                    background: Image {
-                        id: img_delete
-                        anchors.fill: parent
-                        source: !enabled ? "qrc:/res/pictures/btn_2.png" : "qrc:/res/pictures/btn_1.png"
-                    }
-
-                    anchors {
-                        bottom: parent.bottom
-                        right: parent.right
-                        rightMargin: width * 0.25
-                    }
-
-                    Component.onCompleted: {
-                        if (root.user_level === 1) {
-                            btn_delete.visible = false
-                        } else if (root.user_level === 2) {
-                            btn_delete.visible = true
-                        }
-                    }
-
-                    onClicked: {
-                        if (root.checked_user_level >= root.v_user_level){
-                            message_account.dia_title = qsTr("delete faild")
-                            message_account.dia_content = qsTr("you dont have permission to delete this account!!!")
-                            message_account.status = 0
-                            message_account.open()
-
-                        } else if ( root.checked_user_level === 2 && root.admin_num === 1) {
-                            message_account.dia_title = qsTr("delete faild")
-                            message_account.dia_content = qsTr("you cant delete last admin account!!!")
-                            message_account.status = 0
-                            message_account.open()
-                        } else {
-                            account_manager.accountDelete(root.checked_user_name)
-                        }
-
-                    }
+                AddUpdateDeleteBtn {
+                    id: btns
+                    width: parent.width * 0.7
+                    height: parent.height
+                    anchors.right: parent.right
                 }
-                Button {
-                    id: btn_update
-                    width: parent.width * 0.2
-                    height: parent.height * 0.5
-                    contentItem: Text {
-                        width: parent.width
-                        height: parent.height * 0.8
-                        font.pixelSize: parent.height * 0.53
-                        text: qsTr("update")
-                        color: "white"
-                        horizontalAlignment: Text.AlignHCenter
-                        anchors.top: parent.top
-                        anchors.topMargin: parent.height * 0.05
-                    }
 
-                    enabled: list_view_user.currentIndex === -1 ? false : true
-
-                    background: Image {
-                        id: img_update
-                        anchors.fill: parent
-                        source: !enabled ? "qrc:/res/pictures/btn_2.png" : "qrc:/res/pictures/btn_1.png"
-                    }
-
-                    anchors {
-                        bottom: parent.bottom
-                        right: btn_delete.visible ? btn_delete.left : parent.right
-                        rightMargin: width * 0.1
-                    }
-                    onClicked: message_update_uer.open()
-                }
-                Button {
-                    id: btn_add
-                    width: parent.width * 0.2
-                    height: parent.height * 0.5
-                    contentItem: Text {
-                        width: parent.width
-                        height: parent.height * 0.8
-                        font.pixelSize: parent.height * 0.52
-                        text: qsTr("add")
-                        color: "white"
-                        horizontalAlignment: Text.AlignHCenter
-                        anchors.top: parent.top
-                        anchors.topMargin: parent.height * 0.05
-                    }
-
-                    //                enabled: list_view_user.currentIndex === -1 ? false : true
-
-                    background: Image {
-                        id: img_add
-                        anchors.fill: parent
-                        source: "qrc:/res/pictures/btn_1.png"
-                    }
-
-                    anchors {
-                        bottom: parent.bottom
-                        right: btn_update.left
-                        rightMargin: width * 0.1
-                    }
-                    onClicked: dialog_add_user.open()
-                }
                 Rectangle {
                     width: parent.width * 0.93
                     height: 0.5
@@ -551,7 +90,7 @@ Rectangle {
             Rectangle {
                 id: rect_list
                 width: parent.width * 0.8
-                height: parent.height * 0.45
+                height: parent.height * 0.8
                 clip: true
                 color: "transparent"
                 anchors {
@@ -563,7 +102,7 @@ Rectangle {
                     width: parent.width
                     height: parent.height
                     currentIndex: -1
-                    spacing: 12 * rate
+                    spacing: height * 0.01
 
                     anchors {
                         top: parent.top
@@ -578,7 +117,7 @@ Rectangle {
                         height: list_view_user.height * 0.14
                         Rectangle {
                             id: rect_circle
-                            width: 19 * rate
+                            width: parent.height * 0.6
                             height: width
                             radius: height / 2
                             border.width: 1
@@ -629,36 +168,20 @@ Rectangle {
                             color: Qt.rgba(0, 0, 0, 0.1)
                         }
                         onClicked: {
-
                             list_view_user.currentIndex = index
-                            root.checked_user_name = model.user_name
-                            root.checked_user_level = text_level.user_level
-
+                            btns.p_checked_user_level = text_level.user_level
+                            btns.p_checked_user_name = model.user_name
+                            btns.p_is_choose_account = true
                         }
                     }
                     model: ListModel {
                         id: user_list_model
                         Component.onCompleted: {
-                            root.admin_num = 0
-                            root.v_accounts_info = account_manager.getAllAccountsInfo()
-                            user_list_model.clear()
-
-                            var nomal_level = qsTr("nomal_level")
-                            var admin_level = qsTr("admin_level")
-
-
-                            for (var key in root.v_accounts_info) {
-                                if (root.v_accounts_info[key] === 0) {
-                                    console.info("error user level")
-                                } else if (root.v_accounts_info[key] === 1) {
-                                    user_list_model.append({ "user_name": key, "level": nomal_level, "user_level": root.v_accounts_info[key]})
-                                } else if (root.v_accounts_info[key] === 2) {
-                                    user_list_model.append({"user_name": key, "level": admin_level, "user_level": root.v_accounts_info[key]})
-                                    ++root.admin_num;
-                                }
-                            }
+                            root.initAllAccountInfo()
                         }
                     }
+
+                    ScrollBar.vertical: TLScrollBar { visible: user_list_model.count > 5 }
                 }
             }
         }
@@ -666,63 +189,23 @@ Rectangle {
 
     Connections {
         target: account_manager
-        onEmitAddAccountRst: {
-            switch (status) {
-            case 0:
-                message_account.dia_content = qsTr("user name has exited !")
-                message_account.dia_title = qsTr("Error")
-                message_account.status = 0
-                message_account.open()
-                break;
-            case 1:
-                message_account.dia_title = qsTr("add success")
-                message_account.dia_content = qsTr("a new user was added")
-                message_account.status = 1
-                message_account.open()
-                break;
-            }
-        }
-
         onEmitDeleteAccountRst: {
-            switch(status) {
-            case 0:
-                message_account.dia_title = qsTr("delete error")//qsTr("This one user is last admin,\n you are not allowed to delete it!")
-                message_account.dia_content = message
-                message_account.status = 0
-                message_account.open()
-
-                break;
-            case 1:
-                list_view_user.currentIndex = -1
-                message_account.dia_title = qsTr("delete success")
-                message_account.dia_content = qsTr("user ") + root.checked_user_name + qsTr(" was deleted !")
-                message_account.status = 1
-                message_account.open()
-                message_update_uer.close()
-                if (root.checked_user_level == 2) {
-                    --root.admin_num
+            if (status === 1) {
+                if (root.p_checked_user_level === 2) {
+                    --root.p_admin_num
                 }
-                break;
             }
         }
+        onEmitAllAccountInfo: {
+            root.initAllAccountInfo()
+        }
+    }
 
-        onEmitUpdateAccountRst: {
-            switch(status) {
-            case 0:
-                message_account.dia_title = qsTr("update error")
-                message_account.dia_content = message
-                message_account.status = 0
-                message_account.open()
-                break;
-            case 1:
-                dialog_update_success.dia_title = qsTr("update success")
-                dialog_update_success.dia_content = qsTr("password had be changed!!!")
-                dialog_update_success.status = 1
-                dialog_update_success.open()
-                field_old_pwd.text = ""
-                field_new_pwd.text = ""
-                break;
-            }
-        }
+    TLMessageBox {
+        id: message_account
+        height: parent.height * 0.5
+        width: height * 1.5
+        x: (root.width - width) / 2
+        y: (root.height - height) / 2
     }
 }

@@ -4,7 +4,6 @@
         <file>LoginPage.qml</file>
         <file>MainPage.qml</file>
         <file>HomePage.qml</file>
-        <file>UserManagePage.qml</file>
         <file>HelpDocumentPage.qml</file>
         <file>AboutMachinePage.qml</file>
         <file>TaskSettingsPage.qml</file>
@@ -16,6 +15,7 @@
         <file>VerifyPasswordPage.qml</file>
         <file>MenuPage.qml</file>
         <file>FaildToConnectPage.qml</file>
+        <file>MessageBox.qml</file>
     </qresource>
     <qresource prefix="/customControl">
         <file>TLTextField.qml</file>
@@ -23,5 +23,13 @@
         <file>TLRadioButton.qml</file>
         <file>TLInfoDisplayPage.qml</file>
         <file>TLDialog.qml</file>
+        <file>TLMessageBox.qml</file>
+        <file>TLScrollBar.qml</file>
+    </qresource>
+    <qresource prefix="/user">
+        <file>UserManagePage.qml</file>
+        <file>UpdateAccount.qml</file>
+        <file>AddNewAccount.qml</file>
+        <file>AddUpdateDeleteBtn.qml</file>
     </qresource>
 </RCC>

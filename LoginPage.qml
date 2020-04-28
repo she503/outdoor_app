@@ -10,6 +10,15 @@ Item{
     property real _login_faild_time: 0
     property string _default_test_user: "root"
 
+    Connections {
+        target: account_manager
+        onEmitLoginRst: {
+            if (status === 1) {
+                successToLogin()
+            }
+        }
+    }
+
     FontLoader {
         id: font_hanzhen;
         source: "qrc:/res/font/hanzhen.ttf"
@@ -171,8 +180,8 @@ Item{
                 onClicked: {
                     if (root._login_faild_time < 3 ) {
                         account_manager.accountLogin(username.text, password.text)
-                        ++ root._login_faild_time
                     } else {
+                        ++ root._login_faild_time
                         message_login_faild.dia_title = qsTr("login failed!")
                         message_login_faild.dia_content = qsTr("Multiple login failures,please contact the administrator!")
                         message_login_faild.open()
@@ -181,34 +190,4 @@ Item{
             }
         }
     }
-
-    Connections {
-        target: account_manager
-        onEmitLoginRst: {
-            if (status === 0) {
-                message_login_faild.dia_title = qsTr("Error")
-                message_login_faild.dia_content = qsTr("Account or password is wrong!")
-                message_login_faild.open()
-            } else if (status === 1) {
-                root.successToLogin()
-                root._login_faild_time = 0
-            }
-        }
-    }
-
-    TLDialog {
-        id: message_login_faild
-        height: parent.height * 0.5
-        width: height * 1.5
-        x: (root.width - width) / 2
-        y: (root.height - height) / 2
-        dia_title: qsTr("login error!")
-        status: 0
-        cancel_text: qsTr("OK")
-
-        onCancelClicked: {
-            message_login_faild.close()
-        }
-    }
-
 }

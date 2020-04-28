@@ -10,6 +10,13 @@ Rectangle {
     property string bord_color: "#87CEFA"
     property string center_color: "#00BFFF"
     property real checked_num: -1
+    onChecked_numChanged: {
+        if (checked_num === -1) {
+            radio_nomal.state = "nomal_unchecked"
+            radio_admin.state = "admin_unchecked"
+        }
+    }
+
     Rectangle {
         id: radio_admin
         width: parent.width * 0.5

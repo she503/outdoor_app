@@ -8,8 +8,6 @@
         <file>AboutMachinePage.qml</file>
         <file>TaskSettingsPage.qml</file>
         <file>VehicleItem.qml</file>
-        <file>MapDisplayPage.qml</file>
-        <file>TaskProcess.qml</file>
         <file>MonitorMessagePage.qml</file>
         <file>WelcomePage.qml</file>
         <file>VerifyPasswordPage.qml</file>
@@ -17,7 +15,7 @@
         <file>FaildToConnectPage.qml</file>
         <file>MessageBox.qml</file>
     </qresource>
-    <qresource prefix="/customControl">
+    <qresource prefix="/homemade_components">
         <file>TLTextField.qml</file>
         <file>TLButton.qml</file>
         <file>TLRadioButton.qml</file>
@@ -26,10 +24,17 @@
         <file>TLMessageBox.qml</file>
         <file>TLScrollBar.qml</file>
     </qresource>
-    <qresource prefix="/user">
+    <qresource prefix="/user_manager">
         <file>UserManagePage.qml</file>
         <file>UpdateAccount.qml</file>
         <file>AddNewAccount.qml</file>
         <file>AddUpdateDeleteBtn.qml</file>
+    </qresource>
+    <qresource prefix="/map_task_manager">
+        <file>TaskProgressPage.qml</file>
+        <file>MapDisplayPage.qml</file>
+        <file>WorkDone.qml</file>
+        <file>WorkingBtns.qml</file>
+        <file>TaskInfo.qml</file>
     </qresource>
 </RCC>

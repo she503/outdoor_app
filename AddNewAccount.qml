@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.2
-import "../customControl"
+import "../homemade_components"
 
 Dialog {
     id: dialog_add_user

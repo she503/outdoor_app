@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
 import QtQuick.Controls.Styles 1.4
-import "./customControl"
+import "./homemade_components"
 
 Rectangle {
     id: root
@@ -21,7 +21,6 @@ Rectangle {
     property string work_time: ""
     property var tasks_list: []
     property var checked_tasks_name: []
-    property alias timer_task_timing: timer_task_timing
 
     signal startTaskLock()
 
@@ -39,7 +38,46 @@ Rectangle {
         } else if (status >= 6) {
 
         }
+    }
 
+    function hideAllComponent() {
+        rec_header_bar.visible = false
+        rec_header_bar.height = 0
+        rect_decoration.visible = false
+        rec_checked_location.visible = false
+        rec_task_control.visible = false
+        rec_ref_lines.visible = false
+        monitor_page.p_choose_marker.visible = false
+        btn_start_task.visible = false
+    }
+
+    function chooseMapPage() {
+        hideAllComponent()
+        rec_header_bar.visible = true
+        rec_header_bar.height = rec_task_page.height * 0.1
+        rect_decoration.visible = true
+        rec_checked_location.visible = true
+        monitor_page.p_choose_marker.visible = true
+
+        task_list_model.clear()
+    }
+
+    function confirmMapPage() {
+        hideAllComponent()
+        rec_ref_lines.visible = true
+        rec_task_control.visible = true
+
+    }
+
+    function chooseTaskPage() {
+        hideAllComponent()
+        btn_start_task.visible = true
+        rec_task_control.visible = true
+        rec_ref_lines.visible = true
+    }
+
+    function startTaskPage() {
+        hideAllComponent()
     }
 
     Component.onCompleted: {
@@ -50,7 +88,6 @@ Rectangle {
                 task_list_model.append({"idcard": i,"task_name": tasks_name[i]})
             }
         }
-
         updateMapSettingPage(work_status)
     }
 
@@ -78,84 +115,10 @@ Rectangle {
 
 
 
-    function hideAllComponent() {
-        rec_header_bar.visible = false
-        rec_header_bar.height = 0
-        rect_decoration.visible = false
-        rec_checked_location.visible = false
-        rec_task_control.visible = false
-        rec_ref_lines.visible = false
-        monitor_page.choose_marker.visible = false
-        btn_start_task.visible = false
-    }
 
-    function chooseMapPage() {
-        hideAllComponent()
-        rec_header_bar.visible = true
-        rec_header_bar.height = rec_task_page.height * 0.1
-        rect_decoration.visible = true
-        rec_checked_location.visible = true
-        monitor_page.choose_marker.visible = true
 
-        task_list_model.clear()
-    }
 
-    function confirmMapPage() {
-        hideAllComponent()
-        rec_ref_lines.visible = true
-        rec_task_control.visible = true
 
-    }
-
-    function chooseTaskPage() {
-        hideAllComponent()
-        btn_start_task.visible = true
-        rec_task_control.visible = true
-        rec_ref_lines.visible = true
-    }
-
-    function startTaskPage() {
-        hideAllComponent()
-    }
-
-    function toTime(s){
-        var working_time = []
-        if(s > -1){
-            var hour = Math.floor(s / 3600)
-            var min = Math.floor((s / 60) % 60)
-            var sec = init_time % 60
-
-            if(hour < 10){
-                working_time = hour + " 时 "
-            }
-            if(min < 10){
-                working_time += "0"
-            }
-            working_time += min + " 分 "
-            if(sec < 10){
-                working_time += "0"
-            }
-            working_time += sec.toFixed(0) + " 秒"
-        }
-        return working_time
-    }
-    Timer{
-        id: timer_task_timing
-        interval: 1000
-        repeat: true
-        triggeredOnStart: true
-        onTriggered: {
-            init_time++
-            work_time = toTime(init_time)
-        }
-        onRunningChanged: {
-            if (!running) {
-                init_time = 0
-            } else {
-
-            }
-        }
-    }
 
     FontLoader {
         id: font_hanzhen;
@@ -197,7 +160,6 @@ Rectangle {
                             list_view_areas.currentIndex = index
 
                             root.choose_map_name = model.map_name
-                            monitor_page.choose_map_name = model.map_name
                             map_task_manager.setWorkMapName(model.map_name)
                             monitor_page.paintingMap(model.map_name)
                         }
@@ -315,9 +277,9 @@ Rectangle {
                                     root.checked_tasks_name = temp_str
                                 }
                                 var tasks_data = map_task_manager.getTasksData(root.checked_tasks_name)
-                                monitor_page._task_lines = tasks_data[0]
-                                monitor_page._task_points = tasks_data[1]
-                                monitor_page._task_regions = tasks_data[2]
+                                monitor_page.p_task_lines = tasks_data[0]
+                                monitor_page.p_task_points = tasks_data[1]
+                                monitor_page.p_task_regions = tasks_data[2]
                                 monitor_page.paintTasks()
 
                             }
@@ -416,7 +378,6 @@ Rectangle {
                         anchors.fill: parent
                         onClicked: {
                             map_task_manager.setWorkTasksName(root.checked_tasks_name)
-                            timer_task_timing.start()
                         }
                     }
                 }
@@ -628,99 +589,44 @@ Rectangle {
             dialog_resure.close()
         }
     }
-
-
-
 }
 
-//    Connections {
-//        target: map_task_manager
-//        onUpdateMapsName: {
-//            list_model_areas.clear()
-//            map_areas = maps_name
-//            map_status = 1
-//            root.checked_tasks_name = []
-//            monitor_page.clearAllCanvas()
-//            for (var i = 0; i < map_areas.length; ++i) {
-//                list_model_areas.append({"id_card": i, "map_name":map_areas[i]})
-//            }
-//            chooseMapPage()
-//        }
-//        onGetMapInfoError: {
-//            map_status = 0
-//            error = error_message
-//        }
-//        onUpdateTasksName: {
-//            busy.visible = false
-//            busy.running = false
-//            root.checked_tasks_name = []
-//            pop_lock_loading_task.close()
-//            tasks_list = tasks
-//            task_list_model.clear()
-//            if (tasks_list.length <= 4 ) {
-//                vbar.visible = false
-//            } else {
-//                vbar.visible = true
-//            }
-//            monitor_page.clearAllCanvas()
-//            for (var i = 0; i < tasks_list.length; ++i) {
-//                task_list_model.append({"idcard": i,"check_box_text": tasks_list[i]})
-//            }
-//            confirmMapPage()
-//        }
-////        onLocalizationInitInfo: {
-////            if (status === 0) {
-////                root.chooseMapPage()
-////                dialog_match_warn.dia_title = message
-////                dialog_match_warn.open()
-////            } else if (status === 1) {
-////                root.confirmMapPage()
-////            }
-////            busy.running = false
-////        }
-//        onSetTaskInfo: {
-//            root.chooseTaskPage()
-//            dialog_match_warn.dia_title = qsTr("Error")
-//            dialog_match_warn.dia_content = qsTr("message set task")//message
-//            dialog_match_warn.open()
-//        }
-////        onUpdateSetMapAndInitPosInfo: {
-////            busy.running = false
-////            dialog_match_warn.dia_content = message
-////            dialog_match_warn.open()
-////        }
-//        onUpdateMapAndTasksInfo: {
-//            root.choose_map_name = map_name
+//Timer{
+//    id: timer_task_timing
+//    interval: 1000
+//    repeat: true
+//    triggeredOnStart: true
+//    onTriggered: {
+//        init_time++
+//        work_time = toTime(init_time)
+//    }
+//    onRunningChanged: {
+//        if (!running) {
+//            init_time = 0
+//        } else {
 
-//            root.confirmMapPage()
-//        }
-//        onUpdateMapAndTaskInfo: {
-//            root.choose_map_name = map_name
-//            root.startTaskPage()
-//        }
-//        onEmitSetInitPoseRstInfo: {
-//            busy.visible = false
-//            busy.running = false
-//            pop_lock_loading_task.close()
-//            dialog_match_warn.dia_title = qsTr("Error ")
-//            dialog_match_warn.dia_content = qsTr("message")//message
-//            dialog_match_warn.open()
-//            rec_checked_location.visible = true
-//        }
-//        onUpdateErrorToLoadMapOrNoneTasksInfo: {
-//            busy.visible = false
-//            busy.running = false
-//            pop_lock_loading_task.close()
-//            dialog_match_warn.dia_title = qsTr("Error ")
-//            dialog_match_warn.dia_content = qsTr("message map && task")//message
-//            dialog_match_warn.open()
-
-//        }
-
-
-//        onUpdateMapName: {
-//            list_view_areas.currentIndex = index
-//            map_task_manager.parseMapData(map_name)
-//            map_task_manager.getFeature(map_name)
 //        }
 //    }
+//}
+//function toTime(s){
+//    var working_time = []
+//    if(s > -1){
+//        var hour = Math.floor(s / 3600)
+//        var min = Math.floor((s / 60) % 60)
+//        var sec = init_time % 60
+
+//        if(hour < 10){
+//            working_time = hour + " 时 "
+//        }
+//        if(min < 10){
+//            working_time += "0"
+//        }
+//        working_time += min + " 分 "
+//        if(sec < 10){
+//            working_time += "0"
+//        }
+//        working_time += sec.toFixed(0) + " 秒"
+//    }
+//    return working_time
+//}
+

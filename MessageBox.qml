@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import "customControl"
+import "homemade_components"
 Rectangle {
     id: root
     TLMessageBox {

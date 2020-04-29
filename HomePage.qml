@@ -2,7 +2,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Extras 1.4
 import QtQuick.Controls.Styles 1.4
-import "customControl"
+import "homemade_components"
 //todo
 Rectangle {
     property bool _text_visible: false

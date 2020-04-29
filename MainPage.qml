@@ -1,8 +1,8 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
-import "./customControl"
-import "./user"
+import "./homemade_components"
+import "./user_manager_pages"
 
 Rectangle {
     id: root
@@ -43,9 +43,6 @@ Rectangle {
             list_view.currentIndex = 0
             menu_stack.tlReplace(list_view)
             stack_view.tlReplace(home_page)
-        }
-        onStopTaskCommond: {
-            task_settings_page.timer_task_timing.stop()
         }
     }
     Connections {

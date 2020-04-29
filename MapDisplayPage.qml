@@ -10,7 +10,20 @@ Page {
     height: parent.height
     clip: true
 
-    property var paint_begin_point: 20
+    signal sendInitPoint()
+    onSendInitPoint: {
+        var pos = pixelToGeometry(choosePoint[0],choosePoint[1])
+        map_task_manager.sendInitPos(pos[0],pos[1])
+    }
+
+    property alias p_choose_marker: choose_marker
+    property var p_task_points: []
+    property var p_task_regions: []
+    property var p_task_lines: []
+
+
+
+    property var paint_begin_offset: 20
 
     property var var_trees: []
     property var var_signals: []
@@ -27,7 +40,6 @@ Page {
 
     property var var_obstacles: []
     property var obstacles_is_polygon: []
-
     property var var_ref_line: []
     property real ref_line_curren_index: 0
     property var var_planning_path: []
@@ -44,22 +56,16 @@ Page {
     property real max_x: Number.NEGATIVE_INFINITY
     property real real_rate: 2.0
 
+    property bool can_drag: false
     property var choosePoint: []
-    property alias choose_marker: choose_marker
 
-    property var _task_points: []
-    property var _task_regions: []
-    property var _task_lines: []
 
     property var begin_points: []
     property var charge_points: []
 
-    property var choose_map_name: "value"
-
-    property bool can_drag: false
 
     function paintTasks(){
-        canvas_others.requestPaint()
+        canvas_task.requestPaint()
     }
 
     function paintingMap(current_map_name) {
@@ -111,7 +117,6 @@ Page {
             }
         }
 
-
         map_width = max_x - min_x
         map_height = max_y - min_y
 
@@ -120,7 +125,7 @@ Page {
 
         map_rate *= real_rate
 
-        map.x = (map.width - canvas_background.width) / 2 / root.real_rate + root.paint_begin_point * 2
+        map.x = (map.width - canvas_background.width) / 2 / root.real_rate + root.paint_begin_offset * 2
         map.y = (map.height - canvas_background.height) / 2 / root.real_rate
 
         canvas_background.requestPaint()
@@ -128,11 +133,58 @@ Page {
         var vehicle_width = vehicle_info_manager.getVehicleWidth()
         var vehicle_height = vehicle_info_manager.getVehicleHeight()
 
-        vehicle.width =  vehicle_width * 3/2 * map_rate // 1.3
-        vehicle.height = vehicle_height * map_rate // 0.74
+        vehicle.width =  vehicle_width * 3/2 * map_rate
+        vehicle.height = vehicle_height * map_rate
+    }
 
+    function geometryToPixel(X, Y) {
+        var x = (X - min_x) * map_rate + paint_begin_offset
+        var y = (Y - max_y) * -map_rate + paint_begin_offset
 
+        return [x, y]
+    }
 
+    function pixelToGeometry(X, Y) {
+        var x = (X - paint_begin_offset) / map_rate + min_x
+        var y = (Y - paint_begin_offset) / -map_rate + max_y
+        return [x, y]
+    }
+
+    function clearAllCanvas() {
+        var_obstacles = []
+        obstacles_is_polygon = []
+        var_ref_line = []
+        ref_line_curren_index = 0
+        var_planning_path = []
+        var_planning_ref_path = []
+        var_trajectory = []
+        p_task_points = []
+        p_task_regions = []
+        p_task_lines = []
+        canvas_task.requestPaint()
+        canvas_obstacles.requestPaint()
+        canvas_ref_line.requestPaint()
+        canvas_red_ref_line.requestPaint()
+        canvas_planning_ref_line.requestPaint()
+        canvas_trajectory.requestPaint()
+    }
+
+    function drawLine2d(ctx, points, color) {
+        if (points.length <= 0) {
+            return
+        }
+        ctx.save()
+        ctx.lineWidth = 1
+        ctx.strokeStyle = color
+        ctx.beginPath()
+        var first_pointt = geometryToPixel(points[0][0], points[0][1])
+        ctx.moveTo(first_pointt[0], first_pointt[1])
+        for (var i = 0; i < points.length; ++i) {
+            var point = geometryToPixel(points[i][0], points[i][1])
+            ctx.lineTo(point[0], point[1])
+        }
+        ctx.stroke()
+        ctx.restore()
     }
 
     Component.onCompleted: {
@@ -143,7 +195,6 @@ Page {
             root.var_ref_line = map_task_manager.getWorkFullRefLine()
             canvas_ref_line.requestPaint()
         }
-
     }
 
     Connections {
@@ -151,7 +202,6 @@ Page {
         onEmitWorkFullRefLine: {
             root.var_ref_line = ref_line
             canvas_ref_line.requestPaint()
-
         }
     }
 
@@ -188,56 +238,18 @@ Page {
         }
         onUpdateTrajectoryInfo: {
             var_trajectory = trajectory
-            canvas_trajectory.requestPaint()
+            canvas_red_ref_line.requestPaint()
         }
     }
 
-
-    signal sendInitPoint()
-    onSendInitPoint: {
-        var pos = pixelToGeometry(choosePoint[0],choosePoint[1])
-        map_task_manager.sendInitPos(pos[0],pos[1])
-    }
-
-    function geometryToPixel(X, Y) {
-        var x = (X - min_x) * map_rate + paint_begin_point
-        var y = (Y - max_y) * -map_rate + paint_begin_point
-
-        return [x, y]
-    }
-
-    function pixelToGeometry(X, Y) {
-        var x = (X - paint_begin_point) / map_rate + min_x
-        var y = (Y - paint_begin_point) / -map_rate + max_y
-        return [x, y]
-    }
-
-    function clearAllCanvas() {
-        var_obstacles = []
-        obstacles_is_polygon = []
-        var_ref_line = []
-        ref_line_curren_index = 0
-        var_planning_path = []
-        var_planning_ref_path = []
-        var_trajectory = []
-        _task_points = []
-        _task_regions = []
-        _task_lines = []
-        canvas_others.requestPaint()
-        canvas_obstacles.requestPaint()
-        canvas_ref_line.requestPaint()
-        canvas_red_ref_line.requestPaint()
-        canvas_planning_ref_line.requestPaint()
-        canvas_trajectory.requestPaint()
-    }
-
     onHeightChanged: {
-        map.x = (map.width - canvas_background.width) / 2 / root.real_rate + root.paint_begin_point * 2
+        map.x = (map.width - canvas_background.width) / 2 / root.real_rate + root.paint_begin_offset * 2
         map.y = (map.height - canvas_background.height) / 2 / root.real_rate
 
     }
+
     onWidthChanged: {
-        map.x = (map.width - canvas_background.width) / 2 / root.real_rate + root.paint_begin_point * 2
+        map.x = (map.width - canvas_background.width) / 2 / root.real_rate + root.paint_begin_offset * 2
         map.y = (map.height - canvas_background.height) / 2 / root.real_rate
 
     }
@@ -298,10 +310,8 @@ Page {
             color: "transparent"
             Canvas {
                 id: canvas_background
-                width: map_width * map_rate + paint_begin_point * 2
-                height: map_height * map_rate + paint_begin_point * 2
-
-
+                width: map_width * map_rate + paint_begin_offset * 2
+                height: map_height * map_rate + paint_begin_offset * 2
 
                 function cacuDis(sx,sy,tx,ty){
                     return Math.sqrt(Math.pow(tx-sx,2)+Math.pow(ty-sy,2))
@@ -322,41 +332,7 @@ Page {
                             ctx.lineTo(point[0], point[1])
                         }
                     }
-                    //                        ctx.closePath()
                     ctx.stroke()
-                    ctx.restore()
-                }
-
-                function drawTrees(ctx, var_trees) {
-                    if (var_trees.length <= 0) {
-                        return
-                    }
-                    ctx.save()
-                    ctx.fillStyle = "green"
-                    for (var i = 0; i < var_trees.length; ++i) {
-                        var point = geometryToPixel(var_trees[i][0], var_trees[i][1])
-                        ctx.beginPath()
-                        ctx.arc(point[0],point[1],2,0,2*Math.PI)
-                        ctx.fill()
-                    }
-                    ctx.restore()
-                }
-
-                function drawSigns(ctx, var_signals) {
-                    if (var_signals.length <= 0) {
-                        return
-                    }
-                    ctx.save()
-                    ctx.fillStyle = "green"
-                    ctx.strokeStyle = "red"
-                    ctx.lineWidth = 1.5
-                    for (var i = 0; i < var_signals.length; ++i) {
-                        var point = geometryToPixel(var_signals[i][0], var_signals[i][1])
-                        ctx.beginPath()
-                        ctx.arc(point[0],point[1],2,0,2*Math.PI)
-                        ctx.fill()
-                        ctx.stroke()
-                    }
                     ctx.restore()
                 }
 
@@ -406,212 +382,21 @@ Page {
                     ctx.restore()
                 }
 
-                function drawTowPointLine(ctx, var_line, line_widt, color) {
-                    if (var_line.length <= 0) {
-                        return
-                    }
-                    ctx.save()
-                    ctx.lineWidth = line_widt
-                    ctx.strokeStyle = color
-                    ctx.beginPath()
-                    for (var i = 0; i < var_line.length; ++i) {
-                        var first_point = geometryToPixel(var_line[i][0][0], var_line[i][0][1])
-                        ctx.moveTo(first_point[0], first_point[1])
-                        var point = geometryToPixel(var_line[i][1][0], var_line[i][1][1])
-                        ctx.lineTo(point[0], point[1])
-                        ctx.stroke()
-                    }
-                    ctx.restore()
-                }
-
-                function drawDashedLine(ctx,sx,sy,tx,ty,color,lineWidth,dashLen){
-                    var len = cacuDis(sx,sy,tx,ty),
-                            lineWidth = lineWidth || 1,
-                            dashLen = dashLen || 5,
-                            num = ~~(len / dashLen)
-                    ctx.beginPath()
-                    for(var i=0; i<num;++i){
-                        var x = sx + (tx - sx) / num * i,
-                                y = sy + (ty - sy) / num * i
-                        ctx[i & 1 ? "lineTo" : "moveTo"](x,y)
-                    }
-                    ctx.closePath()
-                    ctx.lineWidth = lineWidth
-                    ctx.strokeStyle = color
-                    ctx.stroke()
-                }
-
-                function drawLaneLine(ctx, var_lane_lines) {
-                    if (var_lane_lines.length <= 0) {
-                        return
-                    }
-                    ctx.save()
-                    ctx.beginPath()
-                    ctx.lineCap="round"
-                    for (var i = 0; i < var_lane_lines.length; ++i) {
-                        for (var j =1; j < var_lane_lines[i][0].length; ++j ) {
-                            var first_point = geometryToPixel(var_lane_lines[i][0][j - 1][0], var_lane_lines[i][0][j - 1][1])
-                            ctx.moveTo(first_point[0], first_point[1])
-                            var second_point = geometryToPixel(var_lane_lines[i][0][j][0], var_lane_lines[i][0][j][1])
-                            ctx.lineTo(second_point[0], second_point[1])
-                            drawDashedLine(ctx, first_point[0], first_point[1], second_point[0], second_point[1],
-                                           "rgba(155,"+Math.floor(255-42.5*j)+',0,100)', 0.5, 5)
-                            ctx.stroke()
-                        }
-                    }
-                    ctx.restore()
-                }
-
-                function drawCrosswalk(ctx, var_crosswalks) {
-                    if (var_crosswalks.length <= 0) {
-                        return
-                    }
-                    ctx.save()
-                    ctx.beginPath()
-                    var min_x, max_x, min_x_y, max_x_y
-                    var min_y, max_y, min_y_x, max_y_x
-                    for (var i = 0; i < var_crosswalks.length;  ++i) {
-                        var first_point = geometryToPixel(var_crosswalks[i][0][0], var_crosswalks[i][0][1])
-                        ctx.moveTo(first_point[0], first_point[1])
-                        min_x = first_point[0]
-                        min_x_y = first_point[1]
-                        max_x = first_point[0]
-                        max_x_y = first_point[1]
-                        min_y = first_point[1]
-                        max_y = first_point[1]
-                        min_y_x = first_point[0]
-                        max_y_x = first_point[0]
-                        for (var j = 0; j < var_crosswalks[i].length; ++j) {
-                            var point = geometryToPixel(var_crosswalks[i][j][0], var_crosswalks[i][j][1])
-                            ctx.lineTo(point[0], point[1])
-                            if (Math.min(min_x, point[0]) === point[0]) {
-                                min_x = point[0]
-                                min_x_y = point[1]
-                            }
-                            if (Math.max(max_x, point[0]) === point[0]) {
-                                max_x = point[0]
-                                max_x_y = point[1]
-                            }
-
-                            if (Math.min(min_y, point[1]) === point[1]) {
-                                min_y = point[1]
-                                min_y_x = point[0]
-                            }
-                            if (Math.max(max_y, point[1]) === point[1]) {
-                                max_y = point[1]
-                                max_y_x = point[0]
-                            }
-                        }
-                        ctx.fillStyle="rgba(0,191,255,0.5)"
-                        ctx.closePath()
-                        ctx.fill()
-                        ctx.beginPath()
-                        ctx.strokeStyle = "rgba(0,0,0,0.5)"
-                        ctx.moveTo(min_x, min_x_y)
-                        ctx.lineTo(max_x, max_x_y)
-                        ctx.stroke()
-                        ctx.beginPath()
-                        ctx.strokeStyle = "rgba(255,255,255,1)"
-                        ctx.moveTo(min_y_x, min_y)
-                        ctx.lineTo(max_y_x, max_y)
-                        ctx.stroke()
-                    }
-
-                    ctx.restore()
-                }
-
-                function drawJunction(ctx, var_junctions) {
-                    if (var_junctions.length <= 0) {
-                        return
-                    }
-                    ctx.save()
-                    ctx.beginPath()
-                    var min_x, max_x, min_x_y, max_x_y
-                    var min_y, max_y, min_y_x, max_y_x
-                    for (var i = 0; i < var_junctions.length;  ++i) {
-                        var first_point = geometryToPixel(var_junctions[i][0][0], var_junctions[i][0][1])
-                        ctx.moveTo(first_point[0], first_point[1])
-                        min_x = first_point[0]
-                        min_x_y = first_point[1]
-                        max_x = first_point[0]
-                        max_x_y = first_point[1]
-                        min_y = first_point[1]
-                        max_y = first_point[1]
-                        min_y_x = first_point[0]
-                        max_y_x = first_point[0]
-                        for (var j = 0; j < var_junctions[i].length; ++j) {
-                            var point = geometryToPixel(var_junctions[i][j][0], var_junctions[i][j][1])
-                            ctx.lineTo(point[0], point[1])
-                            if (Math.min(min_x, point[0]) === point[0]) {
-                                min_x = point[0]
-                                min_x_y = point[1]
-                            }
-                            if (Math.max(max_x, point[0]) === point[0]) {
-                                max_x = point[0]
-                                max_x_y = point[1]
-                            }
-
-                            if (Math.min(min_y, point[1]) === point[1]) {
-                                min_y = point[1]
-                                min_y_x = point[0]
-                            }
-                            if (Math.max(max_y, point[1]) === point[1]) {
-                                max_y = point[1]
-                                max_y_x = point[0]
-                            }
-                        }
-                        ctx.fillStyle="rgba(238,130,238,0.5)"
-                        ctx.fill()
-                        ctx.closePath()
-                        var left_center_point = [( min_x + min_y_x ) / 2, ( min_x_y + min_y ) / 2]
-                        var right_center_point = [( max_y_x + max_x ) / 2, (max_x_y + max_y) / 2]
-                        var top_center_point = [(min_y_x + max_x) / 2, (min_y + max_x_y) / 2]
-                        var bottom_center_point = [(min_x + max_y_x) / 2, (min_x_y + max_y) / 2]
-                        ctx.beginPath()
-                        ctx.lineWidth = 2
-                        ctx.strokeStyle = "rgba(0,0,0,0.5)"
-                        ctx.moveTo(left_center_point[0], left_center_point[1])
-                        ctx.lineTo(right_center_point[0], right_center_point[1])
-                        ctx.stroke()
-
-                        ctx.beginPath()
-                        ctx.lineWidth = 2
-                        ctx.strokeStyle = "rgba(0,0,0,0.5)"
-                        ctx.moveTo(top_center_point[0], top_center_point[1])
-                        ctx.lineTo(bottom_center_point[0], bottom_center_point[1])
-                        ctx.stroke()
-                    }
-
-
-                    ctx.restore()
-                }
-
                 onPaint: {
                     var ctx = getContext("2d")
                     ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
-
-                    drawJunction(ctx, var_junctions)
                     drawIncludeArea(ctx, var_roads_include, "rgba(0,255,0,0.05)", 0)
-                    drawIncludeArea(ctx, var_clear_areas_include, "#CD2626", 0)
-                    drawIncludeArea(ctx, var_parking_spaces, "rgb(127,255,0)", 0)
                     drawExcludeArea(ctx, var_roads_exclude, "grey", 1.5)
-                    drawCrosswalk(ctx, var_crosswalks)
-
-                    drawLaneLine(ctx, var_lane_lines)
                     drawRoadEdge(ctx, var_road_edges)
 
-                    drawTowPointLine(ctx, var_speed_bumps, 1, "#FFD700")
-                    drawTowPointLine(ctx, var_stop_signs, 1.5, "red")
-
-                    drawTrees(ctx, var_trees)
-                    drawSigns(ctx, var_signals)
+                    drawLine2d(ctx, root.var_ref_line, "#ff0000")
                 }
             }
 
             Canvas {
-                id: canvas_others
-                width: map_width * map_rate  + paint_begin_point * 2
-                height: map_height * map_rate + paint_begin_point * 2
+                id: canvas_task
+                width: map_width * map_rate  + paint_begin_offset * 2
+                height: map_height * map_rate + paint_begin_offset * 2
 
                 x: canvas_background.x
                 y: canvas_background.y
@@ -684,15 +469,16 @@ Page {
                 onPaint: {
                     var ctx = getContext("2d")
                     ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
-                    drawLine(ctx, root._task_lines)
-                    drawPoint(ctx, root._task_points)
-                    drawRegion(ctx, root._task_regions)
+                    drawLine(ctx, root.p_task_lines)
+                    drawPoint(ctx, root.p_task_points)
+                    drawRegion(ctx, root.p_task_regions)
                 }
             }
+
             Canvas {
                 id: canvas_obstacles
-                width: map_width * map_rate  + paint_begin_point * 2
-                height: map_height * map_rate + paint_begin_point * 2
+                width: map_width * map_rate  + paint_begin_offset * 2
+                height: map_height * map_rate + paint_begin_offset * 2
 
                 x: canvas_background.x
                 y: canvas_background.y
@@ -717,14 +503,11 @@ Page {
                             ctx.stroke()
                             ctx.fill()
                         }
-
                         ctx.restore()
                     } else {
                         ctx.save()
-                        ctx.strokeStyle = "#EE4000"
-//                        ctx.fillStyle = "rgba(238,64,0,0.5)"
-                        ctx.fillStyle = "#ffff00"
-
+                        ctx.strokeStyle = "#FFA500"
+                        ctx.fillStyle = "#FFEFD5"
                         for (var i = 0; i < obstacles.length; ++i) {
                             for (var j = 0; j < obstacles[i].length; ++j) {
                                 var point = geometryToPixel(obstacles[i][j][0], obstacles[i][j][1])
@@ -733,11 +516,9 @@ Page {
                                 ctx.fill()
                                 ctx.stroke()
                             }
-
                         }
                         ctx.restore()
                     }
-
                 }
 
                 onPaint: {
@@ -750,128 +531,22 @@ Page {
 
             Canvas {
                 id: canvas_ref_line
-                width: map_width * map_rate  + paint_begin_point * 2
-                height: map_height * map_rate + paint_begin_point * 2
-
+                width: map_width * map_rate  + paint_begin_offset * 2
+                height: map_height * map_rate + paint_begin_offset * 2
                 x: canvas_background.x
                 y: canvas_background.y
 
-                function drawRefLine(ctx, points) {
-                    if (points.length <= 0) {
-                        return
-                    }
-
-                    ctx.save()
-                    ctx.lineWidth = 1
-                    ctx.strokeStyle = "#ff0000"//
-                    ctx.beginPath()
-                    var first_point = geometryToPixel(points[0][0], points[0][1])
-                    ctx.moveTo(first_point[0], first_point[1])
-                    for (var i = 0; i < points.length; ++i) {
-                        var point3 = geometryToPixel(points[i][0], points[i][1])
-                        ctx.lineTo(point3[0], point3[1])
-                    }
-                    ctx.stroke()
-                    ctx.restore()
-                }
                 onPaint: {
                     var ctx = getContext("2d")
                     ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
-                    drawRefLine(ctx, root.var_ref_line)
+                    drawLine2d(ctx, root.var_ref_line, "#ff0000")
                 }
             }
 
             Canvas {
                 id: canvas_red_ref_line
-                width: map_width * map_rate  + paint_begin_point * 2
-                height: map_height * map_rate + paint_begin_point * 2
-
-                x: canvas_background.x
-                y: canvas_background.y
-
-                function drawRefLine(ctx, points) {
-                    if (points.length <= 0) {
-                        return
-                    }
-
-                    if (ref_line_curren_index <= 0) {
-                        return
-                    }
-
-                    ctx.save()
-                    ctx.lineWidth = 2
-                    ctx.strokeStyle = "#00ff00"
-                    ctx.beginPath()
-                    var first_pointt = geometryToPixel(points[0][0], points[0][1])
-                    ctx.moveTo(first_pointt[0], first_pointt[1])
-                    for (var i = 0; i < ref_line_curren_index; ++i) {
-                        var point = geometryToPixel(points[i][0], points[i][1])
-                        ctx.lineTo(point[0], point[1])
-                    }
-                    ctx.stroke()
-                    ctx.restore()
-                }
-
-                function drawPlanningLine(ctx, points) {
-                    if (points.length <= 0) {
-                        return
-                    }
-                    ctx.save()
-                    ctx.lineWidth = 1
-                    ctx.strokeStyle = "#4169E1"
-                    ctx.beginPath()
-                    var first_pointt = geometryToPixel(points[0][0], points[0][1])
-                    ctx.moveTo(first_pointt[0], first_pointt[1])
-                    for (var i = 0; i < points.length; ++i) {
-                        var point = geometryToPixel(points[i][0], points[i][1])
-                        ctx.lineTo(point[0], point[1])
-                    }
-                    ctx.stroke()
-                    ctx.restore()
-                }
-                onPaint: {
-                    var ctx = getContext("2d")
-                    ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
-                    drawRefLine(ctx, root.var_ref_line);
-                    drawPlanningLine(ctx, root.var_planning_path);
-                }
-            }
-            Canvas {
-                id: canvas_planning_ref_line
-                width: map_width * map_rate  + paint_begin_point * 2
-                height: map_height * map_rate + paint_begin_point * 2
-
-                x: canvas_background.x
-                y: canvas_background.y
-
-                function drawPlanningLine(ctx, points) {
-                    if (points.length <= 0) {
-                        return
-                    }
-                    ctx.save()
-                    ctx.lineWidth = 1
-                    ctx.strokeStyle = "#FF00FF"
-                    ctx.beginPath()
-                    var first_pointt = geometryToPixel(points[0][0], points[0][1])
-                    ctx.moveTo(first_pointt[0], first_pointt[1])
-                    for (var i = 0; i < points.length; ++i) {
-                        var point = geometryToPixel(points[i][0], points[i][1])
-                        ctx.lineTo(point[0], point[1])
-                    }
-                    ctx.stroke()
-                    ctx.restore()
-                }
-                onPaint: {
-                    var ctx = getContext("2d")
-                    ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
-                    drawPlanningLine(ctx, root.var_planning_ref_path);
-                }
-            }
-
-            Canvas {
-                id: canvas_trajectory
-                width: map_width * map_rate  + paint_begin_point * 2
-                height: map_height * map_rate + paint_begin_point * 2
+                width: map_width * map_rate  + paint_begin_offset * 2
+                height: map_height * map_rate + paint_begin_offset * 2
 
                 x: canvas_background.x
                 y: canvas_background.y
@@ -894,10 +569,32 @@ Page {
                     ctx.stroke()
                     ctx.restore()
                 }
+
                 onPaint: {
                     var ctx = getContext("2d")
                     ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
+                    drawLine2d(ctx, root.var_planning_path, "#4169E1")
+                    if (ref_line_curren_index <= 0) {
+                        return
+                    }
+                    drawLine2d(ctx, root.var_ref_line, "#00ff00") //green
                     drawtrajectory(ctx, root.var_trajectory);
+                }
+            }
+
+            Canvas {
+                id: canvas_planning_ref_line
+                width: map_width * map_rate  + paint_begin_offset * 2
+                height: map_height * map_rate + paint_begin_offset * 2
+
+                x: canvas_background.x
+                y: canvas_background.y
+
+                onPaint: {
+                    var ctx = getContext("2d")
+                    ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
+                    drawLine2d(ctx, root.var_planning_ref_path, "#FF00FF")
+
                 }
             }
 
@@ -943,169 +640,12 @@ Page {
                 map.x = (map.width / 2 - vehicle.x) * (map.scale)
                 map.y = (map.height / 2 - vehicle.y) * (map.scale)
                 canvas_background.requestPaint()
-                canvas_others.requestPaint()
+                canvas_task.requestPaint()
                 canvas_planning_ref_line.requestPaint()
                 canvas_red_ref_line.requestPaint()
                 canvas_obstacles.requestPaint()
                 canvas_trajectory.requestPaint()
             }
         }
-
     }
-
-
-
-//    // map feature and task
-//    Connections {
-//        target: map_task_manager
-//        onUpdateMapFeature: {
-
-//            root.begin_points = begin_point
-//            root.charge_points = charge_point
-//            var point_x = 0
-//            var point_y = 0
-//            var is_point = false
-//            for(var key in begin_point) {
-//                if (key === "x") {
-//                    point_x = begin_point[key]
-
-//                } else if (key === "y") {
-//                    point_y = begin_point[key]
-//                    is_point = true
-//                }
-//                if (is_point) {
-//                    var pixel_pos = geometryToPixel(point_x, point_y)
-//                    img_begin.x = pixel_pos[0] - img_begin.width / 2
-//                    img_begin.y = pixel_pos[1] - img_begin.height / 2
-//                    img_begin.visible = true
-//                }
-//            }
-
-//            var point_xx = 0
-//            var point_yy = 0
-//            var is_pointt = false
-//            for(var keyy in charge_point) {
-//                if (keyy === "x") {
-//                    point_xx = charge_point[key]
-//                } else if (keyy === "y") {
-//                    point_yy = charge_point[key]
-//                    is_pointt = true
-//                }
-//                if (is_pointt) {
-//                    var pixel_poss = geometryToPixel(point_xx, point_yy)
-//                    img_charge.x = pixel_poss[0] - img_charge.width / 2
-//                    img_charge.y = pixel_poss[1] - img_charge.height / 2
-//                    img_charge.visible = true
-//                }
-//            }
-//        }
-//        onUpdateTaskData: {
-//            task_points = points    //task_points[0]
-//            task_regions = regions
-//            task_lines = lines
-//            canvas_others.requestPaint()
-//        }
-//    }
-//    Connections {
-//        target: map_task_manager
-//        onUpdateStopTaskInfo: {
-//            if (status === 1) {
-//                var_obstacles = []
-//                obstacles_is_polygon = []
-//                var_ref_line = []
-//                var_planning_path = []
-//                ref_line_curren_index = 0
-//                var_planning_ref_path = []
-//                var_trajectory = []
-
-//                canvas_others.requestPaint()
-//                canvas_obstacles.requestPaint()
-//                canvas_ref_line.requestPaint()
-//                canvas_red_ref_line.requestPaint()
-//                canvas_planning_ref_line.requestPaint()
-//                canvas_trajectory.requestPaint()
-//                vehicle.x = -200
-//                vehicle.y = -200
-//            }
-//        }
-//    }
-//    Connections {
-//        target: ros_message_manager
-//        onUpdateLocalizationInfo: {
-//            vehicle.visible = true
-//            var pixel_pos = geometryToPixel(x, y)
-//            vehicle.x = pixel_pos[0] - vehicle.width / 2
-//            vehicle.y = pixel_pos[1] - vehicle.height / 2
-////            console.info([x,vehicle.x, y, vehicle.y])
-////            console.info([y, vehicle.y])
-
-
-//            if (map.scale > root.real_rate / 2 && !root.can_drag) {
-//                map.x = (map.width / 2 - vehicle.x - vehicle.width / 2) * (map.scale)
-//                map.y = (map.height / 2 - vehicle.y - vehicle.height / 2) * (map.scale)
-//            }
-
-//            vehicle.rotation = -heading
-//        }
-//        onUpdateObstacleInfo: {
-//            var_obstacles = obstacles
-//            obstacles_is_polygon = is_polygon
-//            canvas_obstacles.requestPaint()
-//        }
-//        onUpdatePlanningInfo: {
-//            var_planning_path = planning_path
-//            canvas_red_ref_line.requestPaint()
-//        }
-//        onUpdatePlanningRefInfo: {
-//            root.var_planning_ref_path = planning_path
-//            canvas_planning_ref_line.requestPaint()
-//        }
-//        onUpdateTaskProcessInfo: {
-//            ref_line_curren_index = current_index
-//            canvas_red_ref_line.requestPaint()
-//        }
-//        onUpdateTrajectoryInfo: {
-//            var_trajectory = trajectory
-//            canvas_trajectory.requestPaint()
-//        }
-//    }
-
-//    // | reference line | localization | obstacles | task Process | planning
-//    Connections {
-//        target: map_task_manager
-//        onUpdateRefLine: {
-//            root.var_ref_line = ref_line
-//            canvas_ref_line.requestPaint()
-//        }
-//        onUpdateMapsName:{
-//            var_ref_line = []
-//            var_trajectory = []
-//            var_planning_path = []
-//            var_planning_ref_path = []
-//            ref_line_curren_index = 0
-//            canvas_planning_ref_line.requestPaint()
-//            canvas_trajectory.requestPaint()
-//            canvas_ref_line.requestPaint()
-//        }
-//    }
-
-//    Connections {
-//        target: map_task_manager
-//        onUpdateStopTaskInfo: {
-//            if (status === 1) {
-//                var_ref_line = []
-//                var_planning_path = []
-//                ref_line_curren_index = 0
-//                canvas_red_ref_line.requestPaint()
-//            }
-//        }
-//    }
-
-//    Connections {
-//        target: map_task_manager
-//        onUpdateInitPosInfo: {
-//            vehicle.x = 0
-//            vehicle.y = 0
-//        }
-//    }
 }

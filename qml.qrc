@@ -7,10 +7,9 @@
         <file>HelpDocumentPage.qml</file>
         <file>AboutMachinePage.qml</file>
         <file>TaskSettingsPage.qml</file>
-        <file>VehicleItem.qml</file>
-        <file>MonitorMessagePage.qml</file>
+        <file>MissonBordPage.qml</file>
         <file>WelcomePage.qml</file>
-        <file>VerifyPasswordPage.qml</file>
+        <file>LockScreenPage.qml</file>
         <file>MenuPage.qml</file>
         <file>FaildToConnectPage.qml</file>
         <file>MessageBox.qml</file>
@@ -36,5 +35,6 @@
         <file>WorkDone.qml</file>
         <file>WorkingBtns.qml</file>
         <file>TaskInfo.qml</file>
+        <file>VehicleItem.qml</file>
     </qresource>
 </RCC>

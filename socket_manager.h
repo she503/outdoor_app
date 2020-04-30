@@ -22,14 +22,12 @@ public:
     explicit SocketManager(QObject *parent = nullptr);
     ~SocketManager();
 
-    Q_INVOKABLE bool connectToServer();
+    Q_INVOKABLE bool connectToServer(const QString& ip);
     Q_INVOKABLE bool disConnet();
 
     bool sendSocketMessage(const QByteArray& message);
 
     void setVehicleInfoManager(VehicleInfoManager* vehicle_info_manager);
-
-    bool connectToHost(const QString& ip, const QString& port);
 
 signals:
     void emitLoginRst(const QJsonObject& obj);

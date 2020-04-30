@@ -166,7 +166,6 @@ Page {
         canvas_ref_line.requestPaint()
         canvas_red_ref_line.requestPaint()
         canvas_planning_ref_line.requestPaint()
-        canvas_trajectory.requestPaint()
     }
 
     function drawLine2d(ctx, points, color) {

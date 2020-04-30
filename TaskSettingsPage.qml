@@ -4,6 +4,7 @@ import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
 import QtQuick.Controls.Styles 1.4
 import "./homemade_components"
+import "map_task_manager"
 
 Rectangle {
     id: root
@@ -47,7 +48,7 @@ Rectangle {
         rec_checked_location.visible = false
         rec_task_control.visible = false
         rec_ref_lines.visible = false
-        monitor_page.p_choose_marker.visible = false
+        map_display_page.p_choose_marker.visible = false
         btn_start_task.visible = false
     }
 
@@ -57,7 +58,7 @@ Rectangle {
         rec_header_bar.height = rec_task_page.height * 0.1
         rect_decoration.visible = true
         rec_checked_location.visible = true
-        monitor_page.p_choose_marker.visible = true
+        map_display_page.p_choose_marker.visible = true
 
         task_list_model.clear()
     }
@@ -108,17 +109,10 @@ Rectangle {
 
             updateMapSettingPage(status)
             root.checked_tasks_name = []
-            monitor_page.clearAllCanvas()
-            monitor_page.paintingMap(map_task_manager.getCurrentMapName())
+            map_display_page.clearAllCanvas()
+            map_display_page.paintingMap(map_task_manager.getCurrentMapName())
         }
     }
-
-
-
-
-
-
-
 
     FontLoader {
         id: font_hanzhen;
@@ -161,7 +155,7 @@ Rectangle {
 
                             root.choose_map_name = model.map_name
                             map_task_manager.setWorkMapName(model.map_name)
-                            monitor_page.paintingMap(model.map_name)
+                            map_display_page.paintingMap(model.map_name)
                         }
 
                         Rectangle {
@@ -213,7 +207,7 @@ Rectangle {
                 height: rec_task_page.height - rec_header_bar.height - rect_decoration.height
                 anchors.top: rect_decoration.bottom
                 MapDisplayPage {
-                    id: monitor_page
+                    id: map_display_page
                     width:parent.width
                     height: parent.height
                 }
@@ -277,10 +271,10 @@ Rectangle {
                                     root.checked_tasks_name = temp_str
                                 }
                                 var tasks_data = map_task_manager.getTasksData(root.checked_tasks_name)
-                                monitor_page.p_task_lines = tasks_data[0]
-                                monitor_page.p_task_points = tasks_data[1]
-                                monitor_page.p_task_regions = tasks_data[2]
-                                monitor_page.paintTasks()
+                                map_display_page.p_task_lines = tasks_data[0]
+                                map_display_page.p_task_points = tasks_data[1]
+                                map_display_page.p_task_regions = tasks_data[2]
+                                map_display_page.paintTasks()
 
                             }
                         }
@@ -479,10 +473,6 @@ Rectangle {
         onEmitSetInitPoseRstInfo: {
             busy.visible = false
             busy.running = false
-            pop_lock_loading_task.close()
-            dialog_match_warn.dia_title = qsTr("Error ")
-            dialog_match_warn.dia_content = qsTr("message")//message
-            dialog_match_warn.open()
             rec_checked_location.visible = true
         }
     }
@@ -535,33 +525,6 @@ Rectangle {
 
         }
     }
-    TLDialog {
-        id: dialog_work_down
-        width: root.width * 0.4
-        height: root.height * 0.3
-        x: (root.width - width) / 2
-        y: (root.height - height) / 2
-        dia_title: qsTr("Repeat")
-        dia_content: qsTr("dialog_work_down")
-        status: 1
-        ok: true
-        cancel_text: qsTr("cancel")
-        ok_text: qsTr("yes")
-        onOkClicked: {
-
-        }
-        onCancelClicked: {
-
-        }
-    }
-    TLDialog {
-        id: dialog_match_warn
-        height: parent.height * 0.5
-        width: height * 1.5
-        x: (root.width - width) / 2
-        y: (root.height - height) / 2
-        dia_title: "error"
-    }
 
     TLDialog {
         id: dialog_resure
@@ -577,7 +540,7 @@ Rectangle {
         ok_text: qsTr("yes")
         onOkClicked: {
             dialog_resure.close()
-            monitor_page.sendInitPoint()
+            map_display_page.sendInitPoint()
             busy.visible = true
             busy.running = true
             rec_checked_location.visible = false
@@ -590,43 +553,3 @@ Rectangle {
         }
     }
 }
-
-//Timer{
-//    id: timer_task_timing
-//    interval: 1000
-//    repeat: true
-//    triggeredOnStart: true
-//    onTriggered: {
-//        init_time++
-//        work_time = toTime(init_time)
-//    }
-//    onRunningChanged: {
-//        if (!running) {
-//            init_time = 0
-//        } else {
-
-//        }
-//    }
-//}
-//function toTime(s){
-//    var working_time = []
-//    if(s > -1){
-//        var hour = Math.floor(s / 3600)
-//        var min = Math.floor((s / 60) % 60)
-//        var sec = init_time % 60
-
-//        if(hour < 10){
-//            working_time = hour + " 时 "
-//        }
-//        if(min < 10){
-//            working_time += "0"
-//        }
-//        working_time += min + " 分 "
-//        if(sec < 10){
-//            working_time += "0"
-//        }
-//        working_time += sec.toFixed(0) + " 秒"
-//    }
-//    return working_time
-//}
-

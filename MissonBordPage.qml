@@ -10,8 +10,6 @@ Item {
     signal cannotOperatorTask()
     property bool is_locked: false
     property bool has_error: false
-    //    property var error_list: [Qt.formatDateTime(new Date(), "hh:mm:ss"), "error level", "error code", "error detail"]
-    //    property var error_message_info: [error_list]
     property var error_level: 0//: ["debug", "warn", "error"]
     property var error_text_color: "red"//: ["yellow", "orange", "red"]
     property bool is_first_get_error: false
@@ -149,46 +147,6 @@ Item {
                     color: "transparent"
                     border.width: 1
                     border.color: Qt.rgba(100, 100, 200, 0.6)
-//                    Rectangle {
-//                        width: parent.width
-//                        height: parent.height * 0.5
-//                        anchors.top: parent.top
-//                        color: "transparent"
-//                        Image {
-//                            id: img_exit
-//                            height: parent.height * 0.7
-//                            width: height
-//                            anchors {
-//                                right: parent.right
-//                                rightMargin: parent.height * 0.2
-//                                verticalCenter: parent.verticalCenter
-//                            }
-//                            source: "qrc:/res/pictures/exit.png"
-//                            fillMode: Image.PreserveAspectFit
-//                            MouseArea {
-//                                anchors.fill: parent
-//                                onClicked: {
-//                                    draw_error.close()
-//                                }
-//                            }
-//                        }
-//                        Image {
-//                            id: pic_error_icon
-//                            height: parent.height * 0.6
-//                            width: parent.height
-//                            source: "qrc:/res/pictures/BUTTON-WARNING1.png"
-//                            fillMode: Image.PreserveAspectFit
-//                            anchors.verticalCenter: parent.verticalCenter
-//                        }
-//                        Text {
-//                            text: qsTr("error message:")
-//                            width: parent.width
-//                            height: parent.height
-//                            anchors.left: pic_error_icon.right
-//                            verticalAlignment: Text.AlignVCenter
-//                            font.pixelSize: parent.height * 0.6
-//                        }
-//                    }
 
                     Rectangle {
                         width: parent.width

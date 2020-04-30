@@ -4,18 +4,18 @@ Rectangle {
     id: root
     color: "transparent"
 
-    property string p_map_name: map_task_manager.getCurrentMapName()
-    Image {
-        anchors.fill: parent
-        source: "qrc:/res/pictures/background_glow1.png"
-    }
+    property string map_name: map_task_manager.getCurrentMapName()
+    property var work_second: 0
+    property var work_time: []
+    property string title_color: "black"
+    property string font_color: "blue"
 
     function toTime(s){
         var working_time = []
         if(s > -1){
             var hour = Math.floor(s / 3600)
             var min = Math.floor((s / 60) % 60)
-            var sec = init_time % 60
+            var sec = root.work_second % 60
             if(hour < 10){
                 working_time = hour + " 时 "
             }
@@ -30,21 +30,29 @@ Rectangle {
         }
         return working_time
     }
+
+    Image {
+        anchors.fill: parent
+        source: "qrc:/res/pictures/background_glow1.png"
+    }
+
     Timer{
         id: timer_task_timing
         interval: 1000
         repeat: true
+        running: status_manager.getWorkStatus() === 5
         triggeredOnStart: true
         onTriggered: {
-            init_time++
-            work_time = toTime(init_time)
+            root.work_second++
+            root.work_time = toTime(work_second)
+            text_work_time.text = root.work_time.toString()
         }
-        onRunningChanged: {
-            if (!running) {
-                init_time = 0
-            } else {
+    }
 
-            }
+    Connections {
+        target: ros_message_manager
+        onUpdateTaskProcessInfo: {
+            text_progress.text = "" + progress + " %";
         }
     }
 
@@ -52,9 +60,9 @@ Rectangle {
         target: status_manager
         onWorkStatusUpdate: {
             if (status === 5) {
-
+                timer_task_timing.start()
             } else {
-
+                root.work_second = 0
             }
         }
     }
@@ -104,7 +112,7 @@ Rectangle {
                         }
                         Text {
                             id: text_map_name
-                            text: root.p_map_name
+                            text: root.map_name
                             width: parent.width * 0.5
                             height: parent.height
                             verticalAlignment: Text.AlignVCenter
@@ -139,7 +147,6 @@ Rectangle {
                         }
                         Text {
                             id: text_work_time
-                            text: root.work_time
                             width: parent.width * 0.5
                             height: parent.height
                             verticalAlignment: Text.AlignVCenter

@@ -43,7 +43,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        message_view.is_locked = false
+//                        /.is_locked = false
                         dialog_unlock.open()
                         password.text = ""
                     }
@@ -168,7 +168,7 @@ Item {
 
                         }
                         onClicked: {
-                            if (password.text === login_page.current_login_password) {
+                            if (password.text === account_manager.getCurrentUserPwd()) {
                                 message_unclock_faild.close()
                                 dialog_unlock.close()
                                 pop_lock.close()
@@ -270,26 +270,4 @@ Item {
             }
         }
     }
-
-//    TLDialog {
-//        id: message_unclock_faild
-//        x: (root.width - width) / 2
-//        y: (root.height - height) / 2
-//        dia_title: qsTr("error!")
-//        status: 0
-//        cancel_text: qsTr("OK")
-//        dia_content: qsTr("Password input error, please re-enter!")
-//        onCancelClicked: {
-//            if (password.text === login_page.current_login_password) {
-//                message_unclock_faild.close()
-//                dialog_unlock.close()
-//                pop_lock.close()
-//            } else {
-//                message_unclock_faild.close()
-//                dialog_unlock.open()
-//            }
-//            password.text = ""
-//        }
-//    }
-
 }

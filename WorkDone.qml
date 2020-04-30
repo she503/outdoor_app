@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.2
-
+import "../homemade_components"
 Dialog {
     id: task_auto_achived
     height: 280

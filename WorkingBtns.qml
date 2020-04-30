@@ -1,10 +1,13 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.2
 Rectangle {
-    id: rect_btns
+    id: root
     width: parent.width
     height: parent.height * 0.1
     color: "transparent"
+    signal sigBackBtnPress()
+
+    property Dialog work_done_widget: WorkDone { x: 200; y: -100}
     Row {
         property real btn_spacing: parent.width * 0.03
         spacing: btn_spacing / 6
@@ -21,7 +24,6 @@ Rectangle {
                 anchors.fill: parent
                 onClicked: {
                     root.sigBackBtnPress()
-
                 }
             }
         }
@@ -42,23 +44,9 @@ Rectangle {
             Connections {
                 target: map_task_manager
                 onEmitPauseTaskRst: {
-                    pause_stop_message.x = (parent.parent.parent.parent.width - width ) / 2
-                    pause_stop_message.y =  (parent.parent.parent.parent.height - height ) / 2
-                    y: (parent.parent.parent.parent.height - height ) / 2
                     if (status === 0 ) {
-                        if (!btn_stop._is_pause) {
-                            pause_stop_message.dia_title = qsTr("Error")
-                            pause_stop_message.dia_content = qsTr("faild to start the task")
-                            pause_stop_message.status = 0
-                            pause_stop_message.open()
-                        } else if (btn_stop._is_pause) {
-                            pause_stop_message.dia_title = qsTr("Error")
-                            pause_stop_message.dia_content = qsTr("faild to stop the task")
-                            pause_stop_message.status = 0
-                            pause_stop_message.open()
-                        }
-                    } else if (status === 1 ) {
 
+                    } else if (status === 1 ) {
                         btn_stop._is_pause = !is_pause
                     }
                 }
@@ -73,8 +61,7 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    task_auto_achived.open()
-
+                    work_done_widget.open()
                 }
             }
         }

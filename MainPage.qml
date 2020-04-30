@@ -2,7 +2,8 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
 import "./homemade_components"
-import "./user_manager_pages"
+import "./user_manager"
+import "./map_task_manager"
 
 Rectangle {
     id: root
@@ -11,11 +12,9 @@ Rectangle {
     property Component user_manage_page: UserManagePage {}
     property Component help_document_page: HelpDocumentPage { }
     property Component about_machine_page: AboutMachinePage { }
-    property Component verify_password_page: VerifyPasswordPage { }
-    property Component message_view: MonitorMessagePage { }
     property Component task_settings_page: TaskSettingsPage{
         onStartTaskLock: {
-            verify_password_page.pop_lock.open()
+            lock_screen_page.pop_lock.open()
         }
     }
     property Component home_page: HomePage{
@@ -30,6 +29,8 @@ Rectangle {
             list_view.mainPageChanged(1)
         }
     }
+    LockScreenPage { id: lock_screen_page}
+
 
     Component.onCompleted: {
         map_task_manager.setWorkMapName(map_task_manager.getCurrentMapName())
@@ -37,7 +38,7 @@ Rectangle {
     }
 
 
-    TaskProcess {
+    TaskProgressPage {
        id: task_process_page
         onSigBackBtnPress: {
             list_view.currentIndex = 0
@@ -72,6 +73,18 @@ Rectangle {
         height: parent.height * 0.082
         color: "transparent"
 
+        MissonBordPage {
+            id: misson_bord
+            width: parent.width * 0.5
+            height: parent.height * 0.8
+            anchors {
+                verticalCenter: parent.verticalCenter
+                right: parent.right
+            }
+            onLockScreen: {
+                lock_screen_page.pop_lock.open()
+            }
+        }
 
     }
 
@@ -117,13 +130,13 @@ Rectangle {
                     } else {
                         menu_stack.tlReplace(list_view)
                     }
+                    menu_stack.tlReplace(task_process_page)
                     stack_view.tlReplace(task_settings_page)
                 } else if (current_index === 2) {
                     stack_view.tlReplace(help_document_page)
                 } else if (current_index === 3) {
                     stack_view.tlReplace(about_machine_page)
                 }
-
             }
         }
     }

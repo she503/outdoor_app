@@ -25,18 +25,10 @@ SocketManager::~SocketManager()
     _socket->close();
 }
 
-bool SocketManager::connectToServer()
-{
-//    return this->connectToHost("127.0.0.1", "32432");
-    return this->connectToHost("192.168.8.127", "32432");
-//    return this->connectToHost("192.168.1.125", "32432");
-//    return this->connectToHost("192.168.1.102", "32432");
-}
-
-bool SocketManager::connectToHost(const QString &ip, const QString &port)
+bool SocketManager::connectToServer(const QString &ip)
 {
     _socket->abort();
-    _socket->connectToHost(ip, port.toInt());
+    _socket->connectToHost(ip, 32432);
     if (!_socket->waitForConnected(1000)) {
         qDebug() << "[SocketManager::connectToHost]: error!!!";
         return false;

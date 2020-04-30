@@ -32,9 +32,15 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        connect_to_server = socket_manager.connectToServer()
+        connect_to_server = socket_manager.connectToServer("192.168.1.125")
     }
 
+    Connections {
+        target: socket_manager
+        onAppDisconnected: {
+            stack_view.replace(fail_connect_page)
+        }
+    }
 
     LoginPage {
         id: login_page

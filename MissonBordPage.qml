@@ -10,16 +10,9 @@ Item {
     signal cannotOperatorTask()
     property bool is_locked: false
     property bool has_error: false
-    property var error_level: 0//: ["debug", "warn", "error"]
     property var error_text_color: "red"//: ["yellow", "orange", "red"]
     property bool is_first_get_error: false
-    onError_levelChanged: {
-        if (error_level % 2 == 0 ) {
-            error_text_color = "red"
-        } else {
-            error_text_color = "green"
-        }
-    }
+
 
     Connections {
         target: ros_message_manager
@@ -88,7 +81,6 @@ Item {
         }
         onClicked: {
             message_list_model.clear()
-//            addMessageListData()
             if(draw_error.visible){
                 draw_error.close()
             }else{
@@ -340,12 +332,7 @@ Item {
             }
         }
     }
-//    function addMessageListData()
-//    {
-//        for (var i = 0; i < 4; ++i) {
-//            message_list_model.append({"error_message_text": error_message_info[i]})
-//        }
-//    }
+
     Timer {
         id: timer_btn_errror_flashes
         running: false

@@ -46,11 +46,11 @@ Rectangle{
             anchors.horizontalCenter: parent.horizontalCenter
             btn_text:"connect"
             onClicked: {
-//                if(socket_manager.connectToHost(ip.text, "32432")) {
-//                    root.successToConnect()
-//                } else {
-//                    faild.open()
-//                }
+                if(socket_manager.connectToServer(ip.text)) {
+                    root.successToConnect()
+                } else {
+                    faild.open()
+                }
             }
         }
     }
@@ -90,6 +90,8 @@ Rectangle{
     TLMessageBox {
         id: faild;
         dia_type: 0
+        x: 200
+        y: 100
         dia_title: qsTr("faild")
         dia_text: qsTr("faild to connect")
     }

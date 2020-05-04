@@ -6,8 +6,8 @@ Rectangle {
     height: parent.height * 0.1
     color: "transparent"
     signal sigBackBtnPress()
+    signal sigWorkDown()
 
-    property Dialog work_done_widget: WorkDone { x: 200; y: -100}
     Row {
         property real btn_spacing: parent.width * 0.03
         spacing: btn_spacing / 6
@@ -61,7 +61,7 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    work_done_widget.open()
+                    root.sigWorkDown()
                 }
             }
         }

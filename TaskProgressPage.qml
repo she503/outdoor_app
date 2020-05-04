@@ -13,6 +13,12 @@ Rectangle {
     property string font_color: "blue"
 
     signal sigBackBtnPress()
+    signal sigWorkDown()
+//    property Dialog work_done_widget: WorkDone {
+
+//        x: (parent.parent.width - width ) /2;
+//        y: (parent.parent.height - height) / 2
+//    }
     Column{
         anchors.fill: parent
         TLInfoDisplayPage {
@@ -26,6 +32,9 @@ Rectangle {
             height: parent.height * 0.1
             onSigBackBtnPress: {
                 root.sigBackBtnPress()
+            }
+            onSigWorkDown: {
+                root.sigWorkDown()//work_done_widget.open()
             }
         }
 

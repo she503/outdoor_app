@@ -8,6 +8,7 @@ Rectangle {
     property int p_checked_user_level: 0
     property string p_checked_user_name: ""
     property bool p_is_choose_account: false
+    property int p_admin_num: 0
     onP_checked_user_nameChanged: {
         message_update_uer.p_checked_user_level = root.p_checked_user_level
         message_update_uer.p_checked_user_name = root.p_checked_user_name
@@ -15,7 +16,7 @@ Rectangle {
     property Dialog dialog_add_user: AddNewAccount{
         x: -parent.width * 0.5
         y: parent.height * 0.7
-        width: 300
+        width: parent.width * 1.2
         height: parent.height * 5
     }
     UpdateAccount{
@@ -55,10 +56,10 @@ Rectangle {
         }
         onClicked: {
             if ( root.p_checked_user_level === 2 && root.p_admin_num === 1) {
-                message_account.dia_title = qsTr("delete faild")
-                message_account.dia_text = qsTr("you cant delete last admin account!!!")
-                message_account.dia_type = 0
-                message_account.open()
+                tl_message_box.dia_title = qsTr("delete faild")
+                tl_message_box.dia_text = qsTr("you cant delete last admin account!!!")
+                tl_message_box.dia_type = 0
+                tl_message_box.open()
             } else {
                 account_manager.accountDelete(root.p_checked_user_name)
             }
@@ -121,11 +122,5 @@ Rectangle {
             rightMargin: width * 0.1
         }
         onClicked: dialog_add_user.open()
-    }
-    TLMessageBox {
-        id: message_account
-        height: parent.height * 1
-        width: height * 1.5
-
     }
 }

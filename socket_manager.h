@@ -23,6 +23,7 @@ public:
     ~SocketManager();
 
     Q_INVOKABLE bool connectToServer(const QString& ip);
+
     Q_INVOKABLE bool disConnet();
 
     bool sendSocketMessage(const QByteArray& message);
@@ -62,6 +63,8 @@ signals:
 
     // app断开连接发出信号
     void appDisconnected(const QString& message);
+
+
 
 private:
     void parseVehicleSize(const QJsonObject& obj);

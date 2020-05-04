@@ -26,19 +26,27 @@ Rectangle {
     signal startTaskLock()
 
     function updateMapSettingPage(status) {
-        if (status <= 3) {
-            list_model_areas.clear()
-            for (var i = 0; i < _maps_name.length; ++i) {
-                list_model_areas.append({"map_name":_maps_name[i]})
+        if (status <= 2) {//selecting map
+            map_name_list.clear()
+            var maps_name = map_task_manager.getMapsName()
+
+            for (var j = 0; j < maps_name.length; ++j) {
+                map_name_list.append({"map_name": maps_name[j]})
             }
             chooseMapPage()
         } else if (status === 4) {
+            var tasks_name = map_task_manager.getTasksName()
+            task_list_model.clear()
+            for (var i = 0; i < tasks_name.length; ++i) {
+                task_list_model.append({"idcard": i,"task_name": tasks_name[i]})
+            }
             chooseTaskPage()
-        } else if (status === 5 ) {
+        }  else if (status === 5 ) {
             startTaskPage()
         } else if (status >= 6) {
 
         }
+
     }
 
     function hideAllComponent() {
@@ -83,29 +91,12 @@ Rectangle {
 
     Component.onCompleted: {
         var work_status = status_manager.getWorkStatus()
-        if (work_status === 4) {
-            var tasks_name = map_task_manager.getTasksName()
-            for (var i = 0; i < tasks_name.length; ++i) {
-                task_list_model.append({"idcard": i,"task_name": tasks_name[i]})
-            }
-        }
         updateMapSettingPage(work_status)
     }
 
     Connections{
         target: status_manager
         onWorkStatusUpdate: {
-            var tasks_name = map_task_manager.getTasksName()
-            task_list_model.clear()
-            for (var i = 0; i < tasks_name.length; ++i) {
-                task_list_model.append({"idcard": i,"task_name": tasks_name[i]})
-            }
-            list_model_areas.clear()
-            var maps_name = map_task_manager.getMapsName()
-
-            for (var j = 0; j < maps_name.length; ++j) {
-                list_model_areas.append({"map_name": maps_name[j]})
-            }
 
             updateMapSettingPage(status)
             root.checked_tasks_name = []
@@ -166,7 +157,7 @@ Rectangle {
                             Image {
                                 anchors.fill: parent
                                 source: parent.parent.focus ?
-                                    "qrc:/res/pictures/map_areas_focus.png" : "qrc:/res/pictures/map_areas_normal.png"
+                                            "qrc:/res/pictures/map_areas_focus.png" : "qrc:/res/pictures/map_areas_normal.png"
                             }
                             Text {
                                 text: model.map_name
@@ -180,11 +171,12 @@ Rectangle {
                         }
                     }
                     model: ListModel {
-                        id: list_model_areas
+                        id: map_name_list
                         Component.onCompleted: {
+                            map_name_list.clear()
                             root._maps_name = map_task_manager.getMapsName()
                             for (var i = 0; i < _maps_name.length; ++i) {
-                                list_model_areas.append({"map_name":_maps_name[i]})
+                                map_name_list.append({"map_name":_maps_name[i]})
                             }
                         }
                     }
@@ -236,7 +228,7 @@ Rectangle {
                                 width: parent.width - 4
                                 height: parent.height
                                 source: item.is_active ?
-                                    "qrc:/res/pictures/bar_ref_line0.png" : "qrc:/res/pictures/map_areas_normal.png"
+                                            "qrc:/res/pictures/bar_ref_line0.png" : "qrc:/res/pictures/map_areas_normal.png"
                             }
                             Text {
                                 id: checked_text
@@ -251,7 +243,7 @@ Rectangle {
                                 font.pixelSize: height * 0.4
                                 font.bold: true
                                 color: "white"
-//                                color: item.is_active ? "red" : "black"
+                                //                                color: item.is_active ? "red" : "black"
                             }
                             onClicked: {
                                 root.chooseTaskPage()

@@ -12,6 +12,15 @@ Rectangle {
     property Component user_manage_page: UserManagePage {}
     property Component help_document_page: HelpDocumentPage { }
     property Component about_machine_page: AboutMachinePage { }
+    property Dialog tl_message_box: TLMessageBox {
+        x: (parent.parent.width - width ) /2
+        y: (parent.parent.height - height) / 2
+    }
+
+    property Dialog work_done_widget: WorkDone {
+        x: (parent.parent.width - width ) /2
+        y: (parent.parent.height - height) / 2
+    }
     property Component task_settings_page: TaskSettingsPage{
         onStartTaskLock: {
             lock_screen_page.pop_lock.open()
@@ -34,7 +43,6 @@ Rectangle {
 
     Component.onCompleted: {
         map_task_manager.setWorkMapName(map_task_manager.getCurrentMapName())
-
     }
 
 
@@ -45,6 +53,9 @@ Rectangle {
             menu_stack.tlReplace(list_view)
             stack_view.tlReplace(home_page)
         }
+        onSigWorkDown: {
+            work_done_widget.open()
+        }
     }
     Connections {
         target: status_manager
@@ -52,7 +63,6 @@ Rectangle {
             if (status <= 1) {
                 list_view.currentIndex = 2
                 menu_stack.tlReplace(list_view)
-
             } else if (status > 1 && status < 5) {
                 menu_stack.tlReplace(list_view)
             } else if (status === 5) {

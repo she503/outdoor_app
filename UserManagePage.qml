@@ -25,6 +25,7 @@ Rectangle {
             } else if (root.p_accounts_info[key] === 2) {
                 user_list_model.append({"user_name": key, "level": admin_level, "user_level": root.p_accounts_info[key]})
                 ++root.p_admin_num;
+                ++btns.p_admin_num;
             }
         }
         list_view_user.currentIndex = -1
@@ -76,6 +77,7 @@ Rectangle {
                     width: parent.width * 0.7
                     height: parent.height
                     anchors.right: parent.right
+
                 }
 
                 Rectangle {
@@ -193,6 +195,7 @@ Rectangle {
             if (status === 1) {
                 if (root.p_checked_user_level === 2) {
                     --root.p_admin_num
+                    --btns.p_admin_num
                 }
             }
         }

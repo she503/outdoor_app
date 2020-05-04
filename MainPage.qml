@@ -130,7 +130,7 @@ Rectangle {
                     } else {
                         menu_stack.tlReplace(list_view)
                     }
-                    menu_stack.tlReplace(task_process_page)
+//                    menu_stack.tlReplace(task_process_page)
                     stack_view.tlReplace(task_settings_page)
                 } else if (current_index === 2) {
                     stack_view.tlReplace(help_document_page)

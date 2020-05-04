@@ -2,7 +2,9 @@
 #define TERGEO_APP_ROS_MESSAGEMANAGER_H
 
 #include <QObject>
+#include <QDateTime>
 #include "socket_manager.h"
+
 
 class RosMessageManager : public QObject
 {

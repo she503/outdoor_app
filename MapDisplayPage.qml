@@ -209,10 +209,11 @@ Page {
             var pixel_pos = geometryToPixel(x, y)
             vehicle.x = pixel_pos[0] - vehicle.width / 2
             vehicle.y = pixel_pos[1] - vehicle.height / 2
+            if (!root.can_drag) {
 
-            if (map.scale > root.real_rate / 2 && !root.can_drag) {
                 map.x = (map.width / 2 - vehicle.x - vehicle.width / 2) * (map.scale)
                 map.y = (map.height / 2 - vehicle.y - vehicle.height / 2) * (map.scale)
+                console.info(map.x,map.y)
             }
             vehicle.rotation = -heading
         }
@@ -238,6 +239,9 @@ Page {
         }
         onUpdateTrajectoryInfo: {
             var_trajectory = trajectory
+            if (ref_line_curren_index === 0) {
+                return
+            }
             canvas_red_ref_line.requestPaint()
         }
     }
@@ -259,9 +263,9 @@ Page {
         width: parent.width * 0.78
         height: parent.height
 
-        onXChanged: {
-            root.can_drag = true
-        }
+//        onXChanged: {
+//            root.can_drag = true
+//        }
 
         Image {
             id: choose_marker
@@ -649,6 +653,10 @@ Page {
                 var y = map.height / 2 - ( map.height / 2 - mouse.y + map.y) / map.scale
                 root.choosePoint = [x, y]
             }
+            onPressed: {
+                root.can_drag = true
+            }
+
             onDoubleClicked: {
                 root.can_drag = false
                 map.x = (map.width / 2 - vehicle.x) * (map.scale)
@@ -658,7 +666,6 @@ Page {
                 canvas_planning_ref_line.requestPaint()
                 canvas_red_ref_line.requestPaint()
                 canvas_obstacles.requestPaint()
-                canvas_trajectory.requestPaint()
             }
         }
     }

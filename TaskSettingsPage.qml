@@ -89,6 +89,10 @@ Rectangle {
 
     Component.onCompleted: {
         var work_status = status_manager.getWorkStatus()
+        if (work_status === 6) {
+            map_task_manager.turnToSelectMap()
+            return
+        }
         updateMapSettingPage(work_status)
     }
 

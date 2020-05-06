@@ -6,7 +6,6 @@
         <file>HomePage.qml</file>
         <file>HelpDocumentPage.qml</file>
         <file>AboutMachinePage.qml</file>
-        <file>TaskSettingsPage.qml</file>
         <file>MissonBordPage.qml</file>
         <file>WelcomePage.qml</file>
         <file>LockScreenPage.qml</file>
@@ -36,5 +35,6 @@
         <file>WorkingBtns.qml</file>
         <file>TaskInfo.qml</file>
         <file>VehicleItem.qml</file>
+        <file>TaskSettingsPage.qml</file>
     </qresource>
 </RCC>

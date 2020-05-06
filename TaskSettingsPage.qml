@@ -3,8 +3,7 @@ import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
 import QtQuick.Controls.Styles 1.4
-import "./homemade_components"
-import "map_task_manager"
+import "../homemade_components"
 
 Rectangle {
     id: root
@@ -46,7 +45,6 @@ Rectangle {
         } else if (status >= 6) {
 
         }
-
     }
 
     function hideAllComponent() {

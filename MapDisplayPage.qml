@@ -223,7 +223,7 @@ Page {
         }
         onUpdatePlanningInfo: {
             var_planning_path = planning_path
-            canvas_red_ref_line.requestPaint()
+            canvas_planning_ref_line.requestPaint()
         }
         onUpdatePlanningRefInfo: {
             root.var_planning_ref_path = planning_path
@@ -231,6 +231,9 @@ Page {
         }
         onUpdateTaskProcessInfo: {
             ref_line_curren_index = current_index
+            if (ref_line_curren_index === 0) {
+                return
+            }
             canvas_red_ref_line.requestPaint()
         }
         onUpdateTrajectoryInfo: {
@@ -587,10 +590,7 @@ Page {
                 onPaint: {
                     var ctx = getContext("2d")
                     ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
-                    drawLine2d(ctx, root.var_planning_path, "#4169E1")
-                    if (ref_line_curren_index <= 0) {
-                        return
-                    }
+
                     drawCleanGreenLine(ctx, root.var_ref_line, "#00ff00") //green
                     drawtrajectory(ctx, root.var_trajectory);
                 }
@@ -608,7 +608,7 @@ Page {
                     var ctx = getContext("2d")
                     ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
                     drawLine2d(ctx, root.var_planning_ref_path, "#FF00FF")
-
+                    drawLine2d(ctx, root.var_planning_path, "#4169E1")
                 }
             }
 

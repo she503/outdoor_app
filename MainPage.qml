@@ -12,10 +12,6 @@ Rectangle {
     property Component user_manage_page: UserManagePage {}
     property Component help_document_page: HelpDocumentPage { }
     property Component about_machine_page: AboutMachinePage { }
-    property Dialog tl_message_box: TLMessageBox {
-        x: (parent.parent.width - width ) /2
-        y: (parent.parent.height - height) / 2
-    }
 
     property Dialog work_done_widget: WorkDone {
         x: (parent.parent.width - width ) /2
@@ -57,6 +53,14 @@ Rectangle {
             work_done_widget.open()
         }
     }
+
+    Connections {
+        target: map_task_manager
+        onEmitWorkDone: {
+            work_done_widget.open()
+        }
+    }
+
     Connections {
         target: status_manager
         onWorkStatusUpdate: {

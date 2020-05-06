@@ -95,10 +95,15 @@ Rectangle {
     Connections{
         target: status_manager
         onWorkStatusUpdate: {
-
             updateMapSettingPage(status)
             root.checked_tasks_name = []
-            map_display_page.clearAllCanvas()
+            if (status <= 5) {
+                map_display_page.clearAllCanvas()
+            }
+            if (status === 4) {
+                busy.running = false
+            }
+
             map_display_page.paintingMap(map_task_manager.getCurrentMapName())
         }
     }

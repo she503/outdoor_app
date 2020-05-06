@@ -21,8 +21,6 @@ Page {
     property var p_task_regions: []
     property var p_task_lines: []
 
-
-
     property var paint_begin_offset: 20
 
     property var var_trees: []
@@ -569,6 +567,23 @@ Page {
                     ctx.restore()
                 }
 
+                function drawCleanGreenLine(ctx, points, color) {
+                    if (points.length <= 0) {
+                        return
+                    }
+                    ctx.save()
+                    ctx.lineWidth = 1
+                    ctx.strokeStyle = color
+                    ctx.beginPath()
+                    var first_pointt = geometryToPixel(points[0][0], points[0][1])
+                    ctx.moveTo(first_pointt[0], first_pointt[1])
+                    for (var i = 0; i < ref_line_curren_index; ++i) {
+                        var point = geometryToPixel(points[i][0], points[i][1])
+                        ctx.lineTo(point[0], point[1])
+                    }
+                    ctx.stroke()
+                    ctx.restore()
+                }
                 onPaint: {
                     var ctx = getContext("2d")
                     ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
@@ -576,7 +591,7 @@ Page {
                     if (ref_line_curren_index <= 0) {
                         return
                     }
-                    drawLine2d(ctx, root.var_ref_line, "#00ff00") //green
+                    drawCleanGreenLine(ctx, root.var_ref_line, "#00ff00") //green
                     drawtrajectory(ctx, root.var_trajectory);
                 }
             }

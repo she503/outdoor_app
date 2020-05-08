@@ -9,7 +9,8 @@ SOURCES += main.cpp \
     ros_message_manager.cpp \
     vehicle_info_manager.cpp \
     qjson_transformer.cpp \
-    status_manager.cpp
+    status_manager.cpp \
+    mapping_manager.cpp
 
 RESOURCES += qml.qrc \
     pictures.qrc
@@ -44,7 +45,8 @@ HEADERS += \
     ros_message_manager.h \
     vehicle_info_manager.h \
     qjson_transformer.h \
-    status_manager.h
+    status_manager.h \
+    mapping_manager.h
 
 TRANSLATIONS = tergeo_app_zh_CN.ts
 

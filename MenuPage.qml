@@ -15,7 +15,7 @@ ListView {
     highlightFollowsCurrentItem: false
     delegate: ItemDelegate {
         id: item
-        height: root._level <= 1 ? root.height / 4 : root.height / 5
+        height: root._level <= 1 ? root.height / 4 : root.height / 6
         width: parent.width
         property real id_num: model.id_num
         Rectangle {
@@ -56,6 +56,7 @@ ListView {
                 user_lit_model.append({"id_num": 1, "focus_source": "qrc:/res/pictures/TASKSETTING-button.png"})
                 user_lit_model.append({"id_num": 2, "focus_source": "qrc:/res/pictures/help.png"})
                 user_lit_model.append({"id_num": 3, "focus_source": "qrc:/res/pictures/about.png"})
+                user_lit_model.append({"id_num": 5, "focus_source": "qrc:/res/pictures/setting.png"})
             }
         }
     }

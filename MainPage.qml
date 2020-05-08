@@ -4,6 +4,7 @@ import QtGraphicalEffects 1.0
 import "./homemade_components"
 import "./user_manager"
 import "./map_task_manager"
+import "./mapping"
 
 Rectangle {
     id: root
@@ -52,6 +53,10 @@ Rectangle {
         onSigWorkDown: {
             work_done_widget.open()
         }
+    }
+
+    MappingPage {
+        id: mapping_page
     }
 
     Connections {
@@ -150,6 +155,8 @@ Rectangle {
                     stack_view.tlReplace(help_document_page)
                 } else if (current_index === 3) {
                     stack_view.tlReplace(about_machine_page)
+                } else if (current_index === 5) {
+                    stack_view.tlReplace(mapping_page)
                 }
             }
         }

@@ -130,6 +130,8 @@ Page {
 
         var vehicle_width = vehicle_info_manager.getVehicleWidth()
         var vehicle_height = vehicle_info_manager.getVehicleHeight()
+//        var vehicle_width = 4.4
+//        var vehicle_height = 2.2
 
         vehicle.width =  vehicle_width * 3/2 * map_rate
         vehicle.height = vehicle_height * map_rate
@@ -210,10 +212,8 @@ Page {
             vehicle.x = pixel_pos[0] - vehicle.width / 2
             vehicle.y = pixel_pos[1] - vehicle.height / 2
             if (!root.can_drag) {
-
                 map.x = (map.width / 2 - vehicle.x - vehicle.width / 2) * (map.scale)
                 map.y = (map.height / 2 - vehicle.y - vehicle.height / 2) * (map.scale)
-                console.info(map.x,map.y)
             }
             vehicle.rotation = -heading
         }
@@ -262,10 +262,6 @@ Page {
         id: map
         width: parent.width * 0.78
         height: parent.height
-
-//        onXChanged: {
-//            root.can_drag = true
-//        }
 
         Image {
             id: choose_marker

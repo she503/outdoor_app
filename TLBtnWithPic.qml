@@ -15,15 +15,18 @@ Rectangle {
         id: img
         source: root.img_source
         width: parent.width * 0.4
-        height: parent.height
+        height: parent.height * 0.8
         fillMode: Image.PreserveAspectFit
         horizontalAlignment: Image.AlignHCenter
         verticalAlignment: Image.AlignVCenter
+        anchors.verticalCenter: parent.verticalCenter
     }
 
     Text {
         text: btn_text
         color: "white"
+        width: parent.width * 0.59
+        height: parent.height
         font{
             pixelSize: font_size
             family: "Arial"
@@ -34,7 +37,7 @@ Rectangle {
         elide: Text.ElideRight
         anchors {
             left: img.right
-            leftMargin: parent.width * 0.01
+            leftMargin: parent.width * 0.05
         }
     }
     MouseArea {

@@ -67,6 +67,10 @@ Page {
     }
 
     function paintingMap(current_map_name) {
+        if(current_map_name === "") {
+            return
+        }
+
         map.scale = 1 / root.real_rate
         img_charge.visible = false
         img_begin.visible = false

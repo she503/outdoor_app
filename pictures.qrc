@@ -79,5 +79,8 @@
         <file>res/pictures/info_background.png</file>
         <file>res/pictures/mapping_stop.png</file>
         <file>res/pictures/mapping_start.png</file>
+        <file>res/pictures/reset.png</file>
+        <file>res/pictures/mapping.png</file>
+        <file>res/pictures/key.png</file>
     </qresource>
 </RCC>

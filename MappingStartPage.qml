@@ -50,33 +50,79 @@ Rectangle {
             enabled: true
             width: parent.width * 0.4
             height: parent.height * 0.5
-            anchors.right: parent.right
-            anchors.rightMargin: 5
-            visible: true
-            btn_text: qsTr("START")
-            img_source: "qrc:/res/pictures/mapping_start.png"
-            onClicked: {
-                console.info("11111111")
-            }
-        }
-        Button {
-            id: btn_stop
-            width: parent.width * 0.3
-            height: parent.height
-            anchors.right: parent.right
-            anchors.rightMargin: 5
+
             visible: false
-            Text{
-                id: text_stop
-                anchors.fill: parent
-                font.pixelSize: height * 0.5
-                text: "\uf04d" + qsTr("stop")
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                color: "red"
-            }
+            btn_text: qsTr("START")
+            font_size: width * 0.1
+            img_source: "qrc:/res/pictures/mapping_start.png"
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
             onClicked: {
 
+            }
+        }
+        Rectangle {
+            id: rect_btns_2
+            visible: !btn_start.visible
+            width: parent.width * 0.9
+            height: parent.height * 0.8
+            anchors.centerIn: parent
+            color: "transparent"
+            Row {
+                spacing: parent.width * 0.1 / 4
+                anchors.centerIn: parent
+                TLBtnWithPic {
+                    id: btn_stop
+                    enabled: true
+                    width: rect_btns_2.width * 0.2
+                    height: rect_btns_2.height * 0.5
+                    visible: true
+                    btn_text: qsTr("STOP")
+                    font_size: width * 0.1
+                    img_source: "qrc:/res/pictures/mapping_stop.png"
+                    onClicked: {
+
+                    }
+                }
+                TLBtnWithPic {
+                    id: btn_reset
+                    enabled: true
+                    width: 40//rect_btns_2.width * 0.2
+                    height: 20//rect_btns_2.height * 0.5
+                    visible: true
+                    btn_text: qsTr("RESET")
+                    font_size: width * 0.1
+                    img_source: "qrc:/res/pictures/reset.png"
+                    onClicked: {
+
+                    }
+                }
+                TLBtnWithPic {
+                    id: btn_save_key
+                    enabled: true
+                    width: rect_btns_2.width * 0.2
+                    height: rect_btns_2.height * 0.5
+                    visible: true
+                    btn_text: qsTr("KEY")
+                    font_size: width * 0.1
+                    img_source: "qrc:/res/pictures/key.png"
+                    onClicked: {
+
+                    }
+                }
+                TLBtnWithPic {
+                    id: btn_mapping
+                    enabled: true
+                    width: rect_btns_2.width * 0.2
+                    height: rect_btns_2.height * 0.5
+                    visible: true
+                    btn_text: qsTr("MAPPING")
+                    font_size: width * 0.1
+                    img_source: "qrc:/res/pictures/mapping.png"
+                    onClicked: {
+
+                    }
+                }
             }
         }
     }

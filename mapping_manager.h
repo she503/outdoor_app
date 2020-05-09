@@ -23,9 +23,9 @@ public:
     explicit MappingManager(QObject *parent = nullptr);
     bool setSocketManager(SocketManager* socket_manager);
 
-    Q_INVOKABLE void setMappingStartOrStop(const MappingStatus mapping_status);
+    Q_INVOKABLE void setMappingStartOrStop(const int mapping_status);
 
-    Q_INVOKABLE void setIndoorOutdoor(const MappingPlace indoor_outdoor) { _indoor_outdoor = indoor_outdoor;}
+    Q_INVOKABLE void setIndoorOutdoor(const int indoor_outdoor) { _indoor_outdoor = (MappingPlace)indoor_outdoor;}
 
 signals:
 

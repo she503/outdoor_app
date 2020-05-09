@@ -21,6 +21,7 @@
         <file>TLDialog.qml</file>
         <file>TLMessageBox.qml</file>
         <file>TLScrollBar.qml</file>
+        <file>TLBtnWithPic.qml</file>
     </qresource>
     <qresource prefix="/user_manager">
         <file>UserManagePage.qml</file>

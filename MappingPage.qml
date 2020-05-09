@@ -6,8 +6,12 @@ Rectangle {
     color: "transparent"
     property Component choose_page: ChooseIndoorOutdoor{
         onSigChooseSuccess: {
-
+            stack.tlReplace(mapping_start)
         }
+    }
+    MappingStartPage {
+        id: mapping_start
+
     }
 
     Image {

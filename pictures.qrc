@@ -77,5 +77,7 @@
         <file>res/pictures/charge_point.png</file>
         <file>res/pictures/back_style4.png</file>
         <file>res/pictures/info_background.png</file>
+        <file>res/pictures/mapping_stop.png</file>
+        <file>res/pictures/mapping_start.png</file>
     </qresource>
 </RCC>

@@ -1,7 +1,7 @@
 #include "mapping_manager.h"
 
 MappingManager::MappingManager(QObject *parent) : QObject(parent),
-    _indoor_outdoor_tag(""), _mapping_status(MAPPING_NULL)
+    _indoor_outdoor(MAPPING_PLACE_NULL), _mapping_status(MAPPING_STATUS_NULL)
 {
 
 }
@@ -11,9 +11,9 @@ bool MappingManager::setSocketManager(SocketManager* socket_manager)
     _socket_manager = socket_manager;
 }
 
-void MappingManager::setMappingStartOrStop(const MappingStatus mapping_status)
+void MappingManager::setMappingStartOrStop(const int mapping_status)
 {
-    if (_indoor_outdoor_tag.isEmpty()) {
+    if (mapping_status >= 3) {
         qDebug() << "[MappingManager::setMappingStartOrStop]: _indoor_outdoor_tag.isEmpty()";
         return;
     }

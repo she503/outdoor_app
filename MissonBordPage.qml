@@ -18,6 +18,7 @@ Item {
     Connections {
         target: ros_message_manager
         onUpdateMonitorMessageInfo: {
+            btn_error.visible = true
             root.error_time = 0
             message_list_model.clear()
             root.has_error = true
@@ -360,6 +361,7 @@ Item {
                 timer_btn_errror_flashes.stop()
                 btn_error.visible = false
                 root.has_error = false
+                draw_error.close()
             }
             ++root.error_time
         }

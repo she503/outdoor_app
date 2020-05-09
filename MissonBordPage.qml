@@ -12,16 +12,19 @@ Item {
     property bool has_error: false
     property var error_text_color: "red"//: ["yellow", "orange", "red"]
     property bool is_first_get_error: false
+    property int error_time: 0
 
 
     Connections {
         target: ros_message_manager
         onUpdateMonitorMessageInfo: {
+            root.error_time = 0
             message_list_model.clear()
             root.has_error = true
             if (!is_first_get_error) {
                 is_first_get_error = true
                 timer_btn_errror_flashes.start()
+                timer_error_close.start()
                 //                timer_btn_errror_open.start()   debug
                 draw_error.open()
                 //                root.cannotOperatorTask()      debug
@@ -347,6 +350,21 @@ Item {
             }
         }
     }
+    Timer {
+        id: timer_error_close
+        running: timer_btn_errror_flashes.running
+        repeat: true
+        interval: 1000
+        onTriggered: {
+            if (root.error_time >= 3) {
+                timer_btn_errror_flashes.stop()
+                btn_error.visible = false
+                root.has_error = false
+            }
+            ++root.error_time
+        }
+    }
+
     Timer {
         id: timer_btn_errror_open
         running: false

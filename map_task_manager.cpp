@@ -229,6 +229,7 @@ void MapTaskManager::parseAllMapsInfo(const QJsonObject &obj)
     }
     _current_map_name = _all_maps.firstKey();
 
+    this->setWorkMapName(_current_map_name);
     _status_manager->setWorkStatus(WORK_STATUS_NONE_WORK);
 }
 

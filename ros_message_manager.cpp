@@ -99,6 +99,9 @@ void RosMessageManager::parseMonitorMessageInfo(const QJsonObject &obj)
     QString str_time = time_secs.toString("hh:mm:ss.zzz");
 
     QJsonObject monitor_messages_obj = obj.value("monitor_messages").toObject();
+    if (monitor_messages_obj.empty()) {
+        return;
+    }
     QJsonObject::const_iterator it = monitor_messages_obj.begin();
     QVariantList error_list;
 

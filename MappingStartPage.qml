@@ -51,14 +51,14 @@ Rectangle {
             width: parent.width * 0.4
             height: parent.height * 0.5
 
-            visible: false
+            visible: true
             btn_text: qsTr("START")
             font_size: width * 0.1
             img_source: "qrc:/res/pictures/mapping_start.png"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             onClicked: {
-
+                mapping_manager.setMappingCommand(2)
             }
         }
         Rectangle {
@@ -81,20 +81,20 @@ Rectangle {
                     font_size: width * 0.1
                     img_source: "qrc:/res/pictures/mapping_stop.png"
                     onClicked: {
-
+                        mapping_manager.setMappingCommand(3)
                     }
                 }
                 TLBtnWithPic {
                     id: btn_reset
                     enabled: true
-                    width: 40//rect_btns_2.width * 0.2
-                    height: 20//rect_btns_2.height * 0.5
+                    width: rect_btns_2.width * 0.2
+                    height: rect_btns_2.height * 0.5
                     visible: true
                     btn_text: qsTr("RESET")
                     font_size: width * 0.1
                     img_source: "qrc:/res/pictures/reset.png"
                     onClicked: {
-
+                        mapping_manager.setMappingCommand(1)
                     }
                 }
                 TLBtnWithPic {
@@ -107,7 +107,7 @@ Rectangle {
                     font_size: width * 0.1
                     img_source: "qrc:/res/pictures/key.png"
                     onClicked: {
-
+                        mapping_manager.setMappingCommand(4)
                     }
                 }
                 TLBtnWithPic {
@@ -120,9 +120,19 @@ Rectangle {
                     font_size: width * 0.1
                     img_source: "qrc:/res/pictures/mapping.png"
                     onClicked: {
-
+                        mapping_manager.setMappingCommand(5)
                     }
                 }
+            }
+        }
+    }
+    Connections {
+        target: mapping_manager
+        onEmitMappingCommandInfo: {
+            if (success) {
+                console.info(message)
+                btn_start.visible = false
+                rect_btns_2.visible = true
             }
         }
     }

@@ -162,6 +162,10 @@ void SocketManager::parseSocketData(const QByteArray &buffer)
     case MESSAGE_ENABLE_CLEAN_WORK_RST:
         emit emitEnableCleanWorkRst(obj.value("current_status").toBool());
         break;
+
+    case MESSAGE_MAPPING_COMMAND_RST:
+        emit emitMappingCommandRst(obj);
+        break;
     default:
         break;
     }

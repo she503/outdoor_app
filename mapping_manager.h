@@ -2,12 +2,18 @@
 #define MAPPING_MANAGER_H
 
 #include <QObject>
+#include <QJsonObject>
+#include <QDebug>
 
+#include "utils.h"
 #include "socket_manager.h"
-enum MappingStatus {
-    MAPPING_STATUS_NULL = 0,
-    MAPPING_STATUS_START = 1,
-    MAPPING_STATUS_STOP = 2
+enum MappingCommand {
+    MAPPING_COMMAND_NULL = 0,
+    MAPPING_COMMAND_RESET = 1,
+    MAPPING_COMMAND_START = 2,
+    MAPPING_COMMAND_STOP = 3,
+    MAPPING_COMMAND_SAVE_KEY = 4,
+    MAPPING_COMMAND_PAINTING = 5
 };
 
 enum MappingPlace {
@@ -23,17 +29,16 @@ public:
     explicit MappingManager(QObject *parent = nullptr);
     bool setSocketManager(SocketManager* socket_manager);
 
-    Q_INVOKABLE void setMappingStartOrStop(const int mapping_status);
+    Q_INVOKABLE void setIndoorOutdoor(const int indoor_outdoor);
 
-    Q_INVOKABLE void setIndoorOutdoor(const int indoor_outdoor) { _indoor_outdoor = (MappingPlace)indoor_outdoor;}
-
+    Q_INVOKABLE void setMappingCommand(const int mapping_command);
 signals:
-
-public slots:
-
+     void emitMappingCommandInfo(const bool success, const QString& message);
+private slots:
+     void parseMappingCommandRst(const QJsonObject& obj);
 private:
-    SocketManager *_socket_manager;
-    MappingStatus _mapping_status;
+    SocketManager* _socket_manager;
+    MappingCommand _mapping_command;
     MappingPlace _indoor_outdoor;
 };
 

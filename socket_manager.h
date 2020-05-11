@@ -61,6 +61,8 @@ signals:
 
     void emitEnableCleanWorkRst(const bool flag);
 
+    void emitMappingCommandRst(const QJsonObject& obj);
+
     // app断开连接发出信号
     void appDisconnected(const QString& message);
 

@@ -209,9 +209,13 @@ void MapTaskManager::parseAllMapsInfo(const QJsonObject &obj)
         return;
     }
 
+
     _all_maps.clear();
     _all_features.clear();
     QJsonObject map_obj = obj.value("maps").toObject();
+    if (map_obj.empty()) {
+        return;
+    }
     QJsonObject::Iterator it;
     for(it = map_obj.begin(); it != map_obj.end(); ++it) {
         QString map_name = it.key();

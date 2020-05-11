@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
     ros_message_manager->setSocket(socket_manager);
 
     MappingManager* mapping_manager = new MappingManager(&engine);
+    mapping_manager->setSocketManager(socket_manager);
     engine.rootContext()->setContextProperty("mapping_manager", mapping_manager);
 
 

@@ -9,6 +9,7 @@ Rectangle {
         anchors.fill: parent
         source: "qrc:/res/pictures/background_glow1.png"
     }
+    clip: true
     Rectangle {
         id: rect_message_show
         width: parent.width * 0.9
@@ -24,23 +25,13 @@ Rectangle {
             color: "green"
         }
         radius: 10
+clip: true
         color: Qt.rgba(255, 255, 255, 0.5)
-
-
-
-        TextArea {
-            id: text_area
-            color: "black"
+        MappingMessage {
+            id: mapping_message
             anchors.fill: parent
-            horizontalAlignment: Text.AlignLeft
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: parent.width * 0.05
-            wrapMode: TextEdit.Wrap
-            focus: false
-            readOnly: true
+            clip: true
         }
-
-
     }
     Rectangle {
         id: rect_btns
@@ -85,6 +76,8 @@ Rectangle {
             anchors.centerIn: parent
             color: "transparent"
 
+
+            property int command_id: 2
             function setVisible(flag) {
                 btn_save_key.visible = flag
                 btn_reset.visible = flag
@@ -105,7 +98,6 @@ Rectangle {
 
             }
 
-            property int command_id: 0
 
             Row {
                 spacing: parent.width * 0.1 / 4
@@ -196,7 +188,7 @@ Rectangle {
             } else {
 
             }
-            text_area.text += success + ": " + message + "\n"
+            mapping_message.setMessage(success, rect_btns_2.command_id, message)
         }
     }
 }

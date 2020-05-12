@@ -4,6 +4,7 @@ import QtQuick.Controls 2.2
 Rectangle {
     id: root
     color: "transparent"
+    clip: true
     ChooseIndoorOutdoor{
         id: choose_page
         onSigChooseSuccess: {
@@ -12,6 +13,7 @@ Rectangle {
     }
     MappingStartPage {
         id: mapping_start
+        clip: true
     }
 
     Image {

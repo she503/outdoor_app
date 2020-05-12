@@ -69,7 +69,7 @@ Rectangle {
         }
         Rectangle {
             id: rect_btns_2
-            visible: true
+            visible: !btn_start.visible
             width: parent.width * 0.9
             height: parent.height * 0.8
             anchors.centerIn: parent

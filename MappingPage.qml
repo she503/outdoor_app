@@ -4,14 +4,14 @@ import QtQuick.Controls 2.2
 Rectangle {
     id: root
     color: "transparent"
-    property Component choose_page: ChooseIndoorOutdoor{
+    ChooseIndoorOutdoor{
+        id: choose_page
         onSigChooseSuccess: {
             stack.tlReplace(mapping_start)
         }
     }
     MappingStartPage {
         id: mapping_start
-
     }
 
     Image {

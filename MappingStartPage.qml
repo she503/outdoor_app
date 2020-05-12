@@ -25,6 +25,22 @@ Rectangle {
         }
         radius: 10
         color: Qt.rgba(255, 255, 255, 0.5)
+
+
+
+        TextArea {
+            id: text_area
+            color: "black"
+            anchors.fill: parent
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
+            font.pixelSize: parent.width * 0.05
+            wrapMode: TextEdit.Wrap
+            focus: false
+            readOnly: true
+        }
+
+
     }
     Rectangle {
         id: rect_btns
@@ -68,9 +84,45 @@ Rectangle {
             height: parent.height * 0.8
             anchors.centerIn: parent
             color: "transparent"
+
+            function setVisible(flag) {
+                btn_save_key.visible = flag
+                btn_reset.visible = flag
+                btn_stop.visible = flag
+                btn_back.visible = !flag
+                btn_mapping.visible = flag
+            }
+
+            function setBtnDisableStyle() {
+                btn_reset.backgroundDefaultColor = "#778899"
+                btn_reset.btn_enable = false
+
+                btn_save_key.backgroundDefaultColor = "#778899"
+                btn_save_key.btn_enable = false
+
+                btn_stop.backgroundDefaultColor = "#778899"
+                btn_stop.btn_enable = false
+
+            }
+
+            property int command_id: 0
+
             Row {
                 spacing: parent.width * 0.1 / 4
                 anchors.centerIn: parent
+                TLBtnWithPic {
+                    id: btn_back
+                    enabled: true
+                    width: rect_btns_2.width * 0.2
+                    height: rect_btns_2.height * 0.5
+                    visible: false
+                    btn_text: qsTr("BACK")
+                    font_size: width * 0.1
+                    img_source: "qrc:/res/pictures/back_style2.png"
+                    onClicked: {
+                        rect_btns_2.setVisible(true)
+                    }
+                }
                 TLBtnWithPic {
                     id: btn_stop
                     enabled: true
@@ -82,6 +134,7 @@ Rectangle {
                     img_source: "qrc:/res/pictures/mapping_stop.png"
                     onClicked: {
                         mapping_manager.setMappingCommand(3)
+                        rect_btns_2.command_id = 3
                     }
                 }
                 TLBtnWithPic {
@@ -95,6 +148,7 @@ Rectangle {
                     img_source: "qrc:/res/pictures/reset.png"
                     onClicked: {
                         mapping_manager.setMappingCommand(1)
+                        rect_btns_2.command_id = 1
                     }
                 }
                 TLBtnWithPic {
@@ -108,6 +162,7 @@ Rectangle {
                     img_source: "qrc:/res/pictures/key.png"
                     onClicked: {
                         mapping_manager.setMappingCommand(4)
+                        rect_btns_2.command_id = 4
                     }
                 }
                 TLBtnWithPic {
@@ -121,6 +176,8 @@ Rectangle {
                     img_source: "qrc:/res/pictures/mapping.png"
                     onClicked: {
                         mapping_manager.setMappingCommand(5)
+                        rect_btns_2.command_id = 5
+//                        rect_btns_2.setBtnDisableStyle()
                     }
                 }
             }
@@ -130,10 +187,16 @@ Rectangle {
         target: mapping_manager
         onEmitMappingCommandInfo: {
             if (success) {
-                console.info(message)
                 btn_start.visible = false
                 rect_btns_2.visible = true
+//                if (rect_btns_2.command_id === 5 && message === "Have no data") {
+//                } else {
+//                    rect_btns_2.setVisible(true)
+//                }
+            } else {
+
             }
+            text_area.text += success + ": " + message + "\n"
         }
     }
 }

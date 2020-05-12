@@ -9,6 +9,7 @@ Rectangle {
     property string btn_text: ""
     property real font_size: root.height * 0.8
     property string img_source: ""
+    property bool btn_enable: true
 
     signal clicked()
     Image {
@@ -43,7 +44,9 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: {
+            if (root.btn_enable) {
             root.clicked();
+            }
         }
     }
 

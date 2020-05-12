@@ -35,6 +35,14 @@ Rectangle {
             list_view.mainPageChanged(1)
         }
     }
+
+    MappingPage {
+        id: mapping_page
+        width: rect_right.width
+        height:rect_right.height
+
+    }
+
     LockScreenPage { id: lock_screen_page}
 
 
@@ -55,9 +63,6 @@ Rectangle {
         }
     }
 
-    MappingPage {
-        id: mapping_page
-    }
 
     Connections {
         target: map_task_manager

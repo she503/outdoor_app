@@ -34,7 +34,7 @@ Rectangle{
 
                 horizontalCenter: parent.horizontalCenter
             }
-            text: "192.168.."
+            text: "192.168.1.125"
             placeholderText: qsTr("enter IP.")
             pic_name: "qrc:/res/pictures/username.png"
             btn_radius: height * 0.1

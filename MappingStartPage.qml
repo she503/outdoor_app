@@ -25,6 +25,12 @@ Rectangle {
         }
         radius: 10
         color: Qt.rgba(255, 255, 255, 0.5)
+        Rectangle {
+            color: "red"
+        }
+        MappingBuildMessage {
+            id: mapping_build_message
+        }
     }
     Rectangle {
         id: rect_btns
@@ -63,7 +69,7 @@ Rectangle {
         }
         Rectangle {
             id: rect_btns_2
-            visible: !btn_start.visible
+            visible: true
             width: parent.width * 0.9
             height: parent.height * 0.8
             anchors.centerIn: parent

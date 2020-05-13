@@ -91,16 +91,18 @@ Rectangle {
         anchors.fill: parent
     }
 
+
+
     Rectangle {
         id: rect_title
-        width: parent.width
-        height: parent.height * 0.082
+        width: parent.width - rec_left.width
+        height: parent.height * 0.1
         color: "transparent"
-
+        anchors.left: rec_left.right
         MissonBordPage {
             id: misson_bord
-            width: parent.width * 0.5
-            height: parent.height * 0.8
+            width: parent.width
+            height: parent.height
             anchors {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
@@ -109,19 +111,20 @@ Rectangle {
                 lock_screen_page.pop_lock.open()
             }
         }
-
     }
 
 
     Rectangle {
         id: rec_left
-        anchors {
-            top: rect_title.bottom
-        }
         width: height * 0.5
-        height: parent.height - rect_title.height
+        height: parent.height
         color: "transparent"
-
+        Image {
+            id: menu_background
+            source: "qrc:/res/ui/background/menu.png"
+            anchors.fill: parent
+            z:0
+        }
         StackView {
             id: menu_stack
             anchors.fill: parent
@@ -143,6 +146,7 @@ Rectangle {
 
         MenuPage {
             id: list_view
+            z: 1
             onMainPageChanged: {
                 if (current_index === 0) {
                     stack_view.tlReplace(home_page)

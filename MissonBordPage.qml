@@ -13,7 +13,6 @@ Item {
     property var error_text_color: "red"//: ["yellow", "orange", "red"]
     property bool is_first_get_error: false
 
-
     Connections {
         target: ros_message_manager
         onUpdateMonitorMessageInfo: {

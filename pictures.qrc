@@ -96,5 +96,6 @@
         <file>res/ui/menu/home.png</file>
         <file>res/ui/menu/help.png</file>
         <file>res/ui/menu/about.png</file>
+        <file>res/ui/menu/clean.png</file>
     </qresource>
 </RCC>

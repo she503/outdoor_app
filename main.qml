@@ -16,13 +16,13 @@ ApplicationWindow {
         }
     }
     property Component welcome_page: WelcomePage {
-//        onFinishAnimation: {
-//            if (!connect_to_server) {
-//                stack_view.replace(fail_connect_page)
-//            } else {
-//                stack_view.replace(login_page)
-//            }
-//        }
+        onFinishAnimation: {
+            if (!connect_to_server) {
+                stack_view.replace(fail_connect_page)
+            } else {
+                stack_view.replace(login_page)
+            }
+        }
     }
     property Component main_page: MainPage {}
 
@@ -32,7 +32,7 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        connect_to_server = socket_manager.connectToServer("192.168.8.127")
+        connect_to_server = socket_manager.connectToServer("192.168.8.198")
     }
 
     Connections {
@@ -54,7 +54,7 @@ ApplicationWindow {
     StackView {
         id: stack_view
         anchors.fill: parent
-        initialItem: main_page//welcome_page
+        initialItem: welcome_page
 
         replaceEnter: Transition {
             ScaleAnimator {

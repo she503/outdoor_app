@@ -97,5 +97,17 @@
         <file>res/ui/menu/help.png</file>
         <file>res/ui/menu/about.png</file>
         <file>res/ui/menu/clean.png</file>
+        <file>res/ui/mission_bord/warn.png</file>
+        <file>res/ui/mission_bord/lock.png</file>
+        <file>res/ui/task/time.png</file>
+        <file>res/ui/task/task_yellow.png</file>
+        <file>res/ui/task/task_red.png</file>
+        <file>res/ui/task/task_no_select.png</file>
+        <file>res/ui/task/task_blue.png</file>
+        <file>res/ui/task/progress.png</file>
+        <file>res/ui/task/home.png</file>
+        <file>res/ui/task/btn_stop_task.png</file>
+        <file>res/ui/task/btn_start.png</file>
+        <file>res/ui/task/btn_pause.png</file>
     </qresource>
 </RCC>

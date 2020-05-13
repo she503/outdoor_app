@@ -22,6 +22,11 @@ Rectangle {
     property var tasks_list: []
     property var checked_tasks_name: []
 
+    property Dialog work_done_widget: WorkDone {
+        x: (parent.parent.width - width ) /2
+        y: (parent.parent.height - height) / 2
+    }
+
     signal startTaskLock()
 
     function updateMapSettingPage(status) {
@@ -50,7 +55,6 @@ Rectangle {
     function hideAllComponent() {
         rec_header_bar.visible = false
         rec_header_bar.height = 0
-        rect_decoration.visible = false
         rec_checked_location.visible = false
         rec_task_control.visible = false
         rec_ref_lines.visible = false
@@ -62,7 +66,6 @@ Rectangle {
         hideAllComponent()
         rec_header_bar.visible = true
         rec_header_bar.height = rec_task_page.height * 0.1
-        rect_decoration.visible = true
         rec_checked_location.visible = true
         map_display_page.p_choose_marker.visible = true
 
@@ -121,94 +124,105 @@ Rectangle {
         id: rec_glow_background
         anchors.fill: parent
         color: "transparent"
+
         Image {
             anchors.fill: parent
-            source: "qrc:/res/pictures/background_glow1.png"
+            source: "qrc:/res/ui/background/map.png"
         }
+
+        Rectangle {
+            id: rec_header_bar
+            width: parent.width * 0.83
+            height: parent.height * 0.01
+            color: "transparent"
+            anchors{
+                bottom: rec_task_page.top
+                bottomMargin: -parent.height * 0.015
+                left: parent.left
+                leftMargin: parent.width * 0.073
+            }
+
+            ListView {
+                id: list_view_areas
+                clip: true
+                anchors.fill: parent
+                orientation:ListView.Horizontal
+                spacing: width * 0.02
+                currentIndex: 0
+                delegate: ItemDelegate {
+                    width: list_view_areas.width / 4
+                    height: list_view_areas.height
+                    onPressed: {
+                        root.chooseMapPage()
+                        list_view_areas.currentIndex = index
+
+                        root.choose_map_name = model.map_name
+                        map_task_manager.setWorkMapName(model.map_name)
+                        map_display_page.paintingMap(model.map_name)
+                    }
+
+                    Rectangle {
+                        width: parent.width
+                        height: parent.height
+                        color: "transparent"
+                        Image {
+                            anchors.fill: parent
+                            source: parent.parent.focus ?
+                                        "qrc:/res/ui/background/map_selected.png" : "qrc:/res/ui/background/map_no_select.png"
+                        }
+                        Text {
+                            text: model.map_name
+                            clip: true
+                            width: parent.width * 0.9
+                            height: parent.height
+                            anchors.left: parent.left
+                            anchors.leftMargin: parent.width * 0.05
+                            horizontalAlignment: Text.AlignLeft
+                            verticalAlignment: Text.AlignVCenter
+                            font.pixelSize: height * 0.4
+                            font.bold: true
+                            color: "white"
+                        }
+                    }
+                }
+                model: ListModel {
+                    id: map_name_list
+                    Component.onCompleted: {
+                        map_name_list.clear()
+                        root._maps_name = map_task_manager.getMapsName()
+                        for (var i = 0; i < _maps_name.length; ++i) {
+                            map_name_list.append({"map_name":_maps_name[i]})
+                        }
+                    }
+                }
+            }
+        }
+
         Rectangle {
             id: rec_task_page
-            width: parent.width * 0.9
-            height: parent.height * 0.88
-            anchors.centerIn: parent
+            width: parent.width * 0.86
+            height: parent.height * 0.81
             color: "transparent"
             visible: root.map_status !== 0
-            Rectangle {
-                id: rec_header_bar
-                width: parent.width
-                height: parent.height * 0.1
-                color: "white"
-                ListView {
-                    id: list_view_areas
-                    clip: true
-                    anchors.fill: parent
-                    orientation:ListView.Horizontal
-                    spacing: width * 0.02
-                    currentIndex: 0
-                    delegate: ItemDelegate {
-                        width: list_view_areas.width / 4
-                        height: list_view_areas.height
-                        onPressed: {
-                            root.chooseMapPage()
-                            list_view_areas.currentIndex = index
+            anchors {
+                left: parent.left
+                leftMargin: parent.width * 0.073
+                top: parent.top
+                topMargin: parent.height * 0.115
 
-                            root.choose_map_name = model.map_name
-                            map_task_manager.setWorkMapName(model.map_name)
-                            map_display_page.paintingMap(model.map_name)
-                        }
-
-                        Rectangle {
-                            width: parent.width
-                            height: parent.height
-                            color: "transparent"
-                            border.color:  Qt.rgba(205,133,63, 0.5)
-                            Image {
-                                anchors.fill: parent
-                                source: parent.parent.focus ?
-                                            "qrc:/res/pictures/map_areas_focus.png" : "qrc:/res/pictures/map_areas_normal.png"
-                            }
-                            Text {
-                                text: model.map_name
-                                anchors.fill: parent
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                                font.pixelSize: height * 0.4
-                                font.bold: true
-                                color: "white"
-                            }
-                        }
-                    }
-                    model: ListModel {
-                        id: map_name_list
-                        Component.onCompleted: {
-                            map_name_list.clear()
-                            root._maps_name = map_task_manager.getMapsName()
-                            for (var i = 0; i < _maps_name.length; ++i) {
-                                map_name_list.append({"map_name":_maps_name[i]})
-                            }
-                        }
-                    }
-                }
-            }
-
-            Rectangle {
-                id: rect_decoration
-                width: parent.width
-                height: 2
-                anchors {
-                    top: rec_header_bar.bottom
-                    left: parent.left
-                }
-                color: "lightblue"
             }
 
             Rectangle {
                 width: parent.width
-                height: rec_task_page.height - rec_header_bar.height - rect_decoration.height
-                anchors.top: rect_decoration.bottom
+                height: parent.height
+                anchors.top: parent.top
+                radius: 10
+                border.color: "lightblue"
                 MapDisplayPage {
                     id: map_display_page
                     width:parent.width
                     height: parent.height
+
                 }
 
                 Rectangle {
@@ -217,40 +231,45 @@ Rectangle {
                     z: 1
                     width: parent.width * 0.2
                     height: parent.height * 0.833
-                    color: "white"
+                    color: "transparent"
+                    radius: 10
                     ListView {
                         id: list_view
                         clip: true
                         width: parent.width
-                        height: parent.height
+                        height: parent.height * 0.9
                         orientation:ListView.Vertical
                         spacing: height * 0.02
                         currentIndex: -1
+                        anchors.top: parent.top
+                        anchors.topMargin: parent.height * 0.05
                         delegate: ItemDelegate {
                             id: item
                             width: parent.width
                             property int id_card: model.idcard
                             property bool is_active: false
+                            height: list_view.height / 10
                             Image {
                                 width: parent.width - 4
                                 height: parent.height
                                 source: item.is_active ?
-                                            "qrc:/res/pictures/bar_ref_line0.png" : "qrc:/res/pictures/map_areas_normal.png"
+                                            "qrc:/res/ui/task/task_red.png" : "qrc:/res/ui/background/map_no_select.png"
                             }
                             Text {
                                 id: checked_text
                                 clip: true
                                 text: model.task_name
-                                horizontalAlignment: Text.AlignLeft
-                                verticalAlignment: Text.AlignVCenter
-                                width: parent.width
-                                height: parent.height
+//                                horizontalAlignment: Text.AlignLeft
                                 anchors.left: parent.left
                                 anchors.leftMargin: parent.width * 0.1
-                                font.pixelSize: height * 0.4
+                                verticalAlignment: Text.AlignVCenter
+                                width: parent.width * 2
+                                height: parent.height
+                                font.pixelSize: height * 0.3
+                                wrapMode: Text.WordWrap
                                 font.bold: true
-                                color: "white"
-                                //                                color: item.is_active ? "red" : "black"
+                                color: "black"
+
                             }
                             onClicked: {
                                 root.chooseTaskPage()
@@ -290,12 +309,14 @@ Rectangle {
                         width: parent.width
                         height: parent.height * 0.2
                         anchors.top: rec_ref_lines.bottom
+                        color: "transparent"
                         TLButton {
                             id: btn_return_choose_map
                             width: parent.width * 0.8
                             height: parent.height * 0.5
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.horizontalCenter: parent.horizontalCenter
+
                             onClicked: {
 
                             }
@@ -330,6 +351,108 @@ Rectangle {
                         }
                     }
                 }
+
+                Rectangle{
+                    id: rec_checked_location
+                    visible: false
+                    color: "transparent"
+                    width: parent.width
+                    height: parent.height * 0.1
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: parent.height * 0.06
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    Image {
+                        id: choose_point
+                        width: parent.width
+                        height: parent.height * 0.9
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        source: "qrc:/res/pictures/background_mached.png"
+                        horizontalAlignment: Image.AlignHCenter
+                        verticalAlignment: Image.AlignVCenter
+                    }
+
+                    Text {
+                        id: note_text
+                        text: qsTr("move and choose point!")//移动选点!
+                        width: parent.width * 0.7
+                        height: parent.height
+                        font.family: "Helvetica"
+                        font.pixelSize: height * 0.5
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        color: "red"
+                    }
+                    Rectangle {
+                        id: btn_resure
+                        width: parent.width * 0.2
+                        height: parent.height
+                        anchors.right: parent.right
+                        anchors.rightMargin: parent.width * 0.1
+                        color: "transparent"
+                        Image {
+                            anchors.fill: parent
+                            source: "qrc:/res/ui/background/btn.png"
+                            fillMode: Image.PreserveAspectFit
+                            Text {
+                                text: qsTr("SURE")
+                                anchors.fill: parent
+                                color: "white"
+                                font.pixelSize: height * 0.3
+                                font.family: "Arial"
+                                font.weight: Font.Thin
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    dialog_resure.open()
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            WorkingBtns {
+                id: working_btns
+                width: parent.width * 0.4
+                height: parent.height * 0.2
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: parent.width * 0.05
+                onSigWorkDown: {
+                    root.work_done_widget.open()
+                }
+                Component.onCompleted: {
+                    var status = status_manager.getWorkStatus()
+                    if (status === 5) {
+                        working_btns.visible = true
+                    } else {
+                        working_btns.visible = false
+                    }
+                }
+
+                Connections {
+                    target: status_manager
+                    onWorkStatusUpdate: {
+                        if (status === 5) {
+                            working_btns.visible = true
+                        } else {
+                            working_btns.visible = false
+                        }
+                    }
+                }
+                Connections {
+                    target: map_task_manager
+                    onEmitWorkDone: {
+                        work_done_widget.open()
+
+                    }
+                }
             }
         }
 
@@ -353,7 +476,7 @@ Rectangle {
                 }
                 Image {
                     anchors.fill: parent
-                    source: "qrc:/res/pictures/btn_style2.png"
+                    source: "qrc:/res/ui/background/btn.png"
                     fillMode: Image.PreserveAspectFit
                     horizontalAlignment: Image.AlignHCenter
                     verticalAlignment: Image.AlignVCenter
@@ -377,68 +500,6 @@ Rectangle {
             }
         }
 
-        Rectangle{
-            id: rec_checked_location
-            visible: false
-            color: "transparent"
-            width: rec_glow_background.width
-            height: rec_glow_background.height * 0.1
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: parent.height * 0.06
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            Image {
-                id: choose_point
-                width: parent.width * 0.96
-                height: parent.height * 0.9
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                source: "qrc:/res/pictures/background_mached.png"
-                horizontalAlignment: Image.AlignHCenter
-                verticalAlignment: Image.AlignVCenter
-            }
-
-            Text {
-                id: note_text
-                text: qsTr("move and choose point!")//移动选点!
-                width: parent.width * 0.7
-                height: parent.height
-                font.family: "Helvetica"
-                font.pixelSize: height * 0.5
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                color: "red"
-            }
-            Rectangle {
-                id: btn_resure
-                width: parent.width * 0.2
-                height: parent.height
-                anchors.right: parent.right
-                anchors.rightMargin: parent.width * 0.1
-                color: "transparent"
-                Image {
-                    anchors.fill: parent
-                    source: "qrc:/res/pictures/btn_style1.png"
-                    fillMode: Image.PreserveAspectFit
-                    Text {
-                        text: qsTr("SURE")
-                        anchors.fill: parent
-                        color: "blue"
-                        font.pixelSize: height * 0.3
-                        font.family: "Arial"
-                        font.weight: Font.Thin
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                    }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            dialog_resure.open()
-                        }
-                    }
-                }
-            }
-        }
 
         BusyIndicator{
             id:busy
@@ -452,10 +513,17 @@ Rectangle {
 
     Rectangle {
         id: rect_error
-        width: parent.width * 0.9
-        height: parent.height * 0.88
-        anchors.centerIn: parent
+        width: parent.width * 0.83
+        height: parent.height * 0.79
+        anchors {
+            top: parent.top
+            topMargin: parent.height * 0.12
+            left: parent.left
+            leftMargin: parent.width * 0.09
+        }
+
         color: "white"
+
         visible: !rec_task_page.visible
         Text {
             anchors.fill: parent

@@ -3,13 +3,13 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
-Page {
+Rectangle {
     id: root
     visible: true
     width: parent.width
     height: parent.height
     clip: true
-
+    color: "transparent"
     signal sendInitPoint()
     onSendInitPoint: {
         var pos = pixelToGeometry(choosePoint[0],choosePoint[1])
@@ -266,7 +266,7 @@ Page {
         id: map
         width: parent.width * 0.78
         height: parent.height
-
+        color: "transparent"
         Image {
             id: choose_marker
             z: 1
@@ -309,8 +309,8 @@ Page {
 
         Rectangle {
             id: map_background
-            width: parent.width
-            height: parent.height
+            width: canvas_background.width
+            height: canvas_background.height
             color: "transparent"
             Canvas {
                 id: canvas_background

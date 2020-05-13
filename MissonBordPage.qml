@@ -37,9 +37,13 @@ Item {
     Button {
         id: btn_lock
         visible: !is_locked
-        height: parent.height
+        height: parent.height * 0.6
         width: height
-        anchors.right: parent.right
+        anchors{
+            right: parent.right
+            rightMargin: parent.width * 0.05
+            verticalCenter: parent.verticalCenter
+        }
         background: Rectangle {
             height: parent.height * 2.27
             width: height
@@ -50,7 +54,7 @@ Item {
                 height: parent.height * 0.6
                 width: height
                 anchors.centerIn: parent
-                source: "qrc:/res/pictures/BUTTON-LOCK.png"
+                source: "qrc:/res/ui/mission_bord/lock.png"
                 fillMode: Image.PreserveAspectFit
             }
         }
@@ -62,10 +66,10 @@ Item {
     Button {
         id: btn_error
         visible: has_error
-        height: parent.height
+        height: parent.height * 0.7
         width: height
-        anchors.right: btn_lock.left
-        anchors.rightMargin: height * 0.2
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
         background: Rectangle {
             height: parent.height * 1.36
             width: height
@@ -74,7 +78,7 @@ Item {
             radius: width / 2
             Image {
                 anchors.fill: parent
-                source: "qrc:/res/pictures/BUTTON-WARNING1.png"
+                source: "qrc:/res/ui/mission_bord/warn.png"
                 fillMode: Image.PreserveAspectFit
             }
         }

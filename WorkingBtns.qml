@@ -16,7 +16,7 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         Image {
             id: btn_back
-            source: "qrc:/res/pictures/BUTTON-HOME.png"
+            source: "qrc:/res/ui/task/home.png"
             width: (parent.width -  parent.btn_spacing)/ 4
             height: parent.height
             fillMode: Image.PreserveAspectFit
@@ -31,8 +31,8 @@ Rectangle {
             id: btn_stop
             width: (parent.width -  parent.btn_spacing)/ 4
             height: parent.height
-            source: _is_pause ? "qrc:/res/pictures/BUTTON-START.png" :
-                                "qrc:/res/pictures/BUTTON-PAUSE.png"
+            source: _is_pause ? "qrc:/res/ui/task/btn_start.png" :
+                                "qrc:/res/ui/task/btn_pause.png"
             fillMode: Image.PreserveAspectFit
             property bool _is_pause: false
             MouseArea {
@@ -56,7 +56,7 @@ Rectangle {
             id: btn_ending
             width:  (parent.width -  parent.btn_spacing)/ 4
             height: parent.height
-            source: "qrc:/res/pictures/BUTTON-STOP.png"
+            source: "qrc:/res/ui/task/btn_stop_task.png"
             fillMode: Image.PreserveAspectFit
             MouseArea {
                 anchors.fill: parent
@@ -67,12 +67,13 @@ Rectangle {
         }
 
         Rectangle {
-            width: height// (parent.width -  parent.btn_spacing)/ 4
-            height: parent.height
+            width: btn_ending.paintedWidth - 4// (parent.width -  parent.btn_spacing)/ 4
+            height: width
             color: "#4169E1"
             radius: height
             border.color: "#D3D3D3"
             border.width: 2
+            anchors.verticalCenter: parent.verticalCenter
             Image {
                 id: btn_clean_work
                 width: parent.height * 0.8

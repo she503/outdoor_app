@@ -5,7 +5,7 @@ ListView {
     id: root
     signal mainPageChanged(var current_index)
 
-    property int _level: 3//account_manager.getCurrentUserLevel()
+    property int _level: account_manager.getCurrentUserLevel()
     property bool _monitor_error: false
 
     spacing: height / 7 / 7
@@ -47,7 +47,7 @@ ListView {
     model: ListModel {
         id: user_lit_model
         Component.onCompleted: {
-//            root._level = account_manager.getCurrentUserLevel()
+            root._level = account_manager.getCurrentUserLevel()
             if (root._level <= 1) {
                 user_lit_model.append({"id_num": 0, "focus_source": "qrc:/res/ui/menu/home.png"})
                 user_lit_model.append({"id_num": 1, "focus_source": "qrc:/res/ui/menu/clean.png"})

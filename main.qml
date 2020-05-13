@@ -6,8 +6,8 @@ import "homemade_components"
 ApplicationWindow {
     id: root
     visible: true
-    width: 640
-    height: 480
+    width: 1920 / 3
+    height: 1200 / 3
 
     property bool connect_to_server: false
     property Component fail_connect_page: FaildToConnectPage{

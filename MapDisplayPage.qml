@@ -216,8 +216,8 @@ Rectangle {
             vehicle.x = pixel_pos[0] - vehicle.width / 2
             vehicle.y = pixel_pos[1] - vehicle.height / 2
             if (!root.can_drag) {
-                map.x = (map.width / 2 - vehicle.x - vehicle.width / 2) * (map.scale)
-                map.y = (map.height / 2 - vehicle.y - vehicle.height / 2) * (map.scale)
+                map.x = (map.width / 2 - vehicle.x + vehicle.width / 2) * (map.scale)
+                map.y = (map.height / 2 - vehicle.y + vehicle.height / 2) * (map.scale)
             }
             vehicle.rotation = -heading
         }

@@ -109,5 +109,22 @@
         <file>res/ui/task/btn_stop_task.png</file>
         <file>res/ui/task/btn_start.png</file>
         <file>res/ui/task/btn_pause.png</file>
+        <file>res/ui/CenterBigBtn/auto_mode.png</file>
+        <file>res/ui/CenterBigBtn/battery.png</file>
+        <file>res/ui/CenterBigBtn/btn_cleaning.png</file>
+        <file>res/ui/CenterBigBtn/btn_finish.png</file>
+        <file>res/ui/CenterBigBtn/btn_pause.png</file>
+        <file>res/ui/CenterBigBtn/btn_start.png</file>
+        <file>res/ui/CenterBigBtn/gear_D.png</file>
+        <file>res/ui/CenterBigBtn/gear_N.png</file>
+        <file>res/ui/CenterBigBtn/gear_R.png</file>
+        <file>res/ui/CenterBigBtn/lock.png</file>
+        <file>res/ui/CenterBigBtn/manual_mode.png</file>
+        <file>res/ui/CenterBigBtn/pro_is_clearning.png</file>
+        <file>res/ui/CenterBigBtn/water.png</file>
+        <file>res/ui/CleanPageButton/btn_stop_task.png</file>
+        <file>res/ui/CleanPageButton/warn.png</file>
+        <file>res/ui/内页-0510.png</file>
+        <file>res/ui/内页-清扫任务.png</file>
     </qresource>
 </RCC>

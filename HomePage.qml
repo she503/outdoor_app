@@ -23,13 +23,14 @@ Rectangle {
     TLInfoDisplayPage {
         id: rect_info_display
         width: parent.width
-        height: parent.height * 0.65
+        height: parent.height
 
     }
 
 
     Rectangle {
         id: rect_bottom
+        visible: false
         width: parent.width
         height: parent.height * 0.35
         color: "transparent"

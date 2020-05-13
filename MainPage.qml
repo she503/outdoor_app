@@ -93,8 +93,9 @@ Rectangle {
 
     Rectangle {
         id: rect_title
+        z:2
         width: parent.width
-        height: parent.height * 0.082
+        height: 0//parent.height * 0.082
         color: "transparent"
 
         MissonBordPage {
@@ -119,8 +120,13 @@ Rectangle {
             top: rect_title.bottom
         }
         width: height * 0.5
-        height: parent.height - rect_title.height
+        height: parent.height //- rect_title.height
         color: "transparent"
+//        Image {
+//            id: img_menu_background
+//            source: "qrc:/res/ui/background/menu.png"
+//            anchors.fill: parent
+//        }
 
         StackView {
             id: menu_stack
@@ -170,10 +176,10 @@ Rectangle {
     Rectangle {
         id: rect_right
         width: parent.width - rec_left.width
-        height: parent.height - rect_title.height
+        height: parent.height //- rect_title.height
         color:"transparent"
         anchors{
-            top: rect_title.bottom
+            //top: rect_title.bottom
             left: rec_left.right
         }
         StackView {

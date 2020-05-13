@@ -82,5 +82,19 @@
         <file>res/pictures/reset.png</file>
         <file>res/pictures/mapping.png</file>
         <file>res/pictures/key.png</file>
+        <file>res/ui/background/start_task.png</file>
+        <file>res/ui/background/mission_bord.png</file>
+        <file>res/ui/background/menu.png</file>
+        <file>res/ui/background/map_selected.png</file>
+        <file>res/ui/background/map_no_select.png</file>
+        <file>res/ui/background/map.png</file>
+        <file>res/ui/background/main.png</file>
+        <file>res/ui/background/btn.png</file>
+        <file>res/ui/menu/user.png</file>
+        <file>res/ui/menu/task.png</file>
+        <file>res/ui/menu/mapping.png</file>
+        <file>res/ui/menu/home.png</file>
+        <file>res/ui/menu/help.png</file>
+        <file>res/ui/menu/about.png</file>
     </qresource>
 </RCC>

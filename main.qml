@@ -16,13 +16,13 @@ ApplicationWindow {
         }
     }
     property Component welcome_page: WelcomePage {
-        onFinishAnimation: {
-            if (!connect_to_server) {
-                stack_view.replace(fail_connect_page)
-            } else {
-                stack_view.replace(login_page)
-            }
-        }
+//        onFinishAnimation: {
+//            if (!connect_to_server) {
+//                stack_view.replace(fail_connect_page)
+//            } else {
+//                stack_view.replace(login_page)
+//            }
+//        }
     }
     property Component main_page: MainPage {}
 
@@ -54,7 +54,7 @@ ApplicationWindow {
     StackView {
         id: stack_view
         anchors.fill: parent
-        initialItem: welcome_page
+        initialItem: main_page//welcome_page
 
         replaceEnter: Transition {
             ScaleAnimator {

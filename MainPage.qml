@@ -87,7 +87,7 @@ Rectangle {
 
     Image {
         id: img_main_background
-        source: "qrc:/res/pictures/main_background.png"
+        source: "qrc:/res/ui/background/main.png"
         anchors.fill: parent
     }
 

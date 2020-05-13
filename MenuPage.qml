@@ -5,7 +5,7 @@ ListView {
     id: root
     signal mainPageChanged(var current_index)
 
-    property int _level: account_manager.getCurrentUserLevel()
+    property int _level: 3//account_manager.getCurrentUserLevel()
     property bool _monitor_error: false
 
     spacing: height * 0.002
@@ -44,19 +44,19 @@ ListView {
     model: ListModel {
         id: user_lit_model
         Component.onCompleted: {
-            root._level = account_manager.getCurrentUserLevel()
+//            root._level = account_manager.getCurrentUserLevel()
             if (root._level <= 1) {
-                user_lit_model.append({"id_num": 0, "focus_source": "qrc:/res/pictures/home.png"})
-                user_lit_model.append({"id_num": 1, "focus_source": "qrc:/res/pictures/TASKSETTING-button.png"})
-                user_lit_model.append({"id_num": 2, "focus_source": "qrc:/res/pictures/help.png"})
-                user_lit_model.append({"id_num": 3, "focus_source": "qrc:/res/pictures/about.png"})
+                user_lit_model.append({"id_num": 0, "focus_source": "qrc:/res/ui/menu/home.png"})
+                user_lit_model.append({"id_num": 1, "focus_source": "qrc:/res/ui/menu/task.png"})
+                user_lit_model.append({"id_num": 2, "focus_source": "qrc:/res/ui/menu/help.png"})
+                user_lit_model.append({"id_num": 3, "focus_source": "qrc:/res/ui/menu/about.png"})
             } else {
-                user_lit_model.append({"id_num": 0, "focus_source": "qrc:/res/pictures/home.png"})
-                user_lit_model.append({"id_num": 4, "focus_source": "qrc:/res/pictures/user.png"})
-                user_lit_model.append({"id_num": 1, "focus_source": "qrc:/res/pictures/TASKSETTING-button.png"})
-                user_lit_model.append({"id_num": 2, "focus_source": "qrc:/res/pictures/help.png"})
-                user_lit_model.append({"id_num": 3, "focus_source": "qrc:/res/pictures/about.png"})
-                user_lit_model.append({"id_num": 5, "focus_source": "qrc:/res/pictures/setting.png"})
+                user_lit_model.append({"id_num": 0, "focus_source": "qrc:/res/ui/menu/home.png"})
+                user_lit_model.append({"id_num": 4, "focus_source": "qrc:/res/ui/menu/user.png"})
+                user_lit_model.append({"id_num": 1, "focus_source": "qrc:/res/ui/menu/task.png"})
+                user_lit_model.append({"id_num": 5, "focus_source": "qrc:/res/ui/menu/mapping.png"})
+                user_lit_model.append({"id_num": 2, "focus_source": "qrc:/res/ui/menu/help.png"})
+                user_lit_model.append({"id_num": 3, "focus_source": "qrc:/res/ui/menu/about.png"})
             }
         }
     }

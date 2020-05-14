@@ -6,8 +6,12 @@ Rectangle {
     width: parent.width
     height: parent.height
 
-    property real cellWidth: width / 3
-    property real cellHeight: height / 2
+//    property real cellWidth: width / 3
+//    property real cellHeight: height / 2
+//    property real min_length: Math.min(cellHeight, cellWidth)
+//    property real btn_size: min_length * 0.8
+    property real cellWidth: width / 2
+    property real cellHeight: height / 3
     property real min_length: Math.min(cellHeight, cellWidth)
     property real btn_size: min_length * 0.8
 
@@ -112,14 +116,14 @@ Rectangle {
             Rectangle {
                 anchors.centerIn: parent
                 width: left_length
-                height: left_length * 0.6
+                height: left_length * 0.15
                 color: "transparent"
                 Image {
                     source: "qrc:/res/ui/CenterBigBtn/battery.png"
                     anchors.bottom: parent.bottom
                     anchors.left: parent.left
-                    anchors.leftMargin: - left_length * 0.16
-                    width: left_length * 0.85
+                    anchors.leftMargin: - left_length * 0.075
+                    width: left_length * 1.1
                     fillMode: Image.PreserveAspectFit
                 }
             }
@@ -138,11 +142,11 @@ Rectangle {
                 color: "transparent"
                 Image {
                     source: "qrc:/res/ui/CenterBigBtn/water.png"
-                    width: left_length * 0.85
+                    width: left_length * 1.1
                     anchors.left: parent.left
+                    anchors.leftMargin: - left_length * 0.25
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.verticalCenterOffset: - left_length * 0.02
-                    anchors.leftMargin: - left_length * 0.3
+                    anchors.verticalCenterOffset: - left_length * 0.05
                     fillMode: Image.PreserveAspectFit
                 }
             }
@@ -158,15 +162,17 @@ Rectangle {
             Rectangle {
                 anchors.centerIn: parent
                 width: left_length
-                height: left_length * 0.65
+                height: left_length * 0.6
 //                color: Qt.rgba(255,0,0,0.3)
                 color: "transparent"
                 Image {
                     source: "qrc:/res/ui/CenterBigBtn/pro_is_clearning.png"
-                    width: left_length * 0.95
-                    fillMode: Image.PreserveAspectFit
+                    width: left_length * 1.2
                     anchors.left: parent.left
-                    anchors.leftMargin: left_length * 0.02
+                    anchors.leftMargin: left_length * 0.165
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.verticalCenterOffset: - left_length * 0.075
+                    fillMode: Image.PreserveAspectFit
                 }
             }
         }
@@ -187,16 +193,16 @@ Rectangle {
             color: "transparent"
             Rectangle {
                 anchors.centerIn: parent
-                width: right_length / 2
-                height: right_length / 2
+                width: right_length * 0.7
+                height: right_length * 0.2
 //                color: "transparent"//Qt.rgba(0,255,0,0.3)
                 color: "transparent"
                 Row {
                     width: parent.width
-                    height: parent.height * 0.55
+                    height: parent.height * 0.9
                     anchors.left: parent.left
-                    anchors.leftMargin: right_length * 0.14
-                    anchors.bottom: parent.bottom
+                    anchors.leftMargin: right_length * 0.23
+                    anchors.verticalCenter: parent.verticalCenter
                     Rectangle {
                         width: parent.width / 3
                         height: parent.height
@@ -247,11 +253,11 @@ Rectangle {
                 color: "transparent"
                 Image {
                     source: "qrc:/res/ui/CenterBigBtn/manual_mode.png" //"qrc:/res/ui/CenterBigBtn/auto_mode.png"
+                    width: left_length * 0.68
                     anchors.top: parent.top
-                    anchors.topMargin: - right_length * 0.05
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.horizontalCenterOffset: right_length * 0.1
-                    width: left_length / 2
+                    anchors.topMargin: - right_length * 0.02
+                    anchors.left: parent.left
+                    anchors.leftMargin: right_length * 0.2
                     fillMode: Image.PreserveAspectFit
                 }
             }
@@ -261,11 +267,12 @@ Rectangle {
     Rectangle {
         id: bac_start_task
         z: 1
-        width: parent.width * 0.39
+        width: parent.width * 0.35
         height: width
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenterOffset: - right_length * 0.02
+        anchors.horizontalCenterOffset: right_length * 0.11
+        anchors.verticalCenterOffset: - right_length * 0.06
         color: "transparent"
         radius: width / 2
         Image {
@@ -280,7 +287,9 @@ Rectangle {
             color: "transparent"
             Image {
                 anchors.fill: parent
-                anchors.centerIn: parent
+                anchors.topMargin: right_length * 0.017
+                anchors.leftMargin: right_length * 0.005
+//                anchors.centerIn: parent
                 source: "qrc:/res/ui/CenterBigBtn/btn_start.png"
                 fillMode: Image.PreserveAspectFit
             }

@@ -126,5 +126,6 @@
         <file>res/ui/CleanPageButton/warn.png</file>
         <file>res/ui/内页-0510.png</file>
         <file>res/ui/内页-清扫任务.png</file>
+        <file>res/ui/background/login.png</file>
     </qresource>
 </RCC>

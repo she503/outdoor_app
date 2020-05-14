@@ -21,6 +21,9 @@ Rectangle {
     property string work_time: ""
     property var tasks_list: []
     property var checked_tasks_name: []
+    property var _work_second: 0
+    property var _work_time: []
+
 
     property Dialog work_done_widget: WorkDone {
         x: (parent.parent.width - width ) /2
@@ -416,6 +419,100 @@ Rectangle {
                 }
 
             }
+            Rectangle{
+                id: task_progress
+                anchors.bottom: working_btns.top
+                anchors.left: parent.left
+                width: parent.width * 0.4
+                height: parent.height * 0.2
+                color: "transparent"
+                function toTime(s){
+                    var working_time = []
+                    if(s > -1){
+                        var hour = Math.floor(s / 3600)
+                        var min = Math.floor((s / 60) % 60)
+                        var sec = root._work_second % 60
+                        if(hour < 10){
+                            working_time = hour + " 时 "
+                        }
+                        if(min < 10){
+                            working_time += "0"
+                        }
+                        working_time += min + " 分 "
+                        if(sec < 10){
+                            working_time += "0"
+                        }
+                        working_time += sec.toFixed(0) + " 秒"
+                    }
+                    return working_time
+                }
+                Timer{
+                    id: timer_task_timing
+                    interval: 1000
+                    repeat: true
+                    running: status_manager.getWorkStatus() === 5
+                    triggeredOnStart: true
+                    onTriggered: {
+                        root._work_second++
+                        root._work_time = task_progress.toTime(_work_second)
+                        txt_tim.text = root._work_time.toString()
+                    }
+                }
+                Image {
+                    id: img_time
+                    width: parent.width * 0.8
+                    height: parent.height * 0.4
+                    source: "qrc:/res/ui/task/time.png"
+                    fillMode: Image.PreserveAspectFit
+                    Text {
+                        id: txt_tim
+                        width: parent.width * 0.5
+                        height: parent.height
+                        anchors.left: parent.left
+                        anchors.leftMargin: parent.width * 0.3
+                        text: qsTr("")
+                        color: "black"
+                        font.pixelSize: height * 0.3
+                        font.family: "Arial"
+                        font.weight: Font.Thin
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                    Component.onCompleted: {
+                    }
+                }
+                Image {
+                    id: img_progress
+                    source: "qrc:/res/ui/task/progress.png"
+                    width: parent.width * 0.8
+                    height: parent.height * 0.4
+                    fillMode: Image.PreserveAspectFit
+                    anchors.top: img_time.bottom
+                    anchors.topMargin: parent.height * 0.1
+                    Text {
+                        id: txt_progress
+                        width: parent.width * 0.5
+                        height: parent.height
+                        anchors.left: parent.left
+                        anchors.leftMargin: parent.width * 0.3
+                        text: qsTr("0 %")
+                        color: "black"
+                        font.pixelSize: height * 0.3
+                        font.family: "Arial"
+                        font.weight: Font.Thin
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    Connections {
+                        target: ros_message_manager
+                        onUpdateTaskProcessInfo: {
+                            txt_progress.text = "" + progress + " %";
+                        }
+                    }
+
+                }
+            }
 
             WorkingBtns {
                 id: working_btns
@@ -423,7 +520,7 @@ Rectangle {
                 height: parent.height * 0.2
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
-                anchors.leftMargin: parent.width * 0.05
+//                anchors.leftMargin: parent.width * 0.05
                 onSigWorkDown: {
                     root.work_done_widget.open()
                 }
@@ -431,8 +528,15 @@ Rectangle {
                     var status = status_manager.getWorkStatus()
                     if (status === 5) {
                         working_btns.visible = true
+                        task_progress.visible = true
+                        timer_task_timing.start()
+
                     } else {
                         working_btns.visible = false
+                        task_progress.visible = false
+                        timer_task_timing.stop()
+                        root._work_second = 0
+                        root._work_time = []
                     }
                 }
 
@@ -441,8 +545,14 @@ Rectangle {
                     onWorkStatusUpdate: {
                         if (status === 5) {
                             working_btns.visible = true
+                            task_progress.visible = true
+                            timer_task_timing.start()
                         } else {
                             working_btns.visible = false
+                            task_progress.visible = false
+                            timer_task_timing.stop()
+                            root._work_second = 0
+                            root._work_time = []
                         }
                     }
                 }

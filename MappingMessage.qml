@@ -31,7 +31,7 @@ Rectangle {
     Rectangle {
         id: rect_temp
         width: parent.width
-        height: parent.height * 0.05
+        height: parent.height * 0.07
         color: rect_attr.color
 //        border.color: "green"
         anchors.top: parent.top
@@ -44,11 +44,11 @@ Rectangle {
         Rectangle {
             id: rect_attr
             width: parent.width
-            height: parent.height * 0.1
+            height: parent.height * 0.125
             color: "lightblue"
 //            border.color: "green"
             clip: true
-            radius: 9
+            radius: height * 0.3
             Row {
                 anchors.fill: parent
                 clip: true

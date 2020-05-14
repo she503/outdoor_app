@@ -18,8 +18,12 @@ Rectangle {
 
     Image {
         anchors.fill: parent
-        source: "qrc:/res/pictures/background_glow1.png"
+        source: "qrc:/res/ui/background/map.png"
     }
+//    Image {
+//        anchors.fill: parent
+//        source: "qrc:/res/pictures/background_glow1.png"
+//    }
     StackView {
         id: stack
         anchors.fill: parent

@@ -26,7 +26,7 @@ ListView {
             Image {
                 id: img_background
                 z:1
-                source: model.focus_source
+                source:item.focus ? model.focus_source: model.no_focus_source
                 anchors.fill: parent
                 opacity: item.focus ? 1: 0.3
                 fillMode: Image.PreserveAspectFit
@@ -49,17 +49,17 @@ ListView {
         Component.onCompleted: {
             root._level = account_manager.getCurrentUserLevel()
             if (root._level <= 1) {
-                user_lit_model.append({"id_num": 0, "focus_source": "qrc:/res/ui/menu/home.png"})
-                user_lit_model.append({"id_num": 1, "focus_source": "qrc:/res/ui/menu/clean.png"})
-                user_lit_model.append({"id_num": 2, "focus_source": "qrc:/res/ui/menu/help.png"})
-                user_lit_model.append({"id_num": 3, "focus_source": "qrc:/res/ui/menu/about.png"})
+                user_lit_model.append({"id_num": 0, "no_focus_source": "qrc:/res/ui/menu/home_off.png", "focus_source": ""})
+                user_lit_model.append({"id_num": 1, "no_focus_source": "qrc:/res/ui/menu/clean_off.png", "focus_source": "qrc:/res/ui/menu/clean_on.png"})
+                user_lit_model.append({"id_num": 2, "no_focus_source": "qrc:/res/ui/menu/help_off.png", "focus_source": "qrc:/res/ui/menu/help_on.png"})
+                user_lit_model.append({"id_num": 3, "no_focus_source": "qrc:/res/ui/menu/about_off.png", "focus_source": "qrc:/res/ui/menu/about_on.png"})
             } else {
-                user_lit_model.append({"id_num": 0, "focus_source": "qrc:/res/ui/menu/home.png"})
-                user_lit_model.append({"id_num": 4, "focus_source": "qrc:/res/ui/menu/user.png"})
-                user_lit_model.append({"id_num": 1, "focus_source": "qrc:/res/ui/menu/clean.png"})
-                user_lit_model.append({"id_num": 5, "focus_source": "qrc:/res/ui/menu/mapping.png"})
-                user_lit_model.append({"id_num": 2, "focus_source": "qrc:/res/ui/menu/help.png"})
-                user_lit_model.append({"id_num": 3, "focus_source": "qrc:/res/ui/menu/about.png"})
+                user_lit_model.append({"id_num": 0, "no_focus_source": "qrc:/res/ui/menu/home_off.png", "focus_source": "qrc:/res/ui/menu/home_on.png"})
+                user_lit_model.append({"id_num": 4, "no_focus_source": "qrc:/res/ui/menu/user_off.png", "focus_source": "qrc:/res/ui/menu/user_on.png"})
+                user_lit_model.append({"id_num": 1, "no_focus_source": "qrc:/res/ui/menu/clean_off.png", "focus_source": "qrc:/res/ui/menu/clean_on.png"})
+                user_lit_model.append({"id_num": 5, "no_focus_source": "qrc:/res/ui/menu/mapping_off.png", "focus_source": "qrc:/res/ui/menu/mapping_on.png"})
+                user_lit_model.append({"id_num": 2, "no_focus_source": "qrc:/res/ui/menu/help_off.png", "focus_source": "qrc:/res/ui/menu/help_on.png"})
+                user_lit_model.append({"id_num": 3, "no_focus_source": "qrc:/res/ui/menu/about_off.png", "focus_source": "qrc:/res/ui/menu/about_on.png"})
             }
         }
     }

@@ -40,11 +40,6 @@ Rectangle {
         anchors.fill: parent
         color: "transparent"
         visible: true
-//        Image {
-//            id: im
-//            anchors.fill: parent
-//            source: "qrc:/res/pictures/background_glow1.png"
-//        }
         Image {
             id: im
             anchors.fill: parent
@@ -64,7 +59,7 @@ Rectangle {
             }
             Rectangle {
                 anchors.fill: parent
-                color: Qt.rgba(255, 255, 255, 0.6)
+                color: "transparent"
                 radius:  height * 0.02
                 Rectangle {
                     id: rect_top
@@ -163,7 +158,7 @@ Rectangle {
                                 font.pixelSize: item_de.height * 0.8
                                 horizontalAlignment: Text.AlignLeft
                                 verticalAlignment: Text.AlignVCenter
-                                color: "black"
+                                color: "white"
                             }
                             Text {
                                 id: text_level
@@ -175,7 +170,7 @@ Rectangle {
                                 font.pixelSize: item_de.height * 0.8
                                 horizontalAlignment: Text.AlignLeft
                                 verticalAlignment: Text.AlignVCenter
-                                color: "black" //: "white"
+                                color: "white" //: "white"
                                 property int user_level: model.user_level
                             }
                             Rectangle {

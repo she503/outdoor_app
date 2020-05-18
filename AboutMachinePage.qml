@@ -9,9 +9,9 @@ Rectangle {
     signal attrChanged(var current_index)
     onAttrChanged: {
         if (current_index === 0) {
-            stack_attr.replace(col_car_info)
+            stack_attr.tlReplace(col_car_info)
         } else if (current_index === 1) {
-            stack_attr.replace(col_device_info)
+            stack_attr.tlReplace(col_device_info)
         }
     }
 
@@ -150,6 +150,14 @@ Rectangle {
                         id: stack_attr
                         anchors.fill: parent
                         initialItem: col_car_info
+
+                        function tlReplace(item) {
+                            if (stack_attr.currentItem === item) {
+                                return
+                            } else {
+                                 stack_attr.replace(item)
+                            }
+                        }
 
                         replaceEnter: Transition {
 

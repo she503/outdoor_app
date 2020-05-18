@@ -25,12 +25,15 @@ Rectangle {
     property var _work_time: []
 
 
-    property Dialog work_done_widget: WorkDone {
-        x: (parent.parent.width - width ) /2
-        y: (parent.parent.height - height) / 2
+   WorkDone {
+       id: work_done_widget
+        x:0
+        y:100
     }
 
     signal startTaskLock()
+
+    signal sigBackBtnPress()
 
     function updateMapSettingPage(status) {
         if (status <= 2) {//selecting map
@@ -522,8 +525,12 @@ Rectangle {
                 anchors.left: parent.left
 //                anchors.leftMargin: parent.width * 0.05
                 onSigWorkDown: {
-                    root.work_done_widget.open()
+                    work_done_widget.open()
                 }
+                onSigBackBtnPress:{
+                    root.sigBackBtnPress()
+                }
+
                 Component.onCompleted: {
                     var status = status_manager.getWorkStatus()
                     if (status === 5) {

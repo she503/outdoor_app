@@ -19,6 +19,11 @@ Rectangle {
         onStartTaskLock: {
             lock_screen_page.pop_lock.open()
         }
+        onSigBackBtnPress: {
+            list_view.currentIndex = 0
+            list_view.mainPageChanged(0)
+
+        }
     }
 
 
@@ -56,8 +61,6 @@ Rectangle {
         anchors.fill: parent
     }
 
-
-
     Rectangle {
         id: home_page
         color: "transparent"
@@ -72,6 +75,12 @@ Rectangle {
             onLockScreen: {
                 lock_screen_page.pop_lock.open()
             }
+            Image {
+                id: img_mission
+                anchors.fill: parent
+                source: "qrc:/res/ui/background/mission_bar.png"
+                fillMode: Image.PreserveAspectCrop
+            }
         }
         HomePage{
             id: home_page_1
@@ -80,23 +89,19 @@ Rectangle {
             anchors.top: misson_bord.bottom
             anchors.topMargin: parent.height * 0.01
             onCenterBtnPress: {
-                var status = status_manager.getWorkStatus()
-                if (status < 5) {
-                    menu_stack.tlReplace(list_view)
-                    list_view.currentIndex = 2
-                } else if (status === 5) {
-//                    menu_stack.tlReplace(task_process_page)
-                }
+                list_view.currentIndex = 2
                 list_view.mainPageChanged(1)
             }
         }
     }
 
-
+    Row {
+        anchors.fill: parent
     Rectangle {
         id: rec_left
         width: height * 0.4
         height: parent.height
+
         color: "transparent"
         Image {
             id: menu_background
@@ -126,6 +131,7 @@ Rectangle {
         MenuPage {
             id: list_view
             z: 1
+            visible: false
             onMainPageChanged: {
                 if (current_index === 0) {
                     stack_view.tlReplace(home_page)
@@ -155,10 +161,10 @@ Rectangle {
         width: parent.width - rec_left.width
         height: parent.height
         color:"transparent"
-        anchors{
-            top: parent.top
-            left: rec_left.right
-        }
+//        anchors{
+//            top: parent.top
+//            left: rec_left.right
+//        }
         StackView {
             id: stack_view
             anchors.fill: parent
@@ -179,5 +185,7 @@ Rectangle {
 
             }
         }
+    }
+
     }
 }

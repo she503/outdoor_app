@@ -19,10 +19,12 @@ Item {
             message_list_model.clear()
             root.has_error = true
             if (!is_first_get_error) {
-                is_first_get_error = true
                 timer_btn_errror_flashes.start()
-                //                timer_btn_errror_open.start()   debug
+                root.is_first_get_error = true
                 draw_error.open()
+                timer_no_error_close.running = true
+
+                //                timer_btn_errror_open.start()   debug
                 //                root.cannotOperatorTask()      debug
             }
             for(var i = 0; i < monitor_message.length; ++i) {
@@ -344,6 +346,7 @@ Item {
         onTriggered: {
             if (has_error) {
                 btn_error.opacity = btn_error.opacity === 0 ? 1 : 0
+                timer_no_error_close.times = 0
             } else {
                 timer_btn_errror_flashes.stop()
                 btn_error.visible = false
@@ -361,6 +364,23 @@ Item {
             } else {
                 timer_btn_errror_open.stop()
                 btn_error.visible = false
+            }
+        }
+    }
+    Timer {
+        id: timer_no_error_close
+        running: false
+        repeat: true
+        interval: 1000
+        property int times: 0
+        onTriggered: {
+            ++times
+            if (times === 2) {
+                timer_btn_errror_open.stop()
+                timer_btn_errror_flashes.stop()
+                btn_error.visible = false
+                root.has_error = false
+                root.is_first_get_error = false
             }
         }
     }

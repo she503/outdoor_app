@@ -90,13 +90,6 @@
         <file>res/ui/background/map.png</file>
         <file>res/ui/background/main.png</file>
         <file>res/ui/background/btn.png</file>
-        <file>res/ui/menu/user.png</file>
-        <file>res/ui/menu/task.png</file>
-        <file>res/ui/menu/mapping.png</file>
-        <file>res/ui/menu/home.png</file>
-        <file>res/ui/menu/help.png</file>
-        <file>res/ui/menu/about.png</file>
-        <file>res/ui/menu/clean.png</file>
         <file>res/ui/mission_bord/warn.png</file>
         <file>res/ui/mission_bord/lock.png</file>
         <file>res/ui/task/time.png</file>
@@ -127,5 +120,32 @@
         <file>res/ui/内页-0510.png</file>
         <file>res/ui/内页-清扫任务.png</file>
         <file>res/ui/background/login.png</file>
+        <file>res/ui/background/tiao_5.png</file>
+        <file>res/ui/background/tiao_4.png</file>
+        <file>res/ui/background/tiao_3.png</file>
+        <file>res/ui/background/tiao_2.png</file>
+        <file>res/ui/background/tiao_1.png</file>
+        <file>res/ui/background/mission_bar.png</file>
+        <file>res/ui/CenterBigBtn/operate_hand.png</file>
+        <file>res/ui/CenterBigBtn/operate_auto.png</file>
+        <file>res/ui/CenterBigBtn/gear_r.png</file>
+        <file>res/ui/CenterBigBtn/gear_n.png</file>
+        <file>res/ui/CenterBigBtn/gear_d.png</file>
+        <file>res/ui/CenterBigBtn/clean.png</file>
+        <file>res/ui/background/progress_more.png</file>
+        <file>res/ui/background/progress_little.png</file>
+        <file>res/ui/background/progress_full.png</file>
+        <file>res/ui/menu/user_on.png</file>
+        <file>res/ui/menu/user_off.png</file>
+        <file>res/ui/menu/mapping_on.png</file>
+        <file>res/ui/menu/mapping_off.png</file>
+        <file>res/ui/menu/help_on.png</file>
+        <file>res/ui/menu/help_off.png</file>
+        <file>res/ui/menu/clean_on.png</file>
+        <file>res/ui/menu/clean_off.png</file>
+        <file>res/ui/menu/about_on.png</file>
+        <file>res/ui/menu/about_off.png</file>
+        <file>res/ui/menu/home_on.png</file>
+        <file>res/ui/menu/home_off.png</file>
     </qresource>
 </RCC>

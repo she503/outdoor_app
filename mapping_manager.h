@@ -33,7 +33,8 @@ public:
     Q_INVOKABLE void setMappingCommand(const int mapping_command);
 signals:
      void emitMappingCommandInfo(const bool success, const QString& message);
-     void emitmappingProgressInfo(const int progress);
+     void emitmappingProgressInfo(const int status, const QString& message,const int progress);
+     void emitMappingFinish();
 private slots:
      void parseMappingCommandRst(const QJsonObject& obj);
      void parseMappingProgress(const QJsonObject& obj);

@@ -5,6 +5,8 @@ Rectangle {
     id: root
     color: "transparent"
 
+    property string pro_message: ""
+
     function getCommandString(command) {
         var str = ""
         if (command === 1) {
@@ -19,9 +21,9 @@ Rectangle {
         return str;
     }
 
-    function setPercent(percent) {
+    function setOneTaskPercent(message,percent) {
         message_list_model.get(0).mapping_time = Qt.formatDateTime(new Date(), "hh:mm:ss")
-        message_list_model.get(0).mapping_message = "Current Mapping Percent: " + percent
+        message_list_model.get(0).mapping_message = message + ": " + percent + "%"
     }
 
     function setMessage(flag, command,message) {
@@ -31,10 +33,16 @@ Rectangle {
                                        "mapping_message": message})
     }
 
+
     Connections {
         target: mapping_manager
         onEmitmappingProgressInfo: {
-            root.setPercent(progress)
+            if (root.pro_message != message) {
+                root.setMessage(true, 4, message)
+                root.pro_message = message
+            } else {
+                root.setOneTaskPercent(message, progress)
+            }
         }
     }
 

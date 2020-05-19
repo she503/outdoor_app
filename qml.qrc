@@ -43,5 +43,6 @@
         <file>ChooseIndoorOutdoor.qml</file>
         <file>MappingStartPage.qml</file>
         <file>MappingMessage.qml</file>
+        <file>MappingTrajectory.qml</file>
     </qresource>
 </RCC>

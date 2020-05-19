@@ -63,6 +63,7 @@ signals:
 
     void emitMappingCommandRst(const QJsonObject& obj);
     void emitMappingProgress(const QJsonObject& obj);
+    void emitMappingFinish();
 
     // app断开连接发出信号
     void appDisconnected(const QString& message);

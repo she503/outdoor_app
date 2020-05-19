@@ -92,6 +92,35 @@ Rectangle {
                 anchors.centerIn: parent
                 color: "transparent"
 
+                Connections {
+                    target: mapping_manager
+                    onEmitmappingProgressInfo: {
+                        if(status === 4) {
+                            txt_mapping.visible = true
+                            btns.visible = false
+                        }
+                    }
+                }
+
+                Text {
+                    id: txt_mapping
+                    visible: false
+                    width: parent.width
+                    height: parent.height
+                    font.pixelSize: height * 0.2
+                    color: "green"
+                    font.bold: true
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    text: qsTr("Please waite for a minute...")
+                    Connections {
+                        target: mapping_manager
+                        onEmitMappingFinish: {
+                            txt_mapping.text = qsTr("Mapping Finised!!!")
+                        }
+                    }
+                }
+
 
                 property int command_id: 1
                 function setVisible(flag) {
@@ -116,6 +145,7 @@ Rectangle {
 
 
                 Row {
+                    id: btns
                     spacing: parent.width * 0.1 / 4
                     anchors.centerIn: parent
                     TLBtnWithPic {
@@ -176,6 +206,7 @@ Rectangle {
                         }
                     }
                 }
+
             }
         }
     }

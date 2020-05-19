@@ -9,11 +9,10 @@
 #include "socket_manager.h"
 enum MappingCommand {
     MAPPING_COMMAND_NULL = 0,
-    MAPPING_COMMAND_RESET = 1,
-    MAPPING_COMMAND_START = 2,
+    MAPPING_COMMAND_START = 1,
+    MAPPING_COMMAND_RESET = 2,
     MAPPING_COMMAND_STOP = 3,
-    MAPPING_COMMAND_SAVE_KEY = 4,
-    MAPPING_COMMAND_PAINTING = 5
+    MAPPING_COMMAND_MAPPING = 4
 };
 
 enum MappingPlace {
@@ -34,8 +33,10 @@ public:
     Q_INVOKABLE void setMappingCommand(const int mapping_command);
 signals:
      void emitMappingCommandInfo(const bool success, const QString& message);
+     void emitmappingProgressInfo(const int progress);
 private slots:
      void parseMappingCommandRst(const QJsonObject& obj);
+     void parseMappingProgress(const QJsonObject& obj);
 private:
     SocketManager* _socket_manager;
     MappingCommand _mapping_command;

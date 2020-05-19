@@ -2,7 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
-
+import "./homemade_components"
 Item {
     id: root
 
@@ -12,6 +12,102 @@ Item {
     property bool has_error: false
     property var error_text_color: "red"//: ["yellow", "orange", "red"]
     property bool is_first_get_error: false
+
+    function showMessagePics(flag) {
+        if (flag) {
+            btn_error.anchors.right = btn_lock.left
+            btn_error.anchors.rightMargin = root.width * 0.05
+            btn_error.anchors.verticalCenter = root.verticalCenter
+            message_pic.visible = true
+        } else {
+            btn_error.anchors.horizontalCenter = root.horizontalCenter
+            btn_error.anchors.verticalCenter = root.verticalCenter
+            message_pic.visible = false
+        }
+    }
+
+    Row {
+        id: message_pic
+        visible: true
+        anchors.fill: parent
+
+        TLBtnWithPic {
+            id: lab_battery
+            width: parent.width * 0.15
+            height: parent.height
+            backgroundDefaultColor: "transparent"
+            img_source: "qrc:/res/ui/mission_bord/battery_pic.png"
+            btn_text: "100 %"
+            font_size: height * 0.3
+        }
+
+        TLBtnWithPic {
+            id: lab_speed
+            width: parent.width * 0.15
+            height: parent.height
+            backgroundDefaultColor: "transparent"
+            img_source: "qrc:/res/ui/mission_bord/speed_pic.png"
+            btn_text: "1 m/s"
+            font_size: height * 0.3
+        }
+
+        TLBtnWithPic {
+            id: lab_progress
+            width: parent.width * 0.15
+            height: parent.height
+            backgroundDefaultColor: "transparent"
+            img_source: "qrc:/res/ui/mission_bord/task_progress.png"
+            font_size: height * 0.4
+            btn_text: "99 %"
+            Connections {
+                target: ros_message_manager
+                onUpdateTaskProcessInfo: {
+                    lab_progress.btn_text = "" + progress + " %";
+                }
+            }
+        }
+
+
+        Image {
+            id: lab_gear
+            width: parent.width * 0.1
+            height: parent.height * 0.8
+            fillMode: Image.PreserveAspectFit
+            anchors.verticalCenter: parent.verticalCenter
+            source: "qrc:/res/ui/mission_bord/gear_N_pic.png"
+            Connections {
+                target: ros_message_manager
+                onUpdateChassisInfo: {
+                    var v_speed = speed
+                    var n_speed = Number(v_speed)
+
+                    if (drive_mode === 0) {
+                        lab_operate.source = "qrc:/res/ui/mission_bord/operate_auto_pic.png"
+                    } else if (drive_mode === 1) {
+                        lab_operate.source = "qrc:/res/ui/mission_bord/operate_hand_pic.png"
+                    }
+
+                    if(Math.abs(n_speed) <= 0.05) {
+                        lab_gear.source = "qrc:/res/ui/mission_bord/gear_N_pic.png"
+                    } else if(n_speed > 0.05) {
+                        lab_gear.source = "qrc:/res/ui/mission_bord/gear_D_pic.png"
+                    } else if (n_speed < -0.05) {
+                        lab_gear.source = "qrc:/res/ui/mission_bord/gear_R_pic.png"
+                    }
+                    lab_speed.btn_text = v_speed + " m/s"
+                }
+            }
+        }
+
+        Image {
+            id: lab_operate
+            width: parent.width * 0.15
+            height: parent.height
+            fillMode: Image.PreserveAspectFit
+            anchors.verticalCenter: parent.verticalCenter
+            source: "qrc:/res/ui/mission_bord/operate_auto_pic.png"
+        }
+    }
 
     Connections {
         target: ros_message_manager
@@ -25,7 +121,7 @@ Item {
                 timer_no_error_close.running = true
 
                 //                timer_btn_errror_open.start()   debug
-                //                root.cannotOperatorTask()      debug
+                //                root.cannotOperatorTask ()      debug
             }
             for(var i = 0; i < monitor_message.length; ++i) {
                 message_list_model.append({"error_time" : monitor_message[i][0],
@@ -70,8 +166,8 @@ Item {
         visible: has_error
         height: parent.height * 0.7
         width: height
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
+//        anchors.horizontalCenter: parent.horizontalCenter
+//        anchors.verticalCenter: parent.verticalCenter
         background: Rectangle {
             height: parent.height * 1.36
             width: height

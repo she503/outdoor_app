@@ -147,5 +147,19 @@
         <file>res/ui/menu/about_off.png</file>
         <file>res/ui/menu/home_on.png</file>
         <file>res/ui/menu/home_off.png</file>
+        <file>res/ui/mission_bord/water_pic.png</file>
+        <file>res/ui/mission_bord/speed_pic.png</file>
+        <file>res/ui/mission_bord/operate_hand_pic.png</file>
+        <file>res/ui/mission_bord/operate_auto_pic.png</file>
+        <file>res/ui/mission_bord/clean_on.png</file>
+        <file>res/ui/mission_bord/clean_off.png</file>
+        <file>res/ui/mission_bord/clean_not_start.png</file>
+        <file>res/ui/mission_bord/battery_pic.png</file>
+        <file>res/ui/CenterBigBtn/state_line.png</file>
+        <file>res/ui/CenterBigBtn/speed.png</file>
+        <file>res/ui/mission_bord/gear_D_pic.png</file>
+        <file>res/ui/mission_bord/gear_N_pic.png</file>
+        <file>res/ui/mission_bord/gear_R_pic.png</file>
+        <file>res/ui/mission_bord/task_progress.png</file>
     </qresource>
 </RCC>

@@ -11,6 +11,8 @@ bool MappingManager::setSocketManager(SocketManager* socket_manager)
     _socket_manager = socket_manager;
     connect(_socket_manager, SIGNAL(emitMappingCommandRst(QJsonObject)),
             this, SLOT(parseMappingCommandRst(QJsonObject)));
+    connect(_socket_manager, SIGNAL(emitMappingProgress(QJsonObject)),
+            this, SLOT(parseMappingProgress(QJsonObject)));
 }
 
 void MappingManager::setIndoorOutdoor(const int indoor_outdoor)
@@ -42,4 +44,10 @@ void MappingManager::parseMappingCommandRst(const QJsonObject &obj)
     bool success = obj.value("success").toBool();
     QString message = obj.value("message").toString();
     emit emitMappingCommandInfo(success, message);
+}
+
+void MappingManager::parseMappingProgress(const QJsonObject &obj)
+{
+    int progress = obj.value("progress").toInt();
+    emit emitmappingProgressInfo(progress);
 }

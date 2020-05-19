@@ -81,7 +81,7 @@ Rectangle {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
                 onClicked: {
-                    mapping_manager.setMappingCommand(2)
+                    mapping_manager.setMappingCommand(1)
                 }
             }
             Rectangle {
@@ -93,7 +93,7 @@ Rectangle {
                 color: "transparent"
 
 
-                property int command_id: 2
+                property int command_id: 1
                 function setVisible(flag) {
                     btn_save_key.visible = flag
                     btn_reset.visible = flag
@@ -155,24 +155,11 @@ Rectangle {
                         font_size: width * 0.1
                         img_source: "qrc:/res/pictures/reset.png"
                         onClicked: {
-                            mapping_manager.setMappingCommand(1)
-                            rect_btns_2.command_id = 1
+                            mapping_manager.setMappingCommand(2)
+                            rect_btns_2.command_id = 2
                         }
                     }
-                    TLBtnWithPic {
-                        id: btn_save_key
-                        enabled: true
-                        width: rect_btns_2.width * 0.2
-                        height: rect_btns_2.height * 0.5
-                        visible: true
-                        btn_text: qsTr("KEY")
-                        font_size: width * 0.1
-                        img_source: "qrc:/res/pictures/key.png"
-                        onClicked: {
-                            mapping_manager.setMappingCommand(4)
-                            rect_btns_2.command_id = 4
-                        }
-                    }
+
                     TLBtnWithPic {
                         id: btn_mapping
                         enabled: true
@@ -183,8 +170,8 @@ Rectangle {
                         font_size: width * 0.1
                         img_source: "qrc:/res/pictures/mapping.png"
                         onClicked: {
-                            mapping_manager.setMappingCommand(5)
-                            rect_btns_2.command_id = 5
+                            mapping_manager.setMappingCommand(4)
+                            rect_btns_2.command_id = 4
     //                        rect_btns_2.setBtnDisableStyle()
                         }
                     }

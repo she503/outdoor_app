@@ -8,17 +8,20 @@ Rectangle {
     function getCommandString(command) {
         var str = ""
         if (command === 1) {
-            str = qsTr("reset")
-        } else if(command === 2) {
             str = qsTr("start")
+        } else if(command === 2) {
+            str = qsTr("reset")
         } else if(command === 3) {
             str = qsTr("stop")
         } else if(command === 4) {
-            str = qsTr("save_key")
-        } else if(command === 5) {
             str = qsTr("mapping")
         }
         return str;
+    }
+
+    function setPercent(percent) {
+        message_list_model.get(0).mapping_time = Qt.formatDateTime(new Date(), "hh:mm:ss")
+        message_list_model.get(0).mapping_message = "Current Mapping Percent: " + percent
     }
 
     function setMessage(flag, command,message) {
@@ -26,6 +29,13 @@ Rectangle {
                                        "mapping_flag": flag,
                                        "mapping_command": root.getCommandString(command),
                                        "mapping_message": message})
+    }
+
+    Connections {
+        target: mapping_manager
+        onEmitmappingProgressInfo: {
+            root.setPercent(progress)
+        }
     }
 
     Rectangle {

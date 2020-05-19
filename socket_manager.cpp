@@ -166,6 +166,9 @@ void SocketManager::parseSocketData(const QByteArray &buffer)
     case MESSAGE_MAPPING_COMMAND_RST:
         emit emitMappingCommandRst(obj);
         break;
+    case MESSAGE_MAPPING_PROGRESS:
+        emit emitMappingProgress(obj);
+        break;
     default:
         break;
     }

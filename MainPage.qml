@@ -29,8 +29,8 @@ Rectangle {
 
     MappingPage {
         id: mapping_page
-        width: rect_right.width
-        height:rect_right.height
+        width: stack_view.width
+        height:stack_view.height
 
     }
 
@@ -39,11 +39,19 @@ Rectangle {
 
     Component.onCompleted: {
         map_task_manager.setWorkMapName(map_task_manager.getCurrentMapName())
+        var status = status_manager.getWorkStatus()
+        if (status === 5) {
+            misson_bord.showMessagePics(true)
+//            rec_left.width = 10
+        } else {
+            misson_bord.showMessagePics(false)
+        }
     }
 
     Connections {
         target: status_manager
         onWorkStatusUpdate: {
+            misson_bord.showMessagePics(false)
             if (status <= 1) {
                 list_view.currentIndex = 2
                 menu_stack.tlReplace(list_view)
@@ -51,6 +59,8 @@ Rectangle {
                 menu_stack.tlReplace(list_view)
             } else if (status === 5) {
 //                menu_stack.tlReplace(task_process_page)
+                misson_bord.showMessagePics(true)
+                rect_right.width = 10
             }
         }
     }
@@ -64,30 +74,9 @@ Rectangle {
     Rectangle {
         id: home_page
         color: "transparent"
-        MissonBordPage {
-            id: misson_bord
-            width: parent.width
-            height: parent.height * 0.1
-            anchors {
-                left: parent.left
-                top: parent.top
-            }
-            onLockScreen: {
-                lock_screen_page.pop_lock.open()
-            }
-            Image {
-                id: img_mission
-                anchors.fill: parent
-                source: "qrc:/res/ui/background/mission_bar.png"
-                fillMode: Image.PreserveAspectCrop
-            }
-        }
         HomePage{
             id: home_page_1
-            width: parent.width
-            height: parent.height * 0.8
-            anchors.top: misson_bord.bottom
-            anchors.topMargin: parent.height * 0.01
+            anchors.fill: parent
             onCenterBtnPress: {
                 list_view.currentIndex = 2
                 list_view.mainPageChanged(1)
@@ -161,13 +150,29 @@ Rectangle {
         width: parent.width - rec_left.width
         height: parent.height
         color:"transparent"
-//        anchors{
-//            top: parent.top
-//            left: rec_left.right
-//        }
+        MissonBordPage {
+            id: misson_bord
+            width: parent.width
+            height: parent.height * 0.1
+            anchors {
+                left: parent.left
+                top: parent.top
+            }
+            onLockScreen: {
+                lock_screen_page.pop_lock.open()
+            }
+            Image {
+                id: img_mission
+                anchors.fill: parent
+                source: "qrc:/res/ui/background/mission_bar.png"
+                fillMode: Image.PreserveAspectCrop
+            }
+        }
         StackView {
             id: stack_view
-            anchors.fill: parent
+            width: parent.width
+            height: parent.height - misson_bord.height
+            anchors.top: misson_bord.bottom
             initialItem: home_page
 
             function tlReplace(item) {

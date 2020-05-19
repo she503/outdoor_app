@@ -57,16 +57,16 @@ Rectangle {
             }
             Image {
                 id: img_battery_full_bar
-                visible: false
+                visible: true
                 width: img_battery.paintedWidth * 0.60
-                height: img_battery.paintedHeight * 0.18
+                height: img_battery.paintedHeight * 0.15
                 source: "qrc:/res/ui/background/progress_full.png"
                 //                fillMode: Image.PreserveAspectFit
                 anchors {
                     top: parent.top
-                    topMargin: parent.height * 0.375
+                    topMargin: parent.height * 0.394
                     left: parent.left
-                    leftMargin: parent.width * 0.19
+                    leftMargin: parent.width * 0.2
                 }
 
             }
@@ -74,13 +74,13 @@ Rectangle {
                 id: img_battery_little_bar
                 visible: false
                 width: parent.width * 0.2
-                height: parent.height * 0.075
+                height: parent.height * 0.060
                 color: Qt.rgba(255, 0, 0, 0.4)
                 anchors {
                     top: parent.top
-                    topMargin: parent.height * 0.38
+                    topMargin: parent.height * 0.394
                     left: parent.left
-                    leftMargin: parent.width * 0.19
+                    leftMargin: parent.width * 0.2
 
                 }
             }
@@ -88,13 +88,13 @@ Rectangle {
                 id: img_battery_more_bat
                 visible: false
                 width: parent.width * 0.58
-                height: parent.height * 0.062
+                height: parent.height * 0.060
                 color: Qt.rgba(0, 10, 255, 0.4)
                 anchors {
                     top: parent.top
-                    topMargin: parent.height * 0.38
+                    topMargin: parent.height * 0.394
                     left: parent.left
-                    leftMargin: parent.width * 0.19
+                    leftMargin: parent.width * 0.2
                 }
             }
             Text {
@@ -109,7 +109,7 @@ Rectangle {
                 color: "white"
                 anchors {
                     top: parent.top
-                    topMargin: parent.height * 0.38
+                    topMargin: parent.height * 0.39
                     left: parent.left
                     leftMargin: parent.width * 0.19
                 }
@@ -181,11 +181,11 @@ Rectangle {
                 id: img_clean_progress_bar
                 visible: true
                 width: parent.width * 0.58
-                height: parent.height * 0.075
+                height: parent.height * 0.073
                 color: Qt.rgba(0, 255, 0, 0.4)
                 anchors {
                     top: parent.top
-                    topMargin: parent.height * 0.55
+                    topMargin: parent.height * 0.54
                     left: parent.left
                     leftMargin: parent.width * 0.25
 
@@ -318,6 +318,42 @@ Rectangle {
                     root.sigCenterBtnClicked()
                 }
             }
+            Rectangle {
+                id: center_progress_bar
+                anchors.fill: parent
+                color: "transparent"
+                Canvas {
+                    id: canvas_background
+                    anchors.fill: parent
+                    property string arcColor: "rgba(100,149,237, 0.8)"
+                    property color arcBackgroundColor: "#ffffff"
+                    property int arcWidth: parent.width * 0.09
+                    property real _progress: 20
+                    property real radius: parent.width / 2 * 0.65
+                    property bool anticlockwise: false
+
+                    Connections {
+                        target: ros_message_manager
+                        onUpdateTaskProcessInfo: {
+                            canvas_background._progress = progress;
+                            canvas_background.requestPaint()
+                        }
+                    }
+                    onPaint: {
+                        var ctx = getContext("2d")
+                        ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
+                        var r = canvas_background._progress/100 * 2 * Math.PI
+                        ctx.beginPath()
+                        ctx.strokeStyle = arcColor
+//                        ctx.lineCap = "round"
+                        ctx.lineWidth = arcWidth
+
+                        ctx.arc(width/2,height/2,radius,Math.PI / 2,Math.PI / 2  + r ,anticlockwise)
+                        ctx.stroke()
+                    }
+                }
+            }
+
             function changeVisible(status) {
                 if (status >= 1 && status < 5) {
                     img_start.visible = true

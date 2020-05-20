@@ -57,7 +57,7 @@ Item {
             height: parent.height
             backgroundDefaultColor: "transparent"
             img_source: "qrc:/res/ui/mission_bord/task_progress.png"
-            font_size: height * 0.4
+            font_size: height * 0.3
             btn_text: "99 %"
             Connections {
                 target: ros_message_manager

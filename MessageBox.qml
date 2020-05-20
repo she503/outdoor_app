@@ -29,10 +29,12 @@ Rectangle {
         }
 
         onEmitSetInitPoseRstInfo: {
-            message_box.dia_type = 0
-            message_box.dia_title = qsTr("Init Error")
-            message_box.dia_text = qsTr("Init Pos error")
-            message_box.open()
+            if (status === 0) {
+                message_box.dia_type = 0
+                message_box.dia_title = qsTr("Init Error")
+                message_box.dia_text = qsTr("Init Pos error")
+                message_box.open()
+            }
         }
 
         onEmitGetMapAndTasksInfoError: {

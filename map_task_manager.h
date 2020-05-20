@@ -46,6 +46,8 @@ public:
 
     Q_INVOKABLE void setEnableCleanWork(bool flag);
 
+    Q_INVOKABLE void setInitIsRight(bool flag);
+
 private slots:
     void parseAllMapsInfo(const QJsonObject& obj);
     void parseSetMapNameRst(const QJsonObject& obj);
@@ -71,6 +73,9 @@ signals:
 
     void emitPauseTaskRst(const bool is_pause, const int status);
     void emitWorkDone();
+
+    void emitLocalizationInfo(const double x, const double y, const double heading_angle);
+
 
 private:
     SocketManager* _socket_manager;

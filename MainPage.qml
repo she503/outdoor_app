@@ -60,7 +60,7 @@ Rectangle {
             } else if (status === 5) {
 //                menu_stack.tlReplace(task_process_page)
                 misson_bord.showMessagePics(true)
-                rect_right.width = 10
+//                rect_right.width = 10
             }
         }
     }

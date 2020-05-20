@@ -197,6 +197,15 @@ void MapTaskManager::setEnableCleanWork(bool flag)
     _socket_manager->sendSocketMessage(doc.toJson());
 }
 
+void MapTaskManager::setInitIsRight(bool flag)
+{
+    QJsonObject obj;
+    obj.insert("message_type", MESSAGE_INIT_POSE_RST_CONFIRM);
+    obj.insert("flag", flag);
+    QJsonDocument doc(obj);
+    _socket_manager->sendSocketMessage(doc.toJson());
+}
+
 /// \brief parse map and task info from server
 void MapTaskManager::parseAllMapsInfo(const QJsonObject &obj)
 {
@@ -249,9 +258,17 @@ void MapTaskManager::parseSetInitPoseRst(const QJsonObject &obj)
 {
     int status = obj.value("status").toInt();
     QString message = obj.value("message").toString();
-    if (status == 0) {
-        emit emitSetInitPoseRstInfo(status, message);
+
+    emit emitSetInitPoseRstInfo(status, message);
+
+    if (status == 1) {
+        QJsonObject rst_pose_obj = obj.value("rst_pose").toObject();
+        double x = rst_pose_obj.value("x").toDouble();
+        double y = rst_pose_obj.value("y").toDouble();
+        double heading_angle = rst_pose_obj.value("theta").toDouble();
+        emit emitLocalizationInfo(x, y, heading_angle);
     }
+
 }
 
 void MapTaskManager::parseMapAndTasksInfo(const QJsonObject &obj)

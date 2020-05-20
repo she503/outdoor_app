@@ -206,6 +206,19 @@ Rectangle {
             root.var_ref_line = ref_line
             canvas_ref_line.requestPaint()
         }
+        onEmitLocalizationInfo: {
+            vehicle.visible = true
+            var pixel_pos = geometryToPixel(x, y)
+            vehicle.x = pixel_pos[0] - vehicle.width / 2
+            vehicle.y = pixel_pos[1] - vehicle.height / 2
+//            if (!root.can_drag) {
+//                map.x = (map.width / 2 - vehicle.x + vehicle.width / 2) * (map.scale)
+//                map.y = (map.height / 2 - vehicle.y + vehicle.height / 2) * (map.scale)
+//            }
+            vehicle.rotation = -heading_angle
+        }
+
+
     }
 
     Connections {

@@ -94,6 +94,7 @@ Rectangle {
 
     function startTaskPage() {
         hideAllComponent()
+        rec_task_page.height = rec_glow_background.height
     }
 
     Component.onCompleted: {

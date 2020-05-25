@@ -17,12 +17,13 @@ bool MappingManager::setSocketManager(SocketManager* socket_manager)
             this, SIGNAL(emitMappingFinish()));
 }
 
-void MappingManager::setIndoorOutdoor(const int indoor_outdoor)
+void MappingManager::setIndoorOutdoor(const int indoor_outdoor, const QString& map_name)
 {
     _indoor_outdoor = (MappingPlace)indoor_outdoor;
     QJsonObject obj;
     obj.insert("message_type", int(MESSAGE_MAPPING_PLACE));
     obj.insert("place", _indoor_outdoor);
+    obj.insert("map_name", map_name);
     QJsonDocument doc(obj);
     _socket_manager->sendSocketMessage(doc.toJson());
 }
@@ -41,6 +42,16 @@ void MappingManager::setMappingCommand(const int mapping_command)
     _socket_manager->sendSocketMessage(doc.toJson());
 }
 
+void MappingManager::transferMappingData(const int key, const QString& map_name)
+{
+    QJsonObject obj;
+    obj.insert("message_type", int(MESSAGE_MAPPING_TRANSFER_DATA));
+    obj.insert("key", key);
+    obj.insert("map_name", map_name);
+    QJsonDocument doc(obj);
+    _socket_manager->sendSocketMessage(doc.toJson());
+}
+
 void MappingManager::parseMappingCommandRst(const QJsonObject &obj)
 {
     bool success = obj.value("success").toBool();
@@ -54,5 +65,10 @@ void MappingManager::parseMappingProgress(const QJsonObject &obj)
     QString message = obj.value("message").toString();
     int status = obj.value("status").toInt();
 
-    emit emitmappingProgressInfo(status, message, progress);
+    QJsonObject pose_obj = obj.value("pose").toObject();
+    double x = pose_obj.value("x").toDouble();
+    double y = pose_obj.value("y").toDouble();
+    double heading_angle = pose_obj.value("heading_angle").toDouble();
+
+    emit emitmappingProgressInfo(status, message, progress, x, y, heading_angle);
 }

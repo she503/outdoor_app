@@ -40,9 +40,12 @@
     </qresource>
     <qresource prefix="/mapping">
         <file>MappingPage.qml</file>
-        <file>ChooseIndoorOutdoor.qml</file>
-        <file>MappingStartPage.qml</file>
+        <file>MappingStartPageTest.qml</file>
         <file>MappingMessage.qml</file>
         <file>MappingTrajectory.qml</file>
+        <file>MappingMenu.qml</file>
+        <file>TransferMappingDataPage.qml</file>
+        <file>MappingPlaceChoose.qml</file>
+        <file>MappingStartPage.qml</file>
     </qresource>
 </RCC>

@@ -52,7 +52,7 @@ Rectangle {
     property real min_y: Number.POSITIVE_INFINITY
     property real max_y: Number.NEGATIVE_INFINITY
     property real max_x: Number.NEGATIVE_INFINITY
-    property real real_rate: 2.0
+    property real real_rate: 4.0
 
     property bool can_drag: false
     property var choosePoint: []
@@ -136,6 +136,7 @@ Rectangle {
         var vehicle_height = vehicle_info_manager.getVehicleHeight()
 //        var vehicle_width = 4.4
 //        var vehicle_height = 2.2
+
 
         vehicle.width =  vehicle_width * 3/2 * map_rate
         vehicle.height = vehicle_height * map_rate

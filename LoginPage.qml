@@ -128,7 +128,7 @@ Item{
                     id: username
                     width: parent.width * 0.55
                     height: parent.height * 0.8
-                    text: qsTr("root")
+                    text: root._default_test_user
                     placeholderText: qsTr("enter your username.")
                     validator: RegExpValidator{regExp:/^.[A-Za-z0-9_]{0,11}$/}
                     background: Rectangle{
@@ -154,7 +154,7 @@ Item{
                     id: password
                     width: parent.width * 0.55
                     height: parent.height * 0.8
-                    text: qsTr("root")
+                    text: root._default_test_user
                     placeholderText: qsTr("enter your password.")
                     validator: RegExpValidator{regExp:/^.[A-Za-z0-9_]{0,11}$/}
                     background: Rectangle{

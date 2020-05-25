@@ -28,12 +28,16 @@ public:
     explicit MappingManager(QObject *parent = nullptr);
     bool setSocketManager(SocketManager* socket_manager);
 
-    Q_INVOKABLE void setIndoorOutdoor(const int indoor_outdoor);
+    Q_INVOKABLE void setIndoorOutdoor(const int indoor_outdoor, const QString &map_name);
 
     Q_INVOKABLE void setMappingCommand(const int mapping_command);
+
+    Q_INVOKABLE void transferMappingData(const int key, const QString &map_name); // 1:to_usb  2:to_computer
+
 signals:
      void emitMappingCommandInfo(const bool success, const QString& message);
-     void emitmappingProgressInfo(const int status, const QString& message,const int progress);
+     void emitmappingProgressInfo(const int status, const QString& message,const int progress,
+                                  const double x, const double y, const double heading_angle);
      void emitMappingFinish();
 private slots:
      void parseMappingCommandRst(const QJsonObject& obj);

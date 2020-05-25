@@ -76,12 +76,14 @@ Rectangle {
         map_display_page.p_choose_marker.visible = true
 
         task_list_model.clear()
+        mapFillScreen(false)
     }
 
     function confirmMapPage() {
         hideAllComponent()
         rec_ref_lines.visible = true
         rec_task_control.visible = true
+        mapFillScreen(false)
 
     }
 
@@ -90,10 +92,26 @@ Rectangle {
         btn_start_task.visible = true
         rec_task_control.visible = true
         rec_ref_lines.visible = true
+        mapFillScreen(true)
     }
 
     function startTaskPage() {
         hideAllComponent()
+        mapFillScreen(true)
+    }
+
+    function mapFillScreen(flag) {
+        if (flag) {
+            rec_task_page.height = rec_glow_background.height
+            rec_task_page.width = rec_glow_background.width
+            rec_task_page.anchors.topMargin = 0
+            rec_task_page.anchors.leftMargin = 0
+        } else {
+            rec_task_page.width = rec_glow_background.width * 0.86
+            rec_task_page.height = rec_glow_background.height * 0.81
+            rec_task_page.anchors.leftMargin = rec_glow_background.width * 0.073
+            rec_task_page.anchors.topMargin = rec_glow_background.height * 0.115
+        }
     }
 
     Component.onCompleted: {
@@ -212,10 +230,9 @@ Rectangle {
             visible: root.map_status !== 0
             anchors {
                 left: parent.left
-                leftMargin: parent.width * 0.073
                 top: parent.top
+                leftMargin: parent.width * 0.073
                 topMargin: parent.height * 0.115
-
             }
 
             Rectangle {
@@ -360,7 +377,7 @@ Rectangle {
 
                 Rectangle{
                     id: rec_checked_location
-                    visible: false
+                    visible: true
                     color: "transparent"
                     width: parent.width
                     height: parent.height * 0.1
@@ -368,37 +385,123 @@ Rectangle {
                     anchors.bottomMargin: parent.height * 0.06
                     anchors.horizontalCenter: parent.horizontalCenter
 
-                    Image {
-                        id: choose_point
-                        width: parent.width
-                        height: parent.height * 0.9
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        source: "qrc:/res/pictures/background_mached.png"
-                        horizontalAlignment: Image.AlignHCenter
-                        verticalAlignment: Image.AlignVCenter
+                    function resureLocalization(flag) {
+                        if (flag) {
+                            rect_resure_localization.visible = true
+                            rect_resure_point.visible = false
+                        } else {
+                            rect_resure_localization.visible = false
+                            rect_resure_point.visible = true
+                        }
                     }
 
-                    Text {
-                        id: note_text
-                        text: qsTr("move and choose point!")//移动选点!
-                        width: parent.width * 0.7
-                        height: parent.height
-                        font.family: "Helvetica"
-                        font.pixelSize: height * 0.5
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignHCenter
-                        color: "red"
-                    }
                     Rectangle {
-                        id: btn_resure
-                        width: parent.width * 0.2
-                        height: parent.height
-                        anchors.right: parent.right
-                        anchors.rightMargin: parent.width * 0.1
+                        id: rect_resure_localization
+                        anchors.fill: parent
+                        visible: false
                         color: "transparent"
+                        Rectangle {
+                            id: resure_point
+                            width: parent.width
+                            height: parent.height * 0.9
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            color: Qt.rgba(0,255,0,0.5)
+                        }
+
+                        Text {
+                            id: txt_localization
+                            text: qsTr("please resure location is right")
+                            width: parent.width * 0.7
+                            height: parent.height
+                            font.family: "Helvetica"
+                            font.pixelSize: height * 0.5
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            color: "black"
+                        }
                         Image {
-                            anchors.fill: parent
+                            id: img_no
+                            width: parent.width * 0.2
+                            height: parent.height
+                            anchors.right: img_yes.left
+                            source: "qrc:/res/ui/background/btn.png"
+                            fillMode: Image.PreserveAspectFit
+                            Text {
+                                text: qsTr("No")
+                                anchors.fill: parent
+                                color: "white"
+                                font.pixelSize: height * 0.3
+                                font.family: "Arial"
+                                font.weight: Font.Thin
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    map_task_manager.setInitIsRight(false)
+                                    map_task_manager.turnToSelectMap()
+                                    rec_checked_location.resureLocalization(false)
+                                }
+                            }
+                        }
+                        Image {
+                            id: img_yes
+                            width: parent.width * 0.2
+                            height: parent.height
+                            anchors.right: parent.right
+                            source: "qrc:/res/ui/background/btn.png"
+                            fillMode: Image.PreserveAspectFit
+                            Text {
+                                text: qsTr("Yes")
+                                anchors.fill: parent
+                                color: "white"
+                                font.pixelSize: height * 0.3
+                                font.family: "Arial"
+                                font.weight: Font.Thin
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    map_task_manager.setInitIsRight(true)
+                                    rec_checked_location.resureLocalization(false)
+                                }
+                            }
+                        }
+                    }
+
+
+                    Rectangle {
+                        id: rect_resure_point
+                        anchors.fill: parent
+                        color: "transparent"
+                        Rectangle {
+                            id: choose_point
+                            width: parent.width
+                            height: parent.height * 0.9
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            color: Qt.rgba(0,255,0,0.5)
+                        }
+
+                        Text {
+                            id: note_text
+                            text: qsTr("move and choose point!")//移动选点!
+                            width: parent.width * 0.7
+                            height: parent.height
+                            font.family: "Helvetica"
+                            font.pixelSize: height * 0.5
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            color: "black"
+                        }
+                        Image {
+                            width: parent.width * 0.2
+                            height: parent.height
+                            anchors.right: parent.right
                             source: "qrc:/res/ui/background/btn.png"
                             fillMode: Image.PreserveAspectFit
                             Text {
@@ -418,6 +521,18 @@ Rectangle {
                                 }
                             }
                         }
+                    }
+
+
+
+                    Rectangle {
+                        id: btn_resure
+                        width: parent.width * 0.2
+                        height: parent.height
+                        anchors.right: parent.right
+                        anchors.rightMargin: parent.width * 0.1
+                        color: "transparent"
+
                     }
                 }
 
@@ -441,13 +556,9 @@ Rectangle {
                     var status = status_manager.getWorkStatus()
                     if (status === 5) {
                         working_btns.visible = true
-                        //                        task_progress.visible = true
-                        //                        timer_task_timing.start()
 
                     } else {
                         working_btns.visible = false
-                        //                        task_progress.visible = false
-                        //                        timer_task_timing.stop()
                         root._work_second = 0
                         root._work_time = []
                     }
@@ -458,12 +569,8 @@ Rectangle {
                     onWorkStatusUpdate: {
                         if (status === 5) {
                             working_btns.visible = true
-//                            task_progress.visible = true
-//                            timer_task_timing.start()
                         } else {
                             working_btns.visible = false
-//                            task_progress.visible = false
-//                            timer_task_timing.stop()
                             root._work_second = 0
                             root._work_time = []
                         }
@@ -566,7 +673,7 @@ Rectangle {
             rec_checked_location.visible = true
 
             if (status === 1) {
-                dialog_resure_place.open()
+                rec_checked_location.resureLocalization(true)
             }
         }
     }
@@ -617,30 +724,6 @@ Rectangle {
             dialog_return_map_tip.close()
             map_task_manager.turnToSelectMap()
 
-        }
-    }
-
-    TLDialog {
-        id: dialog_resure_place
-        width: height * 1.5
-        x: (root.width - width) / 2
-        y: (root.height - height) / 2
-        dia_title: qsTr("Repeat")
-        dia_content: qsTr("Please checkout that is this place right?")
-        opacity: 0.8
-        status: 1
-        ok: true
-        ok_text: qsTr("yes")
-        cancel_text: qsTr("no")
-        onOkClicked: {
-            map_task_manager.setInitIsRight(true)
-            close()
-        }
-
-        onCancelClicked: {
-            map_task_manager.setInitIsRight(false)
-            map_task_manager.turnToSelectMap()
-            close()
         }
     }
 

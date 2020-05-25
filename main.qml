@@ -24,7 +24,7 @@ ApplicationWindow {
             }
         }
     }
-    property Component main_page: MainPage {}
+    property Component main_page: MainPage { }
 
     MessageBox{
         id: message_box
@@ -32,7 +32,7 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        connect_to_server = socket_manager.connectToServer("192.168.1.125")
+        connect_to_server = socket_manager.connectToServer("127.0.0.1")
     }
 
     Connections {

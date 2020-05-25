@@ -39,6 +39,13 @@ Item {
             img_source: "qrc:/res/ui/mission_bord/battery_pic.png"
             btn_text: "100 %"
             font_size: height * 0.3
+
+            Connections{
+                target: ros_message_manager
+                onUpdateBatteryInfo: {
+                    lab_battery.btn_text = soc + " %"
+                }
+            }
         }
 
         TLBtnWithPic {
@@ -82,9 +89,9 @@ Item {
                     var n_speed = Number(v_speed)
 
                     if (drive_mode === 0) {
-                        lab_operate.source = "qrc:/res/ui/mission_bord/operate_auto_pic.png"
-                    } else if (drive_mode === 1) {
                         lab_operate.source = "qrc:/res/ui/mission_bord/operate_hand_pic.png"
+                    } else if (drive_mode === 1) {
+                        lab_operate.source = "qrc:/res/ui/mission_bord/operate_auto_pic.png"
                     }
 
                     if(Math.abs(n_speed) <= 0.05) {

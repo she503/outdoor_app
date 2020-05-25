@@ -83,6 +83,8 @@ Rectangle {
 
                 fillMode: Image.PreserveAspectFit
                 property bool clean_work: true
+                property bool is_first_init: true
+
             }
 
             MouseArea{
@@ -99,6 +101,17 @@ Rectangle {
                                                                         "qrc:/res/pictures/clean_off.png"
                 }
             }
+            Connections {
+                target: ros_message_manager
+                onUpdateChassisInfo: {
+                    if (btn_clean_work.is_first_init) {
+                        btn_clean_work.source = cleaning_agency_state == 1 ? "qrc:/res/pictures/clean_on.png":
+                                                                             "qrc:/res/pictures/clean_off.png"
+                        btn_clean_work.is_first_init = false
+                    }
+                }
+            }
+
         }
     }
 }

@@ -5,29 +5,32 @@ Rectangle {
     id: root
     color: "transparent"
     clip: true
-    ChooseIndoorOutdoor{
-        id: choose_page
-        onSigChooseSuccess: {
-            stack.tlReplace(mapping_start)
+
+    MappingMenu {
+        id: mapping_menu
+        onSigChooseBtnNumber: {
+            if (num === 1 || num === 2) {
+                stack.tlReplace(map_message)
+            }
         }
+
     }
-    MappingStartPage {
-        id: mapping_start
-        clip: true
+
+    MappingMessage {
+        id: map_message
     }
 
     Image {
         anchors.fill: parent
-        source: "qrc:/res/ui/background/map.png"
+        source: "qrc:/res/ui/background/small_background.png"
     }
-//    Image {
-//        anchors.fill: parent
-//        source: "qrc:/res/pictures/background_glow1.png"
-//    }
+
     StackView {
         id: stack
-        anchors.fill: parent
-        initialItem: choose_page
+        width: parent.width * 0.9
+        height:  parent.height * 0.9
+        anchors.centerIn: parent
+        initialItem: mapping_menu
         function tlReplace(item) {
             if (stack.currentItem === item) {
                 return;

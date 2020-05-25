@@ -161,5 +161,11 @@
         <file>res/ui/mission_bord/gear_N_pic.png</file>
         <file>res/ui/mission_bord/gear_R_pic.png</file>
         <file>res/ui/mission_bord/task_progress.png</file>
+        <file>res/ui/mapping/data_to_computer.png</file>
+        <file>res/ui/mapping/data_to_USB.png</file>
+        <file>res/ui/mapping/indoor.png</file>
+        <file>res/ui/mapping/outdoor.png</file>
+        <file>res/ui/background/small_background.png</file>
+        <file>res/ui/mapping/car.png</file>
     </qresource>
 </RCC>

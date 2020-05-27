@@ -47,5 +47,6 @@
         <file>TransferMappingDataPage.qml</file>
         <file>MappingPlaceChoose.qml</file>
         <file>MappingStartPage.qml</file>
+        <file>MappingStartBtns.qml</file>
     </qresource>
 </RCC>

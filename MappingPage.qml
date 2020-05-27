@@ -16,8 +16,9 @@ Rectangle {
 
     }
 
-    MappingMessage {
+    MappingStartPage {
         id: map_message
+
     }
 
     Image {

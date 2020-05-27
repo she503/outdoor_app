@@ -27,30 +27,31 @@ Rectangle {
         message_list_model.get(0).mapping_message = message + ": " + percent + "%"
     }
 
-    function setMessage(flag, command,message) {
+    function setMessage(flag,message) {
         message_list_model.insert(0,{"mapping_time": Qt.formatDateTime(new Date(), "hh:mm:ss"),
                                       "mapping_flag": flag,
-                                      "mapping_command": root.getCommandString(command),
                                       "mapping_message": message})
     }
 
-    Component.onCompleted: {
-        message_list_model.insert(0,{"mapping_time": "1",
-                                      "mapping_flag": false,
-                                      "mapping_command": "2",
-                                      "mapping_message": "message"})
+    Connections {
+        target: mapping_manager
+        onEmitMappingCommandInfo: {
+            root.setMessage(success, message)
+        }
     }
-
 
     Connections {
         target: mapping_manager
         onEmitmappingProgressInfo: {
             if (root.pro_message != message) {
-                root.setMessage(true, 4, message)
+                root.setMessage(true, message)
                 root.pro_message = message
             } else {
                 root.setOneTaskPercent(message, progress)
             }
+        }
+        onEmitMappingFinish: {
+            root.setMessage(true, "mapping finished!!!")
         }
     }
 
@@ -100,7 +101,7 @@ Rectangle {
                             text: "[19:01:23.123]"//model.mapping_time
                             font.pixelSize: height * 0.3
                             font.bold: true
-                            color: "black"
+                            color: "blue"
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                             wrapMode: Text.Wrap
@@ -117,7 +118,7 @@ Rectangle {
                             text: model.mapping_message
                             font.pixelSize: height * 0.3
                             font.bold: true
-                            color: "white"
+                            color: "black"
                             horizontalAlignment: Text.AlignLeft
                             verticalAlignment: Text.AlignVCenter
                             wrapMode: Text.Wrap

@@ -98,6 +98,8 @@ QVariantList MapTaskManager::getTasksData(const QStringList &tasks_name)
             goal_tasks.push_back(points);
         } else if (task_type == 3) {
             cover_tasks.push_back(points);
+        } else if (task_type == 4){
+            track_tasks.push_back(points);
         }
     }
 

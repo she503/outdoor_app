@@ -102,8 +102,9 @@ Rectangle {
 
     function mapFillScreen(flag) {
         if (flag) {
-            rec_task_page.height = rec_glow_background.height
-            rec_task_page.width = rec_glow_background.width
+//            rec_task_page.height = rec_glow_background.height
+//            rec_task_page.width = rec_glow_background.width\
+            rec_task_page.anchors.fill = rec_glow_background
             rec_task_page.anchors.topMargin = 0
             rec_task_page.anchors.leftMargin = 0
         } else {
@@ -111,6 +112,8 @@ Rectangle {
             rec_task_page.height = rec_glow_background.height * 0.81
             rec_task_page.anchors.leftMargin = rec_glow_background.width * 0.073
             rec_task_page.anchors.topMargin = rec_glow_background.height * 0.115
+            rec_task_page.anchors.rightMargin = rec_glow_background.width * 0.06
+            rec_task_page.anchors.bottomMargin = rec_glow_background.height * 0.075
         }
     }
 

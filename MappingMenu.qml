@@ -54,6 +54,7 @@ Rectangle {
 
         onSigChooseBtnNumber: {
             root.sigChooseBtnNumber(num)
+            mapping_manager.setIndoorOutdoor(num, root.map_name)
         }
     }
 

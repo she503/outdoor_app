@@ -265,6 +265,7 @@ void MapTaskManager::parseAllMapsInfo(const QJsonObject &obj)
         _all_maps.insert(map_name, area_obj);
 
         QJsonObject features_obj = map_temp_obj.value("features").toObject();
+        qDebug() << features_obj;
         _all_features.insert(map_name, features_obj);
     }
     _current_map_name = _all_maps.firstKey();

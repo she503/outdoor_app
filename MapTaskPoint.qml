@@ -9,7 +9,7 @@ Rectangle {
     property real pos_theta: 0.0
     property bool is_focus: false
     property var clicked_point: [Number.NEGATIVE_INFINITY,Number.NEGATIVE_INFINITY]
-    rotation: pos_theta * 180 / Math.PI
+    rotation: pos_theta * 180 / Math.PI + 90
     onYChanged: {
         if(clicked_point[0] >= x && clicked_point[0] <= x + width &&
                 clicked_point[1] >= y && clicked_point[1] <= y + width ) {

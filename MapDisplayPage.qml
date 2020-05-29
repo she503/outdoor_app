@@ -99,6 +99,7 @@ Rectangle {
         var feature_list = map_task_manager.getMapFeature(map_task_manager.getCurrentMapName())
         if (feature_list.length === 1) {
             begin_points = feature_list[0]
+            console.info(begin_points)
 
         } else if (feature_list.length === 2) {
             begin_points = feature_list[0]

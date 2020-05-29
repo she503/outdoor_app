@@ -32,7 +32,7 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        connect_to_server = socket_manager.connectToServer("192.168.1.125")
+        connect_to_server = socket_manager.connectToServer("192.168.8.162")
     }
 
     Connections {

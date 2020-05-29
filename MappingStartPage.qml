@@ -9,6 +9,8 @@ Rectangle {
     clip: true
     color: "white"
 
+    signal sigQuite()
+
     property var trajectory_path:[]
     property bool is_frist: true
 
@@ -77,7 +79,7 @@ Rectangle {
                 ctx.strokeStyle = "#00ff00"
                 ctx.fillStyle = "#00ff00"
                 for (var i = 0; i < trajectory.length; ++i) {
-                    vehicle.rotation =  -trajectory[i][2]
+                    vehicle.rotation =  trajectory[i][2] +180
                     vehicle.x = trajectory[i][0] * 10 - vehicle.width / 2 + canvas_background.width / 2
                     vehicle.y = trajectory[i][1] * 10 - vehicle.height / 2 + canvas_background.height / 2
                     map.x = (map.width / 2 - vehicle.x + vehicle.width / 2) * (map.scale)
@@ -159,7 +161,10 @@ Rectangle {
         id: rect_btns
         width: parent.width
         height: parent.height * 0.2
-        anchors.top: map.bottom
+        anchors.bottom: parent.bottom
+        onSigQuite: {
+            root.sigQuite()
+        }
     }
 
 

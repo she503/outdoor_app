@@ -71,7 +71,7 @@ Rectangle {
     function chooseMapPage() {
         hideAllComponent()
         rec_header_bar.visible = true
-        rec_header_bar.height = rec_task_page.height * 0.1
+        rec_header_bar.height = rec_task_page.height * 0.08
         rec_checked_location.visible = true
         map_display_page.p_choose_marker.visible = true
 
@@ -104,16 +104,20 @@ Rectangle {
         if (flag) {
 //            rec_task_page.height = rec_glow_background.height
 //            rec_task_page.width = rec_glow_background.width\
-            rec_task_page.anchors.fill = rec_glow_background
-            rec_task_page.anchors.topMargin = 0
-            rec_task_page.anchors.leftMargin = 0
+//            rec_task_page.anchors.fill = rec_glow_background
+//            rec_task_page.anchors.topMargin = 0
+//            rec_task_page.anchors.leftMargin = 0
         } else {
-            rec_task_page.width = rec_glow_background.width * 0.86
-            rec_task_page.height = rec_glow_background.height * 0.81
-            rec_task_page.anchors.leftMargin = rec_glow_background.width * 0.073
-            rec_task_page.anchors.topMargin = rec_glow_background.height * 0.115
-            rec_task_page.anchors.rightMargin = rec_glow_background.width * 0.06
-            rec_task_page.anchors.bottomMargin = rec_glow_background.height * 0.075
+//            rec_task_page.width = rec_glow_background.width * 0.86
+//            rec_task_page.height = rec_glow_background.height * 0.81
+//            rec_task_page.anchors.leftMargin = rec_glow_background.width * 0.073
+//            rec_task_page.anchors.topMargin = rec_glow_background.height * 0.115
+//            rec_task_page.anchors.rightMargin = rec_glow_background.width * 0.06
+//            rec_task_page.anchors.bottomMargin = rec_glow_background.height * 0.075
+//            rec_task_page.anchors.leftMargin = rec_glow_background.width * 0.073
+//            rec_task_page.anchors.topMargin = rec_glow_background.height * 0.115
+//            rec_task_page.width = rec_glow_background.width * 0.86
+//            rec_task_page.height = rec_glow_background.height * 0.81
         }
     }
 
@@ -152,21 +156,22 @@ Rectangle {
         anchors.fill: parent
         color: "transparent"
 
-        Image {
-            anchors.fill: parent
-            source: "qrc:/res/ui/background/map.png"
-        }
+//        Image {
+//            anchors.fill: parent
+//            source: "qrc:/res/ui/background/map.png"
+//        }
 
         Rectangle {
             id: rec_header_bar
-            width: parent.width * 0.83
-            height: parent.height * 0.01
+            width: parent.width * 0.9
+            height: parent.height * 0.08
             color: "transparent"
             anchors{
-                bottom: rec_task_page.top
-                bottomMargin: -parent.height * 0.015
+
+                top:parent.top
+                topMargin: parent.height * 0.06
                 left: parent.left
-                leftMargin: parent.width * 0.073
+                leftMargin: parent.width * 0.02
             }
 
             ListView {
@@ -227,15 +232,14 @@ Rectangle {
 
         Rectangle {
             id: rec_task_page
-            width: parent.width * 0.86
-            height: parent.height * 0.81
+            width: parent.width
+            height: parent.height * 0.92
+//            anchors.fill: parent
             color: "transparent"
             visible: root.map_status !== 0
             anchors {
                 left: parent.left
-                top: parent.top
-                leftMargin: parent.width * 0.073
-                topMargin: parent.height * 0.115
+                top: rec_header_bar.bottom
             }
 
             Rectangle {
@@ -248,7 +252,6 @@ Rectangle {
                     id: map_display_page
                     width:parent.width
                     height: parent.height
-
                 }
 
                 Rectangle {
@@ -391,7 +394,9 @@ Rectangle {
                     function resureLocalization(flag) {
                         if (flag) {
                             rect_resure_localization.visible = true
+//                            txt_localization.text = qsTr("Please waite for minute!")
                             rect_resure_point.visible = false
+
                         } else {
                             rect_resure_localization.visible = false
                             rect_resure_point.visible = true
@@ -744,7 +749,7 @@ Rectangle {
         ok_text: qsTr("yes")
         onOkClicked: {
             dialog_resure.close()
-            map_display_page.sendInitPoint()
+            map_task_manager.sendInitPos()
             busy.visible = true
             busy.running = true
             rec_checked_location.visible = false

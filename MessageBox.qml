@@ -11,6 +11,16 @@ Rectangle {
         height: 200
     }
 
+    Connections {
+        target: socket_manager
+        onEmitMappingMessage: {
+            message_box.dia_type = flag ? 1 : 0
+            message_box.dia_title = qsTr("COPY")
+            message_box.dia_text = message
+            message_box.open()
+        }
+    }
+
 
     Connections {
         target: map_task_manager

@@ -6,19 +6,14 @@ Rectangle {
     color: "transparent"
     clip: true
 
-    MappingMenu {
-        id: mapping_menu
-        onSigChooseBtnNumber: {
-            if (num === 1 || num === 2) {
-                stack.tlReplace(map_message)
-            }
+//    property real choose_menu_num: -1
+
+
+    Connections {
+        target: socket_manager
+        onEmitStartMappingSuccess: {
+            stack.tlReplace(map_message)
         }
-
-    }
-
-    MappingStartPage {
-        id: map_message
-
     }
 
     Image {
@@ -45,6 +40,29 @@ Rectangle {
         replaceExit: Transition {
 
         }
+
+
+        MappingStartPage {
+            id: map_message
+            width: parent.width
+            height: parent.height
+            visible: false
+            onSigQuite: {
+                stack.tlReplace(mapping_menu)
+            }
+
+        }
+        MappingMenu {
+            id: mapping_menu
+            width: parent.width
+            height: parent.height
+            onSigChooseBtnNumber: {
+    //            root.choose_menu_num = num
+
+            }
+
+        }
+
     }
 
 

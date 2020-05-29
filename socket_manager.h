@@ -61,12 +61,16 @@ signals:
 
     void emitEnableCleanWorkRst(const bool flag);
 
+    //mapping
     void emitMappingCommandRst(const QJsonObject& obj);
     void emitMappingProgress(const QJsonObject& obj);
     void emitMappingFinish();
+    void emitMappingMessage(const bool flag, const QString& message);
+    void emitStartMappingSuccess();
 
     // app断开连接发出信号
     void appDisconnected(const QString& message);
+
 
 
 

@@ -169,5 +169,6 @@
         <file>res/ui/mapping/car.png</file>
         <file>res/ui/task/qidian_choose.png</file>
         <file>res/ui/task/qidian_no.png</file>
+        <file>res/ui/mapping/quite.png</file>
     </qresource>
 </RCC>

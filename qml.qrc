@@ -37,14 +37,12 @@
         <file>TaskInfo.qml</file>
         <file>VehicleItem.qml</file>
         <file>TaskSettingsPage.qml</file>
+        <file>MapTaskPoint.qml</file>
     </qresource>
     <qresource prefix="/mapping">
         <file>MappingPage.qml</file>
-        <file>MappingStartPageTest.qml</file>
         <file>MappingMessage.qml</file>
-        <file>MappingTrajectory.qml</file>
         <file>MappingMenu.qml</file>
-        <file>TransferMappingDataPage.qml</file>
         <file>MappingPlaceChoose.qml</file>
         <file>MappingStartPage.qml</file>
         <file>MappingStartBtns.qml</file>

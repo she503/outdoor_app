@@ -93,22 +93,20 @@ Rectangle {
                     map_task_manager.setEnableCleanWork(!btn_clean_work.clean_work)
                 }
             }
-            Connections{
-                target: socket_manager
-                onEmitEnableCleanWorkRst: {
-                    btn_clean_work.clean_work = flag
-                    btn_clean_work.source = btn_clean_work.clean_work ? "qrc:/res/pictures/clean_on.png":
-                                                                        "qrc:/res/pictures/clean_off.png"
-                }
-            }
+//            Connections{
+//                target: socket_manager
+//                onEmitEnableCleanWorkRst: {
+//                    btn_clean_work.clean_work = flag
+//                    btn_clean_work.source = btn_clean_work.clean_work ? "qrc:/res/pictures/clean_on.png":
+//                                                                        "qrc:/res/pictures/clean_off.png"
+//                }
+//            }
             Connections {
                 target: ros_message_manager
                 onUpdateChassisInfo: {
-                    if (btn_clean_work.is_first_init) {
+
                         btn_clean_work.source = cleaning_agency_state == 1 ? "qrc:/res/pictures/clean_on.png":
                                                                              "qrc:/res/pictures/clean_off.png"
-                        btn_clean_work.is_first_init = false
-                    }
                 }
             }
 

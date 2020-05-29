@@ -16,7 +16,9 @@ public:
     void setSocketManager(SocketManager* socket_manager);
     void setStatusManager(StatusManager* status_manager);
 
-    Q_INVOKABLE void sendInitPos(const double& pos_x, const double& pos_y);
+    Q_INVOKABLE void sendInitPos();
+
+    Q_INVOKABLE void setInitPos(const double& pos_x, const double& pos_y, const double theta);
 
     Q_INVOKABLE void setWorkMapName(const QString& map_name);
 
@@ -88,6 +90,8 @@ private:
     QMap<QString, QJsonObject> _all_tasks_in_map;
 
     QVariantList _work_full_ref_line;
+
+    QVariantList _init_pose;
 };
 
 #endif // MAPTASKMANAGER_H

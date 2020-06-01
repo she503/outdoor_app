@@ -26,13 +26,17 @@ ApplicationWindow {
     }
     property Component main_page: MainPage { }
 
-    MessageBox{
+    TLMessageBox{
         id: message_box
-        anchors.fill: parent
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+    }
+    TLBusyIndicator {
+        id: busy_indicator
     }
 
     Component.onCompleted: {
-        connect_to_server = socket_manager.connectToServer("192.168.8.162")
+        connect_to_server = socket_manager.connectToServer("127.0.0.1")
     }
 
     Connections {

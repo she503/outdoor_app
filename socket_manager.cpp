@@ -178,6 +178,9 @@ void SocketManager::parseSocketData(const QByteArray &buffer)
     case MESSAGE_MAPPING_START_SUCCESS:
         emit emitStartMappingSuccess();
         break;
+    case MESSAGE_MAPPING_TRANSFER_DATA_RST:
+        emit emitTransferDataRst(obj);
+        break;
     default:
         break;
     }

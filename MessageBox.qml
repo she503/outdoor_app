@@ -2,13 +2,19 @@ import QtQuick 2.0
 import "homemade_components"
 Rectangle {
     id: root
+    property int dia_type: 0 // "success" : 1;     "faild" : 0
+    property string dia_title: "error"
+    property string dia_text: ""
     TLMessageBox {
-        id: message_box
+        id: v_message_box
 
         x: (parent.width - width ) / 2
         y: (parent.height - height) / 2
         width: 300
         height: 200
+        dia_type: root.dia_type
+        dia_text: root.dia_text
+        dia_title: root.dia_title
     }
 
     Connections {
@@ -36,15 +42,6 @@ Rectangle {
             message_box.dia_title = qsTr("Map Error")
             message_box.dia_text = qsTr("set map error")
             message_box.open()
-        }
-
-        onEmitSetInitPoseRstInfo: {
-            if (status === 0) {
-                message_box.dia_type = 0
-                message_box.dia_title = qsTr("Init Error")
-                message_box.dia_text = qsTr("Init Pos error")
-                message_box.open()
-            }
         }
 
         onEmitGetMapAndTasksInfoError: {

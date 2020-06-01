@@ -86,6 +86,8 @@ Rectangle {
                 }
                 root.sigChooseBtnNumber(3)
                 mapping_manager.transferMappingData(1, root.map_name)
+                busy_indicator.txt_context = qsTr("Copy data from computer to USB! Please waite for a minute~")
+                busy_indicator.open()
             }
         }
         TLBtnWithPic {
@@ -105,6 +107,25 @@ Rectangle {
                 }
                 root.sigChooseBtnNumber(4)
                 mapping_manager.transferMappingData(2, root.map_name)
+                busy_indicator.txt_context = qsTr("Copy data from USB to computer! Please waite for a minute~")
+                busy_indicator.open()
+            }
+        }
+        Connections {
+            target: mapping_manager
+            onEmitTransferDataInfo: {
+                if (flag) {
+                    message_box.dia_title = qsTr("SUCCESS")
+                    message_box.dia_text = message
+                    message_box.dia_type = 1
+                    message_box.open()
+                } else {
+                    message_box.dia_title = qsTr("ERROR")
+                    message_box.dia_text = message
+                    message_box.dia_type = 0
+                    message_box.open()
+                }
+                busy_indicator.close()
             }
         }
     }

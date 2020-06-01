@@ -22,6 +22,7 @@
         <file>TLMessageBox.qml</file>
         <file>TLScrollBar.qml</file>
         <file>TLBtnWithPic.qml</file>
+        <file>TLBusyIndicator.qml</file>
     </qresource>
     <qresource prefix="/user_manager">
         <file>UserManagePage.qml</file>
@@ -37,7 +38,6 @@
         <file>TaskInfo.qml</file>
         <file>VehicleItem.qml</file>
         <file>TaskSettingsPage.qml</file>
-        <file>MapTaskPoint.qml</file>
     </qresource>
     <qresource prefix="/mapping">
         <file>MappingPage.qml</file>

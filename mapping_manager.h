@@ -39,11 +39,13 @@ signals:
      void emitMappingCommandInfo(const bool success, const QString& message);
      void emitmappingProgressInfo(const int status, const QString& message,const int progress);
      void emitMappingFinish();
-
      void emitTrajectory(const QVariantList& trajectory);
+     void emitTransferDataInfo(const bool flag, const QString& message);
 private slots:
      void parseMappingCommandRst(const QJsonObject& obj);
      void parseMappingProgress(const QJsonObject& obj);
+     void parseTransferDataRst(const QJsonObject& obj);
+
 private:
     SocketManager* _socket_manager;
     MappingCommand _mapping_command;

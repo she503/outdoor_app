@@ -55,31 +55,7 @@ Rectangle {
 
     property var begin_points: []//map_task_manager.getMapFeature(map_task_manager.getCurrentMapName())[0]
     property var charge_points: []//map_task_manager.getMapFeature(map_task_manager.getCurrentMapName())[1]
-
-    function createBeginPoint(z) {
-        var component = Qt.createComponent("MapTaskPoint.qml")
-
-        for (var i = 0; i < begin_points.length; ++i)
-            if (component.status === Component.Ready) {
-
-                var pos = root.geometryToPixel(begin_points[i][0],begin_points[i][1])
-                var x = pos[0]
-                var y = pos[1]
-
-                var obj = component.createObject(map, {
-                                                     "width": vehicle.width,
-                                                     "height": vehicle.width,
-                                                     "x":x - vehicle.width / 2,
-                                                     "y":y - vehicle.width / 2,
-                                                     "pos_x": begin_points[i][0],
-                                                     "pos_y": begin_points[i][1],
-                                                     "pos_theta": begin_points[i][2],
-                                                     "clicked_point": root.choosePoint,
-                                                     "z": z,
-                                                 })
-
-            }
-    }
+    property bool is_select_begin_point: status_manager.getWorkStatus() <= 4
 
     function paintTasks(){
         canvas_task.requestPaint()
@@ -98,16 +74,13 @@ Rectangle {
 
         var feature_list = map_task_manager.getMapFeature(map_task_manager.getCurrentMapName())
         if (feature_list.length === 1) {
-            begin_points = feature_list[0]
-            console.info(begin_points)
-
+            root.begin_points = feature_list[0]
         } else if (feature_list.length === 2) {
-            begin_points = feature_list[0]
-            charge_points = feature_list[1]
+            root.begin_points = feature_list[0]
+            root.charge_points = feature_list[1]
         } else if (feature_list.length === 0) {
 
         }
-
 
 
 
@@ -175,7 +148,7 @@ Rectangle {
         vehicle.width =  vehicle_width * 3/2 * map_rate
         vehicle.height = vehicle_height * map_rate
 
-        createBeginPoint(0)
+//        createBeginPoint(0)
     }
 
     function geometryToPixel(X, Y) {
@@ -234,6 +207,17 @@ Rectangle {
         if (work_status === 5) {
             root.var_ref_line = map_task_manager.getWorkFullRefLine()
             canvas_ref_line.requestPaint()
+        }
+    }
+
+    Connections {
+        target: status_manager
+        onWorkStatusUpdate: {
+            if (status >= 4) {
+                root.is_select_begin_point = false
+            } else {
+                root.is_select_begin_point = true
+            }
         }
     }
 
@@ -638,6 +622,58 @@ Rectangle {
                 }
             }
 
+            Canvas {
+                id: canvas_begin_points
+                width: map_width * map_rate  + paint_begin_offset * 2
+                height: map_height * map_rate + paint_begin_offset * 2
+
+                x: canvas_background.x
+                y: canvas_background.y
+
+                onImageLoaded: requestPaint()
+                Component.onCompleted: {
+                    loadImage("qrc:/res/ui/task/qidian_no.png")
+                }
+
+                function drawBeginPoints(ctx, begin_points) {
+                    if (!root.is_select_begin_point) {
+                        return
+                    }
+
+                    if (begin_points.length <= 0) {
+                        return
+                    }
+                    for (var i = 0; i < begin_points.length; ++i) {
+                        ctx.save()
+                        var point = geometryToPixel(begin_points[i][0], begin_points[i][1])
+                        ctx.translate(point[0],point[1]);
+                        ctx.rotate(-begin_points[i][2] / Math.PI * 180 );
+
+                        if(root.choosePoint[0] >= point[0] - vehicle.height &&
+                                root.choosePoint[0] <= point[0] + vehicle.height  &&
+                                root.choosePoint[1] >= point[1] - vehicle.height &&
+                                root.choosePoint[1] <= point[1] + vehicle.height  ) {
+                            ctx.drawImage("qrc:/res/ui/task/qidian_choose.png",- vehicle.height,- vehicle.height,
+                                          vehicle.height * 2 ,vehicle.height * 2);
+                            map_task_manager.setInitPos(begin_points[i][0],begin_points[i][1],begin_points[i][2])
+                        } else {
+                            ctx.drawImage("qrc:/res/ui/task/qidian_no.png",- vehicle.height,- vehicle.height,
+                                          vehicle.height * 2 ,vehicle.height * 2);
+                        }
+                        ctx.restore()
+                    }
+
+
+                }
+
+                onPaint: {
+                    var ctx=getContext("2d");
+                    ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
+                    drawBeginPoints(ctx,root.begin_points)
+
+                }
+            }
+
             VehicleItem {
                 id: vehicle
                 visible: true
@@ -674,9 +710,7 @@ Rectangle {
                 var x = map.width / 2 - ( map.width / 2 - mouse.x + map.x) / map.scale
                 var y = map.height / 2 - ( map.height / 2 - mouse.y + map.y) / map.scale
                 root.choosePoint = [x, y]
-
-                createBeginPoint(10)
-
+                canvas_begin_points.requestPaint()
             }
             onPressed: {
                 root.can_drag = true

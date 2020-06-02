@@ -11,7 +11,6 @@ Item {
     property bool is_locked: false
     property bool has_error: false
     property var error_text_color: "red"//: ["yellow", "orange", "red"]
-    property bool is_first_get_error: false
 
     function showMessagePics(flag) {
         if (flag) {
@@ -124,15 +123,9 @@ Item {
             timer_no_error_close.start()
             timer_no_error_close.times = 0
 
-//            timer_no_error_close.running = true
-            if (!is_first_get_error) {
                 timer_btn_errror_flashes.start()
-                root.is_first_get_error = true
                 draw_error.open()
 
-                //                timer_btn_errror_open.start()   debug
-                //                root.cannotOperatorTask ()      debug
-            }
             for(var i = 0; i < monitor_message.length; ++i) {
                 message_list_model.append({"error_time" : monitor_message[i][0],
                                               "error_level" : monitor_message[i][1],
@@ -176,8 +169,7 @@ Item {
         visible: has_error
         height: parent.height * 0.7
         width: height
-//        anchors.horizontalCenter: parent.horizontalCenter
-//        anchors.verticalCenter: parent.verticalCenter
+
         background: Rectangle {
             height: parent.height * 1.36
             width: height
@@ -481,11 +473,11 @@ Item {
         onTriggered: {
             ++times
             if (times >= 2) {
+                draw_error.close()
                 timer_btn_errror_open.stop()
                 timer_btn_errror_flashes.stop()
                 btn_error.visible = false
                 root.has_error = false
-                root.is_first_get_error = false
                 timer_no_error_close.stop()
             }
         }

@@ -456,7 +456,11 @@ Rectangle {
                                 onClicked: {
                                     map_task_manager.setInitIsRight(false)
                                     map_task_manager.turnToSelectMap()
-                                    rec_checked_location.resureLocalization(false)
+                                    rect_resure_localization.visible = false
+                                    txt_localization.text = qsTr("please choose a begin point!")
+                                    rect_resure_point.visible = true
+                                    img_no.visible = false
+                                    img_yes.visible = false
                                 }
                             }
                         }
@@ -533,13 +537,11 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
-                                    console.info("move and choose point")
                                     dialog_resure.open()
                                 }
                             }
                         }
                     }
-
 
 
                     Rectangle {

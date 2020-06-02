@@ -172,6 +172,15 @@ void SocketManager::parseSocketData(const QByteArray &buffer)
     case MESSAGE_MAPPING_FINISH:
         emit emitMappingFinish();
         break;
+    case MESSAGE_MAPPING_MESSAGE:
+        emit emitMappingMessage(obj.value("flag").toBool(), obj.value("message").toString());
+        break;
+    case MESSAGE_MAPPING_START_SUCCESS:
+        emit emitStartMappingSuccess();
+        break;
+    case MESSAGE_MAPPING_TRANSFER_DATA_RST:
+        emit emitTransferDataRst(obj);
+        break;
     default:
         break;
     }

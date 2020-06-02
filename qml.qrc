@@ -22,6 +22,7 @@
         <file>TLMessageBox.qml</file>
         <file>TLScrollBar.qml</file>
         <file>TLBtnWithPic.qml</file>
+        <file>TLBusyIndicator.qml</file>
     </qresource>
     <qresource prefix="/user_manager">
         <file>UserManagePage.qml</file>
@@ -40,12 +41,10 @@
     </qresource>
     <qresource prefix="/mapping">
         <file>MappingPage.qml</file>
-        <file>MappingStartPageTest.qml</file>
         <file>MappingMessage.qml</file>
-        <file>MappingTrajectory.qml</file>
         <file>MappingMenu.qml</file>
-        <file>TransferMappingDataPage.qml</file>
         <file>MappingPlaceChoose.qml</file>
         <file>MappingStartPage.qml</file>
+        <file>MappingStartBtns.qml</file>
     </qresource>
 </RCC>

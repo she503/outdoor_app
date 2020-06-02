@@ -71,7 +71,7 @@ Rectangle {
     function chooseMapPage() {
         hideAllComponent()
         rec_header_bar.visible = true
-        rec_header_bar.height = rec_task_page.height * 0.1
+        rec_header_bar.height = rec_task_page.height * 0.08
         rec_checked_location.visible = true
         map_display_page.p_choose_marker.visible = true
 
@@ -102,15 +102,9 @@ Rectangle {
 
     function mapFillScreen(flag) {
         if (flag) {
-            rec_task_page.height = rec_glow_background.height
-            rec_task_page.width = rec_glow_background.width
-            rec_task_page.anchors.topMargin = 0
-            rec_task_page.anchors.leftMargin = 0
+
         } else {
-            rec_task_page.width = rec_glow_background.width * 0.86
-            rec_task_page.height = rec_glow_background.height * 0.81
-            rec_task_page.anchors.leftMargin = rec_glow_background.width * 0.073
-            rec_task_page.anchors.topMargin = rec_glow_background.height * 0.115
+
         }
     }
 
@@ -122,6 +116,23 @@ Rectangle {
         }
         updateMapSettingPage(work_status)
     }
+    Connections {
+        target: map_task_manager
+        onEmitSetInitPoseRstInfo: {
+            if (status === 1) {
+                rec_checked_location.resureLocalization(false)
+
+            } else if (status === 0) {
+                message_box.dia_type = 0
+                message_box.dia_title = qsTr("Init Error")
+                message_box.dia_text = qsTr("Init Pos error")
+                message_box.open()
+            }
+
+            busy_indicator.close()
+
+        }
+    }
 
     Connections{
         target: status_manager
@@ -132,8 +143,10 @@ Rectangle {
                 map_display_page.clearAllCanvas()
             }
             if (status === 4) {
-                busy.running = false
+                rec_checked_location.resureLocalization(false)
             }
+
+            busy_indicator.close()
 
             map_display_page.paintingMap(map_task_manager.getCurrentMapName())
         }
@@ -149,21 +162,17 @@ Rectangle {
         anchors.fill: parent
         color: "transparent"
 
-        Image {
-            anchors.fill: parent
-            source: "qrc:/res/ui/background/map.png"
-        }
-
         Rectangle {
             id: rec_header_bar
-            width: parent.width * 0.83
-            height: parent.height * 0.01
+            width: parent.width
+            height: parent.height * 0.08
             color: "transparent"
             anchors{
-                bottom: rec_task_page.top
-                bottomMargin: -parent.height * 0.015
-                left: parent.left
-                leftMargin: parent.width * 0.073
+
+//                top:parent.top
+//                topMargin: parent.height * 0.06
+//                left: parent.left
+//                leftMargin: parent.width * 0.02
             }
 
             ListView {
@@ -224,15 +233,14 @@ Rectangle {
 
         Rectangle {
             id: rec_task_page
-            width: parent.width * 0.86
-            height: parent.height * 0.81
+            width: parent.width
+            height: parent.height - rec_header_bar.height
+//            anchors.fill: parent
             color: "transparent"
             visible: root.map_status !== 0
             anchors {
                 left: parent.left
-                top: parent.top
-                leftMargin: parent.width * 0.073
-                topMargin: parent.height * 0.115
+                top: rec_header_bar.bottom
             }
 
             Rectangle {
@@ -245,7 +253,6 @@ Rectangle {
                     id: map_display_page
                     width:parent.width
                     height: parent.height
-
                 }
 
                 Rectangle {
@@ -376,7 +383,7 @@ Rectangle {
                 }
 
                 Rectangle{
-                    id: rec_checked_location
+                    id: rec_checked_location//
                     visible: true
                     color: "transparent"
                     width: parent.width
@@ -388,10 +395,17 @@ Rectangle {
                     function resureLocalization(flag) {
                         if (flag) {
                             rect_resure_localization.visible = true
+                            txt_localization.text = qsTr("Please waite for minute!")
                             rect_resure_point.visible = false
+                            img_no.visible = false
+                            img_yes.visible = false
+
                         } else {
-                            rect_resure_localization.visible = false
-                            rect_resure_point.visible = true
+                            rect_resure_localization.visible = true
+                            txt_localization.text = qsTr("please resure location is right!")
+                            rect_resure_point.visible = false
+                            img_no.visible = true
+                            img_yes.visible = true
                         }
                     }
 
@@ -411,7 +425,7 @@ Rectangle {
 
                         Text {
                             id: txt_localization
-                            text: qsTr("please resure location is right")
+                            text: qsTr("please resure location is right!")
                             width: parent.width * 0.7
                             height: parent.height
                             font.family: "Helvetica"
@@ -442,7 +456,11 @@ Rectangle {
                                 onClicked: {
                                     map_task_manager.setInitIsRight(false)
                                     map_task_manager.turnToSelectMap()
-                                    rec_checked_location.resureLocalization(false)
+                                    rect_resure_localization.visible = false
+                                    txt_localization.text = qsTr("please choose a begin point!")
+                                    rect_resure_point.visible = true
+                                    img_no.visible = false
+                                    img_yes.visible = false
                                 }
                             }
                         }
@@ -467,7 +485,9 @@ Rectangle {
                                 anchors.fill: parent
                                 onClicked: {
                                     map_task_manager.setInitIsRight(true)
-                                    rec_checked_location.resureLocalization(false)
+                                    rec_checked_location.resureLocalization(true)
+                                    busy_indicator.txt_context = qsTr("get map and task info, please waite for a minute!")
+                                    busy_indicator.open()
                                 }
                             }
                         }
@@ -522,7 +542,6 @@ Rectangle {
                             }
                         }
                     }
-
 
 
                     Rectangle {
@@ -629,16 +648,6 @@ Rectangle {
                 }
             }
         }
-
-
-        BusyIndicator{
-            id:busy
-            visible: running
-            running: false
-            width: parent.height * 0.2
-            height: width
-            anchors.centerIn: parent
-        }
     }
 
     Rectangle {
@@ -668,43 +677,11 @@ Rectangle {
     Connections {
         target: map_task_manager
         onEmitSetInitPoseRstInfo: {
-            busy.visible = false
-            busy.running = false
             rec_checked_location.visible = true
-
-            if (status === 1) {
-                rec_checked_location.resureLocalization(true)
-            }
         }
     }
 
-    Timer {
-        id: timer_cant_control_pop
-        running: false
-        repeat: true
-        interval: 10
-        onTriggered: {
-            if (busy.running == true) {
-                pop_lock_loading_task.open()
-            } else {
-                pop_lock_loading_task.close()
-            }
-        }
-    }
 
-    Popup {
-        id: pop_lock_loading_task
-        width: parent.width
-        height: parent.height
-        modal: true
-        focus: true
-        dim: false
-        closePolicy: Popup.CloseOnPressOutsideParent
-        background: Rectangle {
-            anchors.fill: parent
-            color: "transparent"
-        }
-    }
     TLDialog {
         id: dialog_return_map_tip
         height: parent.height * 0.5
@@ -741,12 +718,10 @@ Rectangle {
         ok_text: qsTr("yes")
         onOkClicked: {
             dialog_resure.close()
-            map_display_page.sendInitPoint()
-            busy.visible = true
-            busy.running = true
+            map_task_manager.sendInitPos()
             rec_checked_location.visible = false
-            pop_lock_loading_task.open()
-            timer_cant_control_pop.start()
+            busy_indicator.txt_context = qsTr("Locating, please waite for a minute!")
+            busy_indicator.open()
         }
         onCancelClicked: {
             root.chooseMapPage()

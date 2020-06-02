@@ -42,7 +42,6 @@ Rectangle {
         var status = status_manager.getWorkStatus()
         if (status === 5) {
             misson_bord.showMessagePics(true)
-//            rec_left.width = 10
         } else {
             misson_bord.showMessagePics(false)
         }
@@ -58,9 +57,7 @@ Rectangle {
             } else if (status > 1 && status < 5) {
                 menu_stack.tlReplace(list_view)
             } else if (status === 5) {
-//                menu_stack.tlReplace(task_process_page)
                 misson_bord.showMessagePics(true)
-//                rect_right.width = 10
             }
         }
     }
@@ -128,11 +125,9 @@ Rectangle {
                     stack_view.tlReplace(user_manage_page)
                 } else if (current_index === 1) {
                     if (status_manager.getWorkStatus() === 5) {
-//                        menu_stack.tlReplace(task_process_page)
                     } else {
                         menu_stack.tlReplace(list_view)
                     }
-//                    menu_stack.tlReplace(task_process_page)
                     stack_view.tlReplace(task_settings_page)
                 } else if (current_index === 2) {
                     stack_view.tlReplace(help_document_page)

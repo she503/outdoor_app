@@ -1,5 +1,5 @@
 QT += qml quick network widgets webview
-QT += qml quick network widgets
+
 CONFIG += c++11 resources_big
 
 SOURCES += main.cpp \

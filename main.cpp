@@ -20,7 +20,6 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
-
     QIcon icon(":/res/pictures/logo_3.png");
     app.setWindowIcon(icon);
     app.setApplicationName("中振同辂洗地机");

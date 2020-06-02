@@ -28,7 +28,6 @@ Rectangle {
                     console.info("error map name")
                     return
                 }
-                mapping_manager.setIndoorOutdoor(1, root.map_name)
                 root.sigChooseBtnNumber(1)
             }
         }
@@ -47,7 +46,7 @@ Rectangle {
                     console.info("error map name")
                     return
                 }
-                mapping_manager.setIndoorOutdoor(2, root.map_name)
+
                 root.sigChooseBtnNumber(2)
             }
         }

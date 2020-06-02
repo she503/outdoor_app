@@ -2,13 +2,14 @@ import QtQuick 2.0
 import "homemade_components"
 Rectangle {
     id: root
-    TLMessageBox {
-        id: message_box
-
-        x: (parent.width - width ) / 2
-        y: (parent.height - height) / 2
-        width: 300
-        height: 200
+    Connections {
+        target: socket_manager
+        onEmitMappingMessage: {
+            message_box.dia_type = flag ? 1 : 0
+            message_box.dia_title = qsTr("COPY")
+            message_box.dia_text = message
+            message_box.open()
+        }
     }
 
 
@@ -26,15 +27,6 @@ Rectangle {
             message_box.dia_title = qsTr("Map Error")
             message_box.dia_text = qsTr("set map error")
             message_box.open()
-        }
-
-        onEmitSetInitPoseRstInfo: {
-            if (status === 0) {
-                message_box.dia_type = 0
-                message_box.dia_title = qsTr("Init Error")
-                message_box.dia_text = qsTr("Init Pos error")
-                message_box.open()
-            }
         }
 
         onEmitGetMapAndTasksInfoError: {
@@ -119,4 +111,5 @@ Rectangle {
             }
         }
     }
+
 }

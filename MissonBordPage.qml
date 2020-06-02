@@ -10,6 +10,7 @@ Item {
     signal cannotOperatorTask()
     property bool is_locked: false
     property bool has_error: false
+    property bool is_first_error: true
     property var error_text_color: "red"//: ["yellow", "orange", "red"]
 
     function showMessagePics(flag) {
@@ -120,11 +121,14 @@ Item {
         onUpdateMonitorMessageInfo: {
             message_list_model.clear()
             root.has_error = true
-            timer_no_error_close.start()
             timer_no_error_close.times = 0
 
+            if (root.is_first_error) {
+                root.is_first_error = false
+                timer_no_error_close.start()
                 timer_btn_errror_flashes.start()
                 draw_error.open()
+            }
 
             for(var i = 0; i < monitor_message.length; ++i) {
                 message_list_model.append({"error_time" : monitor_message[i][0],
@@ -479,6 +483,7 @@ Item {
                 btn_error.visible = false
                 root.has_error = false
                 timer_no_error_close.stop()
+                root.is_first_error = true
             }
         }
     }

@@ -59,6 +59,7 @@ void MapTaskManager::sendInitPos()
 
 void MapTaskManager::setWorkMapName(const QString &map_name)
 {
+    _current_map_name = map_name;
     QJsonObject obj;
     obj.insert("message_type", MESSAGE_SET_MAP);
     obj.insert("map_name", map_name);
@@ -68,6 +69,7 @@ void MapTaskManager::setWorkMapName(const QString &map_name)
 
 QVariantList MapTaskManager::getMapRoads(const QString &map_name)
 {
+    _current_map_name = map_name;
     if (_all_maps.empty() || map_name == "") {
         return QVariantList();
     }
@@ -139,6 +141,7 @@ QVariantList MapTaskManager::getMapFeature(const QString &map_name)
     QVariantList map_begin_point_feature;
     QVariantList map_charge_point_feature;
     QJsonObject features_obj = _all_features.value(map_name);
+    qDebug() << map_name << features_obj;
     QJsonObject::Iterator it_feature = features_obj.begin();
     for (; it_feature!= features_obj.end(); ++it_feature) {
         QJsonObject temp_feature = it_feature.value().toObject();

@@ -35,18 +35,31 @@ void MapTaskManager::setStatusManager(StatusManager* status_manager) {
     _status_manager = status_manager;
 }
 
-void MapTaskManager::sendInitPos(const double &pos_x, const double &pos_y)
+void MapTaskManager::setInitPos(const double &pos_x, const double &pos_y, const double theta)
 {
+    _init_pose.clear();
+    _init_pose.push_back(pos_x);
+    _init_pose.push_back(pos_y);
+    _init_pose.push_back(theta);
+}
+
+void MapTaskManager::sendInitPos()
+{
+    if (_init_pose.empty()) {
+        return;
+    }
     QJsonObject obj;
     obj.insert("message_type", int(MESSAGE_SET_INIT_POSE));
-    obj.insert("x", pos_x);
-    obj.insert("y", pos_y);
+    obj.insert("x", _init_pose.at(0).toDouble());
+    obj.insert("y", _init_pose.at(1).toDouble());
+    obj.insert("theta", _init_pose.at(2).toDouble());
     QJsonDocument doc(obj);
     _socket_manager->sendSocketMessage(doc.toJson());
 }
 
 void MapTaskManager::setWorkMapName(const QString &map_name)
 {
+    _current_map_name = map_name;
     QJsonObject obj;
     obj.insert("message_type", MESSAGE_SET_MAP);
     obj.insert("map_name", map_name);
@@ -56,6 +69,7 @@ void MapTaskManager::setWorkMapName(const QString &map_name)
 
 QVariantList MapTaskManager::getMapRoads(const QString &map_name)
 {
+    _current_map_name = map_name;
     if (_all_maps.empty() || map_name == "") {
         return QVariantList();
     }
@@ -98,6 +112,8 @@ QVariantList MapTaskManager::getTasksData(const QStringList &tasks_name)
             goal_tasks.push_back(points);
         } else if (task_type == 3) {
             cover_tasks.push_back(points);
+        } else if (task_type == 4){
+            track_tasks.push_back(points);
         }
     }
 
@@ -113,17 +129,37 @@ QVariantList MapTaskManager::getMapFeature(const QString &map_name)
     if (_all_features.empty()) {
         return QVariantList();
     }
+    if (_all_features.value(map_name).empty()) {
+        return QVariantList();
+    }
     QMap<QString, QJsonObject>::const_iterator iter = _all_features.find(map_name);
     if (iter == _all_features.constEnd()) {
         return QVariantList();
     }
-    QJsonObject begin_obj = iter.value().value("begin_point").toObject();
-    QJsonObject charge_obj = iter.value().value("charge_point").toObject();
 
     QVariantList map_feature;
-    // TODO
-    map_feature.push_back(begin_obj);
-    map_feature.push_back(charge_obj);
+    QVariantList map_begin_point_feature;
+    QVariantList map_charge_point_feature;
+    QJsonObject features_obj = _all_features.value(map_name);
+    qDebug() << map_name << features_obj;
+    QJsonObject::Iterator it_feature = features_obj.begin();
+    for (; it_feature!= features_obj.end(); ++it_feature) {
+        QJsonObject temp_feature = it_feature.value().toObject();
+        QVariantList map_temp_feature;
+        map_temp_feature.insert(0, temp_feature.value("x").toDouble());
+        map_temp_feature.insert(1, temp_feature.value("y").toDouble());
+        map_temp_feature.insert(2, temp_feature.value("theta").toDouble());
+        if (temp_feature.value("type").toInt() == 1) {
+            map_begin_point_feature.push_back(map_temp_feature);
+        } else if (temp_feature.value("type").toInt() == 2) {
+            map_charge_point_feature.push_back(map_temp_feature);
+        } else {
+            return QVariantList();
+        }
+    }
+
+    map_feature.insert(0,map_begin_point_feature);
+    map_feature.insert(1,map_charge_point_feature);
     return map_feature;
 }
 
@@ -197,6 +233,15 @@ void MapTaskManager::setEnableCleanWork(bool flag)
     _socket_manager->sendSocketMessage(doc.toJson());
 }
 
+void MapTaskManager::setInitIsRight(bool flag)
+{
+    QJsonObject obj;
+    obj.insert("message_type", MESSAGE_INIT_POSE_RST_CONFIRM);
+    obj.insert("flag", flag);
+    QJsonDocument doc(obj);
+    _socket_manager->sendSocketMessage(doc.toJson());
+}
+
 /// \brief parse map and task info from server
 void MapTaskManager::parseAllMapsInfo(const QJsonObject &obj)
 {
@@ -212,6 +257,9 @@ void MapTaskManager::parseAllMapsInfo(const QJsonObject &obj)
     _all_maps.clear();
     _all_features.clear();
     QJsonObject map_obj = obj.value("maps").toObject();
+    if (map_obj.empty()) {
+        return;
+    }
     QJsonObject::Iterator it;
     for(it = map_obj.begin(); it != map_obj.end(); ++it) {
         QString map_name = it.key();
@@ -220,16 +268,12 @@ void MapTaskManager::parseAllMapsInfo(const QJsonObject &obj)
         _all_maps.insert(map_name, area_obj);
 
         QJsonObject features_obj = map_temp_obj.value("features").toObject();
-        QJsonObject feature_temp_obj;
-        QJsonObject begin_point_obj = features_obj.value("begin_point").toObject();
-        QJsonObject charge_point_obj = features_obj.value("charge_point").toObject();
-        feature_temp_obj.insert("begin_point", begin_point_obj);
-        feature_temp_obj.insert("charge_point", charge_point_obj);
-        _all_features.insert(map_name, feature_temp_obj);
+        _all_features.insert(map_name, features_obj);
     }
     _current_map_name = _all_maps.firstKey();
 
     this->setWorkMapName(_current_map_name);
+
     _status_manager->setWorkStatus(WORK_STATUS_NONE_WORK);
 }
 
@@ -246,9 +290,17 @@ void MapTaskManager::parseSetInitPoseRst(const QJsonObject &obj)
 {
     int status = obj.value("status").toInt();
     QString message = obj.value("message").toString();
-    if (status == 0) {
-        emit emitSetInitPoseRstInfo(status, message);
+
+    emit emitSetInitPoseRstInfo(status, message);
+
+    if (status == 1) {
+        QJsonObject rst_pose_obj = obj.value("rst_pose").toObject();
+        double x = rst_pose_obj.value("x").toDouble();
+        double y = rst_pose_obj.value("y").toDouble();
+        double heading_angle = rst_pose_obj.value("theta").toDouble();
+        emit emitLocalizationInfo(x, y, heading_angle);
     }
+
 }
 
 void MapTaskManager::parseMapAndTasksInfo(const QJsonObject &obj)

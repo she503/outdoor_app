@@ -6,8 +6,8 @@ import "homemade_components"
 ApplicationWindow {
     id: root
     visible: true
-    width: 640
-    height: 480
+    width: 1920 / 3
+    height: 1200 / 3
 
     property bool connect_to_server: false
     property Component fail_connect_page: FaildToConnectPage{
@@ -24,15 +24,19 @@ ApplicationWindow {
             }
         }
     }
-    property Component main_page: MainPage {}
+    property Component main_page: MainPage { }
 
-    MessageBox{
+    TLMessageBox{
         id: message_box
-        anchors.fill: parent
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+    }
+    TLBusyIndicator {
+        id: busy_indicator
     }
 
     Component.onCompleted: {
-        connect_to_server = socket_manager.connectToServer("192.168.1.125")
+        connect_to_server = socket_manager.connectToServer("127.0.0.1")
     }
 
     Connections {

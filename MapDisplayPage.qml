@@ -3,18 +3,13 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
-Page {
+Rectangle {
     id: root
     visible: true
     width: parent.width
     height: parent.height
     clip: true
-
-    signal sendInitPoint()
-    onSendInitPoint: {
-        var pos = pixelToGeometry(choosePoint[0],choosePoint[1])
-        map_task_manager.sendInitPos(pos[0],pos[1])
-    }
+    color: "transparent"
 
     property alias p_choose_marker: choose_marker
     property var p_task_points: []
@@ -52,28 +47,43 @@ Page {
     property real min_y: Number.POSITIVE_INFINITY
     property real max_y: Number.NEGATIVE_INFINITY
     property real max_x: Number.NEGATIVE_INFINITY
-    property real real_rate: 2.0
+    property real real_rate: 3.0
 
     property bool can_drag: false
     property var choosePoint: []
 
 
-    property var begin_points: []
-    property var charge_points: []
-
+    property var begin_points: []//map_task_manager.getMapFeature(map_task_manager.getCurrentMapName())[0]
+    property var charge_points: []//map_task_manager.getMapFeature(map_task_manager.getCurrentMapName())[1]
+    property bool is_select_begin_point: status_manager.getWorkStatus() <= 4
 
     function paintTasks(){
         canvas_task.requestPaint()
     }
 
     function paintingMap(current_map_name) {
+        if(current_map_name === "") {
+            return
+        }
+
         map.scale = 1 / root.real_rate
-        img_charge.visible = false
-        img_begin.visible = false
         min_x = Number.POSITIVE_INFINITY
         min_y = Number.POSITIVE_INFINITY
         max_y = Number.NEGATIVE_INFINITY
         max_x = Number.NEGATIVE_INFINITY
+
+        var feature_list = map_task_manager.getMapFeature(map_task_manager.getCurrentMapName())
+        if (feature_list.length === 1) {
+            root.begin_points = feature_list[0]
+        } else if (feature_list.length === 2) {
+            root.begin_points = feature_list[0]
+            root.charge_points = feature_list[1]
+        } else if (feature_list.length === 0) {
+
+        }
+
+
+
         var work_status = status_manager.getWorkStatus()
         var map_road_data = []
         var map_road_edges_data = []
@@ -128,13 +138,17 @@ Page {
 
         canvas_background.requestPaint()
 
+
+        //        var vehicle_width = 4.4
+        //        var vehicle_height = 2.2
+
         var vehicle_width = vehicle_info_manager.getVehicleWidth()
         var vehicle_height = vehicle_info_manager.getVehicleHeight()
-//        var vehicle_width = 4.4
-//        var vehicle_height = 2.2
 
         vehicle.width =  vehicle_width * 3/2 * map_rate
         vehicle.height = vehicle_height * map_rate
+
+//        createBeginPoint(0)
     }
 
     function geometryToPixel(X, Y) {
@@ -197,11 +211,35 @@ Page {
     }
 
     Connections {
+        target: status_manager
+        onWorkStatusUpdate: {
+            if (status >= 4) {
+                root.is_select_begin_point = false
+            } else {
+                root.is_select_begin_point = true
+            }
+        }
+    }
+
+    Connections {
         target: map_task_manager
         onEmitWorkFullRefLine: {
             root.var_ref_line = ref_line
             canvas_ref_line.requestPaint()
         }
+        onEmitLocalizationInfo: {
+            vehicle.visible = true
+            var pixel_pos = geometryToPixel(x, y)
+            vehicle.x = pixel_pos[0] - vehicle.width / 2
+            vehicle.y = pixel_pos[1] - vehicle.height / 2
+            //            if (!root.can_drag) {
+            //                map.x = (map.width / 2 - vehicle.x + vehicle.width / 2) * (map.scale)
+            //                map.y = (map.height / 2 - vehicle.y + vehicle.height / 2) * (map.scale)
+            //            }
+            vehicle.rotation = -heading_angle
+        }
+
+
     }
 
     Connections {
@@ -212,8 +250,8 @@ Page {
             vehicle.x = pixel_pos[0] - vehicle.width / 2
             vehicle.y = pixel_pos[1] - vehicle.height / 2
             if (!root.can_drag) {
-                map.x = (map.width / 2 - vehicle.x - vehicle.width / 2) * (map.scale)
-                map.y = (map.height / 2 - vehicle.y - vehicle.height / 2) * (map.scale)
+                map.x = (map.width / 2 - vehicle.x + vehicle.width / 2) * (map.scale)
+                map.y = (map.height / 2 - vehicle.y + vehicle.height / 2) * (map.scale)
             }
             vehicle.rotation = -heading
         }
@@ -262,51 +300,23 @@ Page {
         id: map
         width: parent.width * 0.78
         height: parent.height
-
+        color: "transparent"
         Image {
             id: choose_marker
             z: 1
             visible: false
             source: "qrc:/res/pictures/gps.png"
-            width: 28
-            height: 28
+            width: 0
+            height: 0
             x: choosePoint[0] - width / 2
             y: choosePoint[1] - height
             fillMode: Image.PreserveAspectFit
         }
-        Image {
-            id: img_begin
-            z: 10
-            width: 10
-            height: 10
-            visible: false
-            x: -100
-            y: -100
-            Rectangle {
-                anchors.fill: parent
-                radius: height / 2
-                color: "red"
-            }
-        }
-        Image {
-            id: img_charge
-            width: 10
-            height: 10
-            visible: false
-            x: -100
-            y: -100
-            z: 10
-            Rectangle {
-                anchors.fill: parent
-                radius: height / 2
-                color: "yellow"
-            }
-        }
 
         Rectangle {
             id: map_background
-            width: parent.width
-            height: parent.height
+            width: canvas_background.width
+            height: canvas_background.height
             color: "transparent"
             Canvas {
                 id: canvas_background
@@ -612,6 +622,59 @@ Page {
                 }
             }
 
+            Canvas {
+                id: canvas_begin_points
+                width: map_width * map_rate  + paint_begin_offset * 2
+                height: map_height * map_rate + paint_begin_offset * 2
+
+                x: canvas_background.x
+                y: canvas_background.y
+
+                onImageLoaded: requestPaint()
+                Component.onCompleted: {
+                    loadImage("qrc:/res/ui/task/qidian_no.png")
+                }
+
+                function drawBeginPoints(ctx, begin_points) {
+                    if (!root.is_select_begin_point) {
+                        return
+                    }
+
+                    if (begin_points.length <= 0) {
+                        return
+                    }
+                    for (var i = 0; i < begin_points.length; ++i) {
+                        ctx.save()
+                        var point = geometryToPixel(begin_points[i][0], begin_points[i][1])
+                        ctx.translate(point[0],point[1]);
+                        ctx.rotate(-begin_points[i][2] / Math.PI * 180 );
+
+                        if(root.choosePoint[0] >= point[0] - vehicle.height &&
+                                root.choosePoint[0] <= point[0] + vehicle.height  &&
+                                root.choosePoint[1] >= point[1] - vehicle.height &&
+                                root.choosePoint[1] <= point[1] + vehicle.height  ) {
+                            ctx.drawImage("qrc:/res/ui/task/qidian_choose.png",- vehicle.height,- vehicle.height,
+                                          vehicle.height * 2 ,vehicle.height * 2);
+                            map_task_manager.setInitPos(begin_points[i][0],begin_points[i][1],begin_points[i][2])
+                        } else {
+                            ctx.drawImage("qrc:/res/ui/task/qidian_no.png",- vehicle.height,- vehicle.height,
+                                          vehicle.height * 2 ,vehicle.height * 2);
+                        }
+                        ctx.restore()
+                    }
+
+
+                }
+
+                onPaint: {
+                    var ctx=getContext("2d");
+                    ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
+                    console.info(begin_points)
+                    drawBeginPoints(ctx,root.begin_points)
+
+                }
+            }
+
             VehicleItem {
                 id: vehicle
                 visible: true
@@ -648,6 +711,8 @@ Page {
                 var x = map.width / 2 - ( map.width / 2 - mouse.x + map.x) / map.scale
                 var y = map.height / 2 - ( map.height / 2 - mouse.y + map.y) / map.scale
                 root.choosePoint = [x, y]
+//                console.info(root.pixelToGeometry(root.choosePoint[0],root.choosePoint[1]))
+                canvas_begin_points.requestPaint()
             }
             onPressed: {
                 root.can_drag = true
@@ -665,4 +730,5 @@ Page {
             }
         }
     }
+
 }

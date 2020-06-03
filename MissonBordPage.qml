@@ -2,7 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
-
+import "./homemade_components"
 Item {
     id: root
 
@@ -10,10 +10,111 @@ Item {
     signal cannotOperatorTask()
     property bool is_locked: false
     property bool has_error: false
+    property bool is_first_error: true
     property var error_text_color: "red"//: ["yellow", "orange", "red"]
-    property bool is_first_get_error: false
-    property int error_time: 0
 
+    function showMessagePics(flag) {
+        if (flag) {
+            btn_error.anchors.right = btn_lock.left
+            btn_error.anchors.rightMargin = root.width * 0.05
+            btn_error.anchors.verticalCenter = root.verticalCenter
+            message_pic.visible = true
+        } else {
+            btn_error.anchors.horizontalCenter = root.horizontalCenter
+            btn_error.anchors.verticalCenter = root.verticalCenter
+            message_pic.visible = false
+        }
+    }
+
+    Row {
+        id: message_pic
+        visible: true
+        anchors.fill: parent
+
+        TLBtnWithPic {
+            id: lab_battery
+            width: parent.width * 0.15
+            height: parent.height
+            backgroundDefaultColor: "transparent"
+            img_source: "qrc:/res/ui/mission_bord/battery_pic.png"
+            btn_text: "100 %"
+            font_size: height * 0.3
+
+            Connections{
+                target: ros_message_manager
+                onUpdateBatteryInfo: {
+                    lab_battery.btn_text = soc + " %"
+                }
+            }
+        }
+
+        TLBtnWithPic {
+            id: lab_speed
+            width: parent.width * 0.15
+            height: parent.height
+            backgroundDefaultColor: "transparent"
+            img_source: "qrc:/res/ui/mission_bord/speed_pic.png"
+            btn_text: "1 m/s"
+            font_size: height * 0.3
+        }
+
+        TLBtnWithPic {
+            id: lab_progress
+            width: parent.width * 0.15
+            height: parent.height
+            backgroundDefaultColor: "transparent"
+            img_source: "qrc:/res/ui/mission_bord/task_progress.png"
+            font_size: height * 0.3
+            btn_text: "99 %"
+            Connections {
+                target: ros_message_manager
+                onUpdateTaskProcessInfo: {
+                    lab_progress.btn_text = "" + progress + " %";
+                }
+            }
+        }
+
+
+        Image {
+            id: lab_gear
+            width: parent.width * 0.1
+            height: parent.height * 0.8
+            fillMode: Image.PreserveAspectFit
+            anchors.verticalCenter: parent.verticalCenter
+            source: "qrc:/res/ui/mission_bord/gear_N_pic.png"
+            Connections {
+                target: ros_message_manager
+                onUpdateChassisInfo: {
+                    var v_speed = speed
+                    var n_speed = Number(v_speed)
+
+                    if (drive_mode === 0) {
+                        lab_operate.source = "qrc:/res/ui/mission_bord/operate_hand_pic.png"
+                    } else if (drive_mode === 1) {
+                        lab_operate.source = "qrc:/res/ui/mission_bord/operate_auto_pic.png"
+                    }
+
+                    if(Math.abs(n_speed) <= 0.05) {
+                        lab_gear.source = "qrc:/res/ui/mission_bord/gear_N_pic.png"
+                    } else if(n_speed > 0.05) {
+                        lab_gear.source = "qrc:/res/ui/mission_bord/gear_D_pic.png"
+                    } else if (n_speed < -0.05) {
+                        lab_gear.source = "qrc:/res/ui/mission_bord/gear_R_pic.png"
+                    }
+                    lab_speed.btn_text = v_speed + " m/s"
+                }
+            }
+        }
+
+        Image {
+            id: lab_operate
+            width: parent.width * 0.15
+            height: parent.height
+            fillMode: Image.PreserveAspectFit
+            anchors.verticalCenter: parent.verticalCenter
+            source: "qrc:/res/ui/mission_bord/operate_auto_pic.png"
+        }
+    }
 
     Connections {
         target: ros_message_manager
@@ -21,15 +122,15 @@ Item {
             root.error_time = 0
             message_list_model.clear()
             root.has_error = true
-            if (!is_first_get_error) {
-                btn_error.visible = true
-                is_first_get_error = true
+            timer_no_error_close.times = 0
+
+            if (root.is_first_error) {
+                root.is_first_error = false
+                timer_no_error_close.start()
                 timer_btn_errror_flashes.start()
-                timer_error_close.start()
-                //                timer_btn_errror_open.start()   debug
                 draw_error.open()
-                //                root.cannotOperatorTask()      debug
             }
+
             for(var i = 0; i < monitor_message.length; ++i) {
                 message_list_model.append({"error_time" : monitor_message[i][0],
                                               "error_level" : monitor_message[i][1],
@@ -42,9 +143,13 @@ Item {
     Button {
         id: btn_lock
         visible: !is_locked
-        height: parent.height
+        height: parent.height * 0.6
         width: height
-        anchors.right: parent.right
+        anchors{
+            right: parent.right
+            rightMargin: parent.width * 0.05
+            verticalCenter: parent.verticalCenter
+        }
         background: Rectangle {
             height: parent.height * 2.27
             width: height
@@ -55,7 +160,7 @@ Item {
                 height: parent.height * 0.6
                 width: height
                 anchors.centerIn: parent
-                source: "qrc:/res/pictures/BUTTON-LOCK.png"
+                source: "qrc:/res/ui/mission_bord/lock.png"
                 fillMode: Image.PreserveAspectFit
             }
         }
@@ -67,10 +172,9 @@ Item {
     Button {
         id: btn_error
         visible: has_error
-        height: parent.height
+        height: parent.height * 0.7
         width: height
-        anchors.right: btn_lock.left
-        anchors.rightMargin: height * 0.2
+
         background: Rectangle {
             height: parent.height * 1.36
             width: height
@@ -79,7 +183,7 @@ Item {
             radius: width / 2
             Image {
                 anchors.fill: parent
-                source: "qrc:/res/pictures/BUTTON-WARNING1.png"
+                source: "qrc:/res/ui/mission_bord/warn.png"
                 fillMode: Image.PreserveAspectFit
             }
         }
@@ -343,12 +447,8 @@ Item {
         repeat: true
         interval: 800
         onTriggered: {
-            if (has_error) {
                 btn_error.opacity = btn_error.opacity === 0 ? 1 : 0
-            } else {
-                timer_btn_errror_flashes.stop()
-                btn_error.visible = false
-            }
+
         }
     }
     Timer {
@@ -373,11 +473,25 @@ Item {
         repeat: true
         interval: 5000
         onTriggered: {
-            if (has_error) {
                 draw_error.open()
-            } else {
+        }
+    }
+    Timer {
+        id: timer_no_error_close
+        running: false
+        repeat: true
+        interval: 1000
+        property int times: 0
+        onTriggered: {
+            ++times
+            if (times >= 2) {
+                draw_error.close()
                 timer_btn_errror_open.stop()
+                timer_btn_errror_flashes.stop()
                 btn_error.visible = false
+                root.has_error = false
+                timer_no_error_close.stop()
+                root.is_first_error = true
             }
         }
     }

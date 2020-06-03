@@ -123,4 +123,12 @@ Rectangle {
         }
         onClicked: dialog_add_user.open()
     }
+    TLMessageBox {
+        id: tl_message_box
+        height: 200//parent.height * 0.5
+        width: 300//height * 1.5
+        x: -200
+        y: 50
+
+    }
 }

@@ -16,7 +16,9 @@ public:
     void setSocketManager(SocketManager* socket_manager);
     void setStatusManager(StatusManager* status_manager);
 
-    Q_INVOKABLE void sendInitPos(const double& pos_x, const double& pos_y);
+    Q_INVOKABLE void sendInitPos();
+
+    Q_INVOKABLE void setInitPos(const double& pos_x, const double& pos_y, const double theta);
 
     Q_INVOKABLE void setWorkMapName(const QString& map_name);
 
@@ -46,6 +48,8 @@ public:
 
     Q_INVOKABLE void setEnableCleanWork(bool flag);
 
+    Q_INVOKABLE void setInitIsRight(bool flag);
+
 private slots:
     void parseAllMapsInfo(const QJsonObject& obj);
     void parseSetMapNameRst(const QJsonObject& obj);
@@ -72,6 +76,9 @@ signals:
     void emitPauseTaskRst(const bool is_pause, const int status);
     void emitWorkDone();
 
+    void emitLocalizationInfo(const double x, const double y, const double heading_angle);
+
+
 private:
     SocketManager* _socket_manager;
     StatusManager* _status_manager;
@@ -83,6 +90,8 @@ private:
     QMap<QString, QJsonObject> _all_tasks_in_map;
 
     QVariantList _work_full_ref_line;
+
+    QVariantList _init_pose;
 };
 
 #endif // MAPTASKMANAGER_H

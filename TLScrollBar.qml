@@ -11,6 +11,6 @@ ScrollBar {
         implicitWidth: 4
         implicitHeight: 2
         radius: width / 2
-        color: vbar.pressed ? "#ffffaa" : "lightyellow"
+        color: vbar.pressed ? "#ffffaa" : "black"
     }
 }

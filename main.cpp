@@ -14,12 +14,12 @@
 #include "map_task_manager.h"
 #include "ros_message_manager.h"
 #include "vehicle_info_manager.h"
+#include "mapping_manager.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
-
     QIcon icon(":/res/pictures/logo_3.png");
     app.setWindowIcon(icon);
     app.setApplicationName("中振同辂洗地机");
@@ -55,6 +55,11 @@ int main(int argc, char *argv[])
     RosMessageManager* ros_message_manager = new RosMessageManager(&engine);
     engine.rootContext()->setContextProperty("ros_message_manager", ros_message_manager);
     ros_message_manager->setSocket(socket_manager);
+
+    MappingManager* mapping_manager = new MappingManager(&engine);
+    mapping_manager->setSocketManager(socket_manager);
+    engine.rootContext()->setContextProperty("mapping_manager", mapping_manager);
+
 
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())

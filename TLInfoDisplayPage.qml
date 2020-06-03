@@ -2,330 +2,386 @@ import QtQuick 2.0
 import QtQuick.Controls 2.2
 
 Rectangle {
-    id: rect_info_display
-    width: parent.width
-    height: parent.height
-
-    property real cellWidth: width / 3
-    property real cellHeight: height / 2
-    property real min_length: Math.min(cellHeight, cellWidth)
-    property real btn_size: min_length * 0.8
+    id: root
 
     color: "transparent"
-    //    Connections {
-    //        target: socket_manager
-    //        onUpdateBatteryInfo: {
-    //            var v_soc = soc;
-    //            var n_soc = Number(v_soc)
-    //            if (n_soc <= 20) {
-    //                soc_color.color = "red"
-    //            } else if (n_soc > 20 && n_soc <= 50) {
-    //                soc_color.color = "orange"
-    //            } else if (n_soc > 50) {
-    //                soc_color.color = "#00ff24"
-    //            }
-    //            text_soc.text = v_soc
-    //        }
-    //        onUpdateVehicleSpeed: {
-
-    //        }
-    //        onUpdateWaterVolume: {
-    //            var v_water_volume = water_volume
-    //            text_water.color = v_water_volume
-    //            var n_water_volume = Number(v_water_volume)
-
-    //            if (n_water_volume <= 20) {
-    ////                color_water.color = "red"
-    //            } else if (n_water_volume > 20 && n_water_volume <= 50) {
-    ////                color_water.color = "orange"
-    //            } else if (n_water_volume > 50) {
-    ////                color_water.color = "#00ff24"
-    //            }
-    //            text_water.text = v_water_volume
-    //        }
-    //    }
-
-    Connections {
-        target: ros_message_manager
-        onUpdateChassisInfo: {
-            var v_speed = speed
-            var n_speed = Number(v_speed)
-            text_speed.color = "lightgreen"
-            text_speed.text = n_speed
-
-            if (drive_mode === 0) {
-                img_switch.source = "qrc:/res/pictures/switch_operate.png"
-            } else if (drive_mode === 1) {
-                img_switch.source = "qrc:/res/pictures/switch_auto.png"
-            }
-
-            if (cleaning_agency_state == 0) {
-                shuazi.source = "qrc:/res/pictures/states_no.png"
-            } else if (cleaning_agency_state == 1) {
-                shuazi.source = "qrc:/res/pictures/states_success.png"
-            }
-
-            if(water_tank_signal) {
-
-            } else {
-
-            }
-
-            if(Math.abs(n_speed) <= 0.05) {
-                gear.source = "qrc:/res/pictures/gear_n.png"
-            }
-            if(n_speed > 0.05) {
-                gear.source = "qrc:/res/pictures/gear_d.png"
-            } else if (n_speed < -0.05) {
-                 gear.source = "qrc:/res/pictures/gear_r.png"
-            }
-        }
-        onUpdateBatteryInfo: {
-            var v_soc = soc;
-            if (v_soc <= 20) {
-                soc_color.color = "red"
-            } else if (v_soc > 20 && v_soc < 50) {
-                soc_color.color = "orange"
-            } else if (v_soc >= 50) {
-                soc_color.color = "#00ff24"
-            }
-            text_soc.text = v_soc
-//            console.info(soc)
-        }
-    }
-
-    property real length: height / 2 > width / 3 ?  width / 3 : height / 2
-    //battery
+    signal sigCenterBtnClicked()
     Rectangle {
-        id: bac_battery
-        width: parent.width / 3
-        height:parent.height / 2
-        color: "transparent"
-        Image {
-            width: length
-            height: length
-            source: "qrc:/res/pictures/battery.png"
-            anchors.centerIn: parent
-            Rectangle {
-                id: content_soc
-                width: parent.width / 2
-                height: parent.height / 4
-                color: "transparent"
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                    top: parent.top
-                    topMargin: parent.height * 0.31
-                }
-                Text {
-                    z: 2
-                    id: text_soc
-                    text: qsTr("1")
-                    width: parent.width * 0.5
-                    height: parent.height
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
-                    font.pixelSize: height * 0.5
-                    font.bold: true
-                    color: "white"
-                }
-                Text {
-                    z: 2
-                    anchors{
-                        left: text_soc.right
-                        //                    leftMargin: width * 0.1
-                        bottom: parent.bottom
-                        bottomMargin: height * 0.1
-                    }
-                    text: qsTr("%")
-                    width: parent.width * 0.3
-                    height: parent.height * 0.8
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    font.pixelSize: height * 0.5
-                    font.bold: true
-                    color: text_soc.color
-                }
-                Rectangle {
-                    id: soc_color
-                    width: parent.width * 0.72 * text_soc.text / 100
-                    height: parent.height * 0.5
-                    radius: height / 8
-                    color: "white"
-                    anchors.left: parent.left
-                    anchors.leftMargin: parent.width * 0.15
-                    anchors.top: parent.top
-                    anchors.topMargin: parent.height * 0.25
-                }
-            }
-        }
-    }
-
-    //water
-    Rectangle {
-        id: bac_water
-        width: parent.width / 3
-        height:parent.height / 2
-        color: "transparent"
-        anchors.left: bac_battery.right
-        Image {
-            width: length
-            height: length
-            source: "qrc:/res/pictures/water.png"
-            anchors.centerIn: parent
-
-            Rectangle {
-                id: content_water
-                width: parent.width / 2
-                height: parent.height / 4
-                color: "transparent"
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                    top: parent.top
-                    topMargin: parent.height * 0.3
-                }
-                Text {
-                    id: text_water
-                    text: qsTr("")
-                    width: parent.width * 0.5
-                    height: parent.height
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
-                    font.pixelSize: height * 0.5
-                    font.bold: true
-                    color: "white"
-                }
-                Text {
-                    anchors{
-                        left: text_water.right
-                        //                    leftMargin: width * 0.1
-                        bottom: parent.bottom
-                        bottomMargin: height * 0.1
-                    }
-                    text: qsTr("")
-                    width: parent.width * 0.3
-                    height: parent.height * 0.8
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    font.pixelSize: height * 0.5
-                    font.bold: true
-                    color: text_water.color
-                }
-            }
-        }
-    }
-
-    //operate
-    Rectangle {
-        id: bac_operate
-        width: parent.width / 3
-        height:parent.height / 2
-        color: "transparent"
-        anchors.left: bac_water.right
-        Image {
-            id: img_switch
-            width: length
-            height: length
-            source: "qrc:/res/pictures/switch_operate.png"  //"qrc:/res/pictures/switch_auto.png"
-            anchors.centerIn: parent
-        }
-    }
-
-    //gear
-    Rectangle {
-        id: bac_gear
-        width: parent.width / 3
-        height:parent.height / 2
-        color: "transparent"
-        anchors{
-            top: bac_battery.bottom
+        id: rect_battery
+        width: parent.width * 0.3
+        height: parent.height * 0.4
+        anchors {
+            top: parent.top
             left: parent.left
+            leftMargin: parent.width * 0.1
         }
+        color: "transparent"
+
         Image {
-            id: gear
-            width: length
-            height: length
-            source: "qrc:/res/pictures/controls.png"
-            anchors.centerIn: parent
+            id: img_battery
+            width: parent.width
+            height: parent.height
+            source: "qrc:/res/ui/CenterBigBtn/battery.png"
+            fillMode: Image.PreserveAspectFit
+
+            property int battery_little_width: img_battery.width * 0.2
+            property int battery_more_width: img_battery.width * 0.58
+
+            function changeBatteryUI(soc) {
+                if ((soc) < 30) {
+                    img_battery_full_bar.visible = false
+                    img_battery_more_bat.visible = false
+                    img_battery_little_bar.visible = true
+                    img_battery_little_bar.width = battery_little_width / 30 * soc
+
+                } else if ((soc) >= 30 && (soc) <= 90) {
+                    img_battery_full_bar.visible = false
+                    img_battery_little_bar.visible = false
+                    img_battery_more_bat.visible = true
+                    img_battery_more_bat.width = battery_more_width / 90 * soc
+                } else if ((soc) > 90) {
+                    img_battery_more_bat.visible = false
+                    img_battery_little_bar.visible = false
+                    img_battery_full_bar.visible = true
+                }
+                txt_battery.text = soc + " %"
+            }
+
+            Connections {
+                target: ros_message_manager
+                onUpdateBatteryInfo: {
+                    var v_soc = soc;
+                    var n_soc = Number(v_soc)
+                    img_battery.changeBatteryUI(n_soc)
+                }
+            }
+            Image {
+                id: img_battery_full_bar
+                visible: true
+                width: img_battery.paintedWidth * 0.60
+                height: img_battery.paintedHeight * 0.15
+                source: "qrc:/res/ui/background/progress_full.png"
+                //                fillMode: Image.PreserveAspectFit
+                anchors {
+                    top: parent.top
+                    topMargin: parent.height * 0.394
+                    left: parent.left
+                    leftMargin: parent.width * 0.2
+                }
+
+            }
+            Rectangle {
+                id: img_battery_little_bar
+                visible: false
+                width: parent.width * 0.2
+                height: parent.height * 0.060
+                color: Qt.rgba(255, 0, 0, 0.4)
+                anchors {
+                    top: parent.top
+                    topMargin: parent.height * 0.394
+                    left: parent.left
+                    leftMargin: parent.width * 0.2
+
+                }
+            }
+            Rectangle {
+                id: img_battery_more_bat
+                visible: false
+                width: parent.width * 0.58
+                height: parent.height * 0.060
+                color: Qt.rgba(0, 10, 255, 0.4)
+                anchors {
+                    top: parent.top
+                    topMargin: parent.height * 0.394
+                    left: parent.left
+                    leftMargin: parent.width * 0.2
+                }
+            }
+            Text {
+                id: txt_battery
+                width: parent.width * 0.58
+                height: parent.height * 0.062
+                font.pixelSize: height
+                font.bold: true
+                text: "100 %"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                color: "white"
+                anchors {
+                    top: parent.top
+                    topMargin: parent.height * 0.39
+                    left: parent.left
+                    leftMargin: parent.width * 0.19
+                }
+            }
         }
     }
 
-    //speed
     Rectangle {
-        id: bac_speed
-        width: parent.width / 3
-        height:parent.height / 2
+        id: rect_water
+        width: parent.width * 0.3
+        height: parent.height * 0.3
         color: "transparent"
-        anchors{
-            top: bac_water.bottom
-            left: bac_gear.right
+        anchors {
+            top: rect_battery.bottom
+            topMargin: - parent.height * 0.1
+            left: parent.left
+            leftMargin: parent.width * 0.03
         }
         Image {
-            width: length
-            height: length
-            source: "qrc:/res/pictures/speed.png"
-            anchors.centerIn: parent
-            Rectangle {
-                id: content_speed
-                width: parent.width / 2
-                height: parent.height / 4
-                color: "transparent"
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                    top: parent.top
-                    topMargin: parent.height * 0.33
+            id: img_water
+            width: parent.width
+            height: parent.height
+            source: "qrc:/res/ui/CenterBigBtn/water.png"
+            fillMode: Image.PreserveAspectFit
+        }
+        Rectangle {
+            id: img_water_progress_bar
+            visible: true
+            width: parent.width * 0.58
+            height: parent.height * 0.075
+            color: Qt.rgba(0, 255, 0, 0.4)
+            anchors {
+                top: parent.top
+                topMargin: parent.height * 0.45
+                left: parent.left
+                leftMargin: parent.width * 0.25
+
+            }
+        }
+    }
+
+    Rectangle {
+        id: rect_clean
+        width: parent.width * 0.3
+        height: parent.height * 0.3
+        color: "transparent"
+        anchors {
+            top: rect_water.bottom
+            left: parent.left
+            leftMargin: parent.width * 0.08
+        }
+        Image {
+            id: img_clean
+            width: parent.width
+            height: parent.height
+            source: "qrc:/res/ui/CenterBigBtn/clean.png"
+            fillMode: Image.PreserveAspectFit
+
+            property int task_width: img_clean.width * 0.58
+            Connections {
+                target: ros_message_manager
+                onUpdateTaskProcessInfo: {
+                    txt_clean_progress.text = "" + progress + " %";
+                    img_clean_progress_bar.width = img_clean.task_width / 100 * progress
                 }
-                Rectangle{
-                    anchors.fill: parent
-                    color: "transparent"
-                    Text {
-                        id: text_speed
-                        text: qsTr("1")
-                        width: parent.width * 0.5
-                        height: parent.height
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: height * 0.5
-                        font.bold: true
-                        color: "white"
-                    }
-                    Text {
-                        anchors{
-                            left: text_speed.right
-                            leftMargin: width * 0.1
-                            bottom: parent.bottom
-                            bottomMargin: height * 0.1
-                        }
-                        text: qsTr("m/s")
-                        width: parent.width * 0.3
-                        height: parent.height * 0.8
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignHCenter
-                        font.pixelSize: height * 0.5
-                        font.bold: true
-                        color: text_speed.color
-                    }
+            }
+
+            Rectangle {
+                id: img_clean_progress_bar
+                visible: true
+                width: parent.width * 0.58
+                height: parent.height * 0.073
+                color: Qt.rgba(0, 255, 0, 0.4)
+                anchors {
+                    top: parent.top
+                    topMargin: parent.height * 0.54
+                    left: parent.left
+                    leftMargin: parent.width * 0.25
+
+                }
+            }
+            Text {
+                id: txt_clean_progress
+                text: qsTr("0 %")
+                width: parent.width * 0.58
+                height: parent.height * 0.075
+                font.pixelSize: height
+                font.bold: true
+                color: "white"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                anchors {
+                    top: parent.top
+                    topMargin: parent.height * 0.55
+                    left: parent.left
+                    leftMargin: parent.width * 0.25
+                }
+            }
+        }
+    }
+
+    Rectangle {
+        id: rect_gear
+        width: parent.width * 0.3
+        height: parent.height * 0.5
+        color: "transparent"
+        anchors {
+            top: parent.top
+            right: parent.right
+            rightMargin: parent.width * 0.05
+        }
+        Image {
+            id: img_gear
+            width: parent.width
+            height: parent.height
+            source: "qrc:/res/ui/CenterBigBtn/gear_r.png"
+            fillMode: Image.PreserveAspectFit
+        }
+        Connections {
+            target: ros_message_manager
+            onUpdateChassisInfo: {
+                var v_speed = speed
+                var n_speed = Number(v_speed)
+
+                if (drive_mode === 0) {
+                    img_operate.source = "qrc:/res/ui/CenterBigBtn/operate_hand.png"
+                } else if (drive_mode === 1) {
+                    img_operate.source = "qrc:/res/ui/CenterBigBtn/operate_auto.png"
+                }
+
+                if(Math.abs(n_speed) <= 0.05) {
+                    img_gear.source = "qrc:/res/ui/CenterBigBtn/gear_n.png"
+                } else if(n_speed > 0.05) {
+                    img_gear.source = "qrc:/res/ui/CenterBigBtn/gear_d.png"
+                } else if (n_speed < -0.05) {
+                    img_gear.source = "qrc:/res/ui/CenterBigBtn/gear_r.png"
                 }
 
             }
         }
     }
 
-    //state
     Rectangle {
-        id: bac_state
-        width: parent.width / 3
-        height:parent.height / 2
+        id: rect_operate
+        width: parent.width * 0.3
+        height: parent.height * 0.5
         color: "transparent"
-        anchors{
-            top: bac_operate.bottom
-            left: bac_speed.right
+        anchors {
+            top: rect_gear.bottom
+            right: parent.right
+            rightMargin: parent.width * 0.1
         }
+
         Image {
-            id: shuazi
-            width: length
-            height: length
-            source: "qrc:/res/pictures/states_no.png"
-            anchors.centerIn: parent
+            id: img_operate
+            width: parent.width
+            height: parent.height
+            source: "qrc:/res/ui/CenterBigBtn/operate_hand.png"
+            fillMode: Image.PreserveAspectFit
+        }
+    }
+
+    Rectangle {
+        id: rect_center_btn
+        width: parent.height * 0.5
+        height: width
+        color: "transparent"
+        anchors {
+
+            horizontalCenter: parent.horizontalCenter
+            verticalCenter: parent.verticalCenter
+        }
+
+        Image {
+            id: img_center_btn
+            anchors.fill: parent
+            source: "qrc:/res/ui/background/start_task.png"
+            fillMode: Image.PreserveAspectFit
+            Image {
+                id: img_start
+                visible: false
+                anchors.centerIn: parent
+                width: parent.width * 0.45
+                height: parent.height * 0.45
+                source: "qrc:/res/ui/CenterBigBtn/btn_start.png"
+            }
+            Image {
+                id: img_cleaning
+                visible: false
+                anchors.centerIn: parent
+                width: parent.width * 0.45
+                height: parent.height * 0.45
+                source: "qrc:/res/ui/CenterBigBtn/btn_cleaning.png"
+            }
+            Image {
+                id: img_finish
+                visible: false
+                anchors.centerIn: parent
+                width: parent.width * 0.45
+                height: parent.height * 0.45
+                source: "qrc:/res/ui/CenterBigBtn/btn_finish.png"
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    root.sigCenterBtnClicked()
+                }
+            }
+            Rectangle {
+                id: center_progress_bar
+                anchors.fill: parent
+                color: "transparent"
+                Canvas {
+                    id: canvas_background
+                    anchors.fill: parent
+                    property string arcColor: "rgba(100,149,237, 0.8)"
+                    property color arcBackgroundColor: "#ffffff"
+                    property int arcWidth: parent.width * 0.09
+                    property real _progress: 20
+                    property real radius: parent.width / 2 * 0.65
+                    property bool anticlockwise: false
+
+                    Connections {
+                        target: ros_message_manager
+                        onUpdateTaskProcessInfo: {
+                            canvas_background._progress = progress;
+                            canvas_background.requestPaint()
+                        }
+                    }
+                    onPaint: {
+                        var ctx = getContext("2d")
+                        ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
+                        var r = canvas_background._progress/100 * 2 * Math.PI
+                        ctx.beginPath()
+                        ctx.strokeStyle = arcColor
+//                        ctx.lineCap = "round"
+                        ctx.lineWidth = arcWidth
+
+                        ctx.arc(width/2,height/2,radius,Math.PI / 2,Math.PI / 2  + r ,anticlockwise)
+                        ctx.stroke()
+                    }
+                }
+            }
+
+            function changeVisible(status) {
+                if (status >= 1 && status < 5) {
+                    img_start.visible = true
+                    img_finish.visible = false
+                    img_cleaning.visible = false
+                } else if (status === 5) {
+                    img_start.visible = false
+                    img_finish.visible = false
+                    img_cleaning.visible = true
+                } else if (status === 6) {
+                    img_start.visible = false
+                    img_finish.visible = true
+                    img_cleaning.visible = false
+                }
+            }
+
+            Component.onCompleted: {
+                var status = status_manager.getWorkStatus()
+                img_center_btn.changeVisible(status)
+            }
+
+            Connections {
+                target: status_manager
+                onWorkStatusUpdate: {
+                    img_center_btn.changeVisible(status)
+                }
+            }
+
         }
     }
 

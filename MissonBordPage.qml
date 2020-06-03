@@ -446,12 +446,8 @@ Item {
         repeat: true
         interval: 800
         onTriggered: {
-            if (has_error) {
                 btn_error.opacity = btn_error.opacity === 0 ? 1 : 0
-            } else {
-                timer_btn_errror_flashes.stop()
-                btn_error.visible = false
-            }
+
         }
     }
     Timer {
@@ -460,12 +456,7 @@ Item {
         repeat: true
         interval: 5000
         onTriggered: {
-            if (has_error) {
                 draw_error.open()
-            } else {
-                timer_btn_errror_open.stop()
-                btn_error.visible = false
-            }
         }
     }
     Timer {

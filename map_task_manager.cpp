@@ -141,7 +141,6 @@ QVariantList MapTaskManager::getMapFeature(const QString &map_name)
     QVariantList map_begin_point_feature;
     QVariantList map_charge_point_feature;
     QJsonObject features_obj = _all_features.value(map_name);
-    qDebug() << map_name << features_obj;
     QJsonObject::Iterator it_feature = features_obj.begin();
     for (; it_feature!= features_obj.end(); ++it_feature) {
         QJsonObject temp_feature = it_feature.value().toObject();

@@ -55,7 +55,8 @@ Rectangle {
 
     property var begin_points: []//map_task_manager.getMapFeature(map_task_manager.getCurrentMapName())[0]
     property var charge_points: []//map_task_manager.getMapFeature(map_task_manager.getCurrentMapName())[1]
-    property bool is_select_begin_point: status_manager.getWorkStatus() <= 4
+    property bool could_select_begin_point: status_manager.getWorkStatus() <= 4
+    property bool is_select_begin_point: false
 
     function paintTasks(){
         canvas_task.requestPaint()
@@ -81,6 +82,7 @@ Rectangle {
         } else if (feature_list.length === 0) {
 
         }
+        root.is_select_begin_point = false
 
 
 
@@ -214,9 +216,9 @@ Rectangle {
         target: status_manager
         onWorkStatusUpdate: {
             if (status >= 4) {
-                root.is_select_begin_point = false
+                root.could_select_begin_point = false
             } else {
-                root.is_select_begin_point = true
+                root.could_select_begin_point = true
             }
         }
     }
@@ -636,7 +638,7 @@ Rectangle {
                 }
 
                 function drawBeginPoints(ctx, begin_points) {
-                    if (!root.is_select_begin_point) {
+                    if (!root.could_select_begin_point) {
                         return
                     }
 
@@ -655,6 +657,7 @@ Rectangle {
                                 root.choosePoint[1] <= point[1] + vehicle.height  ) {
                             ctx.drawImage("qrc:/res/ui/task/qidian_choose.png",- vehicle.height,- vehicle.height,
                                           vehicle.height * 2 ,vehicle.height * 2);
+                            root.is_select_begin_point = true
                             map_task_manager.setInitPos(begin_points[i][0],begin_points[i][1],begin_points[i][2])
                         } else {
                             ctx.drawImage("qrc:/res/ui/task/qidian_no.png",- vehicle.height,- vehicle.height,
@@ -669,7 +672,6 @@ Rectangle {
                 onPaint: {
                     var ctx=getContext("2d");
                     ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
-                    console.info(begin_points)
                     drawBeginPoints(ctx,root.begin_points)
 
                 }

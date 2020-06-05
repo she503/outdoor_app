@@ -11,8 +11,12 @@ void RosMessageManager::setSocket(SocketManager *socket)
     _socket = socket;
     connect(_socket, SIGNAL(emitLocalizationInfo(QJsonObject)),
             this, SLOT(parseLocalizationInfo(QJsonObject)));
-    connect(_socket, SIGNAL(emitChassisInfo(QJsonObject)),
-            this, SLOT(parseChassisInfo(QJsonObject)));
+//    connect(_socket, SIGNAL(emitChassisInfo(QJsonObject)),
+//            this, SLOT(parseChassisInfo(QJsonObject)));
+    connect(_socket, SIGNAL(emitCleaningAgencyInfo(QJsonObject)),
+            this, SLOT(parseCleaningAgencyInfo(QJsonObject)));
+    connect(_socket, SIGNAL(emitDrivingInfo(QJsonObject)),
+            this, SLOT(parseDrivingInfo(QJsonObject)));
     connect(_socket, SIGNAL(emitObstaclesInfo(QJsonObject)),
             this, SLOT(parseObstacleInfo(QJsonObject)));
     connect(_socket, SIGNAL(emitPlanningPath(QJsonObject)),
@@ -40,19 +44,44 @@ void RosMessageManager::parseLocalizationInfo(const QJsonObject &obj)
     emit updateLocalizationInfo(time, x, y, heading, state);
 }
 
-void RosMessageManager::parseChassisInfo(const QJsonObject &obj)
+void RosMessageManager::parseCleaningAgencyInfo(const QJsonObject &obj)
 {
-    QString time = obj.value("time").toString();
+
+    int cleaning_agency_state = obj.value("cleaning_agency_state").toInt();
+    bool pure_water_signal = obj.value("cleanning_agency_state").toBool();
+    bool water_tank_signal = obj.value("water_tank_signal").toBool();
+    bool dirty_water_signal = obj.value("dirty_water_signal").toBool();
+    bool cleaning_scu_signal = obj.value("cleaning_scu_signal").toBool();
+
+    emit updateCleaningAgencyInfo(cleaning_agency_state, pure_water_signal, water_tank_signal, dirty_water_signal, cleaning_scu_signal);
+}
+
+void RosMessageManager::parseDrivingInfo(const QJsonObject &obj)
+{
     QString speed = obj.value("speed").toString();
     QString omega = obj.value("omega").toString();
     int brake_state = obj.value("brak_state").toInt();
     int drive_mode = obj.value("drive_mode").toInt();
-    int cleaning_agency_state = obj.value("cleaning_agency_state").toInt();
-    bool water_tank_signal = obj.value("water_tank_signal").toBool();
-    emit updateChassisInfo(time, speed, omega,
-                           brake_state, drive_mode,
-                           cleaning_agency_state,water_tank_signal);
+    int gear_state = obj.value("gear_state").toInt();
+    bool anti_collision_bar_signal = obj.value("anti_collision_bar_signal").toBool();
+    bool emergency_stop_signal = obj.value("emergency_stop_signal").toBool();
+
+    emit updateDrivingInfo(speed, omega, brake_state, drive_mode, gear_state, anti_collision_bar_signal, emergency_stop_signal);
 }
+
+//void RosMessageManager::parseChassisInfo(const QJsonObject &obj)
+//{
+//    QString time = obj.value("time").toString();
+//    QString speed = obj.value("speed").toString();
+//    QString omega = obj.value("omega").toString();
+//    int brake_state = obj.value("brak_state").toInt();
+//    int drive_mode = obj.value("drive_mode").toInt();
+//    int cleaning_agency_state = obj.value("cleaning_agency_state").toInt();
+//    bool water_tank_signal = obj.value("water_tank_signal").toBool();
+//    emit updateChassisInfo(time, speed, omega,
+//                           brake_state, drive_mode,
+//                           cleaning_agency_state,water_tank_signal);
+//}
 
 void RosMessageManager::parseObstacleInfo(const QJsonObject &obj)
 {

@@ -17,9 +17,14 @@ public:
 signals:
     void updateLocalizationInfo(const QString& time, const QString& x, const QString& y,
                                 const QString& heading, const QString& state);
-    void updateChassisInfo(const QString& time, const QString& speed, const QString& omega,
-                           const int& brak_state, const int& drive_mode,
-                           const int& cleaning_agency_state, const bool& water_tank_signal);
+//    void updateChassisInfo(const QString& time, const QString& speed, const QString& omega,
+//                           const int& brak_state, const int& drive_mode,
+//                           const int& cleaning_agency_state, const bool& water_tank_signal);
+    void updateDrivingInfo(const QString& speed, const QString& omega, const int brake_state, const int drive_mode,
+                           const int gear_state, const bool anti_collision_bar_signal, const bool emergency_stop_signal);
+    void updateCleaningAgencyInfo(const int cleaning_agency_state, const bool water_tank_signal,
+                                  const bool pure_water_signal, const bool dirty_water_signal,
+                                  const bool cleaning_scu_signal);
     void updateObstacleInfo(const bool& is_polygon, const QVariantList& obstacles);
     void updatePlanningInfo(const QVariantList& planning_path);
     void updatePlanningRefInfo(const QVariantList& planning_path);
@@ -31,7 +36,9 @@ signals:
 
 private slots:
     void parseLocalizationInfo(const QJsonObject& obj);
-    void parseChassisInfo(const QJsonObject& obj);
+//    void parseChassisInfo(const QJsonObject& obj);
+    void parseCleaningAgencyInfo(const QJsonObject& obj);
+    void parseDrivingInfo(const QJsonObject& obj);
     void parseObstacleInfo(const QJsonObject& obj);
     void parsePlanningInfo(const QJsonObject& obj);
     void parsePlanningRefInfo(const QJsonObject& obj);

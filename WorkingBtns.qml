@@ -103,7 +103,7 @@ Rectangle {
 //            }
             Connections {
                 target: ros_message_manager
-                onUpdateChassisInfo: {
+                onUpdateCleaningAgencyInfo: {
 
                         btn_clean_work.source = cleaning_agency_state == 1 ? "qrc:/res/pictures/clean_on.png":
                                                                              "qrc:/res/pictures/clean_off.png"

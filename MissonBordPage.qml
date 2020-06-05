@@ -84,7 +84,7 @@ Item {
             source: "qrc:/res/ui/mission_bord/gear_N_pic.png"
             Connections {
                 target: ros_message_manager
-                onUpdateChassisInfo: {
+                onUpdateDrivingInfo: {
                     var v_speed = speed
                     var n_speed = Number(v_speed)
 
@@ -119,7 +119,7 @@ Item {
     Connections {
         target: ros_message_manager
         onUpdateMonitorMessageInfo: {
-            root.error_time = 0
+//            root.error_time = 0
             message_list_model.clear()
             root.has_error = true
             timer_no_error_close.times = 0

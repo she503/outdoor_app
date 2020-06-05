@@ -509,19 +509,20 @@ Rectangle {
 
                         Text {
                             id: note_text
-                            text: qsTr("move and choose point!")//移动选点!
+                            text: qsTr("Check a begin point image in map to init localization!")
                             width: parent.width * 0.7
                             height: parent.height
                             font.family: "Helvetica"
                             font.pixelSize: height * 0.5
                             verticalAlignment: Text.AlignVCenter
-                            horizontalAlignment: Text.AlignHCenter
+                            horizontalAlignment: Text.AlignLeft
                             color: "black"
                         }
                         Image {
                             width: parent.width * 0.2
                             height: parent.height
                             anchors.right: parent.right
+                            visible: map_display_page.is_select_begin_point
                             source: "qrc:/res/ui/background/btn.png"
                             fillMode: Image.PreserveAspectFit
                             Text {

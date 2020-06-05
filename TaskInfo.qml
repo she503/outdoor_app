@@ -40,7 +40,7 @@ Rectangle {
         id: timer_task_timing
         interval: 1000
         repeat: true
-        running: status_manager.getWorkStatus() === 5
+        running: status_manager.getWorkStatus() === status_manager.getWorkingID()
         triggeredOnStart: true
         onTriggered: {
             root.work_second++
@@ -59,7 +59,7 @@ Rectangle {
     Connections {
         target: status_manager
         onWorkStatusUpdate: {
-            if (status === 5) {
+            if (status === status_manager.getWorkingID()) {
                 timer_task_timing.start()
             } else {
                 root.work_second = 0

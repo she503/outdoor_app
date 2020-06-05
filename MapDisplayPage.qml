@@ -55,7 +55,7 @@ Rectangle {
 
     property var begin_points: []//map_task_manager.getMapFeature(map_task_manager.getCurrentMapName())[0]
     property var charge_points: []//map_task_manager.getMapFeature(map_task_manager.getCurrentMapName())[1]
-    property bool could_select_begin_point: status_manager.getWorkStatus() <= 4
+    property bool could_select_begin_point: status_manager.getWorkStatus() <= status_manager.getSelectTaskID()
     property bool is_select_begin_point: false
 
     function paintTasks(){
@@ -89,13 +89,13 @@ Rectangle {
         var work_status = status_manager.getWorkStatus()
         var map_road_data = []
         var map_road_edges_data = []
-        if (work_status <= 2 || work_status > 5) { //WORK_STATUS_SELECTING_MAP
+//        if (work_status <= 2 || work_status > status_manager.getWorkingID()) { //WORK_STATUS_SELECTING_MAP
             map_road_edges_data = map_task_manager.getMapRoadEdges(current_map_name)
             map_road_data = map_task_manager.getMapRoads(current_map_name)
-        } else if (work_status > 3 && work_status <= 5) {
-            map_road_edges_data = map_task_manager.getMapRoadEdges(current_map_name)
-            map_road_data = map_task_manager.getMapRoads(current_map_name)
-        }
+//        } else if (work_status > 3 && work_status <= 5) {
+//            map_road_edges_data = map_task_manager.getMapRoadEdges(current_map_name)
+//            map_road_data = map_task_manager.getMapRoads(current_map_name)
+//        }
         root.var_road_edges = map_road_edges_data
         root.var_roads_include = map_road_data[0]
         root.var_roads_exclude = map_road_data[1]
@@ -206,7 +206,7 @@ Rectangle {
         var work_status = status_manager.getWorkStatus()
         var current_map_name = map_task_manager.getCurrentMapName()
         root.paintingMap(current_map_name)
-        if (work_status === 5) {
+        if (work_status === status_manager.getWorkingID()) {
             root.var_ref_line = map_task_manager.getWorkFullRefLine()
             canvas_ref_line.requestPaint()
         }
@@ -215,7 +215,7 @@ Rectangle {
     Connections {
         target: status_manager
         onWorkStatusUpdate: {
-            if (status >= 4) {
+            if (status >= status_manager.getSelectTaskID()) {
                 root.could_select_begin_point = false
             } else {
                 root.could_select_begin_point = true

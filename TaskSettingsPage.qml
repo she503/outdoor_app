@@ -36,7 +36,7 @@ Rectangle {
     signal sigBackBtnPress()
 
     function updateMapSettingPage(status) {
-        if (status <= 2) {//selecting map
+        if (status <= status_manager.getSelectMapID()) {//selecting map
             map_name_list.clear()
             var maps_name = map_task_manager.getMapsName()
 
@@ -44,16 +44,16 @@ Rectangle {
                 map_name_list.append({"map_name": maps_name[j]})
             }
             chooseMapPage()
-        } else if (status === 4) {
+        } else if (status === status_manager.getSelectTaskID()) {
             var tasks_name = map_task_manager.getTasksName()
             task_list_model.clear()
             for (var i = 0; i < tasks_name.length; ++i) {
                 task_list_model.append({"idcard": i,"task_name": tasks_name[i]})
             }
             chooseTaskPage()
-        }  else if (status === 5 ) {
+        }  else if (status === status_manager.getWorkingID()) {
             startTaskPage()
-        } else if (status >= 6) {
+        } else if (status >= status_manager.getWorkDoneID()) {
 
         }
     }
@@ -110,7 +110,7 @@ Rectangle {
 
     Component.onCompleted: {
         var work_status = status_manager.getWorkStatus()
-        if (work_status === 6) {
+        if (work_status === status_manager.getWorkDoneID()) {
             map_task_manager.turnToSelectMap()
             return
         }
@@ -139,10 +139,10 @@ Rectangle {
         onWorkStatusUpdate: {
             updateMapSettingPage(status)
             root.checked_tasks_name = []
-            if (status <= 5) {
+            if (status <= status_manager.getWorkingID()) {
                 map_display_page.clearAllCanvas()
             }
-            if (status === 4) {
+            if (status === status_manager.getSelectTaskID()) {
                 rec_checked_location.resureLocalization(false)
             }
 
@@ -581,7 +581,7 @@ Rectangle {
 
                 Component.onCompleted: {
                     var status = status_manager.getWorkStatus()
-                    if (status === 5) {
+                    if (status === status_manager.getWorkingID()) {
                         working_btns.visible = true
 
                     } else {
@@ -594,15 +594,23 @@ Rectangle {
                 Connections {
                     target: status_manager
                     onWorkStatusUpdate: {
-                        if (status === 5) {
+                        if (status === status_manager.getWorkingID()) {
                             working_btns.visible = true
                         } else {
                             working_btns.visible = false
                             root._work_second = 0
                             root._work_time = []
                         }
+                        if (status === status_manager.getLocationChoosePointID()) {
+                            rect_resure_point.visible = true
+                            rect_resure_localization.visible = false
+                        } else if (status === status_manager.getLocationComfirmID()) {
+                            rect_resure_point.visible = false
+                            rect_resure_localization.visible = true
+                        }
                     }
                 }
+
                 Connections {
                     target: map_task_manager
                     onEmitWorkDone: {

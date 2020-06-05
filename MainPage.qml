@@ -41,7 +41,7 @@ Rectangle {
     Component.onCompleted: {
         map_task_manager.setWorkMapName(map_task_manager.getCurrentMapName())
         var status = status_manager.getWorkStatus()
-        if (status === 5) {
+        if (status === status_manager.getWorkingID()) {
             misson_bord.showMessagePics(true)
         } else {
             misson_bord.showMessagePics(false)
@@ -52,16 +52,16 @@ Rectangle {
         target: status_manager
         onWorkStatusUpdate: {
             misson_bord.showMessagePics(false)
-            if (status <= 1) {
+            if (status <= status_manager.getNoneWorkID()) {
                 list_view.currentIndex = 2
                 menu_stack.tlReplace(list_view)
-            } else if (status > 1 && status < 5) {
+            } else if (status > status_manager.getNoneWorkID() && status < status_manager.getWorkingID()) {
                 menu_stack.tlReplace(list_view)
-            } else if (status === 5) {
+            } else if (status === status_manager.getWorkingID()) {
                 misson_bord.showMessagePics(true)
             }
 
-            if (status_manager.getWorkStatus() >= 5 && root.stack_view_index === 1) {
+            if (status_manager.getWorkStatus() >= status_manager.getWorkingID() && root.stack_view_index === 1) {
                 rec_left.width = 0
             } else {
                 rec_left.width = rec_left.height * 0.4
@@ -131,7 +131,7 @@ Rectangle {
                     } else if (current_index === 4) {
                         stack_view.tlReplace(user_manage_page)
                     } else if (current_index === 1) {
-                        if (status_manager.getWorkStatus() === 5) {
+                        if (status_manager.getWorkStatus() === status_manager.getWorkingID()) {
                         } else {
                             menu_stack.tlReplace(list_view)
                         }
@@ -143,7 +143,7 @@ Rectangle {
                     } else if (current_index === 5) {
                         stack_view.tlReplace(mapping_page)
                     }
-                    if (status_manager.getWorkStatus() >= 5 && current_index === 1) {
+                    if (status_manager.getWorkStatus() >= status_manager.getWorkingID() && current_index === 1) {
                         rec_left.width = 0
                     } else {
                         rec_left.width = rec_left.height * 0.4

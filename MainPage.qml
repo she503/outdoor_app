@@ -10,6 +10,7 @@ Rectangle {
     id: root
 
     color: "transparent"
+    property int stack_view_index: 0
     property Component user_manage_page: UserManagePage {}
     property Component help_document_page: HelpDocumentPage { }
     property Component about_machine_page: AboutMachinePage { }
@@ -58,6 +59,12 @@ Rectangle {
                 menu_stack.tlReplace(list_view)
             } else if (status === 5) {
                 misson_bord.showMessagePics(true)
+            }
+
+            if (status_manager.getWorkStatus() >= 5 && root.stack_view_index === 1) {
+                rec_left.width = 0
+            } else {
+                rec_left.width = rec_left.height * 0.4
             }
         }
     }
@@ -136,6 +143,13 @@ Rectangle {
                     } else if (current_index === 5) {
                         stack_view.tlReplace(mapping_page)
                     }
+                    if (status_manager.getWorkStatus() >= 5 && current_index === 1) {
+                        rec_left.width = 0
+                    } else {
+                        rec_left.width = rec_left.height * 0.4
+                    }
+
+                    root.stack_view_index = current_index
                 }
             }
         }

@@ -560,10 +560,17 @@ Rectangle {
 
             WorkingBtns {
                 id: working_btns
-                width: parent.width * 0.4
-                height: parent.height * 0.2
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
+                width: parent.width * 0.07
+                height: parent.height * 0.5
+//                anchors.bottom: parent.bottom
+//                anchors.left: parent.left
+                anchors{
+
+                    right: parent.right
+                    rightMargin: parent.width * 0.01
+                    bottom: parent.bottom
+
+                }
                 //                anchors.leftMargin: parent.width * 0.05
                 onSigWorkDown: {
                     work_done_widget.open()

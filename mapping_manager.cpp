@@ -54,6 +54,18 @@ void MappingManager::transferMappingData(const int key, const QString& map_name)
     _socket_manager->sendSocketMessage(doc.toJson());
 }
 
+void MappingManager::recordMappingBag(const int status)
+{
+    QJsonObject obj;
+    obj.insert("message_type", int(MESSAGE_RECORD_ROS_BAG));
+
+    obj.insert("status", QString::number(status));
+
+    QJsonDocument doc(obj);
+    _socket_manager->sendSocketMessage(doc.toJson());
+
+}
+
 void MappingManager::parseMappingCommandRst(const QJsonObject &obj)
 {
     bool success = obj.value("success").toBool();

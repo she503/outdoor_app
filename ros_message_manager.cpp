@@ -61,7 +61,8 @@ void RosMessageManager::parseDrivingInfo(const QJsonObject &obj)
     QString speed = obj.value("speed").toString();
     QString omega = obj.value("omega").toString();
     int brake_state = obj.value("brak_state").toInt();
-    int drive_mode = obj.value("drive_mode").toInt();
+    int drive_mode = obj.value("drive_mode").toString().toInt();
+    qDebug() << obj.value("drive_mode");
     int gear_state = obj.value("gear_state").toInt();
     bool anti_collision_bar_signal = obj.value("anti_collision_bar_signal").toBool();
     bool emergency_stop_signal = obj.value("emergency_stop_signal").toBool();

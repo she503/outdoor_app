@@ -11,6 +11,7 @@ Item {
     property bool is_locked: false
     property bool has_error: false
     property bool is_first_error: true
+    property var error_time: 0
     property var error_text_color: "red"//: ["yellow", "orange", "red"]
 
     function showMessagePics(flag) {
@@ -119,7 +120,7 @@ Item {
     Connections {
         target: ros_message_manager
         onUpdateMonitorMessageInfo: {
-//            root.error_time = 0
+            root.error_time = 0
             message_list_model.clear()
             root.has_error = true
             timer_no_error_close.times = 0

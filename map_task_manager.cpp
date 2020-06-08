@@ -37,6 +37,7 @@ void MapTaskManager::setStatusManager(StatusManager* status_manager) {
 
 void MapTaskManager::setInitPos(const double &pos_x, const double &pos_y, const double theta)
 {
+    _status_manager->setWorkStatus(WORK_STATUS_LOCATION_CHOOSE_POINT);
     _init_pose.clear();
     _init_pose.push_back(pos_x);
     _init_pose.push_back(pos_y);
@@ -60,7 +61,6 @@ void MapTaskManager::sendInitPos()
 void MapTaskManager::setWorkMapName(const QString &map_name)
 {
     _current_map_name = map_name;
-    _status_manager->setWorkStatus(WORK_STATUS_LOCATION_CHOOSE_POINT);
     QJsonObject obj;
     obj.insert("message_type", MESSAGE_SET_MAP);
     obj.insert("map_name", map_name);

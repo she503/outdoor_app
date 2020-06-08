@@ -11,7 +11,6 @@ Item {
     property bool is_locked: false
     property bool has_error: false
     property bool is_first_error: true
-    property var error_time: 0
     property var error_text_color: "red"//: ["yellow", "orange", "red"]
 
     function showMessagePics(flag) {
@@ -120,13 +119,13 @@ Item {
     Connections {
         target: ros_message_manager
         onUpdateMonitorMessageInfo: {
-            root.error_time = 0
             message_list_model.clear()
             root.has_error = true
             timer_no_error_close.times = 0
 
             if (root.is_first_error) {
                 root.is_first_error = false
+                btn_error.visible = true
                 timer_no_error_close.start()
                 timer_btn_errror_flashes.start()
                 draw_error.open()
@@ -449,34 +448,9 @@ Item {
         interval: 800
         onTriggered: {
                 btn_error.opacity = btn_error.opacity === 0 ? 1 : 0
-
-        }
-    }
-    Timer {
-        id: timer_error_close
-        running: timer_btn_errror_flashes.running
-        repeat: true
-        interval: 1000
-        onTriggered: {
-            if (root.error_time >= 3) {
-                timer_btn_errror_flashes.stop()
-                btn_error.visible = false
-                root.has_error = false
-                draw_error.close()
-            }
-            ++root.error_time
         }
     }
 
-    Timer {
-        id: timer_btn_errror_open
-        running: false
-        repeat: true
-        interval: 5000
-        onTriggered: {
-                draw_error.open()
-        }
-    }
     Timer {
         id: timer_no_error_close
         running: false
@@ -485,9 +459,8 @@ Item {
         property int times: 0
         onTriggered: {
             ++times
-            if (times >= 2) {
+            if (times >= 3) {
                 draw_error.close()
-                timer_btn_errror_open.stop()
                 timer_btn_errror_flashes.stop()
                 btn_error.visible = false
                 root.has_error = false

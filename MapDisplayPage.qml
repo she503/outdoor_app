@@ -673,7 +673,6 @@ Rectangle {
                     var ctx=getContext("2d");
                     ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
                     drawBeginPoints(ctx,root.begin_points)
-
                 }
             }
 

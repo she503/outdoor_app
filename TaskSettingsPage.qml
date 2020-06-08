@@ -119,6 +119,7 @@ Rectangle {
     Connections {
         target: map_task_manager
         onEmitSetInitPoseRstInfo: {
+            rec_checked_location.visible = true
             if (status === 1) {
                 rec_checked_location.resureLocalization(false)
 
@@ -689,15 +690,6 @@ Rectangle {
             text: root.error
         }
     }
-
-    Connections {
-        target: map_task_manager
-        onEmitSetInitPoseRstInfo: {
-            rec_checked_location.visible = true
-        }
-    }
-
-
     TLDialog {
         id: dialog_return_map_tip
         height: parent.height * 0.5

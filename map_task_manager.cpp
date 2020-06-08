@@ -37,7 +37,6 @@ void MapTaskManager::setStatusManager(StatusManager* status_manager) {
 
 void MapTaskManager::setInitPos(const double &pos_x, const double &pos_y, const double theta)
 {
-    _status_manager->setWorkStatus(WORK_STATUS_LOCATION_CHOOSE_POINT);
     _init_pose.clear();
     _init_pose.push_back(pos_x);
     _init_pose.push_back(pos_y);
@@ -46,6 +45,7 @@ void MapTaskManager::setInitPos(const double &pos_x, const double &pos_y, const 
 
 void MapTaskManager::sendInitPos()
 {
+    _status_manager->setWorkStatus(WORK_STATUS_LOCATION_CHOOSE_POINT);
     if (_init_pose.empty()) {
         return;
     }

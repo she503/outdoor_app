@@ -15,16 +15,12 @@ while [ -n "$1" ]; do
     esac 
 done
 
-mkdir /tmp/tergeo_app -p 
-cp build/android-build/bin/QtApp-debug.apk /tmp/tergeo_app
-
-cd /tmp/tergeo_app
-zip -r app.zip ./* 
+cd build/android-build/bin/ && cp QtApp-debug.apk tergeo_app.apk
 cd ${CURRENT_PATH}
 
 HUB_URL="https://tonglu-generic.pkg.coding.net/plugins-hub"
-curl -T /tmp/tergeo_app/app.zip \
+curl -T build/android-build/bin/tergeo_app.apk \
     -u ${CURL_USER}:${CURL_PASSWORD} \
-    "${HUB_URL}/tergeo_app/app.zip?version=latest"
+    "${HUB_URL}/tergeo_app/app.apk?version=latest"
 
-rm -r /tmp/tergeo_app
+rm build/android-build/bin/tergeo_app.apk

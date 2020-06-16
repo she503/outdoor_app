@@ -1,0 +1,13 @@
+#!/bin/bash
+set -ue
+
+HOST_ARCH=$(uname -m | grep -w -q 'x86_64' && echo 'amd64' || echo 'arm64')
+HUB_PATH="tonglu-docker.pkg.coding.net/plugins-hub/tergeo-apps"
+TERGEO_MODULE_NAME="tergeo_app_execute"
+VERSION="latest"
+
+docker build --build-arg HOST_ARCH=${HOST_ARCH} --build-arg VERSION=${VERSION} -t ${TERGEO_MODULE_NAME}_${HOST_ARCH}:${VERSION} .
+
+docker tag ${TERGEO_MODULE_NAME}_${HOST_ARCH}:${VERSION} ${HUB_PATH}/${TERGEO_MODULE_NAME}_${HOST_ARCH}:${VERSION}
+
+docker push ${HUB_PATH}/${TERGEO_MODULE_NAME}_${HOST_ARCH}:${VERSION}

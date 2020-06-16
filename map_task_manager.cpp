@@ -213,6 +213,7 @@ void MapTaskManager::turnToSelectMap()
     obj.insert("flag", true);
     QJsonDocument doc(obj);
     _socket_manager->sendSocketMessage(doc.toJson());
+    this->setWorkMapName(this->getCurrentMapName());
 }
 
 void MapTaskManager::turnToSelectTask()

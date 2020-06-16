@@ -126,7 +126,7 @@ Rectangle {
             } else if (status === 0) {
                 message_box.dia_type = 0
                 message_box.dia_title = qsTr("Init Error")
-                message_box.dia_text = qsTr("Init Pos error")
+                message_box.dia_text = error_message
                 message_box.open()
             }
 
@@ -145,6 +145,10 @@ Rectangle {
             }
             if (status === status_manager.getSelectTaskID()) {
                 rec_checked_location.resureLocalization(false)
+            }
+            if (status <= status_manager.getLocationChoosePointID()) {
+                rect_resure_point.visible = true
+                rect_resure_localization.visible = false
             }
 
             busy_indicator.close()

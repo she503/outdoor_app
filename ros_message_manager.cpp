@@ -62,7 +62,6 @@ void RosMessageManager::parseDrivingInfo(const QJsonObject &obj)
     QString omega = obj.value("omega").toString();
     int brake_state = obj.value("brak_state").toInt();
     int drive_mode = obj.value("drive_mode").toString().toInt();
-    qDebug() << obj.value("drive_mode");
     int gear_state = obj.value("gear_state").toInt();
     bool anti_collision_bar_signal = obj.value("anti_collision_bar_signal").toBool();
     bool emergency_stop_signal = obj.value("emergency_stop_signal").toBool();
@@ -125,8 +124,8 @@ void RosMessageManager::parseTrajectoryInfo(const QJsonObject &obj)
 
 void RosMessageManager::parseMonitorMessageInfo(const QJsonObject &obj)
 {
-    QDateTime time_secs = QDateTime::fromMSecsSinceEpoch(obj.value("time").toDouble());
-    QString str_time = time_secs.toString("hh:mm:ss.zzz");
+    QDateTime time_secs = QDateTime::fromTime_t(obj.value("time").toDouble());
+    QString str_time = time_secs.toString("hh:mm:ss");
 
     QJsonObject monitor_messages_obj = obj.value("monitor_messages").toObject();
     if (monitor_messages_obj.empty()) {

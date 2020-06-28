@@ -126,7 +126,7 @@ Rectangle {
             } else if (status === 0) {
                 message_box.dia_type = 0
                 message_box.dia_title = qsTr("Init Error")
-                message_box.dia_text = qsTr("Init Pos error")
+                message_box.dia_text = error_message
                 message_box.open()
             }
 
@@ -660,7 +660,21 @@ Rectangle {
                         anchors.fill: parent
                         onClicked: {
                             map_task_manager.setWorkTasksName(root.checked_tasks_name)
+                            busy_indicator.txt_context = qsTr("Setting task ,please waite for a minute")
+                            busy_indicator.open()
                         }
+                    }
+                }
+            }
+            Connections {
+                target: map_task_manager
+                onEmitSetTasksRstInfo: {
+                    busy_indicator.close()
+                    if (statu == 0) {
+                        message_box.dia_type = 0
+                        message_box.dia_title = qsTr("Init Error")
+                        message_box.dia_text = error_message
+                        message_box.open()
                     }
                 }
             }

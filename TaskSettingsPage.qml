@@ -602,7 +602,7 @@ Rectangle {
                             root._work_second = 0
                             root._work_time = []
                         }
-                        if (status === status_manager.getLocationChoosePointID()) {
+                        if (status <= status_manager.getLocationChoosePointID()) {
                             rect_resure_point.visible = true
                             rect_resure_localization.visible = false
                         } else if (status === status_manager.getLocationComfirmID()) {

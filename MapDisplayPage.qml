@@ -49,7 +49,7 @@ Rectangle {
     property real max_x: Number.NEGATIVE_INFINITY
     property real real_rate: 2.5
 
-    property bool can_drag: false
+    property bool can_drag: true
     property var choosePoint: []
 
 

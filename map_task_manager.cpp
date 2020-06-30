@@ -45,6 +45,7 @@ void MapTaskManager::setInitPos(const double &pos_x, const double &pos_y, const 
 
 void MapTaskManager::sendInitPos()
 {
+    _status_manager->setWorkStatus(WORK_STATUS_LOCATION_CHOOSE_POINT);
     if (_init_pose.empty()) {
         return;
     }
@@ -141,7 +142,6 @@ QVariantList MapTaskManager::getMapFeature(const QString &map_name)
     QVariantList map_begin_point_feature;
     QVariantList map_charge_point_feature;
     QJsonObject features_obj = _all_features.value(map_name);
-    qDebug() << map_name << features_obj;
     QJsonObject::Iterator it_feature = features_obj.begin();
     for (; it_feature!= features_obj.end(); ++it_feature) {
         QJsonObject temp_feature = it_feature.value().toObject();
@@ -213,6 +213,7 @@ void MapTaskManager::turnToSelectMap()
     obj.insert("flag", true);
     QJsonDocument doc(obj);
     _socket_manager->sendSocketMessage(doc.toJson());
+    _status_manager->setWorkStatus(WORK_STATUS_NONE_WORK);
 }
 
 void MapTaskManager::turnToSelectTask()
@@ -222,6 +223,8 @@ void MapTaskManager::turnToSelectTask()
     obj.insert("flag", true);
     QJsonDocument doc(obj);
     _socket_manager->sendSocketMessage(doc.toJson());
+    _status_manager->setWorkStatus(WORK_STATUS_SELECTING_TASK);
+
 }
 
 void MapTaskManager::setEnableCleanWork(bool flag)
@@ -240,6 +243,10 @@ void MapTaskManager::setInitIsRight(bool flag)
     obj.insert("flag", flag);
     QJsonDocument doc(obj);
     _socket_manager->sendSocketMessage(doc.toJson());
+
+    if (!flag) {
+        _status_manager->setWorkStatus(WORK_STATUS_LOCATION_CHOOSE_POINT);
+    }
 }
 
 /// \brief parse map and task info from server
@@ -299,6 +306,8 @@ void MapTaskManager::parseSetInitPoseRst(const QJsonObject &obj)
         double y = rst_pose_obj.value("y").toDouble();
         double heading_angle = rst_pose_obj.value("theta").toDouble();
         emit emitLocalizationInfo(x, y, heading_angle);
+        _status_manager->setWorkStatus(WORK_STATUS_LOCATION_COMFIRM);
+
     }
 
 }

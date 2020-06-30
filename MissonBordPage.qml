@@ -84,7 +84,7 @@ Item {
             source: "qrc:/res/ui/mission_bord/gear_N_pic.png"
             Connections {
                 target: ros_message_manager
-                onUpdateChassisInfo: {
+                onUpdateDrivingInfo: {
                     var v_speed = speed
                     var n_speed = Number(v_speed)
 
@@ -125,6 +125,7 @@ Item {
 
             if (root.is_first_error) {
                 root.is_first_error = false
+                btn_error.visible = true
                 timer_no_error_close.start()
                 timer_btn_errror_flashes.start()
                 draw_error.open()
@@ -447,18 +448,9 @@ Item {
         interval: 800
         onTriggered: {
                 btn_error.opacity = btn_error.opacity === 0 ? 1 : 0
+        }
+    }
 
-        }
-    }
-    Timer {
-        id: timer_btn_errror_open
-        running: false
-        repeat: true
-        interval: 5000
-        onTriggered: {
-                draw_error.open()
-        }
-    }
     Timer {
         id: timer_no_error_close
         running: false
@@ -467,9 +459,8 @@ Item {
         property int times: 0
         onTriggered: {
             ++times
-            if (times >= 2) {
+            if (times >= 3) {
                 draw_error.close()
-                timer_btn_errror_open.stop()
                 timer_btn_errror_flashes.stop()
                 btn_error.visible = false
                 root.has_error = false

@@ -36,7 +36,7 @@ Rectangle {
     signal sigBackBtnPress()
 
     function updateMapSettingPage(status) {
-        if (status <= 2) {//selecting map
+        if (status <= status_manager.getSelectMapID()) {//selecting map
             map_name_list.clear()
             var maps_name = map_task_manager.getMapsName()
 
@@ -44,16 +44,16 @@ Rectangle {
                 map_name_list.append({"map_name": maps_name[j]})
             }
             chooseMapPage()
-        } else if (status === 4) {
+        } else if (status === status_manager.getSelectTaskID()) {
             var tasks_name = map_task_manager.getTasksName()
             task_list_model.clear()
             for (var i = 0; i < tasks_name.length; ++i) {
                 task_list_model.append({"idcard": i,"task_name": tasks_name[i]})
             }
             chooseTaskPage()
-        }  else if (status === 5 ) {
+        }  else if (status === status_manager.getWorkingID()) {
             startTaskPage()
-        } else if (status >= 6) {
+        } else if (status >= status_manager.getWorkDoneID()) {
 
         }
     }
@@ -110,7 +110,7 @@ Rectangle {
 
     Component.onCompleted: {
         var work_status = status_manager.getWorkStatus()
-        if (work_status === 6) {
+        if (work_status === status_manager.getWorkDoneID()) {
             map_task_manager.turnToSelectMap()
             return
         }
@@ -119,13 +119,14 @@ Rectangle {
     Connections {
         target: map_task_manager
         onEmitSetInitPoseRstInfo: {
+            rec_checked_location.visible = true
             if (status === 1) {
                 rec_checked_location.resureLocalization(false)
 
             } else if (status === 0) {
                 message_box.dia_type = 0
                 message_box.dia_title = qsTr("Init Error")
-                message_box.dia_text = qsTr("Init Pos error")
+                message_box.dia_text = error_message
                 message_box.open()
             }
 
@@ -139,10 +140,10 @@ Rectangle {
         onWorkStatusUpdate: {
             updateMapSettingPage(status)
             root.checked_tasks_name = []
-            if (status <= 5) {
+            if (status <= status_manager.getWorkingID()) {
                 map_display_page.clearAllCanvas()
             }
-            if (status === 4) {
+            if (status === status_manager.getSelectTaskID()) {
                 rec_checked_location.resureLocalization(false)
             }
 
@@ -509,19 +510,20 @@ Rectangle {
 
                         Text {
                             id: note_text
-                            text: qsTr("move and choose point!")//移动选点!
+                            text: qsTr("Check a begin point image in map to init localization!")
                             width: parent.width * 0.7
                             height: parent.height
                             font.family: "Helvetica"
                             font.pixelSize: height * 0.5
                             verticalAlignment: Text.AlignVCenter
-                            horizontalAlignment: Text.AlignHCenter
+                            horizontalAlignment: Text.AlignLeft
                             color: "black"
                         }
                         Image {
                             width: parent.width * 0.2
                             height: parent.height
                             anchors.right: parent.right
+                            visible: map_display_page.is_select_begin_point
                             source: "qrc:/res/ui/background/btn.png"
                             fillMode: Image.PreserveAspectFit
                             Text {
@@ -559,10 +561,17 @@ Rectangle {
 
             WorkingBtns {
                 id: working_btns
-                width: parent.width * 0.4
-                height: parent.height * 0.2
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
+                width: parent.width * 0.07
+                height: parent.height * 0.5
+//                anchors.bottom: parent.bottom
+//                anchors.left: parent.left
+                anchors{
+
+                    right: parent.right
+                    rightMargin: parent.width * 0.01
+                    bottom: parent.bottom
+
+                }
                 //                anchors.leftMargin: parent.width * 0.05
                 onSigWorkDown: {
                     work_done_widget.open()
@@ -573,7 +582,7 @@ Rectangle {
 
                 Component.onCompleted: {
                     var status = status_manager.getWorkStatus()
-                    if (status === 5) {
+                    if (status === status_manager.getWorkingID()) {
                         working_btns.visible = true
 
                     } else {
@@ -586,15 +595,23 @@ Rectangle {
                 Connections {
                     target: status_manager
                     onWorkStatusUpdate: {
-                        if (status === 5) {
+                        if (status === status_manager.getWorkingID()) {
                             working_btns.visible = true
                         } else {
                             working_btns.visible = false
                             root._work_second = 0
                             root._work_time = []
                         }
+                        if (status <= status_manager.getLocationChoosePointID()) {
+                            rect_resure_point.visible = true
+                            rect_resure_localization.visible = false
+                        } else if (status === status_manager.getLocationComfirmID()) {
+                            rect_resure_point.visible = false
+                            rect_resure_localization.visible = true
+                        }
                     }
                 }
+
                 Connections {
                     target: map_task_manager
                     onEmitWorkDone: {
@@ -643,7 +660,21 @@ Rectangle {
                         anchors.fill: parent
                         onClicked: {
                             map_task_manager.setWorkTasksName(root.checked_tasks_name)
+                            busy_indicator.txt_context = qsTr("Setting task ,please waite for a minute")
+                            busy_indicator.open()
                         }
+                    }
+                }
+            }
+            Connections {
+                target: map_task_manager
+                onEmitSetTasksRstInfo: {
+                    busy_indicator.close()
+                    if (statu == 0) {
+                        message_box.dia_type = 0
+                        message_box.dia_title = qsTr("Init Error")
+                        message_box.dia_text = error_message
+                        message_box.open()
                     }
                 }
             }
@@ -673,15 +704,6 @@ Rectangle {
             text: root.error
         }
     }
-
-    Connections {
-        target: map_task_manager
-        onEmitSetInitPoseRstInfo: {
-            rec_checked_location.visible = true
-        }
-    }
-
-
     TLDialog {
         id: dialog_return_map_tip
         height: parent.height * 0.5

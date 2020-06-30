@@ -51,7 +51,9 @@ signals:
     // ros msgs
     void emitLocalizationInfo(const QJsonObject& obj);
     void emitTaskInfo(const QJsonObject& obj);
-    void emitChassisInfo(const QJsonObject& obj);
+//    void emitChassisInfo(const QJsonObject& obj);
+    void emitCleaningAgencyInfo(const QJsonObject& obj);
+    void emitDrivingInfo(const QJsonObject& obj);
     void emitObstaclesInfo(const QJsonObject& obj);
     void emitPlanningPath(const QJsonObject& obj);
     void emitPlanningRefLine(const QJsonObject& obj);

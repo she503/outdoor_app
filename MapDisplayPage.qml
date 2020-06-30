@@ -47,15 +47,16 @@ Rectangle {
     property real min_y: Number.POSITIVE_INFINITY
     property real max_y: Number.NEGATIVE_INFINITY
     property real max_x: Number.NEGATIVE_INFINITY
-    property real real_rate: 3.0
+    property real real_rate: 2.5
 
-    property bool can_drag: false
+    property bool can_drag: true
     property var choosePoint: []
 
 
     property var begin_points: []//map_task_manager.getMapFeature(map_task_manager.getCurrentMapName())[0]
     property var charge_points: []//map_task_manager.getMapFeature(map_task_manager.getCurrentMapName())[1]
-    property bool is_select_begin_point: status_manager.getWorkStatus() <= 4
+    property bool could_select_begin_point: status_manager.getWorkStatus() <= status_manager.getSelectTaskID()
+    property bool is_select_begin_point: false
 
     function paintTasks(){
         canvas_task.requestPaint()
@@ -81,19 +82,20 @@ Rectangle {
         } else if (feature_list.length === 0) {
 
         }
+        root.is_select_begin_point = false
 
 
 
         var work_status = status_manager.getWorkStatus()
         var map_road_data = []
         var map_road_edges_data = []
-        if (work_status <= 2 || work_status > 5) { //WORK_STATUS_SELECTING_MAP
+//        if (work_status <= 2 || work_status > status_manager.getWorkingID()) { //WORK_STATUS_SELECTING_MAP
             map_road_edges_data = map_task_manager.getMapRoadEdges(current_map_name)
             map_road_data = map_task_manager.getMapRoads(current_map_name)
-        } else if (work_status > 3 && work_status <= 5) {
-            map_road_edges_data = map_task_manager.getMapRoadEdges(current_map_name)
-            map_road_data = map_task_manager.getMapRoads(current_map_name)
-        }
+//        } else if (work_status > 3 && work_status <= 5) {
+//            map_road_edges_data = map_task_manager.getMapRoadEdges(current_map_name)
+//            map_road_data = map_task_manager.getMapRoads(current_map_name)
+//        }
         root.var_road_edges = map_road_edges_data
         root.var_roads_include = map_road_data[0]
         root.var_roads_exclude = map_road_data[1]
@@ -204,7 +206,7 @@ Rectangle {
         var work_status = status_manager.getWorkStatus()
         var current_map_name = map_task_manager.getCurrentMapName()
         root.paintingMap(current_map_name)
-        if (work_status === 5) {
+        if (work_status === status_manager.getWorkingID()) {
             root.var_ref_line = map_task_manager.getWorkFullRefLine()
             canvas_ref_line.requestPaint()
         }
@@ -213,10 +215,10 @@ Rectangle {
     Connections {
         target: status_manager
         onWorkStatusUpdate: {
-            if (status >= 4) {
-                root.is_select_begin_point = false
+            if (status >= status_manager.getSelectTaskID()) {
+                root.could_select_begin_point = false
             } else {
-                root.is_select_begin_point = true
+                root.could_select_begin_point = true
             }
         }
     }
@@ -636,7 +638,7 @@ Rectangle {
                 }
 
                 function drawBeginPoints(ctx, begin_points) {
-                    if (!root.is_select_begin_point) {
+                    if (!root.could_select_begin_point) {
                         return
                     }
 
@@ -655,6 +657,7 @@ Rectangle {
                                 root.choosePoint[1] <= point[1] + vehicle.height  ) {
                             ctx.drawImage("qrc:/res/ui/task/qidian_choose.png",- vehicle.height,- vehicle.height,
                                           vehicle.height * 2 ,vehicle.height * 2);
+                            root.is_select_begin_point = true
                             map_task_manager.setInitPos(begin_points[i][0],begin_points[i][1],begin_points[i][2])
                         } else {
                             ctx.drawImage("qrc:/res/ui/task/qidian_no.png",- vehicle.height,- vehicle.height,
@@ -669,9 +672,7 @@ Rectangle {
                 onPaint: {
                     var ctx=getContext("2d");
                     ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
-                    console.info(begin_points)
                     drawBeginPoints(ctx,root.begin_points)
-
                 }
             }
 

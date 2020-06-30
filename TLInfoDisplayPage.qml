@@ -230,7 +230,7 @@ Rectangle {
         }
         Connections {
             target: ros_message_manager
-            onUpdateChassisInfo: {
+            onUpdateDrivingInfo: {
                 var v_speed = speed
                 var n_speed = Number(v_speed)
 
@@ -355,15 +355,15 @@ Rectangle {
             }
 
             function changeVisible(status) {
-                if (status >= 1 && status < 5) {
+                if (status >= status_manager.getNoneWorkID() && status < status_manager.getWorkingID()) {
                     img_start.visible = true
                     img_finish.visible = false
                     img_cleaning.visible = false
-                } else if (status === 5) {
+                } else if (status === status_manager.getWorkingID()) {
                     img_start.visible = false
                     img_finish.visible = false
                     img_cleaning.visible = true
-                } else if (status === 6) {
+                } else if (status === status_manager.getWorkDoneID()) {
                     img_start.visible = false
                     img_finish.visible = true
                     img_cleaning.visible = false

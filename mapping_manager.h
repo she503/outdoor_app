@@ -35,6 +35,8 @@ public:
 
     Q_INVOKABLE void transferMappingData(const int key, const QString &map_name); // 1:to_usb  2:to_computer
 
+    Q_INVOKABLE void recordMappingBag(const int status);
+
 signals:
      void emitMappingCommandInfo(const bool success, const QString& message);
      void emitmappingProgressInfo(const int status, const QString& message,const int progress);

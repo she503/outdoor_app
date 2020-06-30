@@ -5,25 +5,32 @@
 
 VehicleInfoManager::VehicleInfoManager(QObject *parent) : QObject(parent)
 {
-//    QAndroidJniEnvironment env;
-//        QAndroidJniObject activity = androidActivity();
-//        QAndroidJniObject contentResolver = activity.callObjectMethod(
-//                    "getContentResolver",
-//                    "()Landroid/content/ContentResolver;"
-//                    );
-////        CHECK_EXCEPTION();
 
-////    QAndroidJniObject brightnessTag = QAndroidJniObject::fromString("screen_brightness");
-//        QAndroidJniObject brightnessModeTag = QAndroidJniObject::fromString("screen_brightness_mode");
-//        bool ok = QAndroidJniObject::callStaticMethod<jboolean>(
-//                    "android/provider/Settings$System",
-//                    "putInt",
-//                    "(Landroid/content/ContentResolver;Ljava/lang/String;I)Z",
-//                    contentResolver.object<jobject>(),
-//                    brightnessModeTag.object<jstring>(),
-//                    0
-//                    );
-////        CHECK_EXCEPTION();
+//    QAndroidJniObject name = QAndroidJniObject::getStaticObjectField(
+//                "android/content/Context",
+//                "POWER_SERVICE",
+//                "Ljava/lang/String;"
+//                );
+//    CHECK_EXCEPTION();
+//    QAndroidJniObject powerService = activity.callObjectMethod(
+//                "getSystemService",
+//                "(Ljava/lang/String;)Ljava/lang/Object;",
+//                name.object<jstring>());
+//    CHECK_EXCEPTION();
+//    QAndroidJniObject tag = QAndroidJniObject::fromString("QtJniWakeLock");
+//    m_wakeLock = powerService.callObjectMethod(
+//                "newWakeLock",
+//                "(ILjava/lang/String;)Landroid/os/PowerManager$WakeLock;",
+//                10, //SCREEN_BRIGHT_WAKE_LOCK
+//                tag.object<jstring>()
+//                );
+//    CHECK_EXCEPTION();
+//    if(m_wakeLock.isValid())
+//    {
+//        m_wakeLock.callMethod<void>("acquire");
+//        CHECK_EXCEPTION();
+//    }
+
 }
 
 float VehicleInfoManager::getVehicleWidth()

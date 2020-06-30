@@ -29,6 +29,7 @@ Rectangle {
 
                 onClicked: {
                     mapping_manager.setMappingCommand(1)
+                    mapping_manager.recordMappingBag(1)
                     btn_start.visible = false
                     btn_stop.visible = true
                 }
@@ -47,6 +48,8 @@ Rectangle {
 
                 onClicked: {
                     mapping_manager.setMappingCommand(3)
+                    mapping_manager.recordMappingBag(2)
+
                     btn_start.visible = true
                     btn_stop.visible = false
                 }

@@ -135,8 +135,14 @@ void SocketManager::parseSocketData(const QByteArray &buffer)
     case MessageType::MESSAGE_TASK_INFO:
         emit emitTaskInfo(obj);
         break;
-    case MessageType::MESSAGE_CHASSIS_INFO:
-        emit emitChassisInfo(obj);
+//    case MessageType::MESSAGE_CHASSIS_INFO:
+//        emit emitChassisInfo(obj);
+//        break;
+    case MessageType::MESSAGE_CLEANING_AGENCY_INFO:
+        emit emitCleaningAgencyInfo(obj);
+        break;
+    case MessageType::MESSAGE_DRIVING_INFO:
+        emit emitDrivingInfo(obj);
         break;
     case MessageType::MESSAGE_PERCEPTION_OBSTACLES:
         emit emitObstaclesInfo(obj);

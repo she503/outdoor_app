@@ -23,6 +23,14 @@ Rectangle {
     property var checked_tasks_name: []
     property var _work_second: 0
     property var _work_time: []
+    property int current_map_index: -1
+
+    onCurrent_map_indexChanged: {
+        map_display_page.is_select_begin_point = false
+        rec_checked_location.resureLocalization(false)
+        rect_resure_point.visible = true
+        rect_resure_localization.visible = false
+    }
 
 
     WorkDone {
@@ -193,7 +201,7 @@ Rectangle {
                     onPressed: {
                         root.chooseMapPage()
                         list_view_areas.currentIndex = index
-
+                        root.current_map_index = index
                         root.choose_map_name = model.map_name
                         map_task_manager.setWorkMapName(model.map_name)
                         map_display_page.paintingMap(model.map_name)

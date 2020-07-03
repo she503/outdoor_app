@@ -645,11 +645,12 @@ Rectangle {
                     if (begin_points.length <= 0) {
                         return
                     }
+                    var num = 0;
                     for (var i = 0; i < begin_points.length; ++i) {
                         ctx.save()
                         var point = geometryToPixel(begin_points[i][0], begin_points[i][1])
                         ctx.translate(point[0],point[1]);
-                        ctx.rotate(begin_points[i][2] + 90 * Math.PI / 180);
+                        ctx.rotate(-begin_points[i][2] );
 
                         if(root.choosePoint[0] >= point[0] - vehicle.height &&
                                 root.choosePoint[0] <= point[0] + vehicle.height  &&
@@ -659,9 +660,13 @@ Rectangle {
                                           vehicle.height * 2 ,vehicle.height * 2);
                             root.is_select_begin_point = true
                             map_task_manager.setInitPos(begin_points[i][0],begin_points[i][1],begin_points[i][2])
+                            ++ num
                         } else {
                             ctx.drawImage("qrc:/res/ui/task/qidian_no.png",- vehicle.height,- vehicle.height,
                                           vehicle.height * 2 ,vehicle.height * 2);
+                        }
+                        if (num <= 0) {
+                            root.is_select_begin_point = false
                         }
 
                         ctx.restore()

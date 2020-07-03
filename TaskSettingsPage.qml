@@ -146,6 +146,10 @@ Rectangle {
             if (status === status_manager.getSelectTaskID()) {
                 rec_checked_location.resureLocalization(false)
             }
+            if (status <= status_manager.getLocationChoosePointID()) {
+                rect_resure_point.visible = true
+                rect_resure_localization.visible = false
+            }
 
             busy_indicator.close()
 

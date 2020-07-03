@@ -23,7 +23,6 @@ Rectangle {
         onSigBackBtnPress: {
             list_view.currentIndex = 0
             list_view.mainPageChanged(0)
-
         }
     }
 

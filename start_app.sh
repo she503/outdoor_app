@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ue
 xhost +
-IMAGE_NAME=tergeo-app_amd64:v2.0
+IMAGE_NAME=tergeo_app_amd64:latest
 NET_NAME=host
 MODULE_NAME=tergeo_app-`date +%H%M%s`
 

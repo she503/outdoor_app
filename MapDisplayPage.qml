@@ -49,7 +49,7 @@ Rectangle {
     property real max_x: Number.NEGATIVE_INFINITY
     property real real_rate: 2.5
 
-    property bool can_drag: false
+    property bool can_drag: true
     property var choosePoint: []
 
 
@@ -649,7 +649,7 @@ Rectangle {
                         ctx.save()
                         var point = geometryToPixel(begin_points[i][0], begin_points[i][1])
                         ctx.translate(point[0],point[1]);
-                        ctx.rotate(-begin_points[i][2] / Math.PI * 180 );
+                        ctx.rotate(begin_points[i][2] + 90 * Math.PI / 180);
 
                         if(root.choosePoint[0] >= point[0] - vehicle.height &&
                                 root.choosePoint[0] <= point[0] + vehicle.height  &&
@@ -663,6 +663,7 @@ Rectangle {
                             ctx.drawImage("qrc:/res/ui/task/qidian_no.png",- vehicle.height,- vehicle.height,
                                           vehicle.height * 2 ,vehicle.height * 2);
                         }
+
                         ctx.restore()
                     }
 
@@ -712,7 +713,7 @@ Rectangle {
                 var x = map.width / 2 - ( map.width / 2 - mouse.x + map.x) / map.scale
                 var y = map.height / 2 - ( map.height / 2 - mouse.y + map.y) / map.scale
                 root.choosePoint = [x, y]
-//                console.info(root.pixelToGeometry(root.choosePoint[0],root.choosePoint[1]))
+//                console.info(root.pixelToGeometry(root.choosePoint[0],root.choosePoint[1])
                 canvas_begin_points.requestPaint()
             }
             onPressed: {

@@ -213,6 +213,7 @@ void MapTaskManager::turnToSelectMap()
     obj.insert("flag", true);
     QJsonDocument doc(obj);
     _socket_manager->sendSocketMessage(doc.toJson());
+    _status_manager->setWorkStatus(WORK_STATUS_NONE_WORK);
     this->setWorkMapName(this->getCurrentMapName());
 }
 
@@ -223,6 +224,8 @@ void MapTaskManager::turnToSelectTask()
     obj.insert("flag", true);
     QJsonDocument doc(obj);
     _socket_manager->sendSocketMessage(doc.toJson());
+    _status_manager->setWorkStatus(WORK_STATUS_SELECTING_TASK);
+
 }
 
 void MapTaskManager::setEnableCleanWork(bool flag)

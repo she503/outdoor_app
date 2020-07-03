@@ -124,8 +124,8 @@ void RosMessageManager::parseTrajectoryInfo(const QJsonObject &obj)
 
 void RosMessageManager::parseMonitorMessageInfo(const QJsonObject &obj)
 {
-    QDateTime time_secs = QDateTime::fromMSecsSinceEpoch(obj.value("time").toDouble());
-    QString str_time = time_secs.toString("hh:mm:ss.zzz");
+    QDateTime time_secs = QDateTime::fromTime_t(obj.value("time").toDouble());
+    QString str_time = time_secs.toString("hh:mm:ss");
 
     QJsonObject monitor_messages_obj = obj.value("monitor_messages").toObject();
     if (monitor_messages_obj.empty()) {

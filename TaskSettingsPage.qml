@@ -606,7 +606,7 @@ Rectangle {
                             root._work_second = 0
                             root._work_time = []
                         }
-                        if (status === status_manager.getLocationChoosePointID()) {
+                        if (status <= status_manager.getLocationChoosePointID()) {
                             rect_resure_point.visible = true
                             rect_resure_localization.visible = false
                         } else if (status === status_manager.getLocationComfirmID()) {
@@ -664,7 +664,21 @@ Rectangle {
                         anchors.fill: parent
                         onClicked: {
                             map_task_manager.setWorkTasksName(root.checked_tasks_name)
+                            busy_indicator.txt_context = qsTr("Setting task ,please waite for a minute")
+                            busy_indicator.open()
                         }
+                    }
+                }
+            }
+            Connections {
+                target: map_task_manager
+                onEmitSetTasksRstInfo: {
+                    busy_indicator.close()
+                    if (statu == 0) {
+                        message_box.dia_type = 0
+                        message_box.dia_title = qsTr("Init Error")
+                        message_box.dia_text = error_message
+                        message_box.open()
                     }
                 }
             }

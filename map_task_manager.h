@@ -20,7 +20,7 @@ public:
 
     Q_INVOKABLE void setInitPos(const double& pos_x, const double& pos_y, const double theta);
 
-    Q_INVOKABLE void setWorkMapName(const QString& map_name);
+    Q_INVOKABLE void setWorkMapName(const QString& map_name, const int map_index);
 
     Q_INVOKABLE QVariantList getMapRoads(const QString& map_name);
 
@@ -33,6 +33,8 @@ public:
     Q_INVOKABLE QStringList getMapsName();
 
     Q_INVOKABLE QString getCurrentMapName();
+
+    Q_INVOKABLE int getCurrentMapIndex();
 
     Q_INVOKABLE QStringList getTasksName();
 
@@ -87,6 +89,7 @@ private:
     QMap<QString, QJsonObject> _all_features;
 
     QString _current_map_name;
+    int _current_map_index;
     QMap<QString, QJsonObject> _all_tasks_in_map;
 
     QVariantList _work_full_ref_line;

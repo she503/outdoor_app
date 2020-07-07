@@ -38,7 +38,7 @@ Rectangle {
 
 
     Component.onCompleted: {
-        map_task_manager.setWorkMapName(map_task_manager.getCurrentMapName())
+//        map_task_manager.setWorkMapName(map_task_manager.getCurrentMapName(), map_task_manager.getCurrentMapIndex())
         var status = status_manager.getWorkStatus()
         if (status === status_manager.getWorkingID()) {
             misson_bord.showMessagePics(true)

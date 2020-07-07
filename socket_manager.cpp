@@ -99,6 +99,7 @@ void SocketManager::parseSocketData(const QByteArray &buffer)
         break;
 
     case MessageType::MESSAGE_ALL_MAPS_INFO:
+        qDebug() << "-----------------------------------";
         emit emitAllMapsInfo(obj);
         break;
     case MessageType::MESSAGE_SET_INIT_POSE_RST:

@@ -12,6 +12,7 @@ Rectangle {
     color: "transparent"
 
     property alias p_choose_marker: choose_marker
+    property alias a_vehicle: vehicle
     property var p_task_points: []
     property var p_task_regions: []
     property var p_task_lines: []
@@ -80,7 +81,8 @@ Rectangle {
             root.begin_points = feature_list[0]
             root.charge_points = feature_list[1]
         } else if (feature_list.length === 0) {
-
+            root.begin_points = []
+            root.charge_points = []
         }
         root.is_select_begin_point = false
 
@@ -89,13 +91,9 @@ Rectangle {
         var work_status = status_manager.getWorkStatus()
         var map_road_data = []
         var map_road_edges_data = []
-//        if (work_status <= 2 || work_status > status_manager.getWorkingID()) { //WORK_STATUS_SELECTING_MAP
-            map_road_edges_data = map_task_manager.getMapRoadEdges(current_map_name)
-            map_road_data = map_task_manager.getMapRoads(current_map_name)
-//        } else if (work_status > 3 && work_status <= 5) {
-//            map_road_edges_data = map_task_manager.getMapRoadEdges(current_map_name)
-//            map_road_data = map_task_manager.getMapRoads(current_map_name)
-//        }
+        map_road_edges_data = map_task_manager.getMapRoadEdges(current_map_name)
+        map_road_data = map_task_manager.getMapRoads(current_map_name)
+
         root.var_road_edges = map_road_edges_data
         root.var_roads_include = map_road_data[0]
         root.var_roads_exclude = map_road_data[1]
@@ -219,6 +217,11 @@ Rectangle {
                 root.could_select_begin_point = false
             } else {
                 root.could_select_begin_point = true
+            }
+            console.info("s" + status)
+            if (status <= status_manager.getSelectMapID()) {
+                console.info("11111111111111111111")
+                map_task_manager.setWorkMapName(map_task_manager.getCurrentMapName(), map_task_manager.getCurrentMapIndex())
             }
         }
     }

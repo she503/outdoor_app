@@ -194,7 +194,7 @@ Rectangle {
                 anchors.fill: parent
                 orientation:ListView.Horizontal
                 spacing: width * 0.02
-                currentIndex: 0
+                currentIndex: 1
                 delegate: ItemDelegate {
                     width: list_view_areas.width / 4
                     height: list_view_areas.height
@@ -203,7 +203,7 @@ Rectangle {
                         list_view_areas.currentIndex = index
                         root.current_map_index = index
                         root.choose_map_name = model.map_name
-                        map_task_manager.setWorkMapName(model.map_name)
+                        map_task_manager.setWorkMapName(model.map_name, index)
                         map_display_page.paintingMap(model.map_name)
                     }
 
@@ -468,12 +468,17 @@ Rectangle {
                                 anchors.fill: parent
                                 onClicked: {
                                     map_task_manager.setInitIsRight(false)
-                                    map_task_manager.turnToSelectMap()
                                     rect_resure_localization.visible = false
                                     txt_localization.text = qsTr("please choose a begin point!")
                                     rect_resure_point.visible = true
                                     img_no.visible = false
                                     img_yes.visible = false
+
+                                    map_display_page.a_vehicle.x = 0
+                                    map_display_page.a_vehicle.y = 0
+                                    map_display_page.a_vehicle.rotation = 0
+
+
                                 }
                             }
                         }
@@ -682,7 +687,7 @@ Rectangle {
                 target: map_task_manager
                 onEmitSetTasksRstInfo: {
                     busy_indicator.close()
-                    if (statu == 0) {
+                    if (status == 0) {
                         message_box.dia_type = 0
                         message_box.dia_title = qsTr("Init Error")
                         message_box.dia_text = error_message
@@ -734,6 +739,7 @@ Rectangle {
         onOkClicked: {
             dialog_return_map_tip.close()
             map_task_manager.turnToSelectMap()
+            list_view_areas.currentIndex = root.current_map_index
 
         }
     }

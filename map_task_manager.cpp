@@ -1,7 +1,7 @@
 #include "map_task_manager.h"
 #include "qjson_transformer.h"
 
-MapTaskManager::MapTaskManager(QObject *parent) : QObject(parent),_work_full_ref_line({})
+MapTaskManager::MapTaskManager(QObject *parent) : QObject(parent),_work_full_ref_line({}), _current_map_index(0)
 {
 
 }
@@ -56,10 +56,12 @@ void MapTaskManager::sendInitPos()
     obj.insert("theta", _init_pose.at(2).toDouble());
     QJsonDocument doc(obj);
     _socket_manager->sendSocketMessage(doc.toJson());
+
 }
 
-void MapTaskManager::setWorkMapName(const QString &map_name)
+void MapTaskManager::setWorkMapName(const QString &map_name, const int map_index)
 {
+    _current_map_index = map_index;
     _current_map_name = map_name;
     QJsonObject obj;
     obj.insert("message_type", MESSAGE_SET_MAP);
@@ -178,6 +180,11 @@ QString MapTaskManager::getCurrentMapName()
     return _current_map_name;
 }
 
+int MapTaskManager::getCurrentMapIndex()
+{
+    return _current_map_index;
+}
+
 QStringList MapTaskManager::getTasksName()
 {
     QStringList tasks_name;
@@ -213,8 +220,6 @@ void MapTaskManager::turnToSelectMap()
     obj.insert("flag", true);
     QJsonDocument doc(obj);
     _socket_manager->sendSocketMessage(doc.toJson());
-    _status_manager->setWorkStatus(WORK_STATUS_NONE_WORK);
-    this->setWorkMapName(this->getCurrentMapName());
 }
 
 void MapTaskManager::turnToSelectTask()
@@ -246,7 +251,7 @@ void MapTaskManager::setInitIsRight(bool flag)
     _socket_manager->sendSocketMessage(doc.toJson());
 
     if (!flag) {
-        _status_manager->setWorkStatus(WORK_STATUS_LOCATION_CHOOSE_POINT);
+        _status_manager->setWorkStatus(WORK_STATUS_SELECTING_MAP);
     }
 }
 
@@ -278,11 +283,9 @@ void MapTaskManager::parseAllMapsInfo(const QJsonObject &obj)
         QJsonObject features_obj = map_temp_obj.value("features").toObject();
         _all_features.insert(map_name, features_obj);
     }
-    _current_map_name = _all_maps.firstKey();
 
-    this->setWorkMapName(_current_map_name);
-
-    _status_manager->setWorkStatus(WORK_STATUS_NONE_WORK);
+    this->setWorkMapName( _all_maps.firstKey(), 0);
+    _status_manager->setWorkStatus(WORK_STATUS_SELECTING_MAP);
 }
 
 void MapTaskManager::parseSetMapNameRst(const QJsonObject &obj)

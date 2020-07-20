@@ -23,6 +23,14 @@ Rectangle {
     property var checked_tasks_name: []
     property var _work_second: 0
     property var _work_time: []
+    property int current_map_index: 0
+
+    onCurrent_map_indexChanged: {
+        map_display_page.is_select_begin_point = false
+        rec_checked_location.resureLocalization(false)
+        rect_resure_point.visible = true
+        rect_resure_localization.visible = false
+    }
 
 
     WorkDone {
@@ -41,8 +49,9 @@ Rectangle {
             var maps_name = map_task_manager.getMapsName()
 
             for (var j = 0; j < maps_name.length; ++j) {
-                map_name_list.append({"map_name": maps_name[j]})
+                map_name_list.append({"map_name": maps_name[j], "map_select_index" : j})
             }
+            root.current_map_index = map_task_manager.getCurrentMapIndex()
             chooseMapPage()
         } else if (status === status_manager.getSelectTaskID()) {
             var tasks_name = map_task_manager.getTasksName()
@@ -129,7 +138,6 @@ Rectangle {
                 message_box.dia_text = error_message
                 message_box.open()
             }
-
             busy_indicator.close()
 
         }
@@ -172,13 +180,12 @@ Rectangle {
             width: parent.width
             height: parent.height * 0.08
             color: "transparent"
-            anchors{
-
+//            anchors{
 //                top:parent.top
 //                topMargin: parent.height * 0.06
 //                left: parent.left
 //                leftMargin: parent.width * 0.02
-            }
+//            }
 
             ListView {
                 id: list_view_areas
@@ -186,16 +193,18 @@ Rectangle {
                 anchors.fill: parent
                 orientation:ListView.Horizontal
                 spacing: width * 0.02
-                currentIndex: 0
+                currentIndex: 1
                 delegate: ItemDelegate {
+                    id: item_map_select
                     width: list_view_areas.width / 4
                     height: list_view_areas.height
+                    property real map_select_index: model.map_select_index
                     onPressed: {
                         root.chooseMapPage()
                         list_view_areas.currentIndex = index
-
+                        root.current_map_index = index
                         root.choose_map_name = model.map_name
-                        map_task_manager.setWorkMapName(model.map_name)
+                        map_task_manager.setWorkMapName(model.map_name, index)
                         map_display_page.paintingMap(model.map_name)
                     }
 
@@ -205,8 +214,10 @@ Rectangle {
                         color: "transparent"
                         Image {
                             anchors.fill: parent
-                            source: parent.parent.focus ?
+                            source: item_map_select.map_select_index === root.current_map_index ?
                                         "qrc:/res/ui/background/map_selected.png" : "qrc:/res/ui/background/map_no_select.png"
+//                            source: parent.parent.focus ?
+//                                        "qrc:/res/ui/background/map_selected.png" : "qrc:/res/ui/background/map_no_select.png"
                         }
                         Text {
                             text: model.map_name
@@ -228,8 +239,8 @@ Rectangle {
                     Component.onCompleted: {
                         map_name_list.clear()
                         root._maps_name = map_task_manager.getMapsName()
-                        for (var i = 0; i < _maps_name.length; ++i) {
-                            map_name_list.append({"map_name":_maps_name[i]})
+                        for (var i = 0; i < root._maps_name.length; ++i) {
+                            map_name_list.append({"map_name":_maps_name[i], "map_select_index" : i})
                         }
                     }
                 }
@@ -460,12 +471,17 @@ Rectangle {
                                 anchors.fill: parent
                                 onClicked: {
                                     map_task_manager.setInitIsRight(false)
-                                    map_task_manager.turnToSelectMap()
                                     rect_resure_localization.visible = false
                                     txt_localization.text = qsTr("please choose a begin point!")
                                     rect_resure_point.visible = true
                                     img_no.visible = false
                                     img_yes.visible = false
+
+                                    map_display_page.a_vehicle.x = 0
+                                    map_display_page.a_vehicle.y = 0
+                                    map_display_page.a_vehicle.rotation = 0
+
+
                                 }
                             }
                         }
@@ -548,7 +564,6 @@ Rectangle {
                             }
                         }
                     }
-
 
                     Rectangle {
                         id: btn_resure
@@ -674,7 +689,7 @@ Rectangle {
                 target: map_task_manager
                 onEmitSetTasksRstInfo: {
                     busy_indicator.close()
-                    if (statu == 0) {
+                    if (status == 0) {
                         message_box.dia_type = 0
                         message_box.dia_title = qsTr("Init Error")
                         message_box.dia_text = error_message
@@ -726,6 +741,7 @@ Rectangle {
         onOkClicked: {
             dialog_return_map_tip.close()
             map_task_manager.turnToSelectMap()
+            list_view_areas.currentIndex = root.current_map_index
 
         }
     }

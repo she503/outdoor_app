@@ -162,38 +162,22 @@ Rectangle {
             leftMargin: parent.width * 0.08
         }
         Image {
-            id: img_clean
+            id: img_speed
             width: parent.width
             height: parent.height
-            source: "qrc:/res/ui/CenterBigBtn/clean.png"
+            source: "qrc:/res/ui/CenterBigBtn/speed.png"
             fillMode: Image.PreserveAspectFit
 
-            property int task_width: img_clean.width * 0.58
             Connections {
                 target: ros_message_manager
-                onUpdateTaskProcessInfo: {
-                    txt_clean_progress.text = "" + progress + " %";
-                    img_clean_progress_bar.width = img_clean.task_width / 100 * progress
-                }
-            }
-
-            Rectangle {
-                id: img_clean_progress_bar
-                visible: true
-                width: parent.width * 0.58
-                height: parent.height * 0.073
-                color: Qt.rgba(0, 255, 0, 0.4)
-                anchors {
-                    top: parent.top
-                    topMargin: parent.height * 0.54
-                    left: parent.left
-                    leftMargin: parent.width * 0.25
-
+                onUpdateDrivingInfo: {
+                    var v_speed = speed
+                    txt_speed.text = v_speed + " m/s"
                 }
             }
             Text {
-                id: txt_clean_progress
-                text: qsTr("0 %")
+                id: txt_speed
+                text: qsTr("0 m/s")
                 width: parent.width * 0.58
                 height: parent.height * 0.075
                 font.pixelSize: height
@@ -203,7 +187,7 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 anchors {
                     top: parent.top
-                    topMargin: parent.height * 0.55
+                    topMargin: parent.height * 0.45
                     left: parent.left
                     leftMargin: parent.width * 0.25
                 }
@@ -381,8 +365,6 @@ Rectangle {
                     img_center_btn.changeVisible(status)
                 }
             }
-
         }
     }
-
 }

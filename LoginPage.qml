@@ -15,6 +15,11 @@ Item{
         onEmitLoginRst: {
             if (status === 1) {
                 successToLogin()
+            } else if (status == 0) {
+                message_box.dia_title = qsTr("Faild")
+                message_box.dia_text = message
+                message_box.dia_type = 0
+                message_box.open()
             }
         }
     }

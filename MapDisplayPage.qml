@@ -12,6 +12,7 @@ Rectangle {
     color: "transparent"
 
     property alias p_choose_marker: choose_marker
+    property alias a_vehicle: vehicle
     property var p_task_points: []
     property var p_task_regions: []
     property var p_task_lines: []
@@ -53,8 +54,8 @@ Rectangle {
     property var choosePoint: []
 
 
-    property var begin_points: []//map_task_manager.getMapFeature(map_task_manager.getCurrentMapName())[0]
-    property var charge_points: []//map_task_manager.getMapFeature(map_task_manager.getCurrentMapName())[1]
+    property var begin_points: []
+    property var charge_points: []
     property bool could_select_begin_point: status_manager.getWorkStatus() <= status_manager.getSelectTaskID()
     property bool is_select_begin_point: false
 
@@ -80,7 +81,8 @@ Rectangle {
             root.begin_points = feature_list[0]
             root.charge_points = feature_list[1]
         } else if (feature_list.length === 0) {
-
+            root.begin_points = []
+            root.charge_points = []
         }
         root.is_select_begin_point = false
 
@@ -89,13 +91,9 @@ Rectangle {
         var work_status = status_manager.getWorkStatus()
         var map_road_data = []
         var map_road_edges_data = []
-//        if (work_status <= 2 || work_status > status_manager.getWorkingID()) { //WORK_STATUS_SELECTING_MAP
-            map_road_edges_data = map_task_manager.getMapRoadEdges(current_map_name)
-            map_road_data = map_task_manager.getMapRoads(current_map_name)
-//        } else if (work_status > 3 && work_status <= 5) {
-//            map_road_edges_data = map_task_manager.getMapRoadEdges(current_map_name)
-//            map_road_data = map_task_manager.getMapRoads(current_map_name)
-//        }
+        map_road_edges_data = map_task_manager.getMapRoadEdges(current_map_name)
+        map_road_data = map_task_manager.getMapRoads(current_map_name)
+
         root.var_road_edges = map_road_edges_data
         root.var_roads_include = map_road_data[0]
         root.var_roads_exclude = map_road_data[1]
@@ -215,10 +213,21 @@ Rectangle {
     Connections {
         target: status_manager
         onWorkStatusUpdate: {
+            if (status === status_manager.getSelectMapID()) {
+                canvas_background.requestPaint()
+                root.paintingMap(map_task_manager.getCurrentMapName())
+            }
+
             if (status >= status_manager.getSelectTaskID()) {
                 root.could_select_begin_point = false
             } else {
                 root.could_select_begin_point = true
+            }
+
+            if (status < status_manager.getLocationComfirmID()) {
+                vehicle.x = 0
+                vehicle.y = 0
+                vehicle.rotation = 0
             }
         }
     }
@@ -645,11 +654,12 @@ Rectangle {
                     if (begin_points.length <= 0) {
                         return
                     }
+                    var num = 0;
                     for (var i = 0; i < begin_points.length; ++i) {
                         ctx.save()
                         var point = geometryToPixel(begin_points[i][0], begin_points[i][1])
                         ctx.translate(point[0],point[1]);
-                        ctx.rotate(begin_points[i][2] + 90 * Math.PI / 180);
+                        ctx.rotate(-begin_points[i][2] );
 
                         if(root.choosePoint[0] >= point[0] - vehicle.height &&
                                 root.choosePoint[0] <= point[0] + vehicle.height  &&
@@ -659,9 +669,13 @@ Rectangle {
                                           vehicle.height * 2 ,vehicle.height * 2);
                             root.is_select_begin_point = true
                             map_task_manager.setInitPos(begin_points[i][0],begin_points[i][1],begin_points[i][2])
+                            ++ num
                         } else {
                             ctx.drawImage("qrc:/res/ui/task/qidian_no.png",- vehicle.height,- vehicle.height,
                                           vehicle.height * 2 ,vehicle.height * 2);
+                        }
+                        if (num <= 0) {
+                            root.is_select_begin_point = false
                         }
 
                         ctx.restore()
@@ -713,7 +727,7 @@ Rectangle {
                 var x = map.width / 2 - ( map.width / 2 - mouse.x + map.x) / map.scale
                 var y = map.height / 2 - ( map.height / 2 - mouse.y + map.y) / map.scale
                 root.choosePoint = [x, y]
-//                console.info(root.pixelToGeometry(root.choosePoint[0],root.choosePoint[1])
+//                console.info(root.pixelToGeometry(root.choosePoint[0],root.choosePoint[1]))
                 canvas_begin_points.requestPaint()
             }
             onPressed: {

@@ -51,6 +51,7 @@ Rectangle {
         font.family: "Arial"
         font.pixelSize: root.font_size
         anchors.left: pic_login.right
+        focus: activeFocus
         style: TextFieldStyle {
             textColor: "black"
             background: Rectangle {

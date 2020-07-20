@@ -23,7 +23,7 @@ Rectangle {
     property var checked_tasks_name: []
     property var _work_second: 0
     property var _work_time: []
-    property int current_map_index: -1
+    property int current_map_index: 0
 
     onCurrent_map_indexChanged: {
         map_display_page.is_select_begin_point = false
@@ -49,8 +49,9 @@ Rectangle {
             var maps_name = map_task_manager.getMapsName()
 
             for (var j = 0; j < maps_name.length; ++j) {
-                map_name_list.append({"map_name": maps_name[j]})
+                map_name_list.append({"map_name": maps_name[j], "map_select_index" : j})
             }
+            root.current_map_index = map_task_manager.getCurrentMapIndex()
             chooseMapPage()
         } else if (status === status_manager.getSelectTaskID()) {
             var tasks_name = map_task_manager.getTasksName()
@@ -137,7 +138,6 @@ Rectangle {
                 message_box.dia_text = error_message
                 message_box.open()
             }
-
             busy_indicator.close()
 
         }
@@ -180,13 +180,12 @@ Rectangle {
             width: parent.width
             height: parent.height * 0.08
             color: "transparent"
-            anchors{
-
+//            anchors{
 //                top:parent.top
 //                topMargin: parent.height * 0.06
 //                left: parent.left
 //                leftMargin: parent.width * 0.02
-            }
+//            }
 
             ListView {
                 id: list_view_areas
@@ -196,8 +195,10 @@ Rectangle {
                 spacing: width * 0.02
                 currentIndex: 1
                 delegate: ItemDelegate {
+                    id: item_map_select
                     width: list_view_areas.width / 4
                     height: list_view_areas.height
+                    property real map_select_index: model.map_select_index
                     onPressed: {
                         root.chooseMapPage()
                         list_view_areas.currentIndex = index
@@ -213,8 +214,10 @@ Rectangle {
                         color: "transparent"
                         Image {
                             anchors.fill: parent
-                            source: parent.parent.focus ?
+                            source: item_map_select.map_select_index === root.current_map_index ?
                                         "qrc:/res/ui/background/map_selected.png" : "qrc:/res/ui/background/map_no_select.png"
+//                            source: parent.parent.focus ?
+//                                        "qrc:/res/ui/background/map_selected.png" : "qrc:/res/ui/background/map_no_select.png"
                         }
                         Text {
                             text: model.map_name
@@ -236,8 +239,8 @@ Rectangle {
                     Component.onCompleted: {
                         map_name_list.clear()
                         root._maps_name = map_task_manager.getMapsName()
-                        for (var i = 0; i < _maps_name.length; ++i) {
-                            map_name_list.append({"map_name":_maps_name[i]})
+                        for (var i = 0; i < root._maps_name.length; ++i) {
+                            map_name_list.append({"map_name":_maps_name[i], "map_select_index" : i})
                         }
                     }
                 }
@@ -561,7 +564,6 @@ Rectangle {
                             }
                         }
                     }
-
 
                     Rectangle {
                         id: btn_resure

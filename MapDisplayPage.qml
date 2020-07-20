@@ -54,8 +54,8 @@ Rectangle {
     property var choosePoint: []
 
 
-    property var begin_points: []//map_task_manager.getMapFeature(map_task_manager.getCurrentMapName())[0]
-    property var charge_points: []//map_task_manager.getMapFeature(map_task_manager.getCurrentMapName())[1]
+    property var begin_points: []
+    property var charge_points: []
     property bool could_select_begin_point: status_manager.getWorkStatus() <= status_manager.getSelectTaskID()
     property bool is_select_begin_point: false
 
@@ -213,15 +213,21 @@ Rectangle {
     Connections {
         target: status_manager
         onWorkStatusUpdate: {
+            if (status === status_manager.getSelectMapID()) {
+                canvas_background.requestPaint()
+                root.paintingMap(map_task_manager.getCurrentMapName())
+            }
+
             if (status >= status_manager.getSelectTaskID()) {
                 root.could_select_begin_point = false
             } else {
                 root.could_select_begin_point = true
             }
-            console.info("s" + status)
-            if (status <= status_manager.getSelectMapID()) {
-                console.info("11111111111111111111")
-                map_task_manager.setWorkMapName(map_task_manager.getCurrentMapName(), map_task_manager.getCurrentMapIndex())
+
+            if (status < status_manager.getLocationComfirmID()) {
+                vehicle.x = 0
+                vehicle.y = 0
+                vehicle.rotation = 0
             }
         }
     }
@@ -721,7 +727,7 @@ Rectangle {
                 var x = map.width / 2 - ( map.width / 2 - mouse.x + map.x) / map.scale
                 var y = map.height / 2 - ( map.height / 2 - mouse.y + map.y) / map.scale
                 root.choosePoint = [x, y]
-//                console.info(root.pixelToGeometry(root.choosePoint[0],root.choosePoint[1])
+//                console.info(root.pixelToGeometry(root.choosePoint[0],root.choosePoint[1]))
                 canvas_begin_points.requestPaint()
             }
             onPressed: {

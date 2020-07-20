@@ -31,6 +31,7 @@ signals:
     void updateTaskProcessInfo(const int& current_index, const QString& progress);
     void updateBatteryInfo(const int& soc);
     void updateTrajectoryInfo(const QVariantList& trajectory);
+    void updateMileageInfo(const QString& single, const QString& total);
 
     void updateMonitorMessageInfo(const QVariantList& monitor_message);
 

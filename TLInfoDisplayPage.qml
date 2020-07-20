@@ -180,14 +180,14 @@ Rectangle {
                 text: qsTr("0 m/s")
                 width: parent.width * 0.58
                 height: parent.height * 0.075
-                font.pixelSize: height
+                font.pixelSize: height * 2
                 font.bold: true
                 color: "white"
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 anchors {
                     top: parent.top
-                    topMargin: parent.height * 0.45
+                    topMargin: parent.height * 0.35
                     left: parent.left
                     leftMargin: parent.width * 0.25
                 }

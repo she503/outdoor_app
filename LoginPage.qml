@@ -16,10 +16,9 @@ Item{
             if (status === 1) {
                 successToLogin()
             } else if (status == 0) {
-                message_box.dia_title = qsTr("Faild")
-                message_box.dia_text = message
-                message_box.dia_type = 0
-                message_box.open()
+                error_message_box.txt_color = "red"
+                error_message_box.txt_context = qsTr("Error username or password, Please check it agin.")
+                error_message_box.open()
             }
         }
     }

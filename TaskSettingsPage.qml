@@ -133,10 +133,9 @@ Rectangle {
                 rec_checked_location.resureLocalization(false)
 
             } else if (status === 0) {
-                message_box.dia_type = 0
-                message_box.dia_title = qsTr("Init Error")
-                message_box.dia_text = error_message
-                message_box.open()
+                error_message_box.txt_color = "red"
+                error_message_box.txt_context = error_message
+                error_message_box.open()
             }
             busy_indicator.close()
 
@@ -690,10 +689,9 @@ Rectangle {
                 onEmitSetTasksRstInfo: {
                     busy_indicator.close()
                     if (status == 0) {
-                        message_box.dia_type = 0
-                        message_box.dia_title = qsTr("Init Error")
-                        message_box.dia_text = error_message
-                        message_box.open()
+                        error_message_box.txt_color = "red"
+                        error_message_box.txt_context = error_message
+                        error_message_box.open()
                     }
                 }
             }

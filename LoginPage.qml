@@ -169,48 +169,18 @@ Item{
                     color: "white"
                     font.pixelSize: height * 0.5
                 }
-//                Label {
-//                    id: lab_pwd
-//                    width: parent.width * 0.3
-//                    height: parent.height
-//                    text: qsTr("PWD")
-//                    horizontalAlignment: Text.AlignRight
-//                    verticalAlignment: Text.AlignVCenter
-//                    font.pixelSize: height * 0.4
-//                    anchors{
-//                        top: parent.top
-//                    }
-//                    color: "#006abe"
-//                }
-//                TLTextField {
-//                    id: password
-//                    width: parent.width * 0.55
-//                    height: parent.height * 0.8
-//                    anchors {
-//                        left: lab_pwd.right
-//                        leftMargin: parent.width * 0.05
-//                        verticalCenter: parent.verticalCenter
-
-//                    }
-//                    text: root._default_test_user
-//                    btn_radius: height * 0.1
-//                    placeholderText: qsTr("enter your password.")
-//                    echoMode: TextInput.Password
-//                    pic_name: "qrc:/res/pictures/password.png"
-//                    validator: RegExpValidator{regExp:/^.[A-Za-z0-9]{0,16}$/}
-//                }
             }
 
             MouseArea {
                 id: btn_ok
-                width: rect_login.width * 0.8
-                height: rect_login.height * 0.1
+                width: rect_login.width * 0.635
+                height: rect_login.height * 0.15
                 anchors {
                     top: rect_pwd.bottom
-                    topMargin: parent.height * 0.08
+                    topMargin: parent.height * 0.02
 
                     horizontalCenter: parent.horizontalCenter
-                    horizontalCenterOffset: parent.width * 0.05
+                    horizontalCenterOffset: parent.width * 0.022
 
                 }
                 onClicked: {

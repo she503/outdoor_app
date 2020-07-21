@@ -187,7 +187,7 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 anchors {
                     top: parent.top
-                    topMargin: parent.height * 0.35
+                    topMargin: parent.height * 0.40
                     left: parent.left
                     leftMargin: parent.width * 0.25
                 }

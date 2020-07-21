@@ -15,6 +15,7 @@ ApplicationWindow {
             stack_view.replace(login_page)
         }
     }
+
     property Component welcome_page: WelcomePage {
         onFinishAnimation: {
             if (!connect_to_server) {

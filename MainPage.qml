@@ -9,6 +9,8 @@ import "./mapping"
 Rectangle {
     id: root
 
+    signal sigBackBtnPress()
+
     color: "transparent"
     property int stack_view_index: 0
     property Component user_manage_page: UserManagePage {}
@@ -21,8 +23,10 @@ Rectangle {
             lock_screen_page.pop_lock.open()
         }
         onSigBackBtnPress: {
-            list_view.currentIndex = 0
-            list_view.mainPageChanged(0)
+            root.sigBackBtnPress()
+        }
+        onSigEndWork: {
+            work_done_widget.btn_stop_pressed = true
         }
     }
 
@@ -36,6 +40,12 @@ Rectangle {
 
     LockScreenPage { id: lock_screen_page}
 
+    WorkDone {
+        id: work_done_widget
+        onSigBackBtnPress: {
+            root.sigBackBtnPress()
+        }
+    }
 
     Component.onCompleted: {
 //        map_task_manager.setWorkMapName(map_task_manager.getCurrentMapName(), map_task_manager.getCurrentMapIndex())

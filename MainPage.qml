@@ -11,6 +11,11 @@ Rectangle {
 
     signal sigBackBtnPress()
 
+    onSigBackBtnPress: {
+        list_view.currentIndex = 0
+        list_view.mainPageChanged(0)
+    }
+
     color: "transparent"
     property int stack_view_index: 0
     property Component user_manage_page: UserManagePage {}

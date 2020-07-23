@@ -1,188 +1,216 @@
-import QtQuick 2.0
+﻿import QtQuick 2.0
 import QtQuick.Controls 2.2
+import QtGraphicalEffects 1.0
 import "../homemade_components"
-Dialog {
-    id: task_auto_achived
-    height: 280
-    width: 420
 
-    background: Rectangle {
-        anchors.fill: parent
-        color: "transparent"
+Item {
+    id: root
+    width: parent.width
+    height: parent.height
+
+    signal sigBackBtnPress()
+    property bool btn_stop_pressed: false
+
+    onBtn_stop_pressedChanged: {
+        if (btn_stop_pressed === true) {
+            pop_lock.open()
+            dialog_stop_task_tip.open()
+        } else {
+            pop_lock.close()
+        }
     }
-    contentItem: Item {
-        anchors.fill: parent
-        Rectangle {
-            width: parent.width
-            height: parent.height
-            anchors.centerIn: parent
-            color: "transparent"
-            Image {
+
+    Popup {
+        id: pop_lock
+        width: parent.width
+        height: parent.height
+        modal: true
+        focus: true
+        dim: false
+        closePolicy: Popup.CloseOnPressOutsideParent
+        background: Rectangle {
+            anchors.fill: parent
+            opacity: 0.3
+            RadialGradient {
                 anchors.fill: parent
-                source: "qrc:/res/pictures/background_glow2.png"
+                gradient: Gradient
+                {
+                    GradientStop{position: 0.3; color:"grey"}
+                    GradientStop{position: 1; color:"black"}
+                }
             }
+        }
+        contentItem: Item {
+            anchors.fill: parent
             Rectangle {
-                color: Qt.rgba(255, 255, 255, 1)
-                anchors.centerIn: parent
-                width: parent.width * 0.8
-                height: parent.height * 0.75
-                Rectangle {
-                    id: rect_task_achived_title
-                    width: parent.width
-                    height: parent.height * 0.3
-                    color: "transparent"
-                    Text {
-                        color: "#4876FF"
-                        text: qsTr("Task achieved")
-                        font.pixelSize: parent.height * 0.4
-                        font.bold: true
-                        anchors.centerIn: parent
+                width: parent.width
+                height: parent.height
+                color: "transparent"
+                TLDialog {
+                    id: dialog_stop_task_tip
+                    height: parent.height * 0.5
+                    width: height * 1.5
+                    x: (root.width - width) / 2
+                    y: (root.height - height) / 2
+                    dia_title: qsTr("Repeat")
+                    dia_content: qsTr("Whether to stop the task?")
+                    status: 1
+                    ok: true
+                    cancel_text: qsTr("cancel")
+                    ok_text: qsTr("yes")
+                    closePolicy: Popup.NoAutoClose
+                    onCancelClicked: {
+                        root.btn_stop_pressed = false
                     }
-                    Image {
-                        height: parent.height * 0.4
-                        width: height
-                        anchors {
-                            right: parent.right
-                            top:parent.top
-                            rightMargin: parent.height * 0.1
-                            topMargin: parent.height * 0.1
-                        }
-                        source: "qrc:/res/pictures/exit.png"
-                        fillMode: Image.PreserveAspectFit
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                task_auto_achived.close()
-                            }
-                        }
+                    onOkClicked: {
+                        dialog_stop_task_tip.close()
+                        map_task_manager.setPauseTaskCommond(true)
+                        task_auto_achived.open()
                     }
                 }
-                Rectangle {
-                    id: rect_task_options
-                    width: parent.width
-                    height: parent.height * 0.8
-                    color: "transparent"
-                    anchors {
-                        top: rect_task_achived_title.bottom
-                    }
-                    Rectangle {
-                        id: select_return_type_list
-                        width: parent.width * 0.85
-                        height: parent.height * 0.6
+                Dialog {
+                    id: task_auto_achived
+                    height: parent.height * 0.7
+                    width: height * 1.5
+                    dim: false
+                    closePolicy: Popup.NoAutoClose
+                    x: (root.width - width) / 2
+                    y: (root.height - height) / 2
+                    background: Rectangle {
+                        anchors.fill: parent
                         color: "transparent"
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        ListView {
-                            id: list_return_type
-                            anchors.fill: parent
-                            spacing: height * 0.03
-                            currentIndex: 0
-                            highlight: Rectangle {color: "transparent"}
-                            clip: true
-                            highlightFollowsCurrentItem: false
-                            delegate: ItemDelegate {
-                                id: item
-                                height: list_return_type.height * 0.45
+                    }
+                    contentItem: Item {
+                        anchors.fill: parent
+                        Rectangle {
+                            color: "transparent"
+                            anchors.centerIn: parent
+                            width: parent.width * 0.8
+                            height: parent.height * 0.75
+                            radius: 10
+                            Rectangle {
+                                id: rect_task_achived_title
                                 width: parent.width
-                                property real id_num: model.id_num
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                Rectangle {
-                                    anchors.fill: parent
+                                height: parent.height * 0.2
+                                color: "transparent"
+                                Text {
+                                    color: "#4876FF"
+                                    text: qsTr("Task achieved")
+                                    font.pixelSize: parent.height * 0.6
+                                    font.bold: true
                                     anchors.centerIn: parent
-                                    color: list_return_type.currentIndex === parent.id_num ?
-                                                      Qt.rgba(0, 255, 0, 0.1) : "transparent"
-                                    opacity: list_return_type.currentIndex == item.id_num ? 1 : 0.3
-                                    radius: width / 2
-                                    Text {
-                                        id: attr_return_option
+                                }
+                            }
+                            Rectangle {
+                                id: rect_task_options
+                                width: parent.width
+                                height: parent.height * 0.8
+                                color: "transparent"
+                                anchors {
+                                    top: rect_task_achived_title.bottom
+                                }
+                                Rectangle {
+                                    id: select_return_type_list
+                                    width: parent.width * 0.85
+                                    height: parent.height * 0.8
+                                    color: "transparent"
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    ListView {
+                                        id: list_return_type
+                                        anchors.fill: parent
+                                        spacing: height * 0.03
+                                        currentIndex: 0
+                                        highlight: Rectangle {color: "transparent"}
                                         clip: true
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        anchors.left: parent.left
-                                        anchors.leftMargin: parent.height * 0.3
-                                        text: model.btn_text
-                                        width: parent.width * 0.8
-                                        height: parent.height * 0.6
-                                        font.bold: false
-                                        font.pixelSize: list_return_type.currentIndex === item.id_num ?
-                                                          height * 0.8 :height * 0.6
-                                        verticalAlignment: Text.AlignVCenter
-                                        horizontalAlignment: Text.AlignLeft
+                                        highlightFollowsCurrentItem: false
+                                        delegate: ItemDelegate {
+                                            id: item
+                                            height: list_return_type.height * 0.35
+                                            width: parent.width
+                                            property real id_num: model.id_num
+                                            anchors.horizontalCenter: parent.horizontalCenter
+                                            Rectangle {
+                                                anchors.fill: parent
+                                                anchors.centerIn: parent
+                                                color: list_return_type.currentIndex === parent.id_num ?
+                                                           Qt.rgba(0, 255, 0, 0.3) : "transparent"
+                                                opacity: list_return_type.currentIndex == item.id_num ? 1 : 0.5
+                                                radius: width / 2
+                                                Text {
+                                                    id: attr_return_option
+                                                    clip: true
+                                                    anchors.verticalCenter: parent.verticalCenter
+                                                    anchors.left: parent.left
+                                                    anchors.leftMargin: parent.height
+                                                    text: model.btn_text
+                                                    width: parent.width * 0.8
+                                                    height: parent.height * 0.6
+                                                    font.bold: false
+                                                    font.pixelSize: list_return_type.currentIndex === item.id_num ?
+                                                                        height * 0.8 : height * 0.6
+                                                    verticalAlignment: Text.AlignVCenter
+                                                    horizontalAlignment: Text.AlignLeft
+                                                }
+                                                Image {
+                                                    height: parent.height * 0.5
+                                                    width: height
+                                                    opacity: 0.5
+                                                    source: "qrc:/res/pictures/arrow-right.png"
+                                                    anchors.left: parent.left
+                                                    anchors.verticalCenter: parent.verticalCenter
+                                                    verticalAlignment: Image.AlignVCenter
+                                                    fillMode: Image.PreserveAspectFit
+                                                }
+                                                Rectangle {
+                                                    width: parent.width * 0.75
+                                                    height: 0.5
+                                                    anchors.bottom: parent.bottom
+                                                    anchors.horizontalCenter: parent.horizontalCenter
+                                                    color: Qt.rgba(0, 0, 0, 0.1)
+                                                }
+                                            }
+                                            onClicked: {
+                                                list_return_type.currentIndex = index
+                                            }
+                                        }
+                                        model: ListModel {
+                                            id: list_model_attr
+                                            ListElement {
+                                                id_num: 0
+                                                btn_text: qsTr("Continue to pe  rform tasks on this map")
+                                            }
+                                            ListElement {
+                                                id_num: 1
+                                                btn_text: qsTr("Switch map")
+                                            }
+                                        }
                                     }
-                                    Image {
-                                        height: parent.height * 0.5
-                                        width: height
-                                        opacity: 0.1
-                                        source: "qrc:/res/pictures/arrow-right.png"
-                                        anchors.right: parent.right
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        verticalAlignment: Image.AlignVCenter
-                                        fillMode: Image.PreserveAspectFit
+                                }
+                                Rectangle {
+                                    id: rect_update_btns
+                                    width: parent.width * 0.6
+                                    height: parent.height * 0.2
+                                    color: "transparent"
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    anchors.top: select_return_type_list.bottom
+                                    TLButton {
+                                        id: btn_task_accdhived_sure
+                                        width: parent.width * 0.5
+                                        height: parent.height * 0.8
+                                        anchors.centerIn: parent
+                                        btn_text: qsTr("OK")
+                                        onClicked: {
+                                            if (list_return_type.currentIndex === 0) {
+                                                map_task_manager.turnToSelectTask()
+                                            } else if (list_return_type.currentIndex === 1) {
+                                                map_task_manager.turnToSelectMap()
+                                            }
+                                            list_return_type.currentIndex = 0
+                                            task_auto_achived.close()
+                                            root.btn_stop_pressed = false
+                                        }
                                     }
-                                    Rectangle {
-                                        width: parent.width * 0.75
-                                        height: 0.5
-                                        anchors.bottom: parent.bottom
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        color: Qt.rgba(0, 0, 0, 0.1)
-                                    }
                                 }
-                                onClicked: {
-                                    list_return_type.currentIndex = index
-                                }
-                            }
-                            model: ListModel {
-                                id: list_model_attr
-                                ListElement {
-                                    id_num: 0
-                                    btn_text: qsTr("Continue to perform tasks on this map")
-                                }
-                                ListElement {
-                                    id_num: 1
-                                    btn_text: qsTr("Switch map")
-                                }
-                            }
-                        }
-                    }
-                    Rectangle {
-                        id: rect_update_btns
-                        width: parent.width * 0.6
-                        height: parent.height * 0.2
-                        color: "transparent"
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.top: select_return_type_list.bottom
-                        TLButton {
-                            id: btn_task_achived_sure
-                            width: parent.width * 0.5
-                            height: parent.height * 0.8
-                            anchors {
-                                verticalCenter: parent.verticalCenter
-                                right: parent.horizontalCenter
-                                rightMargin: height * 0.4
-                            }
-
-                            btn_text: qsTr("OK")
-                            onClicked: {
-                                if (list_return_type.currentIndex === 0) {
-                                    map_task_manager.turnToSelectTask()
-                                } else if (list_return_type.currentIndex === 1) {
-                                    map_task_manager.turnToSelectMap()
-                                }
-                                list_return_type.currentIndex = 0
-                                task_auto_achived.close()
-                            }
-                        }
-                        TLButton {
-                            id: btn_task_achived_cancle
-                            width: parent.width * 0.5
-                            height: parent.height * 0.8
-                            anchors {
-                                verticalCenter: parent.verticalCenter
-                                left: parent.horizontalCenter
-                                leftMargin: height * 0.4
-                            }
-                            btn_text: qsTr("cancel")
-                            onClicked: {
-                                task_auto_achived.close()
-                                list_return_type.currentIndex = 0
                             }
                         }
                     }

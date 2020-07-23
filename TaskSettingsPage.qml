@@ -32,16 +32,11 @@ Rectangle {
         rect_resure_localization.visible = false
     }
 
-
-    WorkDone {
-        id: work_done_widget
-        x:0
-        y:100
-    }
-
     signal startTaskLock()
 
     signal sigBackBtnPress()
+
+    signal sigEndWork()
 
     function updateMapSettingPage(status) {
         if (status <= status_manager.getSelectMapID()) {//selecting map
@@ -592,7 +587,7 @@ Rectangle {
                 }
                 //                anchors.leftMargin: parent.width * 0.05
                 onSigWorkDown: {
-                    work_done_widget.open()
+                    root.sigEndWork()
                 }
                 onSigBackBtnPress:{
                     root.sigBackBtnPress()
@@ -633,8 +628,7 @@ Rectangle {
                 Connections {
                     target: map_task_manager
                     onEmitWorkDone: {
-                        work_done_widget.open()
-
+                        root.sigEndWork()
                     }
                 }
             }

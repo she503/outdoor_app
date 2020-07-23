@@ -15,6 +15,7 @@ Item {
         if (btn_stop_pressed === true) {
             pop_lock.open()
             dialog_stop_task_tip.open()
+            map_task_manager.setPauseTaskCommond(true)
         } else {
             pop_lock.close()
         }
@@ -61,11 +62,14 @@ Item {
                     closePolicy: Popup.NoAutoClose
                     onCancelClicked: {
                         root.btn_stop_pressed = false
+                        map_task_manager.setPauseTaskCommond(false)
+
                     }
                     onOkClicked: {
                         dialog_stop_task_tip.close()
-                        map_task_manager.setPauseTaskCommond(true)
                         task_auto_achived.open()
+                        map_task_manager.setPauseTaskCommond(false)
+
                     }
                 }
                 Dialog {

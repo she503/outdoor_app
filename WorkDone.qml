@@ -88,7 +88,7 @@ Item {
                             color: "transparent"
                             anchors.centerIn: parent
                             width: parent.width * 0.8
-                            height: parent.height * 0.75
+                            height: parent.height * 0.8
                             radius: 10
                             Rectangle {
                                 id: rect_task_achived_title
@@ -127,7 +127,7 @@ Item {
                                         highlightFollowsCurrentItem: false
                                         delegate: ItemDelegate {
                                             id: item
-                                            height: list_return_type.height * 0.35
+                                            height: list_return_type.height * 0.3
                                             width: parent.width
                                             property real id_num: model.id_num
                                             anchors.horizontalCenter: parent.horizontalCenter
@@ -185,6 +185,10 @@ Item {
                                                 id_num: 1
                                                 btn_text: qsTr("Switch map")
                                             }
+                                            ListElement {
+                                                id_num: 2
+                                                btn_text: qsTr("Back HomePage")
+                                            }
                                         }
                                     }
                                 }
@@ -206,6 +210,9 @@ Item {
                                                 map_task_manager.turnToSelectTask()
                                             } else if (list_return_type.currentIndex === 1) {
                                                 map_task_manager.turnToSelectMap()
+                                            } else if (list_return_type.currentIndex === 2) {
+                                                map_task_manager.turnToSelectMap()
+                                                root.sigBackBtnPress()
                                             }
                                             map_task_manager.setPauseTaskCommond(false)
                                             list_return_type.currentIndex = 0

@@ -326,12 +326,12 @@
         <translation>请输入密码</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="221"/>
+        <location filename="LoginPage.qml" line="191"/>
         <source>login failed!</source>
         <translation>登录失败！</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="222"/>
+        <location filename="LoginPage.qml" line="192"/>
         <source>Multiple login failures,please contact the administrator!</source>
         <oldsource>Multiple login failures,please contact the administrator</oldsource>
         <translation>多次登录失败，请联系管理员!</translation>
@@ -1307,53 +1307,57 @@
 <context>
     <name>WorkDone</name>
     <message>
-        <location filename="WorkDone.qml" line="55"/>
+        <location filename="WorkDone.qml" line="56"/>
         <source>Repeat</source>
         <translatorcomment>询问</translatorcomment>
         <translation>询问</translation>
     </message>
     <message>
-        <location filename="WorkDone.qml" line="56"/>
+        <location filename="WorkDone.qml" line="57"/>
         <source>Whether to stop the task?</source>
         <translation>是否结束任务？</translation>
     </message>
     <message>
-        <location filename="WorkDone.qml" line="60"/>
+        <location filename="WorkDone.qml" line="61"/>
         <source>yes</source>
         <translation>是的</translation>
     </message>
     <message>
-        <location filename="WorkDone.qml" line="98"/>
+        <location filename="WorkDone.qml" line="100"/>
         <source>Task achieved</source>
         <translation>任务结束</translation>
     </message>
     <message>
-        <location filename="WorkDone.qml" line="180"/>
+        <location filename="WorkDone.qml" line="182"/>
         <source>Continue to pe  rform tasks on this map</source>
         <translation>继续在本地图执行任务</translation>
+    </message>
+    <message>
+        <location filename="WorkDone.qml" line="190"/>
+        <source>Back HomePage</source>
+        <translation>返回主页</translation>
     </message>
     <message>
         <source>Continue to perform tasks on this map</source>
         <translation type="vanished">继续在本地图执行任务</translation>
     </message>
     <message>
-        <location filename="WorkDone.qml" line="184"/>
+        <location filename="WorkDone.qml" line="186"/>
         <source>Switch map</source>
         <translation>切换地图</translation>
     </message>
     <message>
-        <location filename="WorkDone.qml" line="188"/>
         <source>Back to Homepage</source>
         <translatorcomment>返回主页</translatorcomment>
-        <translation>返回主页</translation>
+        <translation type="vanished">返回主页</translation>
     </message>
     <message>
-        <location filename="WorkDone.qml" line="205"/>
+        <location filename="WorkDone.qml" line="207"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="WorkDone.qml" line="59"/>
+        <location filename="WorkDone.qml" line="60"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>

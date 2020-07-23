@@ -68,8 +68,6 @@ Item {
                     onOkClicked: {
                         dialog_stop_task_tip.close()
                         task_auto_achived.open()
-                        map_task_manager.setPauseTaskCommond(false)
-
                     }
                 }
                 Dialog {
@@ -209,6 +207,7 @@ Item {
                                             } else if (list_return_type.currentIndex === 1) {
                                                 map_task_manager.turnToSelectMap()
                                             }
+                                            map_task_manager.setPauseTaskCommond(false)
                                             list_return_type.currentIndex = 0
                                             task_auto_achived.close()
                                             root.btn_stop_pressed = false

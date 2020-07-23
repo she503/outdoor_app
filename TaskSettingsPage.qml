@@ -36,7 +36,7 @@ Rectangle {
 
     signal sigBackBtnPress()
 
-    signal sigEndWork()
+    signal sigEndWork(var end_type)
 
     function updateMapSettingPage(status) {
         if (status <= status_manager.getSelectMapID()) {//selecting map
@@ -587,7 +587,7 @@ Rectangle {
                 }
                 //                anchors.leftMargin: parent.width * 0.05
                 onSigWorkDown: {
-                    root.sigEndWork()
+                    root.sigEndWork("Manual")
                 }
                 onSigBackBtnPress:{
                     root.sigBackBtnPress()
@@ -628,7 +628,7 @@ Rectangle {
                 Connections {
                     target: map_task_manager
                     onEmitWorkDone: {
-                        root.sigEndWork()
+                        root.sigEndWork("Auto")
                     }
                 }
             }

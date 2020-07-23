@@ -31,7 +31,7 @@ Rectangle {
             root.sigBackBtnPress()
         }
         onSigEndWork: {
-            work_done_widget.btn_stop_pressed = true
+            work_done_widget.btn_stop_pressed = end_type
         }
     }
 

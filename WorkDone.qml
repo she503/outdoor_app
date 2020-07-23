@@ -9,15 +9,22 @@ Item {
     height: parent.height
 
     signal sigBackBtnPress()
-    property bool btn_stop_pressed: false
+    property var btn_stop_pressed: ""
 
     onBtn_stop_pressedChanged: {
-        if (btn_stop_pressed === true) {
+        if (btn_stop_pressed === "Manual") {
+            map_task_manager.setPauseTaskCommond(true)
             pop_lock.open()
             dialog_stop_task_tip.open()
+        } else if (btn_stop_pressed === "Auto") {
             map_task_manager.setPauseTaskCommond(true)
-        } else {
+            pop_lock.open()
+            task_auto_achived.open()
+        } else if (btn_stop_pressed === "Exit") {
+            map_task_manager.setPauseTaskCommond(false)
             pop_lock.close()
+        } else {
+
         }
     }
 
@@ -61,9 +68,7 @@ Item {
                     ok_text: qsTr("yes")
                     closePolicy: Popup.NoAutoClose
                     onCancelClicked: {
-                        root.btn_stop_pressed = false
-                        map_task_manager.setPauseTaskCommond(false)
-
+                        root.btn_stop_pressed = "Exit"
                     }
                     onOkClicked: {
                         dialog_stop_task_tip.close()
@@ -214,10 +219,9 @@ Item {
                                                 map_task_manager.turnToSelectMap()
                                                 root.sigBackBtnPress()
                                             }
-                                            map_task_manager.setPauseTaskCommond(false)
+                                            root.btn_stop_pressed = "Exit"
                                             list_return_type.currentIndex = 0
                                             task_auto_achived.close()
-                                            root.btn_stop_pressed = false
                                         }
                                     }
                                 }

@@ -115,15 +115,13 @@ Rectangle {
             target: mapping_manager
             onEmitTransferDataInfo: {
                 if (flag) {
-                    message_box.dia_title = qsTr("SUCCESS")
-                    message_box.dia_text = message
-                    message_box.dia_type = 1
-                    message_box.open()
+                    error_message_box.txt_color = "green"
+                    error_message_box.txt_context = qsTr("success to transfer data.")
+                    error_message_box.open()
                 } else {
-                    message_box.dia_title = qsTr("ERROR")
-                    message_box.dia_text = message
-                    message_box.dia_type = 0
-                    message_box.open()
+                    error_message_box.txt_color = "red"
+                    error_message_box.txt_context = qsTr("Error to transfer data.")
+                    error_message_box.open()
                 }
                 busy_indicator.close()
             }

@@ -32,16 +32,11 @@ Rectangle {
         rect_resure_localization.visible = false
     }
 
-
-    WorkDone {
-        id: work_done_widget
-        x:0
-        y:100
-    }
-
     signal startTaskLock()
 
     signal sigBackBtnPress()
+
+    signal sigEndWork(var end_type)
 
     function updateMapSettingPage(status) {
         if (status <= status_manager.getSelectMapID()) {//selecting map
@@ -133,10 +128,9 @@ Rectangle {
                 rec_checked_location.resureLocalization(false)
 
             } else if (status === 0) {
-                message_box.dia_type = 0
-                message_box.dia_title = qsTr("Init Error")
-                message_box.dia_text = error_message
-                message_box.open()
+                error_message_box.txt_color = "red"
+                error_message_box.txt_context = error_message
+                error_message_box.open()
             }
             busy_indicator.close()
 
@@ -593,7 +587,7 @@ Rectangle {
                 }
                 //                anchors.leftMargin: parent.width * 0.05
                 onSigWorkDown: {
-                    work_done_widget.open()
+                    root.sigEndWork("Manual")
                 }
                 onSigBackBtnPress:{
                     root.sigBackBtnPress()
@@ -634,8 +628,7 @@ Rectangle {
                 Connections {
                     target: map_task_manager
                     onEmitWorkDone: {
-                        work_done_widget.open()
-
+                        root.sigEndWork("Auto")
                     }
                 }
             }
@@ -690,10 +683,9 @@ Rectangle {
                 onEmitSetTasksRstInfo: {
                     busy_indicator.close()
                     if (status == 0) {
-                        message_box.dia_type = 0
-                        message_box.dia_title = qsTr("Init Error")
-                        message_box.dia_text = error_message
-                        message_box.open()
+                        error_message_box.txt_color = "red"
+                        error_message_box.txt_context = error_message
+                        error_message_box.open()
                     }
                 }
             }

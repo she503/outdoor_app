@@ -303,7 +303,7 @@
         <translation type="vanished">用户名</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="137"/>
+        <location filename="LoginPage.qml" line="136"/>
         <source>enter your username.</source>
         <translation>请输入用户名</translation>
     </message>
@@ -312,22 +312,26 @@
         <translation type="vanished">密    码</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="19"/>
         <source>Faild</source>
-        <translation type="unfinished">失败</translation>
+        <translation type="obsolete">失败</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="163"/>
+        <location filename="LoginPage.qml" line="20"/>
+        <source>Error username or password, Please check it agin.</source>
+        <translation>用户名或密码错误，请重新输入</translation>
+    </message>
+    <message>
+        <location filename="LoginPage.qml" line="162"/>
         <source>enter your password.</source>
         <translation>请输入密码</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="222"/>
+        <location filename="LoginPage.qml" line="191"/>
         <source>login failed!</source>
         <translation>登录失败！</translation>
     </message>
     <message>
-        <location filename="LoginPage.qml" line="223"/>
+        <location filename="LoginPage.qml" line="192"/>
         <source>Multiple login failures,please contact the administrator!</source>
         <oldsource>Multiple login failures,please contact the administrator</oldsource>
         <translation>多次登录失败，请联系管理员!</translation>
@@ -453,42 +457,42 @@
     <message>
         <location filename="MappingMenu.qml" line="24"/>
         <source>map name: </source>
-        <translation type="unfinished"></translation>
+        <translation>地图名称</translation>
     </message>
     <message>
         <location filename="MappingMenu.qml" line="36"/>
         <source>please inter the map name</source>
-        <translation type="unfinished"></translation>
+        <translation>请输入地图名称</translation>
     </message>
     <message>
         <location filename="MappingMenu.qml" line="79"/>
         <source>to_usb</source>
-        <translation type="unfinished"></translation>
+        <translation>写入USB</translation>
     </message>
     <message>
         <location filename="MappingMenu.qml" line="89"/>
         <source>Copy data from computer to USB! Please waite for a minute~</source>
-        <translation type="unfinished"></translation>
+        <translation>正在将PC数据写入USB,请稍候...</translation>
     </message>
     <message>
         <location filename="MappingMenu.qml" line="100"/>
         <source>to_computer</source>
-        <translation type="unfinished"></translation>
+        <translation>写入PC</translation>
     </message>
     <message>
         <location filename="MappingMenu.qml" line="110"/>
         <source>Copy data from USB to computer! Please waite for a minute~</source>
-        <translation type="unfinished"></translation>
+        <translation>正在将USB数据写入PC,请稍候...</translation>
     </message>
     <message>
-        <location filename="MappingMenu.qml" line="118"/>
-        <source>SUCCESS</source>
-        <translation type="unfinished"></translation>
+        <location filename="MappingMenu.qml" line="119"/>
+        <source>success to transfer data.</source>
+        <translation>数据解析成功</translation>
     </message>
     <message>
         <location filename="MappingMenu.qml" line="123"/>
-        <source>ERROR</source>
-        <translation type="unfinished"></translation>
+        <source>Error to transfer data.</source>
+        <translation>数据解析失败</translation>
     </message>
 </context>
 <context>
@@ -531,12 +535,12 @@
     <message>
         <location filename="MappingPlaceChoose.qml" line="23"/>
         <source>indoor</source>
-        <translation type="unfinished">室内</translation>
+        <translation>室内</translation>
     </message>
     <message>
         <location filename="MappingPlaceChoose.qml" line="41"/>
         <source>outdoor</source>
-        <translation type="unfinished">室外</translation>
+        <translation>室外</translation>
     </message>
 </context>
 <context>
@@ -544,32 +548,32 @@
     <message>
         <location filename="MappingStartBtns.qml" line="26"/>
         <source>START</source>
-        <translation type="unfinished">开始</translation>
+        <translation>开始</translation>
     </message>
     <message>
         <location filename="MappingStartBtns.qml" line="45"/>
         <source>STOP</source>
-        <translation type="unfinished">停止</translation>
+        <translation>停止</translation>
     </message>
     <message>
         <location filename="MappingStartBtns.qml" line="65"/>
         <source>RESET</source>
-        <translation type="unfinished">重置</translation>
+        <translation>重置</translation>
     </message>
     <message>
         <location filename="MappingStartBtns.qml" line="81"/>
         <source>MAPPING</source>
-        <translation type="unfinished">建图</translation>
+        <translation>建图</translation>
     </message>
     <message>
         <location filename="MappingStartBtns.qml" line="97"/>
         <source>QUITE</source>
-        <translation type="unfinished"></translation>
+        <translation>退出</translation>
     </message>
     <message>
         <location filename="MappingStartBtns.qml" line="123"/>
         <source>Please waite for a minute...</source>
-        <translation type="unfinished">请稍等...</translation>
+        <translation>请稍等...</translation>
     </message>
 </context>
 <context>
@@ -606,123 +610,93 @@
 <context>
     <name>MessageBox</name>
     <message>
-        <location filename="MessageBox.qml" line="20"/>
-        <location filename="MessageBox.qml" line="27"/>
-        <location filename="MessageBox.qml" line="41"/>
         <source>Map Error</source>
-        <translation>地图错误</translation>
+        <translation type="vanished">地图错误</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="21"/>
-        <location filename="MessageBox.qml" line="42"/>
         <source>get map error</source>
-        <translation>获取地图失败</translation>
+        <translation type="vanished">获取地图失败</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="28"/>
         <source>set map error</source>
-        <translation>设置地图失败</translation>
+        <translation type="vanished">设置地图失败</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="34"/>
         <source>Task Error</source>
         <oldsource>Init Error</oldsource>
-        <translation type="unfinished">初始化错误</translation>
+        <translation type="obsolete">初始化错误</translation>
     </message>
     <message>
         <source>Init Pos error</source>
         <translation type="vanished">初始化定位失败</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="9"/>
-        <source>COPY</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="MessageBox.qml" line="35"/>
         <source>get map and tasks error</source>
-        <translation>获取地图和任务失败</translation>
+        <translation type="vanished">获取地图和任务失败</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="48"/>
         <source>Work Map Error</source>
-        <translation>工作图错误</translation>
+        <translation type="vanished">工作图错误</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="49"/>
         <source>get work map error</source>
-        <translation>获取工作图失败</translation>
+        <translation type="vanished">获取工作图失败</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="55"/>
         <source>Ref Line Error</source>
-        <translation>参考线错误</translation>
+        <translation type="vanished">参考线错误</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="56"/>
         <source>get ref line error</source>
-        <translation>获取参考线失败</translation>
+        <translation type="vanished">获取参考线失败</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="66"/>
         <source>Login Error</source>
-        <translation>登录失败</translation>
+        <translation type="vanished">登录失败</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="67"/>
         <source>Account or password is wrong!</source>
-        <translation>账号或者密码错误！</translation>
+        <translation type="vanished">账号或者密码错误！</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="75"/>
         <source>Add Error</source>
-        <translation>添加失败</translation>
+        <translation type="vanished">添加失败</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="76"/>
-        <location filename="MessageBox.qml" line="90"/>
         <source>user name has exited !</source>
-        <translation>用户已存在！</translation>
+        <translation type="vanished">用户已存在！</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="80"/>
         <source>a new user was added!</source>
-        <translation>新用户添加成功！</translation>
+        <translation type="vanished">新用户添加成功！</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="81"/>
         <source>Add Success</source>
-        <translation>添加成功</translation>
+        <translation type="vanished">添加成功</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="89"/>
         <source>Delete Error</source>
-        <translation>删除错误</translation>
+        <translation type="vanished">删除错误</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="94"/>
         <source>delete success</source>
-        <translation>用户删除成功</translation>
+        <translation type="vanished">用户删除成功</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="95"/>
         <source>Delete Success</source>
-        <translation>删除成功</translation>
+        <translation type="vanished">删除成功</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="102"/>
         <source>update error</source>
-        <translation>更新失败</translation>
+        <translation type="vanished">更新失败</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="108"/>
         <source>update success</source>
-        <translation>更新成功</translation>
+        <translation type="vanished">更新成功</translation>
     </message>
     <message>
-        <location filename="MessageBox.qml" line="109"/>
         <source>password had be changed!!!</source>
-        <translation>密码修改成功!!!</translation>
+        <translation type="vanished">密码修改成功!!!</translation>
     </message>
 </context>
 <context>
@@ -735,22 +709,22 @@
 <context>
     <name>MissonBordPage</name>
     <message>
-        <location filename="MissonBordPage.qml" line="272"/>
+        <location filename="MissonBordPage.qml" line="275"/>
         <source>error time</source>
         <translation>故障时间</translation>
     </message>
     <message>
-        <location filename="MissonBordPage.qml" line="296"/>
+        <location filename="MissonBordPage.qml" line="299"/>
         <source>error code</source>
         <translation>故障码</translation>
     </message>
     <message>
-        <location filename="MissonBordPage.qml" line="309"/>
+        <location filename="MissonBordPage.qml" line="312"/>
         <source>error level</source>
         <translation>故障等级</translation>
     </message>
     <message>
-        <location filename="MissonBordPage.qml" line="333"/>
+        <location filename="MissonBordPage.qml" line="336"/>
         <source>error message</source>
         <translation>故障信息</translation>
     </message>
@@ -775,16 +749,24 @@
     </message>
 </context>
 <context>
+    <name>TLErrorMessagesPage</name>
+    <message>
+        <location filename="TLErrorMessagesPage.qml" line="67"/>
+        <source>click anywhere to close this message...</source>
+        <translation>点击屏幕关闭消息提示</translation>
+    </message>
+</context>
+<context>
     <name>TLInfoDisplayPage</name>
+    <message>
+        <location filename="TLInfoDisplayPage.qml" line="180"/>
+        <source>0 m/s</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <location filename="TLInfoDisplayPage.qml" line="188"/>
         <source></source>
         <translation></translation>
-    </message>
-    <message>
-        <location filename="TLInfoDisplayPage.qml" line="196"/>
-        <source>0 %</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -941,82 +923,80 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="367"/>
+        <location filename="TaskSettingsPage.qml" line="364"/>
         <source>back to choose map again</source>
         <translation>重选地图</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="136"/>
-        <location filename="TaskSettingsPage.qml" line="691"/>
         <source>Init Error</source>
         <translatorcomment>定位初始化失败</translatorcomment>
-        <translation>定位初始化失败</translation>
+        <translation type="vanished">定位初始化失败</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="411"/>
+        <location filename="TaskSettingsPage.qml" line="408"/>
         <source>Please waite for minute!</source>
         <translatorcomment>请稍候...</translatorcomment>
-        <translation type="unfinished">请稍候...</translation>
+        <translation>请稍候...</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="418"/>
-        <location filename="TaskSettingsPage.qml" line="441"/>
+        <location filename="TaskSettingsPage.qml" line="415"/>
+        <location filename="TaskSettingsPage.qml" line="438"/>
         <source>please resure location is right!</source>
         <translatorcomment>请确认当前定位是否正确</translatorcomment>
-        <translation type="unfinished">请确认当前定位是否正确</translation>
+        <translation>请确认当前定位是否正确</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="458"/>
+        <location filename="TaskSettingsPage.qml" line="455"/>
         <source>No</source>
         <translatorcomment>否</translatorcomment>
-        <translation type="unfinished">否</translation>
+        <translation>否</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="472"/>
+        <location filename="TaskSettingsPage.qml" line="469"/>
         <source>please choose a begin point!</source>
         <translatorcomment>请在图中选择一个初始点</translatorcomment>
-        <translation type="unfinished">请在图中选择一个初始点</translation>
+        <translation>请在图中选择一个初始点</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="493"/>
+        <location filename="TaskSettingsPage.qml" line="490"/>
         <source>Yes</source>
         <translatorcomment>是</translatorcomment>
-        <translation type="unfinished">是</translation>
+        <translation>是</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="507"/>
+        <location filename="TaskSettingsPage.qml" line="504"/>
         <source>get map and task info, please waite for a minute!</source>
         <translatorcomment>正在获取地图和任务信息,请稍候...</translatorcomment>
-        <translation type="unfinished">正在获取地图和任务信息,请稍候...</translation>
+        <translation>正在获取地图和任务信息,请稍候...</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="530"/>
+        <location filename="TaskSettingsPage.qml" line="527"/>
         <source>Check a begin point image in map to init localization!</source>
         <translatorcomment>请在图中选择一个初始点</translatorcomment>
-        <translation type="unfinished">请在图中选择一个初始点</translation>
+        <translation>请在图中选择一个初始点</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="666"/>
+        <location filename="TaskSettingsPage.qml" line="662"/>
         <source>Start</source>
         <translation>开始</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="679"/>
+        <location filename="TaskSettingsPage.qml" line="675"/>
         <source>Setting task ,please waite for a minute</source>
         <translatorcomment>设置任务中,请稍候...</translatorcomment>
-        <translation type="unfinished">设置任务中,请稍候...</translation>
+        <translation>设置任务中,请稍候...</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="729"/>
-        <location filename="TaskSettingsPage.qml" line="752"/>
+        <location filename="TaskSettingsPage.qml" line="724"/>
+        <location filename="TaskSettingsPage.qml" line="747"/>
         <source>Repeat</source>
-        <translation type="unfinished">询问</translation>
+        <translation>询问</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="762"/>
+        <location filename="TaskSettingsPage.qml" line="757"/>
         <source>Locating, please waite for a minute!</source>
         <translatorcomment>正在定位,请稍候...</translatorcomment>
-        <translation type="unfinished">正在定位,请稍候...</translation>
+        <translation>正在定位,请稍候...</translation>
     </message>
     <message>
         <source>Please checkout that is this place right?</source>
@@ -1027,24 +1007,24 @@
         <translation type="vanished">否</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="753"/>
+        <location filename="TaskSettingsPage.qml" line="748"/>
         <source>Are you sure?</source>
         <translation>你确定吗？</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="733"/>
-        <location filename="TaskSettingsPage.qml" line="756"/>
+        <location filename="TaskSettingsPage.qml" line="728"/>
+        <location filename="TaskSettingsPage.qml" line="751"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="734"/>
-        <location filename="TaskSettingsPage.qml" line="757"/>
+        <location filename="TaskSettingsPage.qml" line="729"/>
+        <location filename="TaskSettingsPage.qml" line="752"/>
         <source>yes</source>
         <translation>是的</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="730"/>
+        <location filename="TaskSettingsPage.qml" line="725"/>
         <source>Whether to reselect the map?</source>
         <translation>是否重新选择地图？</translation>
     </message>
@@ -1053,7 +1033,7 @@
         <translation type="vanished">取消</translation>
     </message>
     <message>
-        <location filename="TaskSettingsPage.qml" line="547"/>
+        <location filename="TaskSettingsPage.qml" line="544"/>
         <source>SURE</source>
         <translation>确定</translation>
     </message>
@@ -1327,27 +1307,57 @@
 <context>
     <name>WorkDone</name>
     <message>
-        <location filename="WorkDone.qml" line="36"/>
-        <source>Task achieved</source>
-        <translation>任务完成</translation>
+        <location filename="WorkDone.qml" line="56"/>
+        <source>Repeat</source>
+        <translatorcomment>询问</translatorcomment>
+        <translation>询问</translation>
     </message>
     <message>
-        <location filename="WorkDone.qml" line="136"/>
-        <source>Continue to perform tasks on this map</source>
+        <location filename="WorkDone.qml" line="57"/>
+        <source>Whether to stop the task?</source>
+        <translation>是否结束任务？</translation>
+    </message>
+    <message>
+        <location filename="WorkDone.qml" line="61"/>
+        <source>yes</source>
+        <translation>是的</translation>
+    </message>
+    <message>
+        <location filename="WorkDone.qml" line="100"/>
+        <source>Task achieved</source>
+        <translation>任务结束</translation>
+    </message>
+    <message>
+        <location filename="WorkDone.qml" line="182"/>
+        <source>Continue to pe  rform tasks on this map</source>
         <translation>继续在本地图执行任务</translation>
     </message>
     <message>
-        <location filename="WorkDone.qml" line="140"/>
+        <location filename="WorkDone.qml" line="190"/>
+        <source>Back HomePage</source>
+        <translation>返回主页</translation>
+    </message>
+    <message>
+        <source>Continue to perform tasks on this map</source>
+        <translation type="vanished">继续在本地图执行任务</translation>
+    </message>
+    <message>
+        <location filename="WorkDone.qml" line="186"/>
         <source>Switch map</source>
         <translation>切换地图</translation>
     </message>
     <message>
-        <location filename="WorkDone.qml" line="162"/>
+        <source>Back to Homepage</source>
+        <translatorcomment>返回主页</translatorcomment>
+        <translation type="vanished">返回主页</translation>
+    </message>
+    <message>
+        <location filename="WorkDone.qml" line="207"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="WorkDone.qml" line="182"/>
+        <location filename="WorkDone.qml" line="60"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>

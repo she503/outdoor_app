@@ -508,7 +508,6 @@ Rectangle {
                         }
                     }
 
-
                     Rectangle {
                         id: rect_resure_point
                         anchors.fill: parent
@@ -566,7 +565,6 @@ Rectangle {
                         anchors.right: parent.right
                         anchors.rightMargin: parent.width * 0.1
                         color: "transparent"
-
                     }
                 }
 

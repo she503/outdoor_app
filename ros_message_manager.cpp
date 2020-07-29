@@ -121,7 +121,19 @@ void RosMessageManager::parseBatteryInfo(const QJsonObject &obj)
 void RosMessageManager::parseTrajectoryInfo(const QJsonObject &obj)
 {
     QVariantList trajectory = obj.value("trajectory").toArray().toVariantList();
-    emit updateTrajectoryInfo(trajectory);
+
+    if(_last_trajectory.empty()) {
+        _trajectory = trajectory;
+        _last_trajectory = trajectory[trajectory.size() - 1].toList();
+        emit updateTrajectoryInfo(trajectory);
+        qDebug() << "----------";
+    } else {
+        QVariantList send_trajectory = trajectory;
+        send_trajectory.push_back(_last_trajectory);
+        emit updateTrajectoryInfo(send_trajectory);
+        _last_trajectory = trajectory[trajectory.size() - 1].toList();
+    }
+
     QString single_mileage = QString::number(obj.value("single_mileage").toDouble() / 1000,'f', 2);
     QString total_mileage = QString::number(obj.value("total_mileage").toDouble() / 1000,'f', 2);
     emit updateMileageInfo(single_mileage, total_mileage);

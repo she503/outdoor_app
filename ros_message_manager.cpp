@@ -53,7 +53,8 @@ void RosMessageManager::parseCleaningAgencyInfo(const QJsonObject &obj)
     bool dirty_water_signal = obj.value("dirty_water_signal").toBool();
     bool cleaning_scu_signal = obj.value("cleaning_scu_signal").toBool();
 
-    emit updateCleaningAgencyInfo(cleaning_agency_state, pure_water_signal, water_tank_signal, dirty_water_signal, cleaning_scu_signal);
+    emit updateCleaningAgencyInfo(cleaning_agency_state, pure_water_signal, water_tank_signal,
+                                  dirty_water_signal, cleaning_scu_signal);
 }
 
 void RosMessageManager::parseDrivingInfo(const QJsonObject &obj)
@@ -66,7 +67,8 @@ void RosMessageManager::parseDrivingInfo(const QJsonObject &obj)
     bool anti_collision_bar_signal = obj.value("anti_collision_bar_signal").toBool();
     bool emergency_stop_signal = obj.value("emergency_stop_signal").toBool();
 
-    emit updateDrivingInfo(speed, omega, brake_state, drive_mode, gear_state, anti_collision_bar_signal, emergency_stop_signal);
+    emit updateDrivingInfo(speed, omega, brake_state, drive_mode, gear_state, anti_collision_bar_signal,
+                           emergency_stop_signal);
 }
 
 //void RosMessageManager::parseChassisInfo(const QJsonObject &obj)
@@ -119,7 +121,21 @@ void RosMessageManager::parseBatteryInfo(const QJsonObject &obj)
 void RosMessageManager::parseTrajectoryInfo(const QJsonObject &obj)
 {
     QVariantList trajectory = obj.value("trajectory").toArray().toVariantList();
-    emit updateTrajectoryInfo(trajectory);
+
+    if(_last_trajectory.empty()) {
+        _trajectory = trajectory;
+        _last_trajectory = trajectory[trajectory.size() - 1].toList();
+        emit updateTrajectoryInfo(trajectory);
+    } else {
+        QVariantList send_trajectory = trajectory;
+        send_trajectory.push_back(_last_trajectory);
+        emit updateTrajectoryInfo(send_trajectory);
+        _last_trajectory = trajectory[trajectory.size() - 1].toList();
+    }
+
+    QString single_mileage = QString::number(obj.value("single_mileage").toDouble() / 1000,'f', 2);
+    QString total_mileage = QString::number(obj.value("total_mileage").toDouble() / 1000,'f', 2);
+    emit updateMileageInfo(single_mileage, total_mileage);
 }
 
 void RosMessageManager::parseMonitorMessageInfo(const QJsonObject &obj)

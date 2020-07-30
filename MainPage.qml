@@ -9,6 +9,13 @@ import "./mapping"
 Rectangle {
     id: root
 
+    signal sigBackBtnPress()
+
+    onSigBackBtnPress: {
+        list_view.currentIndex = 0
+        list_view.mainPageChanged(0)
+    }
+
     color: "transparent"
     property int stack_view_index: 0
     property Component user_manage_page: UserManagePage {}
@@ -16,16 +23,17 @@ Rectangle {
     property Component about_machine_page: AboutMachinePage { }
 
 
-    property Component task_settings_page: TaskSettingsPage{
+    property Component task_settings_page: TaskSettingsPage {
         onStartTaskLock: {
             lock_screen_page.pop_lock.open()
         }
         onSigBackBtnPress: {
-            list_view.currentIndex = 0
-            list_view.mainPageChanged(0)
+            root.sigBackBtnPress()
+        }
+        onSigEndWork: {
+            work_done_widget.btn_stop_pressed = end_type
         }
     }
-
 
     MappingPage {
         id: mapping_page
@@ -36,9 +44,14 @@ Rectangle {
 
     LockScreenPage { id: lock_screen_page}
 
+    WorkDone {
+        id: work_done_widget
+        onSigBackBtnPress: {
+            root.sigBackBtnPress()
+        }
+    }
 
     Component.onCompleted: {
-        map_task_manager.setWorkMapName(map_task_manager.getCurrentMapName())
         var status = status_manager.getWorkStatus()
         if (status === status_manager.getWorkingID()) {
             misson_bord.showMessagePics(true)
@@ -199,6 +212,5 @@ Rectangle {
                 }
             }
         }
-
     }
 }

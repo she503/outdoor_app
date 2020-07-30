@@ -56,6 +56,13 @@ Item {
             img_source: "qrc:/res/ui/mission_bord/speed_pic.png"
             btn_text: "1 m/s"
             font_size: height * 0.3
+            Connections {
+                target: ros_message_manager
+                onUpdateDrivingInfo: {
+                    var v_speed = speed
+                    lab_speed.btn_text = v_speed + " m/s"
+                }
+            }
         }
 
         TLBtnWithPic {
@@ -74,46 +81,56 @@ Item {
             }
         }
 
-
-        Image {
-            id: lab_gear
-            width: parent.width * 0.1
-            height: parent.height * 0.8
-            fillMode: Image.PreserveAspectFit
-            anchors.verticalCenter: parent.verticalCenter
-            source: "qrc:/res/ui/mission_bord/gear_N_pic.png"
+        TLBtnWithPic {
+            id: mileage
+            width: parent.width * 0.15
+            height: parent.height
+            backgroundDefaultColor: "transparent"
+            img_source: "qrc:/res/ui/mission_bord/mileage.png"
+            font_size: height * 0.3
             Connections {
                 target: ros_message_manager
-                onUpdateDrivingInfo: {
-                    var v_speed = speed
-                    var n_speed = Number(v_speed)
-
-                    if (drive_mode === 0) {
-                        lab_operate.source = "qrc:/res/ui/mission_bord/operate_hand_pic.png"
-                    } else if (drive_mode === 1) {
-                        lab_operate.source = "qrc:/res/ui/mission_bord/operate_auto_pic.png"
-                    }
-
-                    if(Math.abs(n_speed) <= 0.05) {
-                        lab_gear.source = "qrc:/res/ui/mission_bord/gear_N_pic.png"
-                    } else if(n_speed > 0.05) {
-                        lab_gear.source = "qrc:/res/ui/mission_bord/gear_D_pic.png"
-                    } else if (n_speed < -0.05) {
-                        lab_gear.source = "qrc:/res/ui/mission_bord/gear_R_pic.png"
-                    }
-                    lab_speed.btn_text = v_speed + " m/s"
+                onUpdateMileageInfo: {
+                  mileage.btn_text = single + "|" + total
                 }
             }
         }
 
-        Image {
-            id: lab_operate
-            width: parent.width * 0.15
-            height: parent.height
-            fillMode: Image.PreserveAspectFit
-            anchors.verticalCenter: parent.verticalCenter
-            source: "qrc:/res/ui/mission_bord/operate_auto_pic.png"
-        }
+//        Image {
+//            id: lab_gear
+//            width: parent.width * 0.1
+//            height: parent.height * 0.8
+//            fillMode: Image.PreserveAspectFit
+//            anchors.verticalCenter: parent.verticalCenter
+//            source: "qrc:/res/ui/mission_bord/gear_N_pic.png"
+
+//                    var n_speed = Number(v_speed)
+
+//                    if (drive_mode === 0) {
+//                        lab_operate.source = "qrc:/res/ui/mission_bord/operate_hand_pic.png"
+//                    } else if (drive_mode === 1) {
+//                        lab_operate.source = "qrc:/res/ui/mission_bord/operate_auto_pic.png"
+//                    }
+
+//                    if(Math.abs(n_speed) <= 0.05) {
+//                        lab_gear.source = "qrc:/res/ui/mission_bord/gear_N_pic.png"
+//                    } else if(n_speed > 0.05) {
+//                        lab_gear.source = "qrc:/res/ui/mission_bord/gear_D_pic.png"
+//                    } else if (n_speed < -0.05) {
+//                        lab_gear.source = "qrc:/res/ui/mission_bord/gear_R_pic.png"
+//                    }
+
+//            }
+//        }
+
+//        Image {
+//            id: lab_operate
+//            width: parent.width * 0.15
+//            height: parent.height
+//            fillMode: Image.PreserveAspectFit
+//            anchors.verticalCenter: parent.verticalCenter
+//            source: "qrc:/res/ui/mission_bord/operate_auto_pic.png"
+//        }
     }
 
     Connections {

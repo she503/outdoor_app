@@ -126,7 +126,6 @@ void RosMessageManager::parseTrajectoryInfo(const QJsonObject &obj)
         _trajectory = trajectory;
         _last_trajectory = trajectory[trajectory.size() - 1].toList();
         emit updateTrajectoryInfo(trajectory);
-        qDebug() << "----------";
     } else {
         QVariantList send_trajectory = trajectory;
         send_trajectory.push_back(_last_trajectory);

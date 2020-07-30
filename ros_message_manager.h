@@ -14,6 +14,8 @@ public:
 
     void setSocket(SocketManager *socket);
 
+    Q_INVOKABLE QVariantList getAllTrajectory() { return _trajectory;}
+
 signals:
     void updateLocalizationInfo(const QString& time, const QString& x, const QString& y,
                                 const QString& heading, const QString& state);
@@ -51,6 +53,8 @@ private slots:
 
 private:
     SocketManager* _socket;
+    QVariantList _last_trajectory;
+    QVariantList _trajectory;
 };
 
 #endif // ROSMESSAGEMANAGER_H

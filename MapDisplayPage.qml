@@ -229,6 +229,9 @@ Rectangle {
                 vehicle.y = 0
                 vehicle.rotation = 0
             }
+            if (status !== status_manager.getWorkingID()) {
+                canvas_trajectory.clean_all = true
+            }
         }
     }
 
@@ -287,11 +290,9 @@ Rectangle {
             canvas_red_ref_line.requestPaint()
         }
         onUpdateTrajectoryInfo: {
+            canvas_trajectory.clean_all = false
             var_trajectory = trajectory
-            if (ref_line_curren_index === 0) {
-                return
-            }
-            canvas_red_ref_line.requestPaint()
+            canvas_trajectory.requestPaint()
         }
     }
 
@@ -572,25 +573,6 @@ Rectangle {
                 x: canvas_background.x
                 y: canvas_background.y
 
-                function drawtrajectory(ctx, points) {
-                    if (points.length <= 0) {
-                        return
-                    }
-                    ctx.save()
-                    ctx.lineWidth = vehicle.height
-                    ctx.strokeStyle = "rgba(0,251,0, 0.3)"
-                    ctx.lineJoin="round";
-                    ctx.beginPath()
-                    var first_pointt = geometryToPixel(points[0][0], points[0][1])
-                    ctx.moveTo(first_pointt[0], first_pointt[1])
-                    for (var i = 0; i < points.length; ++i) {
-                        var point = geometryToPixel(points[i][0], points[i][1])
-                        ctx.lineTo(point[0], point[1])
-                    }
-                    ctx.stroke()
-                    ctx.restore()
-                }
-
                 function drawCleanGreenLine(ctx, points, color) {
                     if (points.length <= 0) {
                         return
@@ -613,9 +595,52 @@ Rectangle {
                     ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
 
                     drawCleanGreenLine(ctx, root.var_ref_line, "#00ff00") //green
-                    drawtrajectory(ctx, root.var_trajectory);
                 }
             }
+
+            Canvas {
+                id: canvas_trajectory
+                width: map_width * map_rate  + paint_begin_offset * 2
+                height: map_height * map_rate + paint_begin_offset * 2
+
+                property bool clean_all: false
+                x: canvas_background.x
+                y: canvas_background.y
+
+                function drawtrajectory(ctx, points) {
+                    if (points.length <= 0) {
+                        return
+                    }
+                    ctx.save()
+                    ctx.lineWidth = vehicle.height
+                    ctx.strokeStyle = "#7FFFAA"
+                    ctx.lineJoin="round";
+                    ctx.lineCap="round";
+
+                    ctx.beginPath()
+                    var first_pointt = geometryToPixel(points[0][0], points[0][1])
+                    ctx.moveTo(first_pointt[0], first_pointt[1])
+                    for (var i = 0; i < points.length; ++i) {
+                        var point = geometryToPixel(points[i][0], points[i][1])
+                        ctx.lineTo(point[0], point[1])
+                    }
+                    ctx.stroke()
+                    ctx.restore()
+                }
+
+                onPaint: {
+                    var ctx = getContext("2d")
+                    if (clean_all) {
+                        ctx.clearRect(0,0,canvas_background.width,canvas_background.height)
+                    }
+                    drawtrajectory(ctx, root.var_trajectory);
+                }
+                Component.onCompleted: {
+                    root.var_trajectory = ros_message_manager.getAllTrajectory()
+                    canvas_trajectory.requestPaint()
+                }
+            }
+
 
             Canvas {
                 id: canvas_planning_ref_line

@@ -218,10 +218,10 @@ Rectangle {
                 root.paintingMap(map_task_manager.getCurrentMapName())
             }
 
-            if (status >= status_manager.getSelectTaskID()) {
-                root.could_select_begin_point = false
-            } else {
+            if (status <= status_manager.getLocationComfirmID()) {
                 root.could_select_begin_point = true
+            } else {
+                root.could_select_begin_point = false
             }
 
             if (status < status_manager.getLocationComfirmID()) {

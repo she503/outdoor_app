@@ -1,5 +1,6 @@
 *.stash
 *.autosave
 *.user
+*.user.*
 build/*
 android/*

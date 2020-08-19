@@ -224,7 +224,7 @@ Rectangle {
                 root.could_select_begin_point = false
             }
 
-            if (status < status_manager.getLocationComfirmID()) {
+            if (status > status_manager.getLocationComfirmID()) {
                 vehicle.x = 0
                 vehicle.y = 0
                 vehicle.rotation = 0

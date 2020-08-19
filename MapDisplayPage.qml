@@ -231,6 +231,7 @@ Rectangle {
             }
             if (status !== status_manager.getWorkingID()) {
                 canvas_trajectory.clean_all = true
+                ros_message_manager.clearLastTrajectory()
             }
         }
     }

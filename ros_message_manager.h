@@ -16,6 +16,8 @@ public:
 
     Q_INVOKABLE QVariantList getAllTrajectory() { return _trajectory;}
 
+    Q_INVOKABLE void clearLastTrajectory() {_last_trajectory.clear();}
+
 signals:
     void updateLocalizationInfo(const QString& time, const QString& x, const QString& y,
                                 const QString& heading, const QString& state);

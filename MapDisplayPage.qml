@@ -149,8 +149,12 @@ Rectangle {
         var vehicle_width = vehicle_info_manager.getVehicleWidth()
         var vehicle_height = vehicle_info_manager.getVehicleHeight()
 
-        vehicle.width =  vehicle_width * 3/2 * map_rate
         vehicle.height = vehicle_height * map_rate
+        vehicle.width = vehicle_info_manager.getVehicleMaxX() > -vehicle_info_manager.getVehicleMinX() ?
+                   vehicle_info_manager.getVehicleMaxX() * map_rate * 2:
+                   -vehicle_info_manager.getVehicleMinX() * map_rate * 2//vehicle.height * vehicle.x_rate_y
+
+        console.info(vehicle.rect_width)
 
 //        createBeginPoint(0)
     }

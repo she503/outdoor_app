@@ -19,12 +19,12 @@ Rectangle {
                                  root.height / (max_y - min_y) * (max_x) * 2:
                                  root.height / (max_y - min_y) * (-min_x) * 2
 
-//    Connections {
-//        target: status_manager
-//        onWorkStatusUpdate: {
-//         canvas.requestPaint()
-//        }
-//    }
+    //    Connections {
+    //        target: status_manager
+    //        onWorkStatusUpdate: {
+    //         canvas.requestPaint()
+    //        }
+    //    }
 
     Canvas {
         id: canvas
@@ -32,7 +32,6 @@ Rectangle {
         height: parent.height
         onPaint: {
             var ctx = getContext("2d")
-//            ctx.clearRect(0, 0, width, height)
 
             var pix_scale = root.height / vehicle_info_manager.getVehicleHeight()
             var min_x_pix = min_x * pix_scale
@@ -40,19 +39,17 @@ Rectangle {
             var max_x_pix = max_x * pix_scale
             var max_y_pix = max_y * pix_scale
 
-            if (root.flag) {
-                if(!root.max_x_more_big) {
-                    ctx.translate( -min_x_pix, max_y_pix);
-                } else {
-                    ctx.translate( max_x_pix, max_y_pix);
-                }
-                root.flag = false
+            ctx.save()
+            if(!root.max_x_more_big) {
+                ctx.translate( -min_x_pix, max_y_pix);
+            } else {
+                ctx.translate( max_x_pix, max_y_pix);
             }
+            root.flag = false
 
             var line_width = root.height * root.border_ratio
             var line_width_half = line_width * 0.5
 
-            ctx.save()
             ctx.fillStyle = Qt.rgba(0, 255, 0, 0.5)
             ctx.beginPath()
             ctx.moveTo(min_x_pix , max_y_pix )
@@ -61,9 +58,7 @@ Rectangle {
             ctx.lineTo(min_x_pix , min_y_pix )
             ctx.closePath()
             ctx.fill()
-            ctx.restore()
 
-            ctx.save()
             ctx.strokeStyle = "#FFFF00"
             ctx.lineWidth = line_width * 0.2
             ctx.moveTo(min_x_pix , max_y_pix )
@@ -71,31 +66,26 @@ Rectangle {
             ctx.lineTo(max_x_pix , min_y_pix )
             ctx.lineTo(min_x_pix , min_y_pix )
             ctx.stroke()
-            ctx.restore()
 
-            ctx.save()
             ctx.strokeStyle = "#FF0000"
             ctx.beginPath();
             ctx.moveTo(0 , 0 )
             ctx.lineTo(max_x_pix , max_y_pix )
             ctx.stroke()
-            ctx.restore()
 
-            ctx.save()
             ctx.strokeStyle = "#FF0000"
             ctx.beginPath();
             ctx.moveTo(0 , 0 )
             ctx.lineTo(max_x_pix , min_y_pix )
             ctx.stroke()
-            ctx.restore()
 
-            ctx.save()
             ctx.fillStyle = "#FFFF00"
             ctx.strokeStyle = "#FFFF00"
             ctx.beginPath();
             ctx.arc(0, 0, max_y_pix / 4, 0, 2 * Math.PI);
             ctx.fill()
             ctx.stroke()
+
             ctx.restore()
 
         }

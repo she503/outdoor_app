@@ -154,8 +154,6 @@ Rectangle {
                    vehicle_info_manager.getVehicleMaxX() * map_rate * 2:
                    -vehicle_info_manager.getVehicleMinX() * map_rate * 2//vehicle.height * vehicle.x_rate_y
 
-        console.info(vehicle.rect_width)
-
 //        createBeginPoint(0)
     }
 

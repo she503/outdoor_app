@@ -8,6 +8,7 @@ Rectangle {
     color: "transparent"
     antialiasing: true
     transformOrigin: Item.Center
+    property bool flag: true
     property var max_x_more_big: max_x > -min_x
     property var min_x: vehicle_info_manager.getVehicleMinX()
     property var min_y: vehicle_info_manager.getVehicleMinY()
@@ -15,9 +16,15 @@ Rectangle {
     property var max_y: vehicle_info_manager.getVehicleMaxY()
     property var x_rate_y:vehicle_info_manager.getVehicleWidth() / vehicle_info_manager.getVehicleHeight()
     property var rect_width: max_x_more_big ?
-                                 240 / (max_y - min_y) * (max_x) * 2:
-                                 240 / (max_y - min_y) * (-min_x) * 2
+                                 root.height / (max_y - min_y) * (max_x) * 2:
+                                 root.height / (max_y - min_y) * (-min_x) * 2
 
+//    Connections {
+//        target: status_manager
+//        onWorkStatusUpdate: {
+//         canvas.requestPaint()
+//        }
+//    }
 
     Canvas {
         id: canvas
@@ -25,7 +32,7 @@ Rectangle {
         height: parent.height
         onPaint: {
             var ctx = getContext("2d")
-            ctx.clearRect(0, 0, width, height)
+//            ctx.clearRect(0, 0, width, height)
 
             var pix_scale = root.height / vehicle_info_manager.getVehicleHeight()
             var min_x_pix = min_x * pix_scale
@@ -33,13 +40,16 @@ Rectangle {
             var max_x_pix = max_x * pix_scale
             var max_y_pix = max_y * pix_scale
 
-            if(!root.max_x_more_big) {
-                ctx.translate( -min_x_pix, max_y_pix);
-            } else {
-                ctx.translate( max_x_pix, max_y_pix);
+            if (root.flag) {
+                if(!root.max_x_more_big) {
+                    ctx.translate( -min_x_pix, max_y_pix);
+                } else {
+                    ctx.translate( max_x_pix, max_y_pix);
+                }
+                root.flag = false
             }
 
-            var line_width = 240 * root.border_ratio
+            var line_width = root.height * root.border_ratio
             var line_width_half = line_width * 0.5
 
             ctx.save()

@@ -19,13 +19,6 @@ Rectangle {
                                  root.height / (max_y - min_y) * (max_x) * 2:
                                  root.height / (max_y - min_y) * (-min_x) * 2
 
-    //    Connections {
-    //        target: status_manager
-    //        onWorkStatusUpdate: {
-    //         canvas.requestPaint()
-    //        }
-    //    }
-
     Canvas {
         id: canvas
         width: parent.width

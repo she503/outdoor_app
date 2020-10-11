@@ -59,6 +59,10 @@ Rectangle {
     property bool could_select_begin_point: status_manager.getWorkStatus() <= status_manager.getSelectTaskID()
     property bool is_select_begin_point: false
 
+    property var lo_x: 0
+    property var lo_y: 0
+
+
     function paintTasks(){
         canvas_task.requestPaint()
     }
@@ -145,8 +149,10 @@ Rectangle {
         var vehicle_width = vehicle_info_manager.getVehicleWidth()
         var vehicle_height = vehicle_info_manager.getVehicleHeight()
 
-        vehicle.width =  vehicle_width * 3/2 * map_rate
         vehicle.height = vehicle_height * map_rate
+        vehicle.width = vehicle_info_manager.getVehicleMaxX() > -vehicle_info_manager.getVehicleMinX() ?
+                   vehicle_info_manager.getVehicleMaxX() * map_rate * 2:
+                   -vehicle_info_manager.getVehicleMinX() * map_rate * 2//vehicle.height * vehicle.x_rate_y
 
 //        createBeginPoint(0)
     }
@@ -225,14 +231,19 @@ Rectangle {
             }
 
             if (status > status_manager.getLocationComfirmID()) {
-                vehicle.x = 0
-                vehicle.y = 0
-                vehicle.rotation = 0
+//                vehicle.x = 0
+//                vehicle.y = 0
+//                vehicle.rotation = 0
+                var pixel_pos = geometryToPixel(root.lo_x, root.lo_y)
+                vehicle.x = pixel_pos[0] - vehicle.width / 2
+                vehicle.y = pixel_pos[1] - vehicle.height / 2
             }
             if (status !== status_manager.getWorkingID()) {
                 canvas_trajectory.clean_all = true
                 ros_message_manager.clearLastTrajectory()
             }
+
+
         }
     }
 
@@ -252,6 +263,8 @@ Rectangle {
             //                map.y = (map.height / 2 - vehicle.y + vehicle.height / 2) * (map.scale)
             //            }
             vehicle.rotation = -heading_angle
+            root.lo_x = x
+            root.lo_y = y
         }
 
 
@@ -269,6 +282,8 @@ Rectangle {
                 map.y = (map.height / 2 - vehicle.y + vehicle.height / 2) * (map.scale)
             }
             vehicle.rotation = -heading
+            root.lo_x = x
+            root.lo_y = y
         }
         onUpdateObstacleInfo: {
             var_obstacles = obstacles

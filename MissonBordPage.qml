@@ -136,6 +136,7 @@ Item {
     Connections {
         target: ros_message_manager
         onUpdateMonitorMessageInfo: {
+            busy_indicator.close()
             message_list_model.clear()
             root.has_error = true
             timer_no_error_close.times = 0

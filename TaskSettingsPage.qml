@@ -50,17 +50,19 @@ Rectangle {
             chooseMapPage()
         } else if (status === status_manager.getSelectTaskID()) {
             var tasks_name = map_task_manager.getTasksName()
+
             task_list_model.clear()
             for (var i = 0; i < tasks_name.length; ++i) {
                 task_list_model.append({"idcard": i,"task_name": tasks_name[i]})
             }
             chooseTaskPage()
-        }  else if (status === status_manager.getWorkingID()) {
+        } else if (status === status_manager.getWorkingID()) {
             startTaskPage()
         } else if (status >= status_manager.getWorkDoneID()) {
 
         }
     }
+
 
     function hideAllComponent() {
         rec_header_bar.visible = false
@@ -134,6 +136,14 @@ Rectangle {
             }
             busy_indicator.close()
 
+        }
+        onEmitTasksDataRecived: {
+            var tasks_name = map_task_manager.getTasksName()
+
+            task_list_model.clear()
+            for (var i = 0; i < tasks_name.length; ++i) {
+                task_list_model.append({"idcard": i,"task_name": tasks_name[i]})
+            }
         }
     }
 

@@ -1,4 +1,5 @@
 #include "vehicle_info_manager.h"
+#include <QDebug>
 //#include <QtAndroidExtras/QAndroidJniObject>
 //#include <QtAndroidExtras/QAndroidJniEnvironment>
 //#include <QtAndroidExtras/QAndroidActivityResultReceiver>
@@ -35,12 +36,12 @@ VehicleInfoManager::VehicleInfoManager(QObject *parent) : QObject(parent)
 
 float VehicleInfoManager::getVehicleWidth()
 {
-    return _vehicle_width;
+    return _max_x - _min_x;
 }
 
 float VehicleInfoManager::getVehicleHeight()
 {
-    return _vehicle_height;
+    return _max_y - _min_y;
 }
 
 int VehicleInfoManager::getVehicleType()

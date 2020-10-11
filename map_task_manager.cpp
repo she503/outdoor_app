@@ -340,6 +340,7 @@ void MapTaskManager::parseMapAndTasksInfo(const QJsonObject &obj)
         _all_tasks_in_map.insert(task_name, temp_obj);
     }
 
+    emit emitTasksDataRecived();
     _status_manager->setWorkStatus(WORK_STATUS_SELECTING_TASK);
 }
 

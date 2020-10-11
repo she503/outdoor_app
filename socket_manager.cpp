@@ -194,8 +194,14 @@ void SocketManager::parseSocketData(const QByteArray &buffer)
 
 void SocketManager::parseVehicleSize(const QJsonObject &obj)
 {
-    _vehicle_info_manager->setVehicleHeight(obj.value("height").toDouble());
-    _vehicle_info_manager->setVehicleWidth(obj.value("width").toDouble());
+    _vehicle_info_manager->setVehicleMaxX(obj.value("max_x").toDouble());
+    _vehicle_info_manager->setVehicleMaxY(obj.value("max_y").toDouble());
+    _vehicle_info_manager->setVehicleMinX(obj.value("min_x").toDouble());
+    _vehicle_info_manager->setVehicleMinY(obj.value("min_y").toDouble());
+
+
+//    _vehicle_info_manager->setVehicleHeight(obj.value("height").toDouble());
+//    _vehicle_info_manager->setVehicleWidth(obj.value("width").toDouble());
 }
 
 bool SocketManager::sendSocketMessage(const QByteArray &message)

@@ -28,6 +28,15 @@ Item {
         }
     }
 
+    Connections {
+        target: status_manager
+        onWorkStatusUpdate: {
+           if (status < status_manager.getWorkingID()) {
+               root.btn_stop_pressed = "Exit"
+           }
+        }
+    }
+
     Popup {
         id: pop_lock
         width: parent.width

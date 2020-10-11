@@ -52,6 +52,7 @@ public:
 
     Q_INVOKABLE void setInitIsRight(bool flag);
 
+
 private slots:
     void parseAllMapsInfo(const QJsonObject& obj);
     void parseSetMapNameRst(const QJsonObject& obj);
@@ -72,6 +73,7 @@ signals:
     void emitSetTasksRstInfo(const int& status, const QString& error_message);
     void emitGetWorkMapInfoError(const QString& error_message);
     void emitGetWorkRefLineInfoError(const QString& error_message);
+    void emitTasksDataRecived();
 
     void emitWorkFullRefLine(const QVariantList& ref_line);
 

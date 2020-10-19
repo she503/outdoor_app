@@ -152,7 +152,7 @@ Rectangle {
         vehicle.height = vehicle_height * map_rate
         vehicle.width = vehicle_info_manager.getVehicleMaxX() > -vehicle_info_manager.getVehicleMinX() ?
                    vehicle_info_manager.getVehicleMaxX() * map_rate * 2:
-                   -vehicle_info_manager.getVehicleMinX() * map_rate * 2//vehicle.height * vehicle.x_rate_y
+                   -vehicle_info_manager.getVehicleMinX() * map_rate * 2 //vehicle.height * vehicle.x_rate_y
 
 //        createBeginPoint(0)
     }

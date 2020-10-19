@@ -19,13 +19,6 @@ Rectangle {
                                  root.height / (max_y - min_y) * (max_x) * 2:
                                  root.height / (max_y - min_y) * (-min_x) * 2
 
-    //    Connections {
-    //        target: status_manager
-    //        onWorkStatusUpdate: {
-    //         canvas.requestPaint()
-    //        }
-    //    }
-
     Canvas {
         id: canvas
         width: parent.width
@@ -51,6 +44,7 @@ Rectangle {
             var line_width_half = line_width * 0.5
 
             ctx.fillStyle = Qt.rgba(0, 255, 0, 0.5)
+            ctx.lineWidth = line_width * 0.4
             ctx.beginPath()
             ctx.moveTo(min_x_pix , max_y_pix )
             ctx.lineTo(max_x_pix , max_y_pix )
@@ -59,21 +53,23 @@ Rectangle {
             ctx.closePath()
             ctx.fill()
 
-            ctx.strokeStyle = "#FFFF00"
-            ctx.lineWidth = line_width * 0.2
-            ctx.moveTo(min_x_pix , max_y_pix )
-            ctx.lineTo(max_x_pix , max_y_pix )
-            ctx.lineTo(max_x_pix , min_y_pix )
-            ctx.lineTo(min_x_pix , min_y_pix )
+            ctx.strokeStyle = "#ffff36"
+            ctx.lineWidth = line_width * 1.2
+//            ctx.moveTo(min_x_pix + line_width * 0.2, max_y_pix + line_width * 0.2 )
+//            ctx.lineTo(max_x_pix + line_width * 0.2 , max_y_pix - line_width * 0.2 )
+//            ctx.lineTo(max_x_pix - line_width * 0.2 , min_y_pix - line_width * 0.2 )
+//            ctx.lineTo(min_x_pix + line_width * 0.2 , min_y_pix - line_width * 0.2 )
             ctx.stroke()
 
             ctx.strokeStyle = "#FF0000"
+            ctx.lineWidth = line_width * 1.2
             ctx.beginPath();
             ctx.moveTo(0 , 0 )
             ctx.lineTo(max_x_pix , max_y_pix )
             ctx.stroke()
 
             ctx.strokeStyle = "#FF0000"
+            ctx.lineWidth = line_width * 1.2
             ctx.beginPath();
             ctx.moveTo(0 , 0 )
             ctx.lineTo(max_x_pix , min_y_pix )
@@ -81,6 +77,7 @@ Rectangle {
 
             ctx.fillStyle = "#FFFF00"
             ctx.strokeStyle = "#FFFF00"
+            ctx.lineWidth = line_width * 0.4
             ctx.beginPath();
             ctx.arc(0, 0, max_y_pix / 4, 0, 2 * Math.PI);
             ctx.fill()

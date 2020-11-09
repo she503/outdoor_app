@@ -56,19 +56,23 @@ void SocketManager::readSocketData()
     if (_socket->bytesAvailable() < 4) {
         return;
     }
-    _buffer += _socket->readAll();
-    QByteArrayList buffer_list = _buffer.split('$');
-    int complete_buffer_num = 0;
-    if (buffer_list.size() == 1) {
-        return;
-    } else {
-        complete_buffer_num = buffer_list.size() - 1;
+    QDataStream in(_socket);
+    in.setVersion(QDataStream::Qt_5_9);
+    if(_block_size == 0) {
+        if(_socket->bytesAvailable() < (int)sizeof(quint64)) return;
+        in >> _block_size;
     }
 
-    for (int i = 0; i < complete_buffer_num; ++i) {
-        this->parseSocketData(buffer_list.at(i));
+    if(_socket->bytesAvailable() < _block_size) return;
+
+    in >> _buffer;
+    this->parseSocketData(_buffer);
+    _block_size = 0;
+    _buffer = "";
+    if (_socket->bytesAvailable() > 0) {
+        readSocketData();
     }
-    _buffer = buffer_list.at(complete_buffer_num);
+
 }
 
 void SocketManager::parseSocketData(const QByteArray &buffer)
@@ -204,21 +208,26 @@ void SocketManager::parseVehicleSize(const QJsonObject &obj)
 //    _vehicle_info_manager->setVehicleWidth(obj.value("width").toDouble());
 }
 
-bool SocketManager::sendSocketMessage(const QByteArray &message)
+bool SocketManager::sendSocketMessage(const QByteArray &message, bool compress)
 {
     if (!_socket->isWritable()) {
         return false;
     }
-    QByteArray temp_message = message;
-    temp_message += '$';
-    qint64 write_result = _socket->write(temp_message);
-    bool is_flush = _socket->flush();
-    if (write_result != -1 && is_flush) {
-        if (write_result != 0) {
-            return true;
-        }
+    QByteArray temp = message;
+    if (compress) {
+        temp.replace(" ","").replace("\n","");
     }
-    return false;
+    QByteArray block;
+    QDataStream out(&block, QIODevice::ReadWrite);
+    out.setVersion(QDataStream::Qt_5_9);
+    out << (quint64)0;
+    out << temp;
+    out.device()->seek(0);
+    out << (quint64)(block.size() - sizeof(quint64));
+    _socket->write(block);
+    _socket->flush();
+    return true;
+
 }
 
 void SocketManager::setVehicleInfoManager(VehicleInfoManager *vehicle_info_manager)

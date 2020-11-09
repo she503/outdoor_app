@@ -12,6 +12,7 @@
 #include <QJsonArray>
 #include <QJsonValue>
 #include <QMap>
+#include <QDataStream>
 
 #include "vehicle_info_manager.h"
 
@@ -26,7 +27,7 @@ public:
 
     Q_INVOKABLE bool disConnet();
 
-    bool sendSocketMessage(const QByteArray& message);
+    bool sendSocketMessage(const QByteArray& message, bool compress = false);
 
     void setVehicleInfoManager(VehicleInfoManager* vehicle_info_manager);
 
@@ -87,6 +88,7 @@ private slots:
 private:
     QTcpSocket* _socket;
     QByteArray _buffer;
+    quint64 _block_size = 0;
 
     VehicleInfoManager* _vehicle_info_manager;
 };

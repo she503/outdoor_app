@@ -4,13 +4,14 @@ CONFIG += c++11 resources_big
 
 SOURCES += main.cpp \
     account_manager.cpp \
-    socket_manager.cpp \
     map_task_manager.cpp \
     ros_message_manager.cpp \
     vehicle_info_manager.cpp \
     qjson_transformer.cpp \
     status_manager.cpp \
-    mapping_manager.cpp
+    mapping_manager.cpp \
+    tcp_manager.cpp \
+    connect_tcp.cpp
 
 RESOURCES += qml.qrc \
     pictures.qrc
@@ -39,14 +40,15 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     account_manager.h \
-    socket_manager.h \
     map_task_manager.h \
     utils.h \
     ros_message_manager.h \
     vehicle_info_manager.h \
     qjson_transformer.h \
     status_manager.h \
-    mapping_manager.h
+    mapping_manager.h \
+    tcp_manager.h \
+    connect_tcp.h
 
 TRANSLATIONS = tergeo_app_zh_CN.ts
 

@@ -3,16 +3,15 @@
 
 #include <QObject>
 #include <QDateTime>
-#include "socket_manager.h"
-
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QVariant>
 
 class RosMessageManager : public QObject
 {
     Q_OBJECT
 public:
     explicit RosMessageManager(QObject *parent = nullptr);
-
-    void setSocket(SocketManager *socket);
 
     Q_INVOKABLE QVariantList getAllTrajectory() { return _trajectory;}
 
@@ -52,9 +51,7 @@ private slots:
     void parseTrajectoryInfo(const QJsonObject& obj);
 
     void parseMonitorMessageInfo(const QJsonObject& obj);
-
 private:
-    SocketManager* _socket;
     QVariantList _last_trajectory;
     QVariantList _trajectory;
 };

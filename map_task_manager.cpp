@@ -6,31 +6,7 @@ MapTaskManager::MapTaskManager(QObject *parent) : QObject(parent),_work_full_ref
 
 }
 
-void MapTaskManager::setSocketManager(SocketManager *socket_manager)
-{
-    _socket_manager = socket_manager;
-    connect(_socket_manager, SIGNAL(emitAllMapsInfo(QJsonObject)),
-            this, SLOT(parseAllMapsInfo(QJsonObject)));
-    connect(_socket_manager, SIGNAL(emitMapAndTasks(QJsonObject)),
-            this, SLOT(parseMapAndTasksInfo(QJsonObject)));
-    connect(_socket_manager, SIGNAL(emitCurrentWorkMapData(QJsonObject)),
-            this, SLOT(parseWorkMapInfo(QJsonObject)));
-    connect(_socket_manager, SIGNAL(emitFullRefLine(QJsonObject)),
-            this, SLOT(parseWorkRefLineInfo(QJsonObject)));
-
-    connect(_socket_manager, SIGNAL(emitSetMapNameRst(QJsonObject)),
-            this, SLOT(parseSetMapNameRst(QJsonObject)));
-    connect(_socket_manager, SIGNAL(emitSetInitPosRST(QJsonObject)),
-            this, SLOT(parseSetInitPoseRst(QJsonObject)));
-    connect(_socket_manager, SIGNAL(emitSetTasksRST(QJsonObject)),
-            this, SLOT(parseSetTasksRst(QJsonObject)));
-
-    connect(_socket_manager, SIGNAL(emitPauseTaskRST(QJsonObject)),
-            this, SLOT(parsePauseTaskRst(QJsonObject)));
-    connect(_socket_manager, SIGNAL(emitWorkDone(QJsonObject)),
-            this, SLOT(parseWorkDoneInfo()));
-}
-
+//
 void MapTaskManager::setStatusManager(StatusManager* status_manager) {
     _status_manager = status_manager;
 }
@@ -55,8 +31,7 @@ void MapTaskManager::sendInitPos()
     obj.insert("y", _init_pose.at(1).toDouble());
     obj.insert("theta", _init_pose.at(2).toDouble());
     QJsonDocument doc(obj);
-    _socket_manager->sendSocketMessage(doc.toJson());
-
+    emit emitSendSocketMessage(doc.toJson(), false);
 }
 
 void MapTaskManager::setWorkMapName(const QString &map_name, const int map_index)
@@ -67,7 +42,7 @@ void MapTaskManager::setWorkMapName(const QString &map_name, const int map_index
     obj.insert("message_type", MESSAGE_SET_MAP);
     obj.insert("map_name", map_name);
     QJsonDocument doc(obj);
-    _socket_manager->sendSocketMessage(doc.toJson());
+    emit emitSendSocketMessage(doc.toJson(), false);
 }
 
 QVariantList MapTaskManager::getMapRoads(const QString &map_name)
@@ -201,7 +176,7 @@ void MapTaskManager::setWorkTasksName(const QStringList &task_list)
     obj.insert("message_type", int(MESSAGE_SET_TASKS));
     obj.insert("tasks_name",QJsonArray::fromStringList(task_list));
     QJsonDocument doc(obj);
-    _socket_manager->sendSocketMessage(doc.toJson());
+    emit emitSendSocketMessage(doc.toJson(), false);
 }
 
 void MapTaskManager::setPauseTaskCommond(const bool is_pause)
@@ -210,7 +185,7 @@ void MapTaskManager::setPauseTaskCommond(const bool is_pause)
     obj.insert("message_type", int(MESSAGE_PAUSE_TASK));
     obj.insert("flag", is_pause);
     QJsonDocument doc(obj);
-    _socket_manager->sendSocketMessage(doc.toJson());
+    emit emitSendSocketMessage(doc.toJson(), false);
 }
 
 void MapTaskManager::turnToSelectMap()
@@ -219,7 +194,7 @@ void MapTaskManager::turnToSelectMap()
     obj.insert("message_type", MESSAGE_RETURN_TO_SELECT_MAP);
     obj.insert("flag", true);
     QJsonDocument doc(obj);
-    _socket_manager->sendSocketMessage(doc.toJson());
+    emit emitSendSocketMessage(doc.toJson(), false);
 }
 
 void MapTaskManager::turnToSelectTask()
@@ -228,7 +203,7 @@ void MapTaskManager::turnToSelectTask()
     obj.insert("message_type", MESSAGE_RETURN_TO_SELECT_TASK);
     obj.insert("flag", true);
     QJsonDocument doc(obj);
-    _socket_manager->sendSocketMessage(doc.toJson());
+    emit emitSendSocketMessage(doc.toJson(), false);
     _status_manager->setWorkStatus(WORK_STATUS_SELECTING_TASK);
 
 }
@@ -239,7 +214,7 @@ void MapTaskManager::setEnableCleanWork(bool flag)
     obj.insert("message_type", MESSAGE_ENABLE_CLEAN_WORK);
     obj.insert("flag", flag);
     QJsonDocument doc(obj);
-    _socket_manager->sendSocketMessage(doc.toJson());
+    emit emitSendSocketMessage(doc.toJson(), false);
 }
 
 void MapTaskManager::setInitIsRight(bool flag)
@@ -248,7 +223,7 @@ void MapTaskManager::setInitIsRight(bool flag)
     obj.insert("message_type", MESSAGE_INIT_POSE_RST_CONFIRM);
     obj.insert("flag", flag);
     QJsonDocument doc(obj);
-    _socket_manager->sendSocketMessage(doc.toJson());
+    emit emitSendSocketMessage(doc.toJson(), false);
 
     if (!flag) {
         _status_manager->setWorkStatus(WORK_STATUS_SELECTING_MAP);
@@ -372,7 +347,7 @@ void MapTaskManager::parseWorkMapInfo(const QJsonObject &obj)
     QJsonObject cb_obj;
     cb_obj.insert("message_type", int(MessageType::MESSAGE_CURRENT_WORK_MAP_DATA_RST));
     QJsonDocument doc(cb_obj);
-    _socket_manager->sendSocketMessage(doc.toJson());
+    emit emitSendSocketMessage(doc.toJson(), false);
 }
 
 void MapTaskManager::parseWorkRefLineInfo(const QJsonObject &obj)

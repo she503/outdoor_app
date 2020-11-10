@@ -3,8 +3,9 @@
 
 #include <QObject>
 #include <QJsonObject>
+#include <QJsonDocument>
 #include <QMap>
-#include "socket_manager.h"
+#include <QPair>
 #include "utils.h"
 
 class AccountManager : public QObject
@@ -13,8 +14,6 @@ class AccountManager : public QObject
 public:
     explicit AccountManager(QObject* parent = nullptr);
     ~AccountManager();
-
-    void setSocket(SocketManager *socket);
 
     /**
      * @brief 添加用户
@@ -62,6 +61,8 @@ signals:
     void emitUpdateAccountRst(const int& status, const QString& message);
     void emitAllAccountInfo(const QJsonObject& accounts_info);
 
+    void emitSendSocketMessage(const QByteArray& message, bool compress);
+
 private slots:
     void parseLoginRst(const QJsonObject& obj);
     void parseAddRst(const QJsonObject& obj);
@@ -70,7 +71,6 @@ private slots:
     void parseAllAccountsInfo(const QJsonObject& obj);
 
 private:
-    SocketManager* _socket;
     QJsonObject _all_accounts_obj;
     QMap<QString, QPair<QString, PermissionLevel> > _accounts_map;
 

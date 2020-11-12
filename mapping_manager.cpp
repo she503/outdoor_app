@@ -6,19 +6,6 @@ MappingManager::MappingManager(QObject *parent) : QObject(parent),
 
 }
 
-bool MappingManager::setSocketManager(SocketManager* socket_manager)
-{
-    _socket_manager = socket_manager;
-    connect(_socket_manager, SIGNAL(emitMappingCommandRst(QJsonObject)),
-            this, SLOT(parseMappingCommandRst(QJsonObject)));
-    connect(_socket_manager, SIGNAL(emitMappingProgress(QJsonObject)),
-            this, SLOT(parseMappingProgress(QJsonObject)));
-    connect(_socket_manager, SIGNAL(emitMappingFinish()),
-            this, SIGNAL(emitMappingFinish()));
-    connect(_socket_manager, SIGNAL(emitTransferDataRst(QJsonObject)),
-            this, SLOT(parseTransferDataRst(QJsonObject)));
-}
-
 void MappingManager::setIndoorOutdoor(const int indoor_outdoor, const QString& map_name)
 {
     _indoor_outdoor = (MappingPlace)indoor_outdoor;
@@ -27,7 +14,7 @@ void MappingManager::setIndoorOutdoor(const int indoor_outdoor, const QString& m
     obj.insert("place", _indoor_outdoor);
     obj.insert("map_name", map_name);
     QJsonDocument doc(obj);
-    _socket_manager->sendSocketMessage(doc.toJson());
+    emit emitSendSocketMessage(doc.toJson(), false);
 }
 
 void MappingManager::setMappingCommand(const int mapping_command)
@@ -41,7 +28,7 @@ void MappingManager::setMappingCommand(const int mapping_command)
     obj.insert("message_type", int(MESSAGE_MAPPING_COMMAND));
     obj.insert("command", _mapping_command);
     QJsonDocument doc(obj);
-    _socket_manager->sendSocketMessage(doc.toJson());
+    emit emitSendSocketMessage(doc.toJson(), false);
 }
 
 void MappingManager::transferMappingData(const int key, const QString& map_name)
@@ -51,7 +38,7 @@ void MappingManager::transferMappingData(const int key, const QString& map_name)
     obj.insert("key", key);
     obj.insert("map_name", map_name);
     QJsonDocument doc(obj);
-    _socket_manager->sendSocketMessage(doc.toJson());
+    emit emitSendSocketMessage(doc.toJson(), false);
 }
 
 void MappingManager::recordMappingBag(const int status)
@@ -62,8 +49,7 @@ void MappingManager::recordMappingBag(const int status)
     obj.insert("status", QString::number(status));
 
     QJsonDocument doc(obj);
-    _socket_manager->sendSocketMessage(doc.toJson());
-
+    emit emitSendSocketMessage(doc.toJson(), false);
 }
 
 void MappingManager::parseMappingCommandRst(const QJsonObject &obj)

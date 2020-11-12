@@ -1,5 +1,5 @@
 #include "account_manager.h"
-
+#include <QDebug>
 #include <QCoreApplication>
 
 AccountManager::AccountManager(QObject *parent) : QObject(parent)
@@ -12,23 +12,6 @@ AccountManager::~AccountManager()
 
 }
 
-void AccountManager::setSocket(SocketManager *socket)
-{
-    _socket = socket;
-
-    connect(_socket, SIGNAL(emitLoginRst(QJsonObject)),
-            this, SLOT(parseLoginRst(QJsonObject)));
-    connect(_socket, SIGNAL(emitAddUserRst(QJsonObject)),
-            this, SLOT(parseAddRst(QJsonObject)));
-    connect(_socket, SIGNAL(emitDeleteUserRst(QJsonObject)),
-            this, SLOT(parseDeleteRst(QJsonObject)));
-    connect(_socket, SIGNAL(emitUpdateUserRst(QJsonObject)),
-            this, SLOT(parseUpdateRst(QJsonObject)));
-
-    connect(_socket, SIGNAL(emitAllAccountsInfo(QJsonObject)),
-            this, SLOT(parseAllAccountsInfo(QJsonObject)));
-}
-
 void AccountManager::accountAdd(const QString &username,
                                 const QString &password, const int &level)
 {
@@ -38,7 +21,7 @@ void AccountManager::accountAdd(const QString &username,
     obj.insert("password", password);
     obj.insert("permission_level", level);
     QJsonDocument doc(obj);
-    _socket->sendSocketMessage(doc.toJson());
+    emit emitSendSocketMessage(doc.toJson(), false);
 }
 
 void AccountManager::accountUpdate(const QString &username, const QString &password,
@@ -60,7 +43,7 @@ void AccountManager::accountUpdate(const QString &username, const QString &passw
     obj.insert("password", password);
     obj.insert("permission_level", level);
     QJsonDocument doc(obj);
-    _socket->sendSocketMessage(doc.toJson());
+    emit emitSendSocketMessage(doc.toJson(), false);
 }
 
 void AccountManager::accountDelete(const QString &username)
@@ -69,7 +52,7 @@ void AccountManager::accountDelete(const QString &username)
     obj.insert("message_type", int(MESSAGE_DELETE_ACCOUNT));
     obj.insert("name", username);
     QJsonDocument doc(obj);
-    _socket->sendSocketMessage(doc.toJson());
+    emit emitSendSocketMessage(doc.toJson(), false);
 }
 
 void AccountManager::accountLogin(const QString &username, const QString &password)
@@ -79,7 +62,7 @@ void AccountManager::accountLogin(const QString &username, const QString &passwo
     obj.insert("name", username);
     obj.insert("password", password);
     QJsonDocument doc(obj);
-    _socket->sendSocketMessage(doc.toJson());
+    emit emitSendSocketMessage(doc.toJson(), false);
     _current_username = username;
     _current_password = password;
 }
@@ -108,7 +91,6 @@ void AccountManager::parseLoginRst(const QJsonObject &obj)
         _current_username = "";
         _current_password = "";
     }
-
     emit emitLoginRst(status, message);
 }
 

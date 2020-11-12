@@ -5,6 +5,7 @@ Rectangle{
     id: root
 
     signal successToConnect()
+    property bool is_reconnect: true
     Text {
         id: faild_text
         text: qsTr("faild to connect server!!!")
@@ -46,11 +47,8 @@ Rectangle{
             anchors.horizontalCenter: parent.horizontalCenter
             btn_text:"connect"
             onClicked: {
-                if(socket_manager.connectToServer(ip.text)) {
-                    root.successToConnect()
-                } else {
-                    faild.open()
-                }
+                root.is_reconnect = true
+                socket_manager.connectToServer(ip.text)
             }
         }
     }
@@ -83,6 +81,21 @@ Rectangle{
                     faild_text.visible = false
                     connect_agin.visible = true
                 }
+            }
+        }
+        Connections {
+            target: socket_manager
+            onEmitConnectRst: {
+                if (!root.is_reconnect) {
+                    return
+                }
+
+                if(rst) {
+                    root.successToConnect()
+                } else {
+                    faild.open()
+                }
+                root.is_reconnect = false
             }
         }
     }

@@ -5,9 +5,10 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QDebug>
+#include <QJsonDocument>
 
 #include "utils.h"
-#include "socket_manager.h"
+
 enum MappingCommand {
     MAPPING_COMMAND_NULL = 0,
     MAPPING_COMMAND_START = 1,
@@ -27,7 +28,6 @@ class MappingManager : public QObject
     Q_OBJECT
 public:
     explicit MappingManager(QObject *parent = nullptr);
-    bool setSocketManager(SocketManager* socket_manager);
 
     Q_INVOKABLE void setIndoorOutdoor(const int indoor_outdoor, const QString &map_name);
 
@@ -43,13 +43,16 @@ signals:
      void emitMappingFinish();
      void emitTrajectory(const QVariantList& trajectory);
      void emitTransferDataInfo(const bool flag, const QString& message);
+
+     void emitSendSocketMessage(const QByteArray& message, bool compress);
+
+
 private slots:
      void parseMappingCommandRst(const QJsonObject& obj);
      void parseMappingProgress(const QJsonObject& obj);
      void parseTransferDataRst(const QJsonObject& obj);
 
 private:
-    SocketManager* _socket_manager;
     MappingCommand _mapping_command;
     MappingPlace _indoor_outdoor;
 };

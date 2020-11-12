@@ -6,33 +6,6 @@ RosMessageManager::RosMessageManager(QObject *parent) : QObject(parent)
 
 }
 
-void RosMessageManager::setSocket(SocketManager *socket)
-{
-    _socket = socket;
-    connect(_socket, SIGNAL(emitLocalizationInfo(QJsonObject)),
-            this, SLOT(parseLocalizationInfo(QJsonObject)));
-//    connect(_socket, SIGNAL(emitChassisInfo(QJsonObject)),
-//            this, SLOT(parseChassisInfo(QJsonObject)));
-    connect(_socket, SIGNAL(emitCleaningAgencyInfo(QJsonObject)),
-            this, SLOT(parseCleaningAgencyInfo(QJsonObject)));
-    connect(_socket, SIGNAL(emitDrivingInfo(QJsonObject)),
-            this, SLOT(parseDrivingInfo(QJsonObject)));
-    connect(_socket, SIGNAL(emitObstaclesInfo(QJsonObject)),
-            this, SLOT(parseObstacleInfo(QJsonObject)));
-    connect(_socket, SIGNAL(emitPlanningPath(QJsonObject)),
-            this, SLOT(parsePlanningInfo(QJsonObject)));
-    connect(_socket, SIGNAL(emitPlanningRefLine(QJsonObject)),
-            this, SLOT(parsePlanningRefInfo(QJsonObject)));
-    connect(_socket, SIGNAL(emitTaskInfo(QJsonObject)),
-            this, SLOT(parseTaskProcessInfo(QJsonObject)));
-    connect(_socket, SIGNAL(emitBatteryInfo(QJsonObject)),
-            this, SLOT(parseBatteryInfo(QJsonObject)));
-    connect(_socket, SIGNAL(emitTrajectoryInfo(QJsonObject)),
-            this, SLOT(parseTrajectoryInfo(QJsonObject)));
-    connect(_socket, SIGNAL(emitMonitorMessage(QJsonObject)),
-            this, SLOT(parseMonitorMessageInfo(QJsonObject)));
-}
-
 void RosMessageManager::parseLocalizationInfo(const QJsonObject &obj)
 {
     QString time = obj.value("time").toString();

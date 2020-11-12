@@ -2,10 +2,12 @@
 #define TERGEO_APP_MAP_TASK_MANAGER_H
 
 #include <QObject>
+#include <QMap>
+#include <QDebug>
+#include <QJsonObject>
 
 #include "utils.h"
 #include "status_manager.h"
-#include "socket_manager.h"
 
 class MapTaskManager : public QObject
 {
@@ -13,7 +15,6 @@ class MapTaskManager : public QObject
 public:
     explicit MapTaskManager(QObject *parent = nullptr);
 
-    void setSocketManager(SocketManager* socket_manager);
     void setStatusManager(StatusManager* status_manager);
 
     Q_INVOKABLE void sendInitPos();
@@ -82,9 +83,10 @@ signals:
 
     void emitLocalizationInfo(const double x, const double y, const double heading_angle);
 
+    void emitSendSocketMessage(const QByteArray& message, bool compress);
+
 
 private:
-    SocketManager* _socket_manager;
     StatusManager* _status_manager;
 
     QMap<QString, QJsonObject> _all_maps;

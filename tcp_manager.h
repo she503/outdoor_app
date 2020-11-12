@@ -87,7 +87,7 @@ private slots:
 private:
     QTcpSocket* _socket;
     QByteArray _buffer;
-    quint64 _block_size = 0;
+    quint32 _block_size = 0;
 
     VehicleInfoManager* _vehicle_info_manager;
 };

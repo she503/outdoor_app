@@ -58,7 +58,7 @@ void SocketServer::readSocketData()
     QDataStream in(_socket);
     in.setVersion(QDataStream::Qt_5_9);
     if(_block_size == 0) {
-        if(_socket->bytesAvailable() < (int)sizeof(quint64)) return;
+        if(_socket->bytesAvailable() < (int)sizeof(quint32)) return;
         in >> _block_size;
     }
 
@@ -219,10 +219,10 @@ void SocketServer::sendSocketMessage(const QByteArray &message, bool compress)
     QByteArray block;
     QDataStream out(&block, QIODevice::ReadWrite);
     out.setVersion(QDataStream::Qt_5_9);
-    out << (quint64)0;
+    out << (quint32)0;
     out << temp;
     out.device()->seek(0);
-    out << (quint64)(block.size() - sizeof(quint64));
+    out << (quint32)(block.size() - sizeof(quint32));
     _socket->write(block);
     _socket->flush();
     return;

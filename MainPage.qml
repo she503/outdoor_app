@@ -83,7 +83,7 @@ Rectangle {
 
     Image {
         id: img_main_background
-        source: "qrc:/res/ui/background/main.png"
+        source: "qrc:/res/pictures/background_all.png"
         anchors.fill: parent
     }
 
@@ -110,7 +110,7 @@ Rectangle {
             color: "transparent"
             Image {
                 id: menu_background
-                source: "qrc:/res/ui/background/menu.png"
+                //source: "qrc:/res/ui/background/menu.png"
                 anchors.fill: parent
                 z:0
             }
@@ -182,12 +182,12 @@ Rectangle {
                 onLockScreen: {
                     lock_screen_page.pop_lock.open()
                 }
-                Image {
-                    id: img_mission
-                    anchors.fill: parent
-                    source: "qrc:/res/ui/background/mission_bar.png"
-                    fillMode: Image.PreserveAspectCrop
-                }
+//                Image {
+//                    id: img_mission
+//                    anchors.fill: parent
+//                    source: "qrc:/res/ui/background/mission_bar.png"
+//                    fillMode: Image.PreserveAspectCrop
+//                }
             }
             StackView {
                 id: stack_view

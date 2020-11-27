@@ -29,27 +29,11 @@ Item{
     }
     Image {
         id: img_background
-        source: "qrc:/res/ui/background/login.png"
+        source: "qrc:/res/pictures/login_background.png"
         width: parent.width
         height: parent.height
     }
-//    Rectangle {
-//        id: rect_logo
-//        width: parent.width
-//        height: parent.height * 0.25
-//        color: "transparent"
-//        Image {
-//            id: img_logo
-//            source: "qrc:/res/pictures/logo.png"
-//            width: parent.width
-//            height: parent.height * 0.5
-//            fillMode: Image.PreserveAspectFit
-//            anchors {
-//                horizontalCenter: parent.horizontalCenter
-//                bottom: parent.bottom
-//            }
-//        }
-//    }
+
     Rectangle {
         id: rect_login
         width: parent.width * 0.4
@@ -58,23 +42,22 @@ Item{
         anchors {
             horizontalCenter: parent.horizontalCenter
             verticalCenter: parent.verticalCenter
+
         }
-//        Label {
-//            id: lab_name
-//            width: rect_login.width
-//            height: rect_login.height * 0.15
-//            text: qsTr("tonglu")
-//            horizontalAlignment: Text.AlignHCenter
-//            verticalAlignment: Text.AlignVCenter
-//            font.bold: true
-//            font.pixelSize: height * 0.5
-//            font.family: font_hanzhen.name
-//            anchors{
-//                top: parent.top
-//                topMargin: parent.height * 0.18
-//            }
-//            color: "#004e8c"
-//        }
+        Image {
+            id: name
+            source: "qrc:/res/pictures/logo_2.png"
+            width: parent.width * 0.4
+            height: parent.height * 0.15
+            fillMode: Image.PreserveAspectFit
+                anchors{
+                    top:parent.top
+                    topMargin: parent.height * 0.19
+                    horizontalCenter: parent.horizontalCenter
+                }
+
+        }
+
 
         Rectangle {
             id: rect_main
@@ -82,65 +65,43 @@ Item{
             height: parent.height * 0.8
             anchors{
                 top:parent.top
-                topMargin: height * 0.3
+                topMargin: height * 0.47
                 horizontalCenter: parent.horizontalCenter
             }
             color: "transparent"
 
-
             Rectangle {
                 id: rect_username
                 width: parent.width * 0.95
-                height: parent.height * 0.25
+                height: parent.height * 0.23
                 color:"transparent"
                 anchors{
                     left: parent.left
-                    leftMargin: width * 0.3
+                    leftMargin: width * 0.1
                     top: parent.top
-                    topMargin: parent.height * 0.04
+                    //topMargin: parent.height * 0.04
                 }
-//                Label {
-//                    id: lab_user
-//                    width: parent.width * 0.3
-//                    height: parent.height
-//                    text: qsTr("username")
-//                    horizontalAlignment: Text.AlignRight
-//                    verticalAlignment: Text.AlignVCenter
-//                    font.pixelSize: height * 0.4
-//                    anchors{
-//                        top: parent.top
-//                    }
-//                    color: "#006abe"
-//                }
-//                TLTextField {
-//                    id: username
-//                    width: parent.width * 0.55
-//                    height: parent.height * 0.8
-//                    anchors {
-//                        verticalCenter: parent.verticalCenter
-//                        left: parent.left
-//                        leftMargin: parent.width * 0.1
-//                        top: parent.top
-//                    }
-//                    text: root._default_test_user
-//                    placeholderText: qsTr("enter your username.")
-//                    pic_name: "qrc:/res/pictures/username.png"
-//                    btn_radius: height * 0.1
-//                    validator: RegExpValidator{regExp:/^.[A-Za-z0-9_]{0,11}$/}
-//                }
-                TextField {
+
+                TLTextField {
                     id: username
-                    width: parent.width * 0.55
+                    width: parent.width * 0.7
                     height: parent.height * 0.8
+                    Image {
+                        id: login_user
+                        source: "qrc:/res/pictures/login_user.png"
+                        //fillMode: Image.PreserveAspectFit
+                        width: parent.width * 0.15
+                        height: parent.height * 0.95
+                        anchors.left: parent.left
+                    }
+                    anchors{
+                        left: parent.left
+                        leftMargin: parent.width * 0.1
+                    }
                     text: root._default_test_user
                     placeholderText: qsTr("enter your username.")
                     validator: RegExpValidator{regExp:/^.[A-Za-z0-9_]{0,11}$/}
-                    background: Rectangle{
-                        anchors.fill: parent
-                        color: "transparent"
-                    }
-                    color: "white"
-                    font.pixelSize: height * 0.5
+
                 }
             }
             Rectangle {
@@ -152,40 +113,83 @@ Item{
                     top: rect_username.bottom
                     topMargin: parent.height * 0.06
                     left: parent.left
-                    leftMargin: width * 0.3
+                    leftMargin: width * 0.1
                 }
-                TextField {
+                TLTextField {
                     id: password
-                    width: parent.width * 0.55
+                    width: parent.width * 0.7
                     height: parent.height * 0.8
+                    Image {
+                        id: login_passwd
+                        source: "qrc:/res/pictures/login_passwd.png"
+                        width: parent.width * 0.15
+                        height: parent.height * 0.95
+                        fillMode: Image.PreserveAspectFit
+                        anchors.left: parent.left
+                        anchors.leftMargin: parent.width * 0.01
+                    }
+                    anchors{
+                        left: parent.left
+                        leftMargin: parent.width * 0.1
+                    }
                     text: root._default_test_user
                     placeholderText: qsTr("enter your password.")
                     validator: RegExpValidator{regExp:/^.[A-Za-z0-9_]{0,11}$/}
-                    background: Rectangle{
-                        anchors.fill: parent
-                        color: "transparent"
-                    }
+
                     echoMode: TextInput.Password
-                    color: "white"
-                    font.pixelSize: height * 0.5
                 }
             }
 
-            MouseArea {
-                id: btn_ok
-                width: rect_login.width * 0.635
-                height: rect_login.height * 0.15
+            Rectangle{
+//                width: rect_login.width * 0.12
+//                height: rect_login.height * 0.15
+                radius: rect_login.width * 0.02
+                width: rect_login.width * 0.3
+                height: rect_login.height * 0.12
+                color: "#1874CD"
                 anchors {
                     top: rect_pwd.bottom
-                    topMargin: parent.height * 0.02
+                    topMargin: parent.height * 0.01
 
                     horizontalCenter: parent.horizontalCenter
                     horizontalCenterOffset: parent.width * 0.022
-
                 }
+
+//                Image {
+//                    id: login_ok
+//                    //source: "qrc:/res/pictures/login_ok1.png"
+//                    width: parent.width
+//                    height: parent.height
+//                    width: parent.width * 0.8
+//                    height: parent.height * 0.9
+//                    fillMode: Image.PreserveAspectFit
+                    Text {
+                        id: login_button
+                        text: qsTr("登 录")
+                        font.pixelSize: 12
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        color: "white"
+                    }
+
+//                }
+            MouseArea {
+                id: btn_ok
+                anchors.fill:parent
+//                width: rect_login.width * 0.635
+//                height: rect_login.height * 0.15
+//
+//                anchors {
+//                    top: rect_pwd.bottom
+//                    topMargin: parent.height * 0.02
+//
+//                    horizontalCenter: parent.horizontalCenter
+//                    horizontalCenterOffset: parent.width * 0.022
+//                }
+
                 onClicked: {
                     if (root._login_faild_time < 3 ) {
                         account_manager.accountLogin(username.text, password.text)
+
                     } else {
                         ++ root._login_faild_time
                         message_login_faild.dia_title = qsTr("login failed!")
@@ -194,6 +198,7 @@ Item{
                     }
                 }
             }
+        }
         }
     }
 }

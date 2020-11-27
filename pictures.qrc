@@ -68,7 +68,6 @@
         <file>res/pictures/BUTTON-START.png</file>
         <file>res/pictures/BUTTON-STOP.png</file>
         <file>res/pictures/BUTTON-WARNING1.png</file>
-        <file>res/pictures/TASKSETTING-button.png</file>
         <file>res/pictures/clean_on.png</file>
         <file>res/pictures/clean_off.png</file>
         <file>res/pictures/acar.png</file>
@@ -171,5 +170,9 @@
         <file>res/ui/task/qidian_no.png</file>
         <file>res/ui/mapping/quite.png</file>
         <file>res/ui/mission_bord/mileage.png</file>
+        <file>res/pictures/login_ok.png</file>
+        <file>res/pictures/login_user.png</file>
+        <file>res/pictures/login_passwd.png</file>
+        <file>res/pictures/task_setting.png</file>
     </qresource>
 </RCC>

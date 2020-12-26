@@ -43,7 +43,7 @@ Rectangle {
             map_name_list.clear()
             var maps_name = map_task_manager.getMapsName()
 
-            for (var j = 0; j < maps_name.length; ++j) {
+            for (var j = 0; j < maps_name.length; ++j) {    //遍历地图加入列表
                 map_name_list.append({"map_name": maps_name[j], "map_select_index" : j})
             }
             root.current_map_index = map_task_manager.getCurrentMapIndex()
@@ -90,7 +90,6 @@ Rectangle {
         rec_ref_lines.visible = true
         rec_task_control.visible = true
         mapFillScreen(false)
-
     }
 
     function chooseTaskPage() {
@@ -263,7 +262,7 @@ Rectangle {
                 top: rec_header_bar.bottom
             }
 
-            Rectangle {
+            Rectangle {             //显示地图区域
                 width: parent.width
                 height: parent.height
                 anchors.top: parent.top
@@ -275,7 +274,7 @@ Rectangle {
                     height: parent.height
                 }
 
-                Rectangle {
+                Rectangle {         //参考线列表区域
                     id: rec_ref_lines
                     visible: false
                     z: 1
@@ -304,6 +303,7 @@ Rectangle {
                                 height: parent.height
                                 source: item.is_active ?
                                             "qrc:/res/ui/task/task_red.png" : "qrc:/res/ui/background/map_no_select.png"
+
                             }
                             Text {
                                 id: checked_text
@@ -354,7 +354,7 @@ Rectangle {
                         ScrollBar.vertical: TLScrollBar { visible: task_list_model.count > 6 }
 
                     }
-                    Rectangle {
+                    Rectangle {             //重选地图按钮
                         id: rect_back
                         width: parent.width
                         height: parent.height * 0.2
@@ -402,7 +402,7 @@ Rectangle {
                     }
                 }
 
-                Rectangle{
+                Rectangle{          //选择定位点
                     id: rec_checked_location//
                     visible: true
                     color: "transparent"
@@ -429,7 +429,7 @@ Rectangle {
                         }
                     }
 
-                    Rectangle {
+                    Rectangle {     //请确认定位点是否正确
                         id: rect_resure_localization
                         anchors.fill: parent
                         visible: false
@@ -440,7 +440,7 @@ Rectangle {
                             height: parent.height * 0.9
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.horizontalCenter: parent.horizontalCenter
-                            color: Qt.rgba(0,255,0,0.5)
+                            color:Qt.rgba(0,255,0,0.5)
                         }
 
                         Text {

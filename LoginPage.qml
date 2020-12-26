@@ -165,9 +165,10 @@ Item{
 //                    fillMode: Image.PreserveAspectFit
                     Text {
                         id: login_button
-                        text: qsTr("登 录")
-                        font.pixelSize: 12
+                        text: qsTr("登   录")
+                        font.pixelSize: 18
                         anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.verticalCenter: parent.verticalCenter
                         color: "white"
                     }
 

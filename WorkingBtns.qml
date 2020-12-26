@@ -7,25 +7,25 @@ Rectangle {
     signal sigBackBtnPress()
     signal sigWorkDown()
 
-    Column {
+    Column {        //列定位其子项
         property real btn_spacing: parent.width * 0.03
-        spacing: btn_spacing / 6
+        spacing: btn_spacing / 6    //间隙
         width: parent.width
         height: parent.height
         Image {
             id: btn_back
-            source: "qrc:/res/ui/task/home.png"
+            source: "qrc:/res/ui/task/home.png"     //任务界面home按钮
             width: parent.width
             height: (parent.height -  parent.btn_spacing)/ 4
             fillMode: Image.PreserveAspectFit
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    root.sigBackBtnPress()
+                    root.sigBackBtnPress()      //发送信号
                 }
             }
         }
-        Image {
+        Image {         //  开始 暂定按钮
             id: btn_stop
             width: parent.width
             height: (parent.height -  parent.btn_spacing)/ 4
@@ -50,7 +50,7 @@ Rectangle {
                 }
             }
         }
-        Image {
+        Image {         //任务停止
             id: btn_ending
             width: parent.width
             height: (parent.height -  parent.btn_spacing)/ 4
@@ -92,7 +92,7 @@ Rectangle {
                 }
             }
             Connections{
-                target: socket_manager
+                target: socket_manager      //开启信号连接到manage
                 onEmitEnableCleanWorkRst: {
                     btn_clean_work.clean_work = flag
                     btn_clean_work.source = btn_clean_work.clean_work ? "qrc:/res/pictures/clean_on.png":

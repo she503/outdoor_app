@@ -768,7 +768,7 @@ Rectangle {
                 var x = map.width / 2 - ( map.width / 2 - mouse.x + map.x) / map.scale
                 var y = map.height / 2 - ( map.height / 2 - mouse.y + map.y) / map.scale
                 root.choosePoint = [x, y]
-//                console.info(root.pixelToGeometry(root.choosePoint[0],root.choosePoint[1]))
+                console.info(root.pixelToGeometry(root.choosePoint[0],root.choosePoint[1]))
                 canvas_begin_points.requestPaint()
             }
             onPressed: {

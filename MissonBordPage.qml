@@ -13,6 +13,12 @@ Item {
     property bool is_first_error: true
     property var error_text_color: "red"//: ["yellow", "orange", "red"]
 
+    property var p_process: 0
+    property var s_single: 0
+    property var t_total: 0
+    property var s_speed: 0
+    property var min_time: 0
+
     function showMessagePics(flag) {
         if (flag) {
             btn_error.anchors.right = btn_lock.left
@@ -26,14 +32,14 @@ Item {
         }
     }
 
-    Row {
+    Row {       //沿单边定义其子项，水平定位一系列项目
         id: message_pic
         visible: true
         anchors.fill: parent
 
-        TLBtnWithPic {
+        TLBtnWithPic {      //显示当前电量
             id: lab_battery
-            width: parent.width * 0.15
+            width: parent.width * 0.12
             height: parent.height
             backgroundDefaultColor: "transparent"
             img_source: "qrc:/res/ui/mission_bord/battery_pic.png"
@@ -48,9 +54,9 @@ Item {
             }
         }
 
-        TLBtnWithPic {
+        TLBtnWithPic {      //显示当前速度
             id: lab_speed
-            width: parent.width * 0.15
+            width: parent.width * 0.14
             height: parent.height
             backgroundDefaultColor: "transparent"
             img_source: "qrc:/res/ui/mission_bord/speed_pic.png"
@@ -59,15 +65,15 @@ Item {
             Connections {
                 target: ros_message_manager
                 onUpdateDrivingInfo: {
-                    var v_speed = speed
-                    lab_speed.btn_text = v_speed + " m/s"
+                    s_speed = speed
+                    lab_speed.btn_text = s_speed + " m/s"
                 }
             }
         }
 
-        TLBtnWithPic {
+        TLBtnWithPic {      //显示任务进度
             id: lab_progress
-            width: parent.width * 0.15
+            width: parent.width * 0.12
             height: parent.height
             backgroundDefaultColor: "transparent"
             img_source: "qrc:/res/ui/mission_bord/task_progress.png"
@@ -76,14 +82,15 @@ Item {
             Connections {
                 target: ros_message_manager
                 onUpdateTaskProcessInfo: {
+                     p_process = progress
                     lab_progress.btn_text = "" + progress + " %";
                 }
             }
         }
 
-        TLBtnWithPic {
+        TLBtnWithPic {          //显示里程
             id: mileage
-            width: parent.width * 0.15
+            width: parent.width * 0.17
             height: parent.height
             backgroundDefaultColor: "transparent"
             img_source: "qrc:/res/ui/mission_bord/mileage.png"
@@ -91,10 +98,30 @@ Item {
             Connections {
                 target: ros_message_manager
                 onUpdateMileageInfo: {
-                  mileage.btn_text = single + "|" + total
+                     s_single = single
+                    mileage.btn_text = s_single + "|" + total
                 }
             }
         }
+
+//        TLBtnWithPic {          //显示时间
+//            id: s_time
+//            width: parent.width * 0.15
+//            height: parent.height
+//            backgroundDefaultColor: "transparent"
+//            img_source: "qrc:/res/ui/mission_bord/time.png"
+//            font_size: height * 0.3
+//            btn_text: "0"
+//            Timer {
+//                id: timer_btn
+//                running: false
+//                repeat: true
+//                interval: 1000
+//                onTriggered: {
+//                    btn_text :(((s_single/p_process)*100 - s_single)/s_speed) * 60
+//                }
+//            }
+//        }
 
 //        Image {
 //            id: lab_gear
@@ -133,12 +160,12 @@ Item {
 //        }
     }
 
-    Connections {
+    Connections {       //连接到ros_message
         target: ros_message_manager
         onUpdateMonitorMessageInfo: {
             busy_indicator.close()
             message_list_model.clear()
-            root.has_error = true
+            root.has_error = true       //有错误信息
             timer_no_error_close.times = 0
 
             if (root.is_first_error) {
@@ -158,7 +185,7 @@ Item {
         }
     }
 
-    Button {
+    Button {        //锁屏
         id: btn_lock
         visible: !is_locked
         height: parent.height * 0.6
@@ -187,9 +214,9 @@ Item {
         }
     }
 
-    Button {
+    Button {        //警告按钮
         id: btn_error
-        visible: has_error
+        visible: has_error      //false
         height: parent.height * 0.7
         width: height
 
@@ -205,7 +232,7 @@ Item {
                 fillMode: Image.PreserveAspectFit
             }
         }
-        onClicked: {
+        onClicked: {        //点击事件查看错误信息
             message_list_model.clear()
             if(draw_error.visible){
                 draw_error.close()
@@ -216,20 +243,22 @@ Item {
     }
 
 
-    Drawer {
+    Drawer {        //基于滑动的侧面板，类似那些常见于触摸界面的侧面板，已提供导航的中心位置
         id: draw_error
         visible: false
         width: parent.width
         height: parent.height
         modal: true
         dim: false
-        edge: Qt.RightEdge
+        edge: Qt.RightEdge      //从右边拖出
         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+        //确定弹出窗口关闭情况，允许多方式关闭窗口
+        //在窗口外按下即可关闭，当escape键被按下关闭
         background: Rectangle{
-            opacity: 0.6
+            opacity: 0.6        //如果有错误信息显示，弹出的背景页面
             RadialGradient {
                 anchors.fill: parent
-                gradient: Gradient
+                gradient: Gradient      //渐变色
                 {
                     GradientStop{position: 0.3; color:"grey"}
                     GradientStop{position: 1; color:"black"}
@@ -242,10 +271,10 @@ Item {
                 draw_error.close()
             }
         }
-        Rectangle {
+        Rectangle {     //故障框外框
             Image {
                 anchors.fill: parent
-                source: "qrc:/res/pictures/background_glow1.png"
+                source: "qrc:/res/pictures/background_glow1.png"    //透明框
             }
             anchors.centerIn: parent
             width: parent.width * 0.6
@@ -253,12 +282,12 @@ Item {
             x: (parent.width - width ) / 2
             y: (parent.height - height) / 2
             color: "transparent"
-            Rectangle {
+            Rectangle {     //故障信息框内框
                 width: parent.width * 0.9
                 height: parent.height * 0.88
                 anchors.centerIn: parent
                 color: "transparent"
-                Rectangle {
+                Rectangle {     //框顶字段信息
                     id: rec_message_head
                     width: parent.width
                     height: parent.height * 0.1
@@ -271,7 +300,7 @@ Item {
                         height: parent.height //* 0.5
                         anchors.bottom: parent.bottom
                         color: "transparent"
-                        Text {
+                        Text {          //故障时间
                             id: title_time
                             text: qsTr("error time")
                             width: parent.width * 0.2
@@ -295,7 +324,7 @@ Item {
                                 }
                             }
                         }
-                        Text {
+                        Text {          //故障码
                             id: title_code
                             text: qsTr("error code")
                             width: parent.width * 0.2
@@ -308,7 +337,7 @@ Item {
                             color: "black"
 
                         }
-                        Text {
+                        Text {              //故障等级
                             id: title_level
                             text: qsTr("error level")
                             width: parent.width * 0.2
@@ -332,7 +361,7 @@ Item {
                                 }
                             }
                         }
-                        Text {
+                        Text {          //故障信息
                             id: title_message
                             text: qsTr("error message")
                             width: parent.width * 0.4
@@ -346,7 +375,7 @@ Item {
                         }
                     }
                 }
-                Rectangle {
+                Rectangle {     //故障信息内容列表框
                     id: rec_message_info
                     width: parent.width
                     height: parent.height * 0.9
@@ -354,7 +383,7 @@ Item {
                     border.width: 1
                     border.color: Qt.rgba(100, 100, 100, 0.6)
                     color: "transparent"
-                    ListView {
+                    ListView {      //故障信息列表
                         id: list_error_message
                         clip: true
                         width: parent.width
@@ -366,16 +395,16 @@ Item {
                             width: parent.width
                             height: ListView.height
                             property bool is_active: false
-                            background: Rectangle {
+                            background: Rectangle {     //单条故障信息
                                 anchors.fill: parent
                                 color: "transparent"
                             }
-                            Row {
+                            Row {       //故障信息字段内容，单行排列
                                 anchors.fill: parent
                                 Rectangle {
                                     width: item_message.width * 0.2
                                     height: parent.height
-                                    color: "transparent"
+                                    color: "transparent"    //故障时间
                                     Text {
                                         id: text_error_time
                                         clip: true
@@ -394,7 +423,7 @@ Item {
                                 Rectangle {
                                     width: item_message.width * 0.2
                                     height: parent.height
-                                    color: "transparent"
+                                    color: "transparent"        //故障码
                                     Text {
                                         id: text_error_code
                                         clip: true
@@ -413,7 +442,7 @@ Item {
                                 Rectangle {
                                     width: item_message.width * 0.2
                                     height: parent.height
-                                    color: "transparent"
+                                    color: "transparent"        //故障等级
                                     Text {
                                         id: text_error_level
                                         clip: true
@@ -432,7 +461,7 @@ Item {
                                 Rectangle {
                                     width: item_message.width * 0.4
                                     height: parent.height
-                                    color: "transparent"
+                                    color: "transparent"        //故障信息
                                     Text {
                                         id: text_error_message
                                         clip: true
@@ -459,13 +488,14 @@ Item {
         }
     }
 
-    Timer {
+    Timer {     //计时器
         id: timer_btn_errror_flashes
         running: false
-        repeat: true
-        interval: 800
-        onTriggered: {
+        repeat: true        //为真则在指定时间内重复触发
+        interval: 800       //800毫秒触发
+        onTriggered: {      //警告图标跳动
                 btn_error.opacity = btn_error.opacity === 0 ? 1 : 0
+            //===判断类型和值相同则为真
         }
     }
 
@@ -473,9 +503,9 @@ Item {
         id: timer_no_error_close
         running: false
         repeat: true
-        interval: 1000
+        interval: 1000   //间隔1000毫秒
         property int times: 0
-        onTriggered: {
+        onTriggered: {  //间隔1000毫秒触发，触发三次关闭
             ++times
             if (times >= 3) {
                 draw_error.close()

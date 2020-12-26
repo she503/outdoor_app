@@ -108,12 +108,12 @@ Rectangle {
             height: parent.height
 
             color: "transparent"
-            Image {
-                id: menu_background
-                //source: "qrc:/res/ui/background/menu.png"
-                anchors.fill: parent
-                z:0
-            }
+//            Image {
+//                id: menu_background
+//                source: "qrc:/res/ui/background/menu.png"
+//                anchors.fill: parent
+//                z:0
+//            }
             StackView {
                 id: menu_stack
                 anchors.fill: parent

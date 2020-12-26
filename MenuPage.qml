@@ -29,7 +29,7 @@ ListView {
                 z:1
                 source:item.focus ? model.focus_source: model.no_focus_source
                 anchors.fill: parent
-                opacity: item.focus ? 1: 0.5
+                opacity: item.focus ? 1: 0.3
                 fillMode: Image.PreserveAspectFit
                 horizontalAlignment: Image.AlignHCenter
             }

@@ -15,7 +15,7 @@ Rectangle {
     signal sigBackBtnPress()
     signal sigWorkDown()
 
-    Column{
+    Column{                     //列定位其子项
         anchors.fill: parent
         TLInfoDisplayPage {
             id: rect_info

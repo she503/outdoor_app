@@ -37,14 +37,14 @@ Item {
         }
     }
 
-    Popup {
+    Popup {         //弹出窗口显示在项目上方
         id: pop_lock
         width: parent.width
         height: parent.height
         modal: true
         focus: true
         dim: false
-        closePolicy: Popup.CloseOnPressOutsideParent
+        closePolicy: Popup.CloseOnPressOutsideParent    //父对象之外按下关闭
         background: Rectangle {
             anchors.fill: parent
             opacity: 0.3

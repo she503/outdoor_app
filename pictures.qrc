@@ -174,5 +174,6 @@
         <file>res/pictures/login_user.png</file>
         <file>res/pictures/login_passwd.png</file>
         <file>res/pictures/task_setting.png</file>
+        <file>res/ui/mission_bord/time.png</file>
     </qresource>
 </RCC>
